@@ -224,6 +224,41 @@ embodied action benchmark.
 
 ## Pipeline Modules
 
+### 0. Adaptive Video Encoder
+
+Purpose: compress egocentric video into a variable-density latent tape so VINNA
+spends compute where the video actually contains information.
+
+The masonry video has long spans where a fixed-rate sampler will waste budget:
+walking, camera swing, blank wall, repeated pass-by footage, and low-information
+motion blur. It also has bursts where information density spikes: hands/tools
+move, material contacts a wall, a work surface changes, text/signage becomes
+readable, or a new object enters the scene.
+
+The adaptive encoder should output:
+
+- `importance_spans`: intervals that deserve dense processing
+- `low_info_spans`: intervals that can be aggressively compressed
+- `keyframes`: timestamped frames chosen for downstream modules
+- `crop_hints`: regions with high visual/text/action density
+- `latent_refs`: optional compressed representations for later model training
+
+Initial implementation can be heuristic:
+
+- motion magnitude from frame differences or optical flow
+- image sharpness / blur
+- OCR/text density
+- object/hand/tool detector changes
+- VLM uncertainty or novelty
+- embedding distance between adjacent frames
+
+Long-term implementation can train a self-supervised video encoder with masked
+compression objectives inspired by V-JEPA-style prediction. The training target
+is not perfect reconstruction; it is preserving semantic/action information at a
+high compression ratio.
+
+This module sits before expensive VLM, depth, and reconstruction passes.
+
 ### 1. Video Ingest
 
 Input: `01_production_masonry.mp4`.
@@ -241,6 +276,9 @@ Initial policy:
 - sample every 5 seconds for broad coverage
 - add scene-change or motion-heavy frames later
 - preserve exact timestamps
+
+The video ingest module receives sampling hints from the adaptive video encoder
+when available. Without those hints, it falls back to fixed-rate sampling.
 
 ### 2. Egocentric Motion And SLAM
 
@@ -505,6 +543,63 @@ construction understanding.
 
 ## Standard Benchmarks
 
+## Ground Truth Benchmark Protocol
+
+The benchmark cannot depend on fully labeled construction datasets. VINNA should
+create ground truth from three layers, ordered from cheapest to strongest:
+
+1. **Objective video evidence**: future frames, before/after frames, frame
+   timestamps, visible motion, and frame differences.
+2. **Programmatic checks**: optical flow, point tracking, object persistence,
+   depth ordering, and reconstruction consistency.
+3. **Gold labels**: small human-reviewed subsets for high-value or ambiguous
+   windows.
+
+The benchmark should report which layer supports each claim. A result backed by
+future frames and human review is stronger than one backed only by model output.
+
+### Minimal Gold Label Set
+
+For the first masonry video benchmark, label only what is necessary:
+
+- 10 action windows for forecast vs observed execution
+- 20 before/after pairs for change or no-change
+- 10 evidence retrieval questions with accepted timestamp ranges
+- 5 persistent object/work-area tracks
+
+This is small enough to create quickly and large enough to expose raw VLM
+failure modes.
+
+### Label Format
+
+```json
+{
+  "label_id": "gold_action_001",
+  "video_id": "01_production_masonry",
+  "time_window_s": [120.0, 125.0],
+  "label_type": "action|change|retrieval|track",
+  "target_entities": ["masonry wall", "worker hand/tool"],
+  "action": "trowel|hammer|place|inspect|passby|unknown",
+  "changed": true,
+  "accepted_evidence_frames": ["f_001200", "f_001225"],
+  "notes": "worker appears to contact wall surface; exact material change is uncertain"
+}
+```
+
+### Evaluation Contract
+
+Each benchmark result should include:
+
+- model or condition
+- input context used
+- prediction
+- ground-truth reference
+- score fields
+- evidence frame refs
+- uncertainty
+
+This keeps the benchmark useful even when labels are partial.
+
 ### Benchmark 1: Raw VLM Vs Ledger-Augmented QA
 
 Task:
@@ -598,7 +693,22 @@ Success criteria:
 - observations include activities/materials/progress/uncertainty
 - no safety-first `hazards` schema
 
-### Phase 2: Geometry Evidence
+### Phase 2: Adaptive Sampling And Candidate Windows
+
+Steps:
+
+1. Compute frame-diff/motion/blur/OCR novelty signals.
+2. Create importance spans and low-info spans.
+3. Generate candidate action windows.
+4. Store candidate windows and uncertainty in the ledger.
+
+Success criteria:
+
+- at least 10 importance spans
+- at least 3 candidate action windows
+- low-info spans are explicitly marked rather than dropped silently
+
+### Phase 3: Geometry Evidence
 
 Steps:
 
@@ -613,7 +723,7 @@ Success criteria:
 - failed geometry modules record explicit failure
 - repeated locations can be proposed even if full SLAM fails
 
-### Phase 3: Tracks And Events
+### Phase 4: Tracks And Events
 
 Steps:
 
@@ -628,7 +738,7 @@ Success criteria:
 - at least 3 event candidates
 - each event has evidence frames and uncertainty
 
-### Phase 4: Action Forecast Benchmark
+### Phase 5: Action Forecast Benchmark
 
 Steps:
 
@@ -643,7 +753,7 @@ Success criteria:
 - at least one trajectory/contact metric
 - qualitative evidence frames for demo
 
-### Phase 5: A/B Agent Benchmark
+### Phase 6: A/B Agent Benchmark
 
 Steps:
 
@@ -688,6 +798,7 @@ uv run --directory backend python ../experiments/build_scene_ledger.py \
 
 Recommended module boundaries:
 
+- `adaptive_video_encoder.py`: importance spans, keyframes, crop hints
 - `video_ingest.py`: metadata and frame extraction
 - `geometry_depth.py`: depth inference and depth metadata
 - `geometry_reconstruction.py`: pose/reconstruction attempts
@@ -695,6 +806,7 @@ Recommended module boundaries:
 - `tracking.py`: entity resolution and tracks
 - `events.py`: progress/change/action event generation
 - `forecast_benchmark.py`: blind action forecast and scoring
+- `ground_truth.py`: human label loading and benchmark references
 - `ledger_io.py`: schema validation and artifact writing
 
 ## Risks And Mitigations
@@ -714,6 +826,14 @@ Mitigation:
 - require evidence strings and uncertainty
 - cross-check with detection/depth/frame-diff signals
 - benchmark raw VLM vs ledger rather than trusting any one answer
+
+### Risk: Model-derived labels become fake ground truth
+
+Mitigation:
+
+- report support level on every benchmark result
+- human-review the highest-impact or highest-disagreement windows
+- use objective future-frame evidence where possible
 
 ### Risk: Privacy constraints block full-video API calls
 
@@ -743,11 +863,14 @@ Mitigation:
 ## Open Decisions
 
 1. Whether to use 5-second or 10-second sampling as the default.
-2. Which local depth model is fastest to integrate in this repo.
-3. Whether the first reconstruction attempt should be COLMAP, MASt3R/DUSt3R, or
+2. Which signals should drive the first adaptive encoder: motion, blur, OCR,
+   embedding novelty, or a weighted blend.
+3. Which local depth model is fastest to integrate in this repo.
+4. Whether the first reconstruction attempt should be COLMAP, MASt3R/DUSt3R, or
    a lighter place-recognition fallback.
-4. Whether real bodycam frames can be sent to Gemini for the hackathon demo.
-5. Which 5-10 benchmark questions should represent Ironsite value best.
+5. Whether real bodycam frames can be sent to Gemini for the hackathon demo.
+6. Which 5-10 benchmark questions should represent Ironsite value best.
+7. Which action categories are narrow enough for the first forecast benchmark.
 
 ## Recommended First Implementation Slice
 
@@ -755,10 +878,12 @@ Build the ledger skeleton before any 3D viewer:
 
 1. `ledger_io.py`
 2. `video_ingest.py`
-3. batch Gemini Robotics-ER frame observations
-4. `build_scene_ledger.py`
-5. small masonry-video ledger artifact
-6. 5-question raw VLM vs ledger-augmented benchmark
+3. `adaptive_video_encoder.py` heuristic importance spans
+4. batch Gemini Robotics-ER frame observations
+5. `build_scene_ledger.py`
+6. small masonry-video ledger artifact
+7. tiny gold-label file for benchmark references
+8. 5-question raw VLM vs ledger-augmented benchmark
 
 This produces a real asset quickly and leaves clear extension points for depth,
 SLAM, reconstruction, tracking, and action-forecast scoring.
