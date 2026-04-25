@@ -1,0 +1,223 @@
+{
+  "export_type": "cii_cold_path_60s_summary",
+  "generated_at": "2026-04-25T09:31:17Z",
+  "pipeline": "VINNA CII Cold Path",
+  "source_video": "/Users/qtzx/Downloads/01_production_masonry.mp4",
+  "video_duration_s": 1276.0,
+  "analysis_window_s": 60,
+  "model": "claude-sonnet-4-6",
+  "total_frames_analyzed": 10,
+  "classification_distribution": {
+    "productive": 0,
+    "contributory": 2,
+    "non_contributory": 8,
+    "productive_pct": 0.0,
+    "contributory_pct": 20.0,
+    "non_contributory_pct": 80.0,
+    "wrench_time_pct": 20.0
+  },
+  "frames": [
+    {
+      "timestamp_s": 0.0,
+      "classification": "NC",
+      "activity": "Masonry work at wall edge",
+      "confidence": 0.78,
+      "violation_count": 4,
+      "high_severity_violations": 2,
+      "source_frame": "frame_00_ts0.jpg",
+      "event_id": "cold_path_proof_0s"
+    },
+    {
+      "timestamp_s": 127.0,
+      "classification": "NC",
+      "activity": "Workers on elevated platform",
+      "confidence": 0.72,
+      "violation_count": 4,
+      "high_severity_violations": 2,
+      "source_frame": "frame_01_ts127.jpg",
+      "event_id": "cold_path_proof_127s"
+    },
+    {
+      "timestamp_s": 255.0,
+      "classification": "NC",
+      "activity": "Elevated work near scaffold",
+      "confidence": 0.63,
+      "violation_count": 4,
+      "high_severity_violations": 2,
+      "source_frame": "frame_02_ts255.jpg",
+      "event_id": "cold_path_proof_255s"
+    },
+    {
+      "timestamp_s": 382.0,
+      "classification": "NC",
+      "activity": "Elevated work on scaffold",
+      "confidence": 0.72,
+      "violation_count": 4,
+      "high_severity_violations": 2,
+      "source_frame": "frame_03_ts382.jpg",
+      "event_id": "cold_path_proof_382s"
+    },
+    {
+      "timestamp_s": 510.0,
+      "classification": "NC",
+      "activity": "Masonry work at elevation",
+      "confidence": 0.72,
+      "violation_count": 4,
+      "high_severity_violations": 2,
+      "source_frame": "frame_04_ts510.jpg",
+      "event_id": "cold_path_proof_510s"
+    },
+    {
+      "timestamp_s": 638.0,
+      "classification": "NC",
+      "activity": "Work at elevation no PPE",
+      "confidence": 0.72,
+      "violation_count": 4,
+      "high_severity_violations": 2,
+      "source_frame": "frame_05_ts638.jpg",
+      "event_id": "cold_path_proof_638s"
+    },
+    {
+      "timestamp_s": 765.0,
+      "classification": "NC",
+      "activity": "Masonry block laying elevated",
+      "confidence": 0.74,
+      "violation_count": 4,
+      "high_severity_violations": 2,
+      "source_frame": "frame_06_ts765.jpg",
+      "event_id": "cold_path_proof_765s"
+    },
+    {
+      "timestamp_s": 893.0,
+      "classification": "NC",
+      "activity": "Masonry work near crane",
+      "confidence": 0.72,
+      "violation_count": 4,
+      "high_severity_violations": 3,
+      "source_frame": "frame_07_ts893.jpg",
+      "event_id": "cold_path_proof_893s"
+    },
+    {
+      "timestamp_s": 1020.0,
+      "classification": "C",
+      "activity": "Elevated platform traverse",
+      "confidence": 0.62,
+      "violation_count": 4,
+      "high_severity_violations": 0,
+      "source_frame": "frame_08_ts1020.jpg",
+      "event_id": "cold_path_proof_1020s"
+    },
+    {
+      "timestamp_s": 1148.0,
+      "classification": "C",
+      "activity": "Ground-level material handling",
+      "confidence": 0.42,
+      "violation_count": 2,
+      "high_severity_violations": 0,
+      "source_frame": "frame_09_ts1148.jpg",
+      "event_id": "cold_path_proof_1148s"
+    }
+  ],
+  "rolling_60s_windows": [
+    {
+      "window_start_s": 0,
+      "window_end_s": 60,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 0,
+        "NC": 1
+      }
+    },
+    {
+      "window_start_s": 120,
+      "window_end_s": 180,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 0,
+        "NC": 1
+      }
+    },
+    {
+      "window_start_s": 240,
+      "window_end_s": 300,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 0,
+        "NC": 1
+      }
+    },
+    {
+      "window_start_s": 360,
+      "window_end_s": 420,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 0,
+        "NC": 1
+      }
+    },
+    {
+      "window_start_s": 480,
+      "window_end_s": 540,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 0,
+        "NC": 1
+      }
+    },
+    {
+      "window_start_s": 600,
+      "window_end_s": 660,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 0,
+        "NC": 1
+      }
+    },
+    {
+      "window_start_s": 720,
+      "window_end_s": 780,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 0,
+        "NC": 1
+      }
+    },
+    {
+      "window_start_s": 840,
+      "window_end_s": 900,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 0,
+        "NC": 1
+      }
+    },
+    {
+      "window_start_s": 1020,
+      "window_end_s": 1080,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 1,
+        "NC": 0
+      }
+    },
+    {
+      "window_start_s": 1140,
+      "window_end_s": 1200,
+      "frames_in_window": 1,
+      "classifications": {
+        "P": 0,
+        "C": 1,
+        "NC": 0
+      }
+    }
+  ]
+}

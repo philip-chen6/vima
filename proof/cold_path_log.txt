@@ -1,0 +1,74 @@
+=== VINNA CII Cold Path Proof Run ===
+Started: 2026-04-25T09:20:39Z
+
+[09:20:39] Health check...
+[09:21:03] Health: {"status":"ok","video":"/Users/qtzx/Downloads/01_production_masonry.mp4","video_exists":true}
+
+[09:21:03] Analyzing frame_00_ts0.jpg (ts=0s)...
+[09:21:27] Response for frame_00_ts0.jpg: {"pnc":"NC","activity":"Masonry work at wall edge","spatial_claims":[{"object":"worker","location":"atop or leaning over CMU block wall, elevated position","distance_m":2.1},{"object":"open_edge","location":"beyond CMU wall top, unguarded drop on far side","distance_m":2.5},{"object":"scaffold","location":"left side of frame, yellow scaffold structure","distance_m":1.2},{"object":"guardrail","location":"absent at elevated wall working edge","distance_m":null},{"object":"material_stack","location
+
+[09:21:27] Analyzing frame_01_ts127.jpg (ts=127s)...
+[09:21:49] Response for frame_01_ts127.jpg: {"pnc":"NC","activity":"Workers on elevated platform","spatial_claims":[{"object":"worker","location":"center-left of frame, on elevated deck","distance_m":2.1},{"object":"worker","location":"center-right of frame, on elevated deck","distance_m":2.8},{"object":"scaffold","location":"right side of frame, multi-level structure","distance_m":3.2},{"object":"open_edge","location":"left side of elevated platform, no visible guardrail","distance_m":1.5},{"object":"guardrail","location":"partial presen
+
+[09:21:49] Analyzing frame_02_ts255.jpg (ts=255s)...
+[09:22:26] Response for frame_02_ts255.jpg: {"pnc":"NC","activity":"Elevated work near scaffold","spatial_claims":[{"object":"scaffold","location":"left foreground, yellow tubular frame","distance_m":1.2},{"object":"ladder","location":"center frame, vertical access structure","distance_m":2.1},{"object":"open_edge","location":"right side, unguarded elevated platform edge","distance_m":1.5},{"object":"material_stack","location":"right background, concrete blocks stacked","distance_m":3.2},{"object":"worker","location":"immediate foreground
+
+[09:22:26] Analyzing frame_03_ts382.jpg (ts=382s)...
+[09:23:02] Response for frame_03_ts382.jpg: {"pnc":"NC","activity":"Elevated work on scaffold","spatial_claims":[{"object":"worker","location":"center-frame, elevated on scaffold structure","distance_m":2.8},{"object":"scaffold","location":"foreground and mid-frame, metal tubular frame","distance_m":1.5},{"object":"open_edge","location":"left and right flanks of scaffold platform","distance_m":1.8},{"object":"guardrail","location":"not visibly present on scaffold edges","distance_m":null},{"object":"handrail","location":"not visibly prese
+
+[09:23:02] Analyzing frame_04_ts510.jpg (ts=510s)...
+[09:23:58] Response for frame_04_ts510.jpg: {"pnc":"NC","activity":"Masonry work at elevation","spatial_claims":[{"object":"worker","location":"center-left of frame, near structural column","distance_m":1.8},{"object":"worker","location":"center of frame, handling block","distance_m":2.5},{"object":"scaffold","location":"right side of frame, adjacent to masonry wall","distance_m":3.2},{"object":"open_edge","location":"left side near structural column, no visible guardrail","distance_m":1.5},{"object":"material_stack","location":"right sid
+
+[09:23:59] Analyzing frame_05_ts638.jpg (ts=638s)...
+[09:24:51] Response for frame_05_ts638.jpg: {"pnc":"NC","activity":"Work at elevation no PPE","spatial_claims":[{"object":"worker","location":"elevated structure, center frame","distance_m":2.1},{"object":"open_edge","location":"left and rear of elevated work surface","distance_m":1.5},{"object":"scaffold","location":"elevated concrete platform area","distance_m":2.0},{"object":"material_stack","location":"precast concrete panels surrounding worker","distance_m":1.8}],"violation_flags":[{"rule":"OSHA 1926.502(d) - Personal Fall Arrest Sys
+
+[09:24:51] Analyzing frame_06_ts765.jpg (ts=765s)...
+[09:25:47] Response for frame_06_ts765.jpg: {"pnc":"NC","activity":"Masonry block laying elevated","spatial_claims":[{"object":"worker","location":"elevated work platform, bending over block wall","distance_m":2.1},{"object":"worker","location":"elevated platform adjacent to block wall","distance_m":2.5},{"object":"material_stack","location":"CMU block wall under construction, center-right","distance_m":1.8},{"object":"scaffold","location":"right side, yellow steel scaffold structure","distance_m":3.2},{"object":"open_edge","location":"le
+
+[09:25:47] Analyzing frame_07_ts893.jpg (ts=893s)...
+[09:26:40] Response for frame_07_ts893.jpg: {"pnc":"NC","activity":"Masonry work near crane","spatial_claims":[{"object":"worker","location":"left foreground, leaning over block wall","distance_m":1.2},{"object":"scaffold","location":"center-left, supporting crane/equipment structure","distance_m":2.0},{"object":"open_edge","location":"top of block wall, right side","distance_m":1.8},{"object":"material_stack","location":"concrete masonry units stacked at wall base","distance_m":1.5}],"violation_flags":[{"rule":"OSHA 1926.502(b) - Guardra
+
+[09:26:40] Analyzing frame_08_ts1020.jpg (ts=1020s)...
+[09:27:24] Response for frame_08_ts1020.jpg: {"pnc":"C","activity":"Elevated platform traverse","spatial_claims":[{"object":"scaffold","location":"primary work surface, extending ~4m x 4m footprint","distance_m":1.5},{"object":"guardrail","location":"perimeter, orange mesh safety netting visible on 3 sides","distance_m":2.1},{"object":"open_edge","location":"right lateral side, partial gap visible near structural steel","distance_m":1.2},{"object":"material_stack","location":"mid-platform, lumber/debris near center-left","distance_m":2.5}]
+
+[09:27:24] Analyzing frame_09_ts1148.jpg (ts=1148s)...
+[09:28:08] Response for frame_09_ts1148.jpg: {"pnc":"C","activity":"Ground-level material handling","spatial_claims":[{"object":"material_stack","location":"directly in front of worker, center frame","distance_m":1.2},{"object":"scaffold","location":"background right, partially visible","distance_m":3.5},{"object":"worker","location":"egocentric origin, ground level","distance_m":0.0},{"object":"blocked_path","location":"immediate foreground, large material obscuring path","distance_m":0.8}],"violation_flags":[{"rule":"OSHA 1926.25 - House
+
+[09:28:08] All frames analyzed.
+
+[09:28:08] Results saved.
+
+=== PIPELINE SUMMARY ===
+
+Step 1: Health check - PASS
+  Backend alive at localhost:8765, video file confirmed
+
+Step 2: Frame extraction - PASS
+  10 frames extracted at 127.6s intervals via ffmpeg -ss seek
+  Timestamps: 0s, 127s, 255s, 382s, 510s, 638s, 765s, 893s, 1020s, 1148s
+
+Step 3: Frame analysis via /analyze/frame - PASS
+  10 frames sent to cold path (Claude Sonnet 4.6)
+  Each frame returned: pnc, activity, spatial_claims, violation_flags, confidence, reasoning
+  Model: claude-sonnet-4-6 with point cloud stub (200 points)
+
+Step 4: Classification results:
+  P (Productive):       0 frames (0.0%)
+  C (Contributory):     2 frames (20.0%)
+  NC (Non-Contributory): 8 frames (80.0%)
+  Wrench Time:          20.0%
+
+  Note: Cold path is safety-focused — high NC rate reflects OSHA violation detection
+  (open edges, missing guardrails, missing fall arrest systems)
+  Hot path (/cii/frames) shows 86.7% wrench time via Gemini Flash Lite (activity-focused)
+
+Step 5: Dashboard generated - cold_path_dashboard.png
+  Dark theme, construction yellow accents
+  5 panels: classification pie, KPI cards, timeline strip, confidence scatter, activity list
+
+Step 6: Artifacts saved:
+  cold_path_results.json - Full 60s summary export with rolling windows
+  cold_path_dashboard.png - Media artifact
+  cold_path_log.txt - This log
+2026-04-25T09:32:07Z Pipeline complete.
+=== END ===
