@@ -5,7 +5,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {
   Activity,
-  Cog,
   Coins,
   HardHat,
   Map,
@@ -56,6 +55,92 @@ const systemSteps = [
   },
 ];
 
+function gearPath(teeth: number, rootRadius: number, outerRadius: number) {
+  const points: string[] = [];
+  const steps = teeth * 4;
+
+  for (let index = 0; index <= steps; index += 1) {
+    const angle = (index / steps) * Math.PI * 2 - Math.PI / 2;
+    const phase = index % 4;
+    const radius = phase === 1 || phase === 2 ? outerRadius : rootRadius;
+    const x = Math.cos(angle) * radius;
+    const y = Math.sin(angle) * radius;
+    points.push(`${index === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`);
+  }
+
+  return `${points.join(" ")} Z`;
+}
+
+function Gear({
+  id,
+  size,
+  teeth,
+  duration,
+  reverse = false,
+  className,
+}: {
+  id: string;
+  size: number;
+  teeth: number;
+  duration: number;
+  reverse?: boolean;
+  className: string;
+}) {
+  const path = gearPath(teeth, 42, 54);
+  const spokeCount = Math.max(4, Math.round(teeth / 5));
+
+  return (
+    <div
+      className={`absolute ${reverse ? "[animation-direction:reverse]" : ""} animate-spin ${className}`}
+      style={{ width: size, height: size, animationDuration: `${duration}s` }}
+    >
+      <svg
+        viewBox="-64 -64 128 128"
+        className="h-full w-full drop-shadow-[0_0_18px_rgba(255,255,255,0.18)]"
+        aria-hidden="true"
+      >
+        <defs>
+          <radialGradient id={`${id}-face`} cx="38%" cy="34%" r="72%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+            <stop offset="38%" stopColor="#d8d5cc" stopOpacity="0.84" />
+            <stop offset="100%" stopColor="#777066" stopOpacity="0.72" />
+          </radialGradient>
+          <radialGradient id={`${id}-shade`} cx="44%" cy="42%" r="68%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="64%" stopColor="#000000" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0.42" />
+          </radialGradient>
+        </defs>
+        <path d={path} fill={`url(#${id}-face)`} stroke="#ffffff" strokeOpacity="0.22" strokeWidth="1.4" />
+        <circle r="35" fill="#17130f" fillOpacity="0.54" />
+        <circle r="33" fill={`url(#${id}-face)`} opacity="0.42" />
+        {Array.from({ length: spokeCount }).map((_, index) => {
+          const angle = (index / spokeCount) * Math.PI * 2;
+          const x = Math.cos(angle) * 26;
+          const y = Math.sin(angle) * 26;
+          return (
+            <line
+              key={index}
+              x1="0"
+              y1="0"
+              x2={x}
+              y2={y}
+              stroke="#ffffff"
+              strokeOpacity="0.55"
+              strokeWidth="5"
+              strokeLinecap="round"
+            />
+          );
+        })}
+        <circle r="14" fill="#100d0a" fillOpacity="0.72" />
+        <circle r="7" fill="#f8f6ef" fillOpacity="0.88" />
+        <circle r="3" fill="#080604" />
+        <circle r="48" fill={`url(#${id}-shade)`} />
+      </svg>
+    </div>
+  );
+}
+
 function ClockworkLoader() {
   const [visible, setVisible] = useState(true);
   const [leaving, setLeaving] = useState(false);
@@ -79,10 +164,10 @@ function ClockworkLoader() {
     >
       <div className="relative h-56 w-56">
         <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.10),transparent_58%)]" />
-        <Cog className="absolute left-[72px] top-[76px] h-24 w-24 animate-spin text-white/78 drop-shadow-[0_0_22px_rgba(255,255,255,0.18)] [animation-duration:7s]" />
-        <Cog className="absolute left-[128px] top-[28px] h-16 w-16 animate-spin text-white/86 [animation-direction:reverse] [animation-duration:4.35s]" />
-        <Cog className="absolute left-[38px] top-[48px] h-14 w-14 animate-spin text-white/70 [animation-direction:reverse] [animation-duration:4.65s]" />
-        <Cog className="absolute left-[34px] top-[128px] h-16 w-16 animate-spin text-white/72 [animation-duration:5.1s]" />
+        <Gear id="gear-main" size={112} teeth={24} duration={7.2} className="left-[72px] top-[70px]" />
+        <Gear id="gear-upper" size={76} teeth={18} duration={4.7} reverse className="left-[140px] top-[24px]" />
+        <Gear id="gear-left" size={66} teeth={16} duration={4.9} reverse className="left-[22px] top-[52px]" />
+        <Gear id="gear-lower" size={78} teeth={18} duration={5.3} reverse className="left-[29px] top-[140px]" />
       </div>
     </div>
   );
