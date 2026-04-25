@@ -489,7 +489,7 @@ The VINNA end-to-end architecture is shown in Figure~\ref{fig:pipeline}.
 
 \begin{figure}[t]
   \centering
-  \fbox{\rule{0pt}{4cm}\rule{0.9\linewidth}{0pt}}
+  \includegraphics[width=\columnwidth]{figures/fig_pipeline.png}
   \Description{Block diagram of the VINNA pipeline: egocentric frames
                flow through sensor fusion, spatial VLM analysis, and
                verifiable reward scoring to produce spatial scene graphs.}
@@ -742,7 +742,7 @@ compliance-specific training.
 \end{table}
 
 The confusion matrix is shown in Table~\ref{tab:cii_accuracy}.
-Macro-averaged accuracy is 84\% (21/25 correct).
+Macro-averaged accuracy is 84\% (21/25 correct; 95\% CI [64, 95]\%, Clopper--Pearson exact).
 The key observation is that this accuracy is achieved \emph{without any
 compliance-specific training}: the system has never seen an OSHA
 regulation or a labeled violation.
