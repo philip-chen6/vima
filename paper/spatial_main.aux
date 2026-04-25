@@ -1,0 +1,117 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{plangrid2018}
+\citation{osha1926}
+\citation{grauman2022ego4d}
+\citation{egoprocel}
+\citation{grauman2022ego4d}
+\citation{grauman2024egoexo4d}
+\citation{plizzari2024outlook}
+\citation{wei2024multimodal}
+\@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\citation{chharia2025safeconstruct}
+\citation{chen2025vlm_construction}
+\citation{kim2025optimizing}
+\citation{soda2022}
+\citation{guo2025deepseekr1}
+\citation{liu2025grpo}
+\citation{rlvr_reasoning2025}
+\citation{chen2024spatialvlm}
+\citation{n3dvlm2024}
+\citation{egocentricmultiview2025}
+\citation{orbslam3_2021}
+\citation{hamledari2021scan}
+\citation{ye2025scantobim}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Egocentric Video Understanding}{2}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Construction AI Safety and Productivity}{2}{subsection.2.2}\protected@file@percent }
+\newlabel{sec:relwork-construction}{{2.2}{2}{Construction AI Safety and Productivity}{subsection.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Verifiable Reward Systems}{2}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Spatial Memory and On-Chain Attestation}{2}{subsection.2.4}\protected@file@percent }
+\citation{schonberger2016colmap}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Problem Formulation}{3}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Setting}{3}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Binary and Continuous Reward Functions}{3}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:reward-math}{{3.2}{3}{Binary and Continuous Reward Functions}{subsection.3.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Per-frame binary reward.}{3}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Worker-level continuous reward (SNRA).}{3}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Terminal reward gate.}{3}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Gaming Resistance Criterion}{3}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:gaming-resistance}{{3.3}{3}{Gaming Resistance Criterion}{subsection.3.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}System Architecture}{3}{section.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces VINNA system architecture. Five local components process egocentric video into an evidence ledger. The reward gate (right) enforces all five verification conditions before any payout is issued.}}{3}{figure.caption.7}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:sysarch}{{1}{3}{VINNA system architecture. Five local components process egocentric video into an evidence ledger. The reward gate (right) enforces all five verification conditions before any payout is issued}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Frame Sampling and Integrity Hashing}{3}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}COLMAP Structure-from-Motion}{3}{subsection.4.2}\protected@file@percent }
+\citation{qwen2vl}
+\citation{cii252}
+\@writefile{toc}{\contentsline {paragraph}{Reproduction details.}{4}{section*.8}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Reproduction commands for VINNA prototype.}}{4}{lstlisting.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}VLM Semantic Annotation}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}CII Activity Classification}{4}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Evidence Ledger and Solana Raffle Integration}{4}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{4}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Experiment 1: CII Classification on Sampled Frames}{4}{subsection.5.1}\protected@file@percent }
+\newlabel{sec:exp1}{{5.1}{4}{Experiment 1: CII Classification on Sampled Frames}{subsection.5.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces CII classification distribution. Left: early-segment clip-only baseline (22 frames, $t$=0--44\nonbreakingspace s). Right: full-video VLM pass (30 frames, $t$=0--1,276\nonbreakingspace s). Mean confidence reported for Productive frames. \emph  {Both passes: claude-sonnet-4-6 (see \S  5.1).}}}{5}{table.caption.9}\protected@file@percent }
+\newlabel{tab:cii}{{1}{5}{CII classification distribution. Left: early-segment clip-only baseline (22 frames, $t$=0--44~s). Right: full-video VLM pass (30 frames, $t$=0--1,276~s). Mean confidence reported for Productive frames. \emph {Both passes: claude-sonnet-4-6 (see \S 5.1).}}{table.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Experiment 2: Evidence Anchoring vs.\ Clip-Only Review}{5}{subsection.5.2}\protected@file@percent }
+\newlabel{sec:exp2}{{5.2}{5}{Experiment 2: Evidence Anchoring vs.\ Clip-Only Review}{subsection.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Experiment 3: Gaming Resistance Under Spatial Anchoring}{5}{subsection.5.3}\protected@file@percent }
+\newlabel{sec:exp3}{{5.3}{5}{Experiment 3: Gaming Resistance Under Spatial Anchoring}{subsection.5.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Adversarial gaming simulation: reward trajectory comparison under honest vs.\ colluding worker strategies. Clip-only systems permit rapid reward inflation by motivated adversaries; spatial anchoring under VINNA suppresses the colluding trajectory by requiring COLMAP registration success.}}{5}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:gaming_sim}{{2}{5}{Adversarial gaming simulation: reward trajectory comparison under honest vs.\ colluding worker strategies. Clip-only systems permit rapid reward inflation by motivated adversaries; spatial anchoring under VINNA suppresses the colluding trajectory by requiring COLMAP registration success}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Preliminary Zone Attribution from COLMAP Poses}{5}{subsection.5.4}\protected@file@percent }
+\newlabel{sec:zone-attr}{{5.4}{5}{Preliminary Zone Attribution from COLMAP Poses}{subsection.5.4}{}}
+\citation{schonberger2016colmap}
+\citation{orbslam3_2021}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Results}{6}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}COLMAP Reconstruction Statistics}{6}{subsection.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces COLMAP sparse reconstruction statistics for 31 frames sampled at $\approx $42-second intervals from \texttt  {01\_production\_masonry.mp4}. SHA-256 of COLMAP summary: \texttt  {d2dac9fa\ldots  }}}{6}{table.caption.11}\protected@file@percent }
+\newlabel{tab:colmap}{{2}{6}{COLMAP sparse reconstruction statistics for 31 frames sampled at $\approx $42-second intervals from \texttt {01\_production\_masonry.mp4}. SHA-256 of COLMAP summary: \texttt {d2dac9fa\ldots }}{table.caption.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Evidence Ledger Status}{6}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Reward Score Illustration (SNRA)}{6}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Limitations and Future Work}{6}{section.7}\protected@file@percent }
+\newlabel{sec:limitations}{{7}{6}{Limitations and Future Work}{section.7}{}}
+\citation{gaussiansplatting}
+\bibstyle{ACM-Reference-Format}
+\bibdata{references}
+\bibcite{egoprocel}{{1}{2022}{{Bansal et~al\mbox  {.}}}{{}}}
+\bibcite{orbslam3_2021}{{2}{2021}{{Campos et~al\mbox  {.}}}{{}}}
+\bibcite{chen2024spatialvlm}{{3}{2024}{{Chen et~al\mbox  {.}}}{{}}}
+\bibcite{chen2025vlm_construction}{{4}{2025}{{Chen et~al\mbox  {.}}}{{}}}
+\bibcite{chharia2025safeconstruct}{{5}{2025}{{Chharia et~al\mbox  {.}}}{{}}}
+\bibcite{cii252}{{6}{2012}{{Construction Industry Institute}}{{}}}
+\bibcite{egocentricmultiview2025}{{7}{2025}{{Gholami et~al\mbox  {.}}}{{}}}
+\bibcite{grauman2022ego4d}{{8}{2022}{{Grauman et~al\mbox  {.}}}{{}}}
+\bibcite{grauman2024egoexo4d}{{9}{2024}{{Grauman et~al\mbox  {.}}}{{}}}
+\bibcite{guo2025deepseekr1}{{10}{2025}{{Guo et~al\mbox  {.}}}{{}}}
+\bibcite{hamledari2021scan}{{11}{2021}{{Hamledari and Fischer}}{{}}}
+\bibcite{gaussiansplatting}{{12}{2023}{{Kerbl et~al\mbox  {.}}}{{}}}
+\bibcite{kim2025optimizing}{{13}{2025}{{Kim et~al\mbox  {.}}}{{}}}
+\bibcite{liu2025grpo}{{14}{2025}{{Liu et~al\mbox  {.}}}{{}}}
+\bibcite{osha1926}{{15}{2023}{{Occupational Safety and Health Administration}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{7}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{7}{section*.14}\protected@file@percent }
+\bibcite{plangrid2018}{{16}{2018}{{{PlanGrid} and {{FMI} Corporation}}}{{}}}
+\bibcite{plizzari2024outlook}{{17}{2024}{{Plizzari et~al\mbox  {.}}}{{}}}
+\bibcite{schonberger2016colmap}{{18}{2016}{{Sch\"{o}nberger and Frahm}}{{}}}
+\bibcite{qwen2vl}{{19}{2024}{{Wang et~al\mbox  {.}}}{{}}}
+\bibcite{n3dvlm2024}{{20}{2025}{{Wang et~al\mbox  {.}}}{{}}}
+\bibcite{wei2024multimodal}{{21}{2024}{{Wei et~al\mbox  {.}}}{{}}}
+\bibcite{soda2022}{{22}{2022}{{Werniuk et~al\mbox  {.}}}{{}}}
+\bibcite{ye2025scantobim}{{23}{2025}{{Ye et~al\mbox  {.}}}{{}}}
+\bibcite{rlvr_reasoning2025}{{24}{2025}{{Yu et~al\mbox  {.}}}{{}}}
+\newlabel{tocindent-1}{0pt}
+\newlabel{tocindent0}{0pt}
+\newlabel{tocindent1}{4.185pt}
+\newlabel{tocindent2}{10.34999pt}
+\newlabel{tocindent3}{18.198pt}
+\newlabel{tocindent4}{0pt}
+\newlabel{tocindent5}{0pt}
+\newlabel{TotPages}{{8}{8}{}{page.8}{}}
+\gdef \@abspage@last{8}
