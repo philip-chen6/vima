@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Homebrew) (preloaded format=pdflatex 2026.3.4)  25 APR 2026 01:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Homebrew) (preloaded format=pdflatex 2026.3.4)  25 APR 2026 02:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1280,14 +1280,29 @@ LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/sb/n' will be
 (Font)              scaled to size 6.0pt on input line 504.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
 (Font)              scaled to size 6.0pt on input line 507.
- [4.4]
-Overfull \hbox (4.8817pt too wide) in paragraph at lines 678--682
+
+Overfull \hbox (25.7601pt too wide) in paragraph at lines 585--596
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[4.4]
+Overfull \hbox (4.8817pt too wide) in paragraph at lines 727--731
  []\T1/LinuxLibertineT-TLF/m/it/9 (-20) Domain shift.[] \T1/LinuxLibertineT-TLF
 /m/n/9 (-20) The cur-rent sys-tem is cal-i-brated on ma-sonry footage.
  []
 
 
-Overfull \hbox (18.78181pt too wide) in paragraph at lines 706--709
+Package fancyhdr Warning: \headheight is too small (13.0pt): 
+(fancyhdr)                Make it at least 16.3575pt, for example:
+(fancyhdr)                \setlength{\headheight}{16.3575pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.3575pt}.
+
+[5.5]
+Overfull \hbox (18.78181pt too wide) in paragraph at lines 755--758
 \T1/LinuxLibertineT-TLF/m/n/9 (-20) data by ground-ing its re-ward func-tions d
 i-rectly in OSHA CFR 29 Part 1926
  []
@@ -1299,21 +1314,13 @@ Processing 'acks' comment.
 Straight input of comment.cut. (./comment.cut)
 No file main.bbl.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/sb/n' will be
-(Font)              scaled to size 7.3pt on input line 745.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-Package fancyhdr Warning: \headheight is too small (13.0pt): 
-(fancyhdr)                Make it at least 16.3575pt, for example:
-(fancyhdr)                \setlength{\headheight}{16.3575pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-3.3575pt}.
-
-[5.5]
+(Font)              scaled to size 7.3pt on input line 794.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 7.0pt on input line 757.
+(Font)              scaled to size 7.0pt on input line 806.
+
+Package balance Warning: You have called \balance in second column
+(balance)                Columns might not be balanced.
+
 
 (/opt/homebrew/Cellar/texlive/20260301/share/texmf-dist/tex/generic/stringenc/s
 e-pdfdoc.def
@@ -1328,16 +1335,16 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 5EB631CBB8A31EF063804F8E6C94F7EF;5602.
+(rerunfilecheck)             Checksum: FE126DA6137131826B9F239D7814AD99;6045.
  ) 
 Here is how much of TeX's memory you used:
- 23328 strings out of 467525
- 395818 string characters out of 5408440
+ 23344 strings out of 467525
+ 396148 string characters out of 5408440
  873158 words of memory out of 5000000
- 51165 multiletter control sequences out of 15000+600000
- 816868 words of font info for 418 fonts, out of 8000000 for 9000
+ 51170 multiletter control sequences out of 15000+600000
+ 817671 words of font info for 424 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 90i,13n,131p,1001b,684s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,13n,131p,1001b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/homebrew/Cellar/texlive/20260301/share/texmf-dist/fonts/type1/public/ne
 wtx/LibertineMathMI.pfb></opt/homebrew/Cellar/texlive/20260301/share/texmf-dist
 /fonts/type1/public/newtx/LibertineMathMI7.pfb></opt/homebrew/Cellar/texlive/20
@@ -1356,10 +1363,10 @@ XMI7.pfb></opt/homebrew/Cellar/texlive/20260301/share/texmf-dist/fonts/type1/pu
 blic/newtx/txexs.pfb></opt/homebrew/Cellar/texlive/20260301/share/texmf-dist/fo
 nts/type1/public/newtx/txmiaX.pfb></opt/homebrew/Cellar/texlive/20260301/share/
 texmf-dist/fonts/type1/public/newtx/txsys.pfb>
-Output written on main.pdf (6 pages, 498398 bytes).
+Output written on main.pdf (6 pages, 501080 bytes).
 PDF statistics:
- 330 PDF objects out of 1000 (max. 8388607)
- 286 compressed objects within 3 object streams
- 88 named destinations out of 1000 (max. 500000)
- 104697 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 335 PDF objects out of 1000 (max. 8388607)
+ 291 compressed objects within 3 object streams
+ 90 named destinations out of 1000 (max. 500000)
+ 104705 words of extra memory for PDF output out of 106986 (max. 10000000)
 
