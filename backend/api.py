@@ -121,7 +121,7 @@ def cii_summary():
         "wrench_time_pct": round(p_pct, 1),
         "baseline_pct": baseline,
         "raffle_tickets": tickets,
-        "model": "gemini-2.5-flash-lite",
+        "model": "claude-sonnet-4-6",
     })
 
 
