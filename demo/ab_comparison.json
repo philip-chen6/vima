@@ -1,0 +1,234 @@
+{
+  "metadata": {
+    "tool": "VINNA A/B Evaluation",
+    "model": "claude-sonnet-4-6",
+    "questions_tested": 5,
+    "timestamp": "2026-04-25T02:41:22Z"
+  },
+  "summary": {
+    "avg_vlm_only_score": 0.6,
+    "avg_vlm_memory_score": 0.792,
+    "avg_improvement_pct": 33.2,
+    "questions_improved": 5,
+    "questions_tested": 5
+  },
+  "key_findings": [
+    "Event memory augmentation improved composite spatial reasoning score by +33.2% on average",
+    "VLM-only average: 0.600 vs VLM+Memory average: 0.792",
+    "5/5 questions showed improvement with temporal context",
+    "Temporal grounding forces the model to acknowledge what it can vs cannot determine from single frames",
+    "Calibration (uncertainty acknowledgment) is the dimension with the largest lift from memory augmentation"
+  ],
+  "results": [
+    {
+      "question_id": "q1_worker_position",
+      "frame_idx": 5,
+      "question": "Describe the exact position and posture of the worker relative to the scaffold structure. Estimate the worker's height above ground level in meters.",
+      "temporal_context_available": false,
+      "vlm_only": {
+        "answer": "## Worker Position & Posture Analysis\n\n### Position Relative to Scaffold Structure\n\n**Horizontal Position:**\n- The worker is positioned at the **front-left edge** of the scaffold/work platform\n- They are leaning **approximately 30-45\u00b0 forward** over the concrete mixing container\n- Their body is oriented roughly **perpendicular to the scaffold railing**, facing inward toward the work surface\n\n**Posture:**\n- The worker is in a **bent-over working posture**, with torso inclined forward ~30-40\u00b0 from",
+        "score": {
+          "specificity": 1.0,
+          "calibration": 1.0,
+          "temporal_grounding": 0.0,
+          "coherence": 0.667,
+          "hallucination_risk": 0,
+          "composite": 0.733,
+          "metric_claims_count": 5,
+          "uncertainty_phrases_count": 4
+        },
+        "tokens": {
+          "input": 474,
+          "output": 323
+        }
+      },
+      "vlm_memory": {
+        "answer": "## Spatial Analysis of Worker Position\n\n### What I Can Determine from the Image\n\n**Worker Position & Posture:**\n- The worker is **leaning forward over a large concrete mixing bowl/skip**, with their **torso bent at approximately 45-60\u00b0 forward** from vertical\n- Their **right arm is extended downward** into the mixing container, wearing an **orange long-sleeve shirt and green gloves**\n- A second worker (partially visible, wearing a **yellow high-visibility vest**) is positioned to the **right sid",
+        "score": {
+          "specificity": 0.2,
+          "calibration": 1.0,
+          "temporal_grounding": 1.0,
+          "coherence": 1.0,
+          "hallucination_risk": 0,
+          "composite": 0.84,
+          "metric_claims_count": 1,
+          "uncertainty_phrases_count": 6
+        },
+        "tokens": {
+          "input": 527,
+          "output": 344
+        },
+        "context_used": "No prior change events detected before this frame."
+      },
+      "improvement_pct": 14.6
+    },
+    {
+      "question_id": "q2_material_layout",
+      "frame_idx": 10,
+      "question": "What materials are visible in the scene? For each material, estimate its distance from the camera and its dimensions in meters.",
+      "temporal_context_available": false,
+      "vlm_only": {
+        "answer": "## Material Analysis of Construction Site Image\n\n### 1. **Steel Reinforcement Formwork (Red/Orange Structure)**\n- **Material:** Steel form panels / falsework (likely reusable concrete formwork)\n- **Distance from camera:** ~1.5\u20133 meters\n- **Estimated dimensions:** ~4m wide \u00d7 ~2m tall \u00d7 ~3m deep\n- **Notes:** Heavily rusted orange-red steel; curved/arched top profile suggests column or wall formwork\n\n---\n\n### 2. **Concrete Masonry Units (CMU Blocks)**\n- **Material:** Concrete block (standard CMU, ~",
+        "score": {
+          "specificity": 1.0,
+          "calibration": 1.0,
+          "temporal_grounding": 0.0,
+          "coherence": 0.0,
+          "hallucination_risk": 0,
+          "composite": 0.6,
+          "metric_claims_count": 24,
+          "uncertainty_phrases_count": 4
+        },
+        "tokens": {
+          "input": 469,
+          "output": 506
+        }
+      },
+      "vlm_memory": {
+        "answer": "## Material Analysis \u2013 Current Frame\n\n> **Temporal context note:** Per the provided system log, *no prior change events have been detected*, meaning this is effectively a baseline frame. I cannot compare against previous states to infer movement, removal, or addition of materials.\n\n---\n\n### Materials Identified (with spatial estimates)\n\nThe image appears to be taken from a **fisheye/wide-angle lens** (likely a GoPro or similar) mounted at an **elevated position**, looking down at a construction ",
+        "score": {
+          "specificity": 1.0,
+          "calibration": 1.0,
+          "temporal_grounding": 1.0,
+          "coherence": 0.333,
+          "hallucination_risk": 0,
+          "composite": 0.867,
+          "metric_claims_count": 14,
+          "uncertainty_phrases_count": 4
+        },
+        "tokens": {
+          "input": 522,
+          "output": 600
+        },
+        "context_used": "No prior change events detected before this frame."
+      },
+      "improvement_pct": 44.5
+    },
+    {
+      "question_id": "q3_structural_change",
+      "frame_idx": 20,
+      "question": "Has the construction progressed compared to earlier stages? Describe what specific structural elements have been added or changed, with estimated dimensions.",
+      "temporal_context_available": false,
+      "vlm_only": {
+        "answer": "# Construction Site Spatial Analysis\n\n## Limitations Note\nSince I only have **this single image** (no \"before\" comparison), I'll analyze what's **currently visible** and infer construction stage based on structural evidence.\n\n---\n\n## Visible Structural Elements\n\n### Vertical Steel Framework\n- **H-section/I-beam columns**: Approximately **3-4 meters tall** visible in frame\n- **Blue steel uprights**: Appear to be ~**200-250mm wide flange** sections\n- **Red/orange painted steel members**: Likely **",
+        "score": {
+          "specificity": 1.0,
+          "calibration": 0.667,
+          "temporal_grounding": 0.0,
+          "coherence": 0.0,
+          "hallucination_risk": 0.333,
+          "composite": 0.467,
+          "metric_claims_count": 8,
+          "uncertainty_phrases_count": 2
+        },
+        "tokens": {
+          "input": 471,
+          "output": 346
+        }
+      },
+      "vlm_memory": {
+        "answer": "## Analysis of Current Frame\n\n### Temporal Context Limitation\n\n**Important caveat:** The automated change detection system reports **\"No prior change events detected before this frame.\"** This means I have **no baseline reference** from earlier stages to make a true before/after comparison. Any assessment of \"progress\" would be speculative without prior imagery.\n\n---\n\n### What I Can Observe in the Current Frame\n\n**Structural Elements Visible:**\n\n1. **Vertical Steel Members**\n- Large red/rust-col",
+        "score": {
+          "specificity": 0.6,
+          "calibration": 1.0,
+          "temporal_grounding": 1.0,
+          "coherence": 0.0,
+          "hallucination_risk": 0,
+          "composite": 0.72,
+          "metric_claims_count": 3,
+          "uncertainty_phrases_count": 3
+        },
+        "tokens": {
+          "input": 524,
+          "output": 316
+        },
+        "context_used": "No prior change events detected before this frame."
+      },
+      "improvement_pct": 54.2
+    },
+    {
+      "question_id": "q4_safety_distances",
+      "frame_idx": 25,
+      "question": "Identify all safety-relevant distances: worker-to-edge, worker-to-guardrail, scaffold height, and any unprotected drop-offs. Give specific meter estimates.",
+      "temporal_context_available": true,
+      "vlm_only": {
+        "answer": "## Safety-Relevant Distance Analysis\n\n### Image Limitations\nThis is a **fisheye/wide-angle lens** (likely body-cam footage), which introduces significant distortion. All estimates carry **\u00b130-40% uncertainty**.\n\n---\n\n## Worker-to-Edge Distances\n\n### **Primary Worker (foreground, yellow/orange vest)**\n- **Distance to nearest visible edge:** ~**0.3\u20130.5 m** (extremely close)\n- This worker appears to be **at or on the edge** of a concrete structure\n- **HIGH RISK** \u2014 essentially at the drop-off\n\n### ",
+        "score": {
+          "specificity": 1.0,
+          "calibration": 1.0,
+          "temporal_grounding": 0.0,
+          "coherence": 0.333,
+          "hallucination_risk": 0,
+          "composite": 0.667,
+          "metric_claims_count": 11,
+          "uncertainty_phrases_count": 5
+        },
+        "tokens": {
+          "input": 484,
+          "output": 505
+        }
+      },
+      "vlm_memory": {
+        "answer": "## Safety Distance Analysis \u2013 Current Frame\n\n### What I Can Determine from the Image\n\n---\n\n#### **Workers Identified**\n- **Worker A**: Foreground left, wearing high-vis yellow vest + orange vest overlay\n- **Worker B**: Mid-ground center-left, wearing yellow high-vis vest, near scaffold structure\n\n---\n\n### **Safety-Relevant Distance Estimates**\n\n#### 1. Worker-to-Edge Distance\n| Worker | Estimated Distance to Nearest Open Edge |\n|--------|----------------------------------------|\n| Worker A (fore",
+        "score": {
+          "specificity": 1.0,
+          "calibration": 1.0,
+          "temporal_grounding": 1.0,
+          "coherence": 0.667,
+          "hallucination_risk": 0,
+          "composite": 0.933,
+          "metric_claims_count": 6,
+          "uncertainty_phrases_count": 5
+        },
+        "tokens": {
+          "input": 728,
+          "output": 600
+        },
+        "context_used": "TEMPORAL CONTEXT: 4 frames ago (at frame 21), a significant visual change was detected: significant red channel shift (0.69); significant green channel shift (0.90); significant blue channel shift (0.91); scene got darker (0.100). Change magnitude: 0.1287. This suggests the scene has recently underg"
+      },
+      "improvement_pct": 39.9
+    },
+    {
+      "question_id": "q5_spatial_reasoning",
+      "frame_idx": 15,
+      "question": "If a worker needed to move from their current position to the nearest safe exit point, describe the path and estimate the total distance in meters. What obstacles would they encounter?",
+      "temporal_context_available": false,
+      "vlm_only": {
+        "answer": "## Spatial Analysis: Worker Path to Safe Exit\n\n### Current Scene Assessment\n\nFrom this **body-worn camera perspective** (likely a worker or supervisor's POV), I can identify:\n\n- **Worker in hi-vis yellow jacket**: approximately **1.5\u20132m to the left**\n- **Second person in hi-vis**: visible at **~3\u20134m distance**, lower right\n- **Concrete blocks/steps**: immediately adjacent, within **0.5\u20131m**\n- **Structural elements**: background, ~**5\u20138m away**\n\n---\n\n### Estimated Path to Safe Exit\n\n**Assuming st",
+        "score": {
+          "specificity": 1.0,
+          "calibration": 0.667,
+          "temporal_grounding": 0.0,
+          "coherence": 0.333,
+          "hallucination_risk": 0.333,
+          "composite": 0.533,
+          "metric_claims_count": 9,
+          "uncertainty_phrases_count": 2
+        },
+        "tokens": {
+          "input": 479,
+          "output": 353
+        }
+      },
+      "vlm_memory": {
+        "answer": "## Spatial Analysis of Current Frame\n\n### What I Can Determine from the Image\n\nThe image shows:\n- **Workers in high-visibility (yellow/lime) safety vests** \u2014 indicating a **construction or industrial site**\n- What appears to be a **rooftop or elevated platform** with concrete/stone paving\n- **Low barriers or wall edges** visible\n- A **camera body-worn or chest-mounted perspective** (close-up of torso/arm)\n- **Blue sky visible**, confirming outdoor elevated location\n\n---\n\n### Limitations\n\n**I can",
+        "score": {
+          "specificity": 0.0,
+          "calibration": 1.0,
+          "temporal_grounding": 1.0,
+          "coherence": 0.0,
+          "hallucination_risk": 0,
+          "composite": 0.6,
+          "metric_claims_count": 0,
+          "uncertainty_phrases_count": 4
+        },
+        "tokens": {
+          "input": 532,
+          "output": 315
+        },
+        "context_used": "No prior change events detected before this frame."
+      },
+      "improvement_pct": 12.6
+    }
+  ]
+}

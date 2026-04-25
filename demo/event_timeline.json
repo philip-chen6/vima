@@ -1,0 +1,254 @@
+{
+  "metadata": {
+    "tool": "VINNA Event Memory Layer",
+    "frames_ingested": 32,
+    "events_detected": 5,
+    "timestamp": "2026-04-25T02:32:03Z"
+  },
+  "frames": [
+    {
+      "frame_idx": 1,
+      "timestamp_est": 1.0,
+      "change_score": 0.0,
+      "similarity_to_prev": 1.0
+    },
+    {
+      "frame_idx": 21,
+      "timestamp_est": 21.0,
+      "change_score": 0.12866395379448137,
+      "similarity_to_prev": 0.8713360462055186
+    },
+    {
+      "frame_idx": 41,
+      "timestamp_est": 41.0,
+      "change_score": 0.039508912213449765,
+      "similarity_to_prev": 0.9604910877865502
+    },
+    {
+      "frame_idx": 61,
+      "timestamp_est": 61.0,
+      "change_score": 0.043608143143340716,
+      "similarity_to_prev": 0.9563918568566593
+    },
+    {
+      "frame_idx": 81,
+      "timestamp_est": 81.0,
+      "change_score": 0.05774910818471868,
+      "similarity_to_prev": 0.9422508918152813
+    },
+    {
+      "frame_idx": 101,
+      "timestamp_est": 101.0,
+      "change_score": 0.0382001796068947,
+      "similarity_to_prev": 0.9617998203931053
+    },
+    {
+      "frame_idx": 121,
+      "timestamp_est": 121.0,
+      "change_score": 0.03014382614204114,
+      "similarity_to_prev": 0.9698561738579589
+    },
+    {
+      "frame_idx": 141,
+      "timestamp_est": 141.0,
+      "change_score": 0.03634314822982421,
+      "similarity_to_prev": 0.9636568517701758
+    },
+    {
+      "frame_idx": 161,
+      "timestamp_est": 161.0,
+      "change_score": 0.05047025656466064,
+      "similarity_to_prev": 0.9495297434353394
+    },
+    {
+      "frame_idx": 181,
+      "timestamp_est": 181.0,
+      "change_score": 0.044586238707417736,
+      "similarity_to_prev": 0.9554137612925823
+    },
+    {
+      "frame_idx": 201,
+      "timestamp_est": 201.0,
+      "change_score": 0.01636098689566945,
+      "similarity_to_prev": 0.9836390131043306
+    },
+    {
+      "frame_idx": 221,
+      "timestamp_est": 221.0,
+      "change_score": 0.06453006578905618,
+      "similarity_to_prev": 0.9354699342109438
+    },
+    {
+      "frame_idx": 241,
+      "timestamp_est": 241.0,
+      "change_score": 0.03678377668548327,
+      "similarity_to_prev": 0.9632162233145167
+    },
+    {
+      "frame_idx": 261,
+      "timestamp_est": 261.0,
+      "change_score": 0.01074565469210309,
+      "similarity_to_prev": 0.9892543453078969
+    },
+    {
+      "frame_idx": 281,
+      "timestamp_est": 281.0,
+      "change_score": 0.031044401731516236,
+      "similarity_to_prev": 0.9689555982684838
+    },
+    {
+      "frame_idx": 301,
+      "timestamp_est": 301.0,
+      "change_score": 0.01662309097943404,
+      "similarity_to_prev": 0.983376909020566
+    },
+    {
+      "frame_idx": 321,
+      "timestamp_est": 321.0,
+      "change_score": 0.06635241558038996,
+      "similarity_to_prev": 0.93364758441961
+    },
+    {
+      "frame_idx": 341,
+      "timestamp_est": 341.0,
+      "change_score": 0.024192009940484538,
+      "similarity_to_prev": 0.9758079900595155
+    },
+    {
+      "frame_idx": 361,
+      "timestamp_est": 361.0,
+      "change_score": 0.025827445751946287,
+      "similarity_to_prev": 0.9741725542480537
+    },
+    {
+      "frame_idx": 381,
+      "timestamp_est": 381.0,
+      "change_score": 0.0627963718123471,
+      "similarity_to_prev": 0.9372036281876529
+    },
+    {
+      "frame_idx": 401,
+      "timestamp_est": 401.0,
+      "change_score": 0.031023435469125338,
+      "similarity_to_prev": 0.9689765645308747
+    },
+    {
+      "frame_idx": 421,
+      "timestamp_est": 421.0,
+      "change_score": 0.027876331075062932,
+      "similarity_to_prev": 0.9721236689249371
+    },
+    {
+      "frame_idx": 441,
+      "timestamp_est": 441.0,
+      "change_score": 0.09758456460078935,
+      "similarity_to_prev": 0.9024154353992107
+    },
+    {
+      "frame_idx": 461,
+      "timestamp_est": 461.0,
+      "change_score": 0.06263094135539393,
+      "similarity_to_prev": 0.9373690586446061
+    },
+    {
+      "frame_idx": 481,
+      "timestamp_est": 481.0,
+      "change_score": 0.052749556470844006,
+      "similarity_to_prev": 0.947250443529156
+    },
+    {
+      "frame_idx": 501,
+      "timestamp_est": 501.0,
+      "change_score": 0.05335287006857525,
+      "similarity_to_prev": 0.9466471299314247
+    },
+    {
+      "frame_idx": 521,
+      "timestamp_est": 521.0,
+      "change_score": 0.02923793770927141,
+      "similarity_to_prev": 0.9707620622907286
+    },
+    {
+      "frame_idx": 541,
+      "timestamp_est": 541.0,
+      "change_score": 0.0949928676213535,
+      "similarity_to_prev": 0.9050071323786465
+    },
+    {
+      "frame_idx": 561,
+      "timestamp_est": 561.0,
+      "change_score": 0.11926793507276989,
+      "similarity_to_prev": 0.8807320649272301
+    },
+    {
+      "frame_idx": 581,
+      "timestamp_est": 581.0,
+      "change_score": 0.06144430493371067,
+      "similarity_to_prev": 0.9385556950662893
+    },
+    {
+      "frame_idx": 601,
+      "timestamp_est": 601.0,
+      "change_score": 0.10100271402638716,
+      "similarity_to_prev": 0.8989972859736128
+    },
+    {
+      "frame_idx": 621,
+      "timestamp_est": 621.0,
+      "change_score": 0.07467881491554451,
+      "similarity_to_prev": 0.9253211850844555
+    }
+  ],
+  "events": [
+    {
+      "event_idx": 0,
+      "frame_idx": 21,
+      "prev_frame_idx": 1,
+      "timestamp_est": 21.0,
+      "change_score": 0.1287,
+      "change_description": "significant red channel shift (0.69); significant green channel shift (0.90); significant blue channel shift (0.91); scene got darker (0.100)",
+      "before_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0001.jpg",
+      "after_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0021.jpg"
+    },
+    {
+      "event_idx": 1,
+      "frame_idx": 441,
+      "prev_frame_idx": 421,
+      "timestamp_est": 441.0,
+      "change_score": 0.0976,
+      "change_description": "significant red channel shift (0.69); significant green channel shift (0.74); significant blue channel shift (0.68)",
+      "before_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0421.jpg",
+      "after_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0441.jpg"
+    },
+    {
+      "event_idx": 2,
+      "frame_idx": 541,
+      "prev_frame_idx": 521,
+      "timestamp_est": 541.0,
+      "change_score": 0.095,
+      "change_description": "significant red channel shift (0.78); significant green channel shift (0.55); significant blue channel shift (0.54); scene got darker (0.154)",
+      "before_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0521.jpg",
+      "after_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0541.jpg"
+    },
+    {
+      "event_idx": 3,
+      "frame_idx": 561,
+      "prev_frame_idx": 541,
+      "timestamp_est": 561.0,
+      "change_score": 0.1193,
+      "change_description": "significant red channel shift (0.74); significant green channel shift (0.94); significant blue channel shift (0.49); scene got brighter (0.204)",
+      "before_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0541.jpg",
+      "after_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0561.jpg"
+    },
+    {
+      "event_idx": 4,
+      "frame_idx": 601,
+      "prev_frame_idx": 581,
+      "timestamp_est": 601.0,
+      "change_score": 0.101,
+      "change_description": "significant red channel shift (0.67); significant green channel shift (0.67); significant blue channel shift (0.98)",
+      "before_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0581.jpg",
+      "after_frame": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames/frame_0601.jpg"
+    }
+  ]
+}

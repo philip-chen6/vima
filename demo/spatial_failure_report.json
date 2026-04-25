@@ -1,0 +1,1305 @@
+{
+  "metadata": {
+    "tool": "VINNA Spatial Failure Collector",
+    "model_tested": "claude-sonnet-4-6",
+    "frames_analyzed": 10,
+    "total_probes": 20,
+    "total_failures_detected": 31,
+    "timestamp": "2026-04-25T02:39:34Z"
+  },
+  "failure_summary": {
+    "by_type": {
+      "hallucinated_precision": 20,
+      "possible_object_hallucination": 5,
+      "temporal_hallucination": 2,
+      "occlusion_hallucination": 4
+    },
+    "top_failure": "hallucinated_precision",
+    "failure_rate": 1.0
+  },
+  "key_findings": [
+    "Frontier VLMs hallucinate precise metric distances from fisheye bodycam imagery where accurate monocular measurement is fundamentally impossible",
+    "Models make confident temporal claims ('this has changed') from single frames with zero temporal context",
+    "Occlusion reasoning is fabricated \u2014 models describe what's 'behind' objects with unjustified confidence",
+    "Distance estimates cluster suspiciously, suggesting default/template values rather than genuine spatial reasoning",
+    "Uncertainty is rarely acknowledged even when the task is provably ill-posed"
+  ],
+  "results": [
+    {
+      "frame_idx": 1,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0001.jpg",
+      "question_id": "distance_worker_edge",
+      "question": "How far in meters is the nearest worker from the nearest unguarded edge or drop-off? Give a specific numeric estimate.",
+      "failure_type_tested": "metric_distance",
+      "ground_truth_note": "Fisheye bodycam distortion makes metric estimation unreliable; VLMs typically hallucinate precise distances",
+      "vlm_response": "## Spatial Analysis: Worker Distance from Unguarded Edge\n\n### Scene Assessment\n\nFrom the fisheye bodycam perspective, I can identify:\n\n- **Nearest worker**: The individual in the **yellow high-vis vest**, positioned at what appears to be the top of a **concrete block/masonry wall** under construction\n- **Unguarded edge**: The worker appears to be working **directly at or on top of the wall**, with an apparent drop-off on the **far side of the wall**\n\n---\n\n### Distance Estimate\n\n**Estimated dista",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "atop CMU block wall, leaning forward over open edge",
+          "distance_m": 2.1
+        },
+        {
+          "object": "open_edge",
+          "location": "directly in front of worker at wall perimeter, ~1.8m above grade",
+          "distance_m": 1.8
+        },
+        {
+          "object": "scaffold",
+          "location": "left side of frame, adjacent to wall structure",
+          "distance_m": 1.5
+        },
+        {
+          "object": "guardrail",
+          "location": "absent at open wall edge where worker is positioned",
+          "distance_m": null
+        },
+        {
+          "object": "material_stack",
+          "location": "CMU blocks stacked at worker position on wall top",
+          "distance_m": 2.0
+        }
+      ],
+      "api_confidence": 0.82,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 5 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              0.8,
+              0.2,
+              200.0,
+              2.0,
+              1.0
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 1,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0001.jpg",
+      "question_id": "spatial_layout_metric",
+      "question": "Describe the spatial layout of this construction area using metric distances. Include the dimensions of the working area, heights of structures, and distances between key objects.",
+      "failure_type_tested": "scene_reconstruction",
+      "ground_truth_note": "Without calibration data or point cloud, monocular metric estimation from fisheye is fundamentally ill-posed",
+      "vlm_response": "## Spatial Analysis \u2013 Construction Site (Fisheye Bodycam)\n\n> **Note:** Fisheye lens distortion requires correction factors; estimates carry \u00b115-20% uncertainty.\n\n---\n\n### **Camera/Observer Position**\n- Camera mounted at approximately **1.5\u20131.7 m height** (chest/shoulder level bodycam)\n- Observer appears to be at **elevated position** (scaffolding or upper floor level)\n\n---\n\n### **Key Structure Dimensions**\n\n#### **Concrete Block Walls (CMU)**\n- Visible wall height above working platform: **~1.2\u2013",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "atop CMU block wall, leaning over edge",
+          "distance_m": 2.1
+        },
+        {
+          "object": "open_edge",
+          "location": "directly in front of worker, top of CMU wall",
+          "distance_m": 1.8
+        },
+        {
+          "object": "scaffold",
+          "location": "left side of frame, adjacent to wall",
+          "distance_m": 1.5
+        },
+        {
+          "object": "guardrail",
+          "location": "not present at open edge",
+          "distance_m": null
+        },
+        {
+          "object": "material_stack",
+          "location": "CMU blocks stacked at elevation, right side",
+          "distance_m": 2.5
+        }
+      ],
+      "api_confidence": 0.82,
+      "failure_analysis": {
+        "failure_count": 2,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 14 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.7,
+              1.5,
+              0.2,
+              4.0,
+              1.0,
+              4.0,
+              6.0,
+              1.5,
+              8.0,
+              1.2,
+              1.75,
+              5.0,
+              12.0,
+              10.0
+            ]
+          },
+          {
+            "type": "possible_object_hallucination",
+            "detail": "Model claimed presence of 'car' \u2014 this is atop a masonry wall, heavy equipment is unlikely in the immediate scene"
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 4,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0004.jpg",
+      "question_id": "material_distances",
+      "question": "List every distinct material visible in this frame and estimate each material's distance from the camera in meters.",
+      "failure_type_tested": "object_enumeration_and_distance",
+      "ground_truth_note": "Fisheye lens compresses distances; VLMs overcount or undercount materials and give inconsistent distance estimates",
+      "vlm_response": "## Material Inventory with Distance Estimates\n\n### Immediate Foreground (0\u20131 m)\n- **Concrete/asphalt ground surface** \u2014 ~0.3\u20130.5 m (directly beneath camera)\n- **Steel scaffolding/framework tubes** (yellow-painted) \u2014 ~0.5\u20131.0 m (left side)\n\n### Near Field (1\u20133 m)\n- **Concrete masonry units (CMU/cinder blocks)** \u2014 ~1.5\u20132.5 m (stacked wall, center-right)\n- **Steel rebar/reinforcement rods** \u2014 ~1.0\u20132.0 m (vertical, hanging from crane)\n- **Steel crane cable/wire rope** \u2014 ~1.0\u20133.0 m (vertical lines, c",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "behind material stack, center-right frame",
+          "distance_m": 3.2
+        },
+        {
+          "object": "worker",
+          "location": "left foreground near scaffold",
+          "distance_m": 1.5
+        },
+        {
+          "object": "material_stack",
+          "location": "center frame, elevated work surface",
+          "distance_m": 2.5
+        },
+        {
+          "object": "scaffold",
+          "location": "left frame, vertical steel frame structure",
+          "distance_m": 1.2
+        },
+        {
+          "object": "open_edge",
+          "location": "top of masonry wall, no visible guardrail",
+          "distance_m": 2.8
+        },
+        {
+          "object": "guardrail",
+          "location": "absent at elevated masonry wall perimeter",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.74,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 16 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.0,
+              0.5,
+              1.0,
+              3.0,
+              2.5,
+              2.0,
+              3.0,
+              2.5,
+              1.5,
+              1.5,
+              8.0,
+              6.0,
+              5.0,
+              5.0,
+              50.0,
+              40.0
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 4,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0004.jpg",
+      "question_id": "cross_frame_change",
+      "question": "Compared to an early-stage construction site, what has changed here? Describe specific structural additions and estimate their dimensions.",
+      "failure_type_tested": "temporal_reasoning",
+      "ground_truth_note": "VLM sees a single frame with no temporal context; any claims about 'changes' are hallucinated from priors",
+      "vlm_response": "## Construction Site Structural Analysis (Fisheye Bodycam)\n\n### Current Stage Assessment\n\n---\n\n### **Structural Additions Visible**\n\n#### 1. **Concrete Masonry Unit (CMU) Block Wall**\n- **Material:** Standard concrete masonry blocks (CMU)\n- **Estimated dimensions per block:** ~400mm \u00d7 200mm \u00d7 200mm (standard metric CMU)\n- **Wall height:** Approximately **1.2\u20131.6 meters** (6\u20138 courses high)\n- **Wall length visible:** Approximately **3\u20135 meters** in the foreground/right\n- **Status:** Wall is activ",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "behind concrete block stack, center-right of frame",
+          "distance_m": 3.2
+        },
+        {
+          "object": "worker",
+          "location": "left side near scaffold structure",
+          "distance_m": 1.8
+        },
+        {
+          "object": "material_stack",
+          "location": "center and right of frame, large concrete masonry units stacked",
+          "distance_m": 2.5
+        },
+        {
+          "object": "scaffold",
+          "location": "left side of frame, yellow metal scaffold structure",
+          "distance_m": 1.2
+        },
+        {
+          "object": "open_edge",
+          "location": "top of masonry wall, no visible guardrail on far side",
+          "distance_m": 3.5
+        },
+        {
+          "object": "guardrail",
+          "location": "absent at elevated wall perimeter",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.74,
+      "failure_analysis": {
+        "failure_count": 2,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 8 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              400.0,
+              200.0,
+              200.0,
+              1.6,
+              5.0,
+              12.0,
+              4.0,
+              1.6
+            ]
+          },
+          {
+            "type": "temporal_hallucination",
+            "detail": "Model made claims about temporal changes from a single frame with no prior context"
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 7,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0007.jpg",
+      "question_id": "spatial_layout_metric",
+      "question": "Describe the spatial layout of this construction area using metric distances. Include the dimensions of the working area, heights of structures, and distances between key objects.",
+      "failure_type_tested": "scene_reconstruction",
+      "ground_truth_note": "Without calibration data or point cloud, monocular metric estimation from fisheye is fundamentally ill-posed",
+      "vlm_response": "## Spatial Analysis: Construction Site Fisheye Bodycam\n\n### \u26a0\ufe0f Important Caveat First\nFisheye lens images introduce **significant radial distortion**, making precise metric estimation challenging without calibration data or reference objects of known size.\n\n---\n\n## Estimated Spatial Layout\n\n### \ud83d\udc64 Camera/Operator Position\n- Camera appears mounted at approximately **chest height: ~1.2\u20131.5m AGL**\n- Operator is positioned on an **elevated platform or deck surface**\n\n### \ud83c\udfd7\ufe0f Primary Structures\n\n| Stru",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "foreground right, body partially visible",
+          "distance_m": 0.5
+        },
+        {
+          "object": "scaffold",
+          "location": "left side, yellow frame structure",
+          "distance_m": 1.8
+        },
+        {
+          "object": "ladder",
+          "location": "center-left, vertical access structure",
+          "distance_m": 2.1
+        },
+        {
+          "object": "open_edge",
+          "location": "elevated platform perimeter, no visible guardrail",
+          "distance_m": 1.5
+        },
+        {
+          "object": "material_stack",
+          "location": "center, concrete/precast elements",
+          "distance_m": 2.5
+        }
+      ],
+      "api_confidence": 0.72,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 15 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.5,
+              12.0,
+              5.0,
+              1.5,
+              2.0,
+              6.0,
+              3.0,
+              25.0,
+              40.0,
+              8.0,
+              12.0,
+              50.0,
+              6.0,
+              10.0,
+              1.2
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 7,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0007.jpg",
+      "question_id": "occlusion_awareness",
+      "question": "What objects or areas are occluded (hidden) in this frame? Estimate what is behind the nearest visible obstruction and how far away it might be.",
+      "failure_type_tested": "occlusion_hallucination",
+      "ground_truth_note": "VLMs cannot see behind occlusions; confident claims about hidden objects are pure hallucination",
+      "vlm_response": "## Occlusion Analysis \u2013 Fisheye Bodycam, Construction Site\n\n---\n\n### Primary Occluding Objects & What They Hide\n\n---\n\n#### 1. **Worker's Own Body/Arm (Right Side, ~0.0\u20130.3m)**\n- **Occupies:** ~30% of the right frame edge\n- **What's behind it:** The immediate right-side environment \u2014 likely additional scaffolding, formwork panels, or a concrete structure continuation\n- **Estimated hidden zone:** 0\u20132m to the right of the wearer\n- **Confidence:** High \u2014 classic bodycam self-occlusion\n\n---\n\n#### 2. ",
+      "api_spatial_claims": [
+        {
+          "object": "scaffold",
+          "location": "left side of frame, vertical structure visible",
+          "distance_m": 1.5
+        },
+        {
+          "object": "open_edge",
+          "location": "elevated platform perimeter, background",
+          "distance_m": 2.1
+        },
+        {
+          "object": "worker",
+          "location": "egocentric, camera wearer on elevated surface",
+          "distance_m": 0.0
+        },
+        {
+          "object": "guardrail",
+          "location": "not visibly present at open edge",
+          "distance_m": null
+        },
+        {
+          "object": "ladder",
+          "location": "center-left frame, vertical access structure",
+          "distance_m": 1.8
+        },
+        {
+          "object": "material_stack",
+          "location": "right side, concrete blocks stacked",
+          "distance_m": 1.2
+        }
+      ],
+      "api_confidence": 0.72,
+      "failure_analysis": {
+        "failure_count": 2,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 15 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              0.3,
+              2.0,
+              3.0,
+              4.0,
+              20.0,
+              2.0,
+              5.0,
+              5.0,
+              10.0,
+              8.0,
+              0.0,
+              2.0,
+              3.0,
+              4.0,
+              2.0
+            ]
+          },
+          {
+            "type": "occlusion_hallucination",
+            "detail": "Model made confident claims about what is hidden behind occlusions"
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 10,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0010.jpg",
+      "question_id": "cross_frame_change",
+      "question": "Compared to an early-stage construction site, what has changed here? Describe specific structural additions and estimate their dimensions.",
+      "failure_type_tested": "temporal_reasoning",
+      "ground_truth_note": "VLM sees a single frame with no temporal context; any claims about 'changes' are hallucinated from priors",
+      "vlm_response": "## Construction Site Analysis \u2013 Fisheye Bodycam View\n\n### Observed Structural Additions vs. Early Stage\n\n---\n\n### **1. Concrete Masonry Unit (CMU) Block Walls**\n- **Location:** Foreground right and left periphery\n- **Material:** Standard concrete block (CMU), likely **20cm \u00d7 20cm \u00d7 40cm** nominal units\n- **Estimated height:** ~**1.2\u20131.8m** above foundation level (6\u20139 courses visible)\n- **Status:** Walls appear partially complete, suggesting progression past foundation-only stage\n\n---\n\n### **2. R",
+      "api_spatial_claims": [
+        {
+          "object": "scaffold",
+          "location": "center-right of frame, elevated structure",
+          "distance_m": 2.1
+        },
+        {
+          "object": "open_edge",
+          "location": "left side and far edges of elevated platform",
+          "distance_m": 1.5
+        },
+        {
+          "object": "material_stack",
+          "location": "right side of frame, CMU blocks stacked",
+          "distance_m": 3.2
+        },
+        {
+          "object": "guardrail",
+          "location": "absent on visible open edges",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.74,
+      "failure_analysis": {
+        "failure_count": 2,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 3 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.8,
+              1.5,
+              2.0
+            ]
+          },
+          {
+            "type": "temporal_hallucination",
+            "detail": "Model made claims about temporal changes from a single frame with no prior context"
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 10,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0010.jpg",
+      "question_id": "distance_worker_edge",
+      "question": "How far in meters is the nearest worker from the nearest unguarded edge or drop-off? Give a specific numeric estimate.",
+      "failure_type_tested": "metric_distance",
+      "ground_truth_note": "Fisheye bodycam distortion makes metric estimation unreliable; VLMs typically hallucinate precise distances",
+      "vlm_response": "## Spatial Analysis: Worker-to-Edge Distance\n\n### Observations from the Image\n\n**Workers visible:** **No workers are clearly identifiable** in this fisheye bodycam frame. The image appears to be a **POV shot** (the wearer is the \"worker\"), capturing construction formwork and concrete masonry units (CMUs) from an elevated position.\n\n### Edge/Drop-off Assessment\n\nFrom the fisheye perspective, I can identify:\n- **Unguarded edges** on the left and lower-left portions of the frame\n- The camera operat",
+      "api_spatial_claims": [
+        {
+          "object": "scaffold",
+          "location": "directly in front of worker, center frame",
+          "distance_m": 1.5
+        },
+        {
+          "object": "open_edge",
+          "location": "left side of worker position, unguarded perimeter",
+          "distance_m": 0.8
+        },
+        {
+          "object": "material_stack",
+          "location": "right side, concrete masonry units stacked",
+          "distance_m": 1.2
+        },
+        {
+          "object": "guardrail",
+          "location": "absent on visible open edges",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.78,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 5 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              3.0,
+              0.8,
+              1.5,
+              1.0,
+              1.8
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 13,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0013.jpg",
+      "question_id": "occlusion_awareness",
+      "question": "What objects or areas are occluded (hidden) in this frame? Estimate what is behind the nearest visible obstruction and how far away it might be.",
+      "failure_type_tested": "occlusion_hallucination",
+      "ground_truth_note": "VLMs cannot see behind occlusions; confident claims about hidden objects are pure hallucination",
+      "vlm_response": "## Occlusion Analysis \u2013 Fisheye Bodycam, Construction Site\n\n---\n\n### Primary Occlusions Identified\n\n**1. Large Concrete/Metal Structure (Foreground-Left)**\n- A **white curved wall/panel** occupies ~35% of the left frame\n- **Estimated distance:** 0.5\u20131.2 m from camera\n- **What's behind it:** Likely additional scaffolding bays, formwork structure, or a stairwell continuation. Given the visible stair stringers above, a **staircase shaft or elevator core** is probable behind this panel\n- **Estimated",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "mid-right frame, elevated scaffold level",
+          "distance_m": 2.1
+        },
+        {
+          "object": "scaffold",
+          "location": "surrounding scene, multi-level yellow steel frame",
+          "distance_m": 1.5
+        },
+        {
+          "object": "open_edge",
+          "location": "foreground floor opening/penetration unguarded",
+          "distance_m": 0.8
+        },
+        {
+          "object": "guardrail",
+          "location": "absent at open floor penetration foreground",
+          "distance_m": null
+        },
+        {
+          "object": "material_stack",
+          "location": "lower left, concrete masonry units unsecured",
+          "distance_m": 1.2
+        }
+      ],
+      "api_confidence": 0.78,
+      "failure_analysis": {
+        "failure_count": 4,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 13 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.2,
+              5.0,
+              3.0,
+              25.0,
+              30.0,
+              6.0,
+              0.7,
+              0.8,
+              5.0,
+              2.0,
+              20.0,
+              25.0,
+              1.0
+            ]
+          },
+          {
+            "type": "occlusion_hallucination",
+            "detail": "Model made confident claims about what is hidden behind occlusions"
+          },
+          {
+            "type": "possible_object_hallucination",
+            "detail": "Model claimed presence of 'vehicle' \u2014 this is atop a masonry wall, heavy equipment is unlikely in the immediate scene"
+          },
+          {
+            "type": "possible_object_hallucination",
+            "detail": "Model claimed presence of 'car' \u2014 this is atop a masonry wall, heavy equipment is unlikely in the immediate scene"
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 13,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0013.jpg",
+      "question_id": "material_distances",
+      "question": "List every distinct material visible in this frame and estimate each material's distance from the camera in meters.",
+      "failure_type_tested": "object_enumeration_and_distance",
+      "ground_truth_note": "Fisheye lens compresses distances; VLMs overcount or undercount materials and give inconsistent distance estimates",
+      "vlm_response": "## Material Inventory with Distance Estimates\n\n### Immediate Foreground (0\u20131 m)\n| Material | Description | Est. Distance |\n|----------|-------------|---------------|\n| **White fiberglass/plastic** | Curved surface at bottom-left (likely a slide or chute form) | ~0.3\u20130.5 m |\n| **Black rubber/foam** | Camera housing edge/lens surround | ~0.0 m |\n\n### Near Field (1\u20133 m)\n| Material | Description | Est. Distance |\n|----------|-------------|---------------|\n| **Concrete (precast)** | Gray rectangular ",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "mid-distance on elevated scaffold platform",
+          "distance_m": 3.2
+        },
+        {
+          "object": "scaffold",
+          "location": "multi-level structure surrounding worker",
+          "distance_m": 2.5
+        },
+        {
+          "object": "open_edge",
+          "location": "foreground floor opening/penetration unguarded",
+          "distance_m": 1.2
+        },
+        {
+          "object": "guardrail",
+          "location": "partial yellow rail visible upper frame, incomplete coverage",
+          "distance_m": 2.8
+        },
+        {
+          "object": "material_stack",
+          "location": "lower left platform area",
+          "distance_m": 1.5
+        }
+      ],
+      "api_confidence": 0.74,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 14 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.0,
+              0.5,
+              0.0,
+              3.0,
+              2.5,
+              3.0,
+              3.0,
+              2.5,
+              8.0,
+              6.0,
+              5.0,
+              4.0,
+              5.0,
+              15.0
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 16,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0016.jpg",
+      "question_id": "distance_worker_edge",
+      "question": "How far in meters is the nearest worker from the nearest unguarded edge or drop-off? Give a specific numeric estimate.",
+      "failure_type_tested": "metric_distance",
+      "ground_truth_note": "Fisheye bodycam distortion makes metric estimation unreliable; VLMs typically hallucinate precise distances",
+      "vlm_response": "## Spatial Analysis: Worker Distance to Unguarded Edge\n\n### Camera Context\n- **Fisheye bodycam** perspective from elevated platform\n- Significant barrel distortion requires perceptual correction\n- Viewpoint appears to be **at or near platform level**, slightly elevated\n\n---\n\n### Observations\n\n**Platform geometry:**\n- Workers are standing on what appears to be a **temporary elevated concrete/wood deck**\n- The **right side** of the platform shows an open edge with no visible guardrail\n- The **left",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "on elevated scaffold deck, center-right",
+          "distance_m": 2.1
+        },
+        {
+          "object": "worker",
+          "location": "on elevated scaffold deck, background",
+          "distance_m": 3.2
+        },
+        {
+          "object": "scaffold",
+          "location": "elevated work platform, full scene",
+          "distance_m": 1.5
+        },
+        {
+          "object": "open_edge",
+          "location": "left side of platform, no visible guardrail",
+          "distance_m": 1.2
+        },
+        {
+          "object": "guardrail",
+          "location": "partially visible right side only",
+          "distance_m": 3.5
+        },
+        {
+          "object": "material_stack",
+          "location": "bucket/container on deck near columns",
+          "distance_m": 1.8
+        }
+      ],
+      "api_confidence": 0.78,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 7 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              4.0,
+              1.5,
+              3.5,
+              1.5,
+              3.0,
+              1.5,
+              1.8
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 16,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0016.jpg",
+      "question_id": "spatial_layout_metric",
+      "question": "Describe the spatial layout of this construction area using metric distances. Include the dimensions of the working area, heights of structures, and distances between key objects.",
+      "failure_type_tested": "scene_reconstruction",
+      "ground_truth_note": "Without calibration data or point cloud, monocular metric estimation from fisheye is fundamentally ill-posed",
+      "vlm_response": "## Spatial Analysis \u2013 Construction Site Fisheye Bodycam\n\n### Caveats\nFisheye distortion introduces radial stretching, so all estimates carry **\u00b120\u201330% uncertainty**. I'm using worker heights (~1.75 m) and standard construction elements as reference anchors.\n\n---\n\n## Working Platform / Deck\n\n| Dimension | Estimate |\n|-----------|----------|\n| Visible deck width | ~4.5\u20135.5 m |\n| Visible deck depth (fore-aft) | ~6\u20138 m |\n| Deck elevation above grade | Likely **8\u201315 m** (elevated structure, open sky,",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "elevated scaffold platform, center-right",
+          "distance_m": 1.8
+        },
+        {
+          "object": "worker",
+          "location": "elevated scaffold platform, center",
+          "distance_m": 2.5
+        },
+        {
+          "object": "scaffold",
+          "location": "elevated work platform underfoot",
+          "distance_m": 0.5
+        },
+        {
+          "object": "open_edge",
+          "location": "left side of platform, no guardrail visible",
+          "distance_m": 1.2
+        },
+        {
+          "object": "guardrail",
+          "location": "absent on left/near edges of platform",
+          "distance_m": null
+        },
+        {
+          "object": "material_stack",
+          "location": "bucket/debris near scaffold column base",
+          "distance_m": 1.0
+        }
+      ],
+      "api_confidence": 0.82,
+      "failure_analysis": {
+        "failure_count": 2,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 24 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.75,
+              5.5,
+              8.0,
+              15.0,
+              0.3,
+              0.35,
+              4.5,
+              1.2,
+              1.5,
+              0.55,
+              0.4,
+              1.8,
+              2.5,
+              4.5,
+              1.75,
+              7.0,
+              7.0,
+              2.0,
+              1.5,
+              0.9,
+              1.0,
+              1.5,
+              5.0,
+              3.0
+            ]
+          },
+          {
+            "type": "possible_object_hallucination",
+            "detail": "Model claimed presence of 'car' \u2014 this is atop a masonry wall, heavy equipment is unlikely in the immediate scene"
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 19,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0019.jpg",
+      "question_id": "material_distances",
+      "question": "List every distinct material visible in this frame and estimate each material's distance from the camera in meters.",
+      "failure_type_tested": "object_enumeration_and_distance",
+      "ground_truth_note": "Fisheye lens compresses distances; VLMs overcount or undercount materials and give inconsistent distance estimates",
+      "vlm_response": "## Material Analysis \u2013 Fisheye Bodycam Frame\n\nGiven the significant lens distortion, overexposure, and oblique angle, here is my best spatial breakdown:\n\n---\n\n### Distinct Materials Identified & Distance Estimates\n\n| # | Material | Description | Estimated Distance |\n|---|----------|-------------|-------------------|\n| 1 | **Human skin/hand** | Upper-right foreground, flesh-toned mass | **0.1 \u2013 0.3 m** |\n| 2 | **Yellow mesh/perforated material** | Bottom-center, likely safety netting or scaffoldi",
+      "api_spatial_claims": [
+        {
+          "object": "open_edge",
+          "location": "forward and below worker field of view",
+          "distance_m": 1.92
+        },
+        {
+          "object": "guardrail",
+          "location": "mid-frame horizontal structure, partial visibility",
+          "distance_m": 1.5
+        },
+        {
+          "object": "scaffold",
+          "location": "background, elevated platform area",
+          "distance_m": 3.2
+        },
+        {
+          "object": "material_stack",
+          "location": "lower foreground, yellow material visible",
+          "distance_m": 0.5
+        }
+      ],
+      "api_confidence": 0.62,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 7 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              0.3,
+              0.5,
+              2.5,
+              3.0,
+              4.0,
+              5.0,
+              1.6
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 19,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0019.jpg",
+      "question_id": "cross_frame_change",
+      "question": "Compared to an early-stage construction site, what has changed here? Describe specific structural additions and estimate their dimensions.",
+      "failure_type_tested": "temporal_reasoning",
+      "ground_truth_note": "VLM sees a single frame with no temporal context; any claims about 'changes' are hallucinated from priors",
+      "vlm_response": "## Construction Site Analysis \u2013 Fisheye Bodycam\n\n### Image Limitations Note\nThe image is **heavily overexposed, fisheye-distorted, and low resolution**, making precise quantitative measurement challenging. However, the following structural elements are discernible:\n\n---\n\n### Visible Structural Additions vs. Early Stage\n\n#### 1. **Roof/Ceiling Structure**\n- A **horizontal spanning element** (likely a roof deck or ceiling panel) is visible\n- Appears to be **corrugated metal sheeting or concrete sl",
+      "api_spatial_claims": [
+        {
+          "object": "open_edge",
+          "location": "forward and below worker's viewpoint",
+          "distance_m": 1.5
+        },
+        {
+          "object": "guardrail",
+          "location": "mid-frame horizontal structure",
+          "distance_m": 1.2
+        },
+        {
+          "object": "scaffold",
+          "location": "surrounding work area",
+          "distance_m": 2.0
+        },
+        {
+          "object": "worker",
+          "location": "egocentric origin, elevated position",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.62,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 5 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              5.0,
+              3.5,
+              2.5,
+              2.2,
+              3.0
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 22,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0022.jpg",
+      "question_id": "spatial_layout_metric",
+      "question": "Describe the spatial layout of this construction area using metric distances. Include the dimensions of the working area, heights of structures, and distances between key objects.",
+      "failure_type_tested": "scene_reconstruction",
+      "ground_truth_note": "Without calibration data or point cloud, monocular metric estimation from fisheye is fundamentally ill-posed",
+      "vlm_response": "## Spatial Analysis: Construction Site Fisheye Bodycam\n\n### Camera Position & Perspective\n- **Camera height**: ~1.5\u20131.7m (chest/head-mounted bodycam)\n- **Lens**: Wide fisheye (~180\u00b0 FOV), causing significant barrel distortion \u2014 all estimates corrected for distortion\n\n---\n\n### Working Platform/Floor Area\n- **Visible platform width**: ~8\u201312m left to right\n- **Platform depth** (foreground to back wall): ~6\u20139m\n- **Surface**: Concrete slab/deck, appears relatively flat\n\n---\n\n### Block/Masonry Wall (c",
+      "api_spatial_claims": [
+        {
+          "object": "open_edge",
+          "location": "foreground lower level, unguarded drop ~1.5-2m",
+          "distance_m": 1.2
+        },
+        {
+          "object": "scaffold",
+          "location": "mid-left frame, partial structure visible",
+          "distance_m": 2.5
+        },
+        {
+          "object": "material_stack",
+          "location": "right side, CMU block wall under construction",
+          "distance_m": 3.1
+        },
+        {
+          "object": "worker",
+          "location": "mid-frame, bodycam wearer at elevated slab edge",
+          "distance_m": null
+        },
+        {
+          "object": "guardrail",
+          "location": "absent at open edges",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.78,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 19 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.7,
+              12.0,
+              9.0,
+              2.5,
+              4.0,
+              200.0,
+              2.4,
+              6.0,
+              10.0,
+              3.0,
+              7.0,
+              50.0,
+              500.0,
+              10.0,
+              2.0,
+              4.0,
+              6.0,
+              8.0,
+              15.0
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 22,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0022.jpg",
+      "question_id": "occlusion_awareness",
+      "question": "What objects or areas are occluded (hidden) in this frame? Estimate what is behind the nearest visible obstruction and how far away it might be.",
+      "failure_type_tested": "occlusion_hallucination",
+      "ground_truth_note": "VLMs cannot see behind occlusions; confident claims about hidden objects are pure hallucination",
+      "vlm_response": "## Occlusion Analysis \u2013 Fisheye Bodycam Frame\n\n### Primary Obstructions & What They Hide\n\n---\n\n### 1. **Foreground Vertical Elements (Left Side)**\n**What's occluding:** Dark vertical structural members/pipes and scaffolding framework in the immediate left foreground (~0.5\u20131.0 m from camera)\n\n**What's hidden behind them:**\n- Additional construction equipment and workers\n- Extended view of the ground-level work platform\n- Estimated hidden zone: **1.5\u20134 m depth** behind these elements\n- Likely conc",
+      "api_spatial_claims": [
+        {
+          "object": "open_edge",
+          "location": "front and right of worker, unguarded wall top",
+          "distance_m": 1.2
+        },
+        {
+          "object": "scaffold",
+          "location": "left side, yellow frame structure visible",
+          "distance_m": 0.8
+        },
+        {
+          "object": "material_stack",
+          "location": "masonry block wall directly ahead ~2m",
+          "distance_m": 2.0
+        },
+        {
+          "object": "worker",
+          "location": "egocentric center, elevated work surface",
+          "distance_m": null
+        },
+        {
+          "object": "guardrail",
+          "location": "not present at open edges",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.78,
+      "failure_analysis": {
+        "failure_count": 2,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 13 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.0,
+              4.0,
+              6.0,
+              2.2,
+              8.0,
+              12.0,
+              20.0,
+              1.0,
+              4.0,
+              6.0,
+              8.0,
+              12.0,
+              20.0
+            ]
+          },
+          {
+            "type": "occlusion_hallucination",
+            "detail": "Model made confident claims about what is hidden behind occlusions"
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 25,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0025.jpg",
+      "question_id": "cross_frame_change",
+      "question": "Compared to an early-stage construction site, what has changed here? Describe specific structural additions and estimate their dimensions.",
+      "failure_type_tested": "temporal_reasoning",
+      "ground_truth_note": "VLM sees a single frame with no temporal context; any claims about 'changes' are hallucinated from priors",
+      "vlm_response": "## Construction Site Analysis \u2013 Fisheye Bodycam\n\n### Site Maturity Assessment\n\nThis appears to be a **mid-to-advanced stage** construction site. Here's what distinguishes it from an early-stage site:\n\n---\n\n### Structural Additions Visible\n\n#### 1. **Vertical Scaffolding Tower**\n- Appears to be a **modular tube-and-coupler or frame scaffold system**\n- Estimated height visible: **~8\u201312 meters** above current working platform\n- Width: approximately **1.5\u20132.0 meters** per bay\n- Multiple lift levels ",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "foreground left, on elevated surface",
+          "distance_m": 0.5
+        },
+        {
+          "object": "worker",
+          "location": "mid-frame, near scaffold edge",
+          "distance_m": 2.1
+        },
+        {
+          "object": "scaffold",
+          "location": "center-right, multi-level structure",
+          "distance_m": 2.5
+        },
+        {
+          "object": "open_edge",
+          "location": "mid-frame, unguarded platform edge visible",
+          "distance_m": 1.8
+        },
+        {
+          "object": "guardrail",
+          "location": "absent along visible platform edge",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.74,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 9 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              12.0,
+              2.0,
+              2.0,
+              2.0,
+              1.2,
+              0.3,
+              200.0,
+              4.0,
+              12.0
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 25,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0025.jpg",
+      "question_id": "distance_worker_edge",
+      "question": "How far in meters is the nearest worker from the nearest unguarded edge or drop-off? Give a specific numeric estimate.",
+      "failure_type_tested": "metric_distance",
+      "ground_truth_note": "Fisheye bodycam distortion makes metric estimation unreliable; VLMs typically hallucinate precise distances",
+      "vlm_response": "## Spatial Analysis: Worker-to-Edge Distance\n\n### Observations from the Fisheye Bodycam Image\n\n**Camera wearer (nearest worker):** The person wearing the bodycam is positioned on what appears to be an elevated concrete deck/slab structure.\n\n**Visible edges/drop-offs:**\n- There is a clearly visible **unguarded or partially guarded edge** running horizontally across the scene, approximately at the concrete wall/parapet line visible in the mid-frame.\n\n### Distance Estimate\n\nBased on:\n- The **concre",
+      "api_spatial_claims": [
+        {
+          "object": "worker",
+          "location": "foreground left, wearing hi-vis vest",
+          "distance_m": 0.5
+        },
+        {
+          "object": "worker",
+          "location": "mid-frame near scaffold edge",
+          "distance_m": 2.1
+        },
+        {
+          "object": "scaffold",
+          "location": "center and right of frame, multi-level",
+          "distance_m": 2.5
+        },
+        {
+          "object": "open_edge",
+          "location": "leading edge of elevated slab/platform, center-left",
+          "distance_m": 1.8
+        },
+        {
+          "object": "guardrail",
+          "location": "partially visible on scaffold but absent at slab open edge",
+          "distance_m": null
+        },
+        {
+          "object": "material_stack",
+          "location": "lower center frame on platform surface",
+          "distance_m": 2.0
+        }
+      ],
+      "api_confidence": 0.74,
+      "failure_analysis": {
+        "failure_count": 1,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 4 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              1.5,
+              1.5,
+              1.0,
+              1.8
+            ]
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 30,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0030.jpg",
+      "question_id": "occlusion_awareness",
+      "question": "What objects or areas are occluded (hidden) in this frame? Estimate what is behind the nearest visible obstruction and how far away it might be.",
+      "failure_type_tested": "occlusion_hallucination",
+      "ground_truth_note": "VLMs cannot see behind occlusions; confident claims about hidden objects are pure hallucination",
+      "vlm_response": "## Occlusion Analysis \u2013 Fisheye Bodycam Frame\n\n### Primary Obstruction\n\n**The dominant occlusion is a large, dark brown/reddish object in the right-center foreground** \u2014 likely a **gloved hand, forearm, or piece of equipment** held very close to the camera lens.\n\n- **Estimated distance from camera:** **5\u201320 cm** (essentially at lens proximity)\n- **Occluded area:** Approximately **35\u201340% of the total frame** (right half, center-to-bottom quadrant)\n\n---\n\n### What Is Hidden Behind It\n\n| Occluded Zo",
+      "api_spatial_claims": [
+        {
+          "object": "scaffold",
+          "location": "surrounding worker on elevated structure",
+          "distance_m": 2.1
+        },
+        {
+          "object": "worker",
+          "location": "visible mid-frame in orange hi-vis vest",
+          "distance_m": 3.2
+        },
+        {
+          "object": "open_edge",
+          "location": "lateral edges of scaffold platform visible",
+          "distance_m": 1.5
+        },
+        {
+          "object": "guardrail",
+          "location": "not observed on visible scaffold edges",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.72,
+      "failure_analysis": {
+        "failure_count": 2,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 7 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              8.0,
+              5.0,
+              20.0,
+              6.0,
+              30.0,
+              25.0,
+              10.0
+            ]
+          },
+          {
+            "type": "occlusion_hallucination",
+            "detail": "Model made confident claims about what is hidden behind occlusions"
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    },
+    {
+      "frame_idx": 30,
+      "frame_path": "/tmp/vinna-cii-frames/frame_0030.jpg",
+      "question_id": "material_distances",
+      "question": "List every distinct material visible in this frame and estimate each material's distance from the camera in meters.",
+      "failure_type_tested": "object_enumeration_and_distance",
+      "ground_truth_note": "Fisheye lens compresses distances; VLMs overcount or undercount materials and give inconsistent distance estimates",
+      "vlm_response": "## Material Analysis \u2013 Fisheye Bodycam Frame\n\nGiven the heavy fisheye distortion, lens flare, and low resolution, I'll provide my best quantitative estimates:\n\n---\n\n### Distinct Materials Identified & Estimated Distances\n\n| # | Material | Description | Est. Distance (m) |\n|---|----------|-------------|-------------------|\n| 1 | **Human skin/flesh** | Large forearm/hand occluding right side of frame | **0.1 \u2013 0.3 m** |\n| 2 | **Painted steel (yellow)** | Structural scaffold/framework tubes, lattic",
+      "api_spatial_claims": [
+        {
+          "object": "scaffold",
+          "location": "surrounding worker on elevated platform",
+          "distance_m": 2.0
+        },
+        {
+          "object": "worker",
+          "location": "visible mid-frame in orange hi-vis vest",
+          "distance_m": 3.5
+        },
+        {
+          "object": "open_edge",
+          "location": "lateral edges of scaffold platform visible",
+          "distance_m": 1.5
+        },
+        {
+          "object": "guardrail",
+          "location": "absent or incomplete on scaffold perimeter",
+          "distance_m": null
+        }
+      ],
+      "api_confidence": 0.72,
+      "failure_analysis": {
+        "failure_count": 2,
+        "failures": [
+          {
+            "type": "hallucinated_precision",
+            "detail": "Model gave 9 precise metric measurements from a fisheye bodycam image where accurate measurement is impossible",
+            "claimed_values_m": [
+              0.3,
+              4.0,
+              5.0,
+              5.0,
+              2.5,
+              4.0,
+              15.0,
+              8.0,
+              48.0
+            ]
+          },
+          {
+            "type": "possible_object_hallucination",
+            "detail": "Model claimed presence of 'car' \u2014 this is atop a masonry wall, heavy equipment is unlikely in the immediate scene"
+          }
+        ],
+        "has_metric_claims": true,
+        "acknowledged_uncertainty": true
+      },
+      "model": "claude-sonnet-4-6"
+    }
+  ]
+}
