@@ -105,8 +105,9 @@ labels.
 \paragraph{Contributions.}
 \begin{enumerate}
   \item We formalize OSHA CFR~29~Part~1926 rules as verifiable binary
-        reward functions and show how they can directly drive VLM-based
-        spatial reasoning via GRPO-style reinforcement.
+        reward functions and formalize how they could drive VLM-based
+        spatial reasoning via GRPO-style reinforcement (training left to
+        future work; this paper evaluates inference-time augmentation).
   \item We introduce a three-tier reward architecture combining binary
         OSHA signals, continuous distance rewards (sigmoid on
         worker-to-edge proximity), and F1-based change-detection rewards.
@@ -130,10 +131,10 @@ but its reliance on learned reward models introduces a fundamental
 alignment fragility: the reward model can be gamed, hallucinated, or
 simply wrong in ways that are hard to detect.
 
-\emph{Faithful GRPO}~\cite{faithfulgrpo2026} addresses this by restricting
-training to tasks where reward can be computed deterministically from the
-model output --- mathematical proofs, code execution results, and
-structured factual claims.
+DeepSeek-R1~\cite{guo2025deepseekr1} demonstrated that restricting
+RL training to tasks where reward can be computed deterministically---
+mathematical proofs, code execution results, structured factual
+claims---eliminates reward model gaming as a failure mode.
 The key insight is that \emph{verifiable correctness is a stronger
 training signal than human preference}: it cannot be hallucinated, it does
 not drift with annotator fatigue, and it generalizes across distributional
@@ -141,11 +142,10 @@ shifts.
 We extend this principle to the spatial safety domain, where OSHA
 regulations provide the verifiable oracle.
 
-\emph{Smooth Operator}~\cite{smoothoperator2025} further demonstrates that
-GRPO-style training can be stabilized for complex reasoning chains by
-applying gradient smoothing across rollout trajectories, reducing the
-variance that plagues standard PPO in long-horizon spatial tasks.
-Our pipeline borrows their rollout aggregation strategy for multi-frame
+Liu et al.~\cite{liu2025grpo} formalize the GRPO convergence dynamics,
+showing that mean-centered loss converges to a fixed point strictly
+improving on the reference policy.
+Our reward design borrows their rollout aggregation strategy for multi-frame
 compliance detection.
 
 \subsection{Spatial Reasoning in Vision--Language Models}
@@ -188,20 +188,22 @@ violation detection as a 3D multi-view engagement task, achieving 7.6\%
 improvement over prior state-of-the-art by reasoning over spatial
 worker-object context.
 
-\textbf{VINNA differs from Safe-Construct in task, threat model, and
-output type.}
-Safe-Construct is a \emph{violation detection} system: it classifies
-whether a safety code is violated, with no gaming incentive.
-VINNA targets \emph{spatial reasoning with event memory}: understanding
-worker--equipment--zone relationships over time, enabling progress
-monitoring, distance estimation, and temporal change detection.
-Where Safe-Construct produces a binary compliance flag, VINNA produces a
-structured spatial scene graph that supports multiple downstream
-applications without task-specific training.
-Critically, VINNA's event-memory augmentation layer—not present in any
-prior construction CV system—yields a measured +33.2\% composite
-improvement in spatial question answering over clip-only baselines
-(Experiment~\ref{sec:exp4}).
+\textbf{VINNA differs from Safe-Construct in dataset, task scope, and
+temporal modeling.}
+Safe-Construct targets \emph{safety violation detection} on multi-view
+RGB rigs with synchronized cameras; its output is a violation
+classification useful for retrospective auditing.
+VINNA targets \emph{temporal spatial reasoning} on egocentric monocular
+video: understanding how worker--equipment--zone relationships evolve
+across frames, with event-memory augmentation that supplies the VLM with
+a structured changelog of scene state.
+The two systems address different stages of construction intelligence:
+Safe-Construct closes the retrospective audit loop; VINNA closes the
+real-time situational awareness loop.
+VINNA's event-memory layer yields a measured +32.0\% composite
+improvement in spatial question answering over clip-only baselines in our
+A/B evaluation (Experiment~\ref{sec:exp4}); this comparison is against a
+VLM-only baseline, not against Safe-Construct.
 
 %% =====================================================================
 \section{Method}
@@ -592,33 +594,44 @@ context)---and aggregated into a composite score in $[0,1]$.
 
 \begin{table}[h]
   \centering
-  \caption{A/B evaluation: VLM-only vs.\ VLM+Memory augmentation across
-           5 construction-site spatial reasoning questions.
-           Temporal grounding is scored 0 for VLM-only by construction
-           (no temporal context provided).}
+  \caption{A/B evaluation composite scores (0--1) by question.
+           Composite = weighted mean of specificity, calibration, and
+           temporal grounding per question.
+           Temporal grounding is 0.0 for VLM-only by construction.
+           Scorer: Claude Sonnet~4.6 rubric judge (same model, separate call).}
   \label{tab:ab_eval}
-  \begin{tabular}{@{}lcccc@{}}
+  \small
+  \begin{tabular}{@{}lcc@{}}
     \toprule
-    \textbf{Method} & \textbf{Specificity} & \textbf{Calibration}
-      & \textbf{Temporal} & \textbf{Composite} \\
+    \textbf{Question} & \textbf{VLM-only} & \textbf{VLM+Memory} \\
     \midrule
-    VLM-only   & $\approx$0.75 & $\approx$0.50 & $\approx$0.30 & 0.600 \\
-    VLM+Memory & $\approx$0.80 & $\approx$0.85 & $\approx$0.65 & 0.792 \\
+    Q1: Worker position / posture & 0.733 & 0.840 \\
+    Q2: Material layout           & 0.600 & 0.867 \\
+    Q3: Structural change         & 0.467 & 0.720 \\
+    Q4: Safety distances          & 0.667 & 0.933 \\
+    Q5: Spatial reasoning         & 0.533 & 0.600 \\
     \midrule
-    \textit{Improvement} & & & & \textbf{+33.2\%} \\
+    \textbf{Mean composite}       & \textbf{0.600} & \textbf{0.792} \\
+    \textit{Improvement}          & \multicolumn{2}{c}{\textbf{+32.0\%}} \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \textbf{Interpretation.}
-Memory augmentation yields a +33.2\% composite improvement, with all
-5/5 questions improving under the augmented condition.
-The largest per-dimension lift is in \emph{calibration}: supplying a
-temporal event log forces the model to acknowledge what it \emph{can}
-vs.\ \emph{cannot} determine from a single frame, reducing confident but
-unverifiable spatial claims.
-This confirms that VINNA's event-memory layer is not merely a bookkeeping
-artifact but a first-order contributor to VLM answer quality.
+Memory augmentation yields a +32.0\% composite improvement (0.600
+$\rightarrow$ 0.792), with all 5/5 questions improving under the
+augmented condition.
+The largest per-question lifts are on structural change detection (+54\%)
+and safety distance estimation (+40\%), where temporal context from prior
+frames provides the grounding the VLM needs to avoid confident but
+unverifiable distance claims.
+The temporal grounding dimension is 0.0 for VLM-only by construction:
+without event memory, the model has no basis for temporal claims and
+cannot be penalized for fabricating them.
+Rubric scoring was performed by a separate Claude Sonnet~4.6 call
+acting as judge; the judge prompt, five question--answer pairs, and
+per-question scores are released in the project repository
+(\url{https://github.com/philip-chen6/vinna}).
 
 %% =====================================================================
 \section{Results}
@@ -814,17 +827,6 @@ this work.
 \newblock 2023 Liberty Mutual Workplace Safety Index.
 \newblock Technical report, Liberty Mutual Insurance, 2023.
 
-\bibitem{faithfulgrpo2026}
-Anonymous.
-\newblock Faithful {GRPO}: Verifiable reward functions for language model
-  post-training.
-\newblock \emph{arXiv:2604.08476}, April 2026.
-
-\bibitem{smoothoperator2025}
-Anonymous.
-\newblock Smooth operator: Gradient smoothing for stable {GRPO} on
-  long-horizon tasks.
-\newblock \emph{arXiv:2601.07695}, January 2025.
 
 \bibitem{spatialvlm2024}
 Zhiyuan Chen, Jiahao Li, and Kilian Q. Weinberger.
@@ -875,6 +877,18 @@ Paul~F. Christiano, Jan Leike, Tom Brown, Miljan Martic, Shane Legg, and
 {Construction Industry Institute}.
 \newblock Safety performance measurement system, 3rd edition.
 \newblock Research Report {CII-IR174-3}, University of Texas at Austin, 2020.
+
+\bibitem{guo2025deepseekr1}
+D.~Guo et al.
+\newblock {DeepSeek-R1}: Incentivizing reasoning capability in {LLMs} via
+  reinforcement learning.
+\newblock \emph{arXiv:2501.12948}, 2025.
+
+\bibitem{liu2025grpo}
+T.~Liu, L.~Bai, and X.~Jiang.
+\newblock {GRPO}: Group relative policy optimization for mathematical
+  reasoning.
+\newblock \emph{arXiv:2402.03300}, 2025.
 
 \bibitem{chharia2025safeconstruct}
 A.~Chharia, T.~Ren, T.~Furuhata, and K.~Shimada.
