@@ -1,0 +1,20 @@
+[project]
+name = "ironsite-spatial"
+version = "0.1.0"
+description = "Ironsite CII Spatial Reasoning Pipeline — event_id → 3.1 judge → spatial claim JSON"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.50.0",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+ply = ["open3d>=0.18"]
+dev = ["pytest", "rich"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
