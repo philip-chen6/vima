@@ -1,10 +1,27 @@
 """
 Ironsite Productivity Raffle — CII wrench time → Solana payout
 Demo: classify workers by P-streak, raffle weight = wrench time %, draw winners, simulate payout
+
+Real SPL transfer: set SOLANA_PAYER_KEYPAIR (base58 private key) and SOLANA_RECIPIENT_ADDRESS
+in environment. Falls back to deterministic mock if keys are absent or solana libs unavailable.
 """
-import json, random, hashlib
+import json, random, hashlib, os
 from pathlib import Path
 from collections import defaultdict
+
+def _do_solana_transfer(winner: str, amount_usdc: float, seed: int) -> dict:
+    """Attempt real devnet SPL transfer; fall back to deterministic mock."""
+    keypair_b58 = os.environ.get("SOLANA_PAYER_KEYPAIR")
+    recipient = os.environ.get("SOLANA_RECIPIENT_ADDRESS")
+    if keypair_b58 and recipient:
+        try:
+            from solana_payout import transfer_usdc_devnet
+            tx_sig = transfer_usdc_devnet(keypair_b58, recipient, amount_usdc)
+            return {"tx_signature": tx_sig, "tx_link": f"https://explorer.solana.com/tx/{tx_sig}?cluster=devnet", "tx_mode": "real_devnet"}
+        except Exception as e:
+            print(f"[raffle] real SPL transfer failed ({e}), falling back to mock")
+    mock_sig = "MOCK_" + hashlib.sha256(f"{winner}{seed}".encode()).hexdigest()[:36].upper()
+    return {"tx_signature": mock_sig, "tx_link": f"https://solscan.io/tx/{mock_sig}", "tx_mode": "mock"}
 
 def run_raffle(classifications_path, prize_pool_usdc=100.0, seed=42):
     """
@@ -50,14 +67,14 @@ def run_raffle(classifications_path, prize_pool_usdc=100.0, seed=42):
     random.shuffle(pool)
     winner = pool[0]
     
-    # Simulate Solana tx (mock)
-    tx_sig = "5x" + hashlib.sha256(f"{winner}{seed}".encode()).hexdigest()[:40].upper()
-    
+    tx = _do_solana_transfer(winner, prize_pool_usdc, seed)
+
     raffle = {
         "winner": winner,
         "prize_usdc": prize_pool_usdc,
-        "tx_signature": tx_sig,
-        "tx_link": f"https://solscan.io/tx/{tx_sig}",
+        "tx_signature": tx["tx_signature"],
+        "tx_link": tx["tx_link"],
+        "tx_mode": tx["tx_mode"],
         "workers": results,
         "total_tickets": len(pool),
         "winner_tickets": results[winner]["raffle_tickets"],
