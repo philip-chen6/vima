@@ -1,30 +1,30 @@
 # VINNA — Ironsite Spatial Safety Intelligence
 
-**HackTech 2025 @ Caltech** | Ironsite Prize ($17,500) + YC Track
+**HackTech 2026 @ Caltech** | Ironsite Prize ($17,500) + Workshop Paper Track
 
 ## What
 
-Construction site safety AI that turns Ironsite egocentric bodycam + LiDAR data into:
-- **P/C/NC classification** (Productive / Contributory / Non-Contributory) per worker
-- **OSHA CFR 29 1926 violation flags** with spatial evidence
-- **Solana raffle payout** weighted by wrench-time productivity
+Spatially-anchored worker intelligence and incentive system for egocentric construction video:
+- **P/C/NC classification** (Productive / Contributory / Non-Contributory) per worker via CII standard
+- **COLMAP camera pose clustering** — zone attribution (Near Equipment / Scaffold / Material Staging)
+- **Solana devnet raffle payout** weighted by wrench-time productivity (real SPL transfer, env-gated)
+
+Results on 30 frames of real Ironsite masonry footage: **86.7% productive**, mean confidence 0.939, ECE 0.0121.
 
 ## Team
 
-- **Joshua** — CII classifier, backend, architecture
-- **Philip** — Solana raffle payout contract
-- **Lucas** — remote
-- **Stephen** — remote
+- **Joshua** — CII classifier, backend, COLMAP spatial layer
+- **Philip** — Solana raffle, frontend
 
 ## Stack
 
 | Layer | Tech |
 |-------|------|
 | Backend API | FastAPI + uvicorn (port 8765) |
-| AI judge | Claude Sonnet via Anthropic SDK |
+| AI judge | Claude Sonnet 4.6 (Anthropic SDK) |
 | Frame extraction | ffmpeg |
-| Point cloud | .ply / .npy / .bin stubs (Ironsite format TBD) |
-| Payout | Solana / Jupiter |
+| Spatial reconstruction | COLMAP (K=3 zone simulation; production: registered camera poses) |
+| Payout | Solana devnet SPL (real transfer with SOLANA_PAYER_KEYPAIR set) |
 
 ## Running
 
@@ -37,10 +37,13 @@ uv run api.py
 ## API
 
 - `GET /health` — status check
-- `POST /analyze/frame` — upload JPG, get OSHA JSON
+- `POST /analyze/frame` — upload JPG, get CII classification + spatial JSON
 - `POST /analyze/timestamp?timestamp=30.0` — analyze from video at timestamp
 - `POST /analyze/batch` — batch events
 - `GET /demo` — 5 events from masonry footage (demo mode)
+- `GET /cii/summary` — wrench-time summary (P/C/NC counts + raffle tickets)
+- `GET /cii/frames` — full per-frame classifications
+- `GET /spatial/zones` — zone attribution with spatial narrative
 
 ## Demo Output Shape
 
