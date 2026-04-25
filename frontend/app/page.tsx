@@ -1,763 +1,430 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useInView } from "motion/react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 import {
-  Camera,
-  Cpu,
+  Activity,
   Coins,
   HardHat,
+  Map,
+  ScanLine,
   ShieldCheck,
-  BarChart3,
-  MapPin,
-  Layers,
+  Terminal,
 } from "lucide-react";
 
-import SilkWaves from "@/components/react-bits/silk-waves";
-import TextScatter from "@/components/react-bits/text-scatter";
-import SmoothCursor from "@/components/react-bits/smooth-cursor";
-import { BlurHighlight } from "@/components/react-bits/blur-highlight";
-import SquareMatrix from "@/components/react-bits/square-matrix";
-import RotatingCards from "@/components/react-bits/rotating-cards";
-import GradientCarousel from "@/components/react-bits/gradient-carousel";
-import { Features4 } from "@/components/blocks/features-4";
+type CursorPoint = {
+  id: number;
+  x: number;
+  y: number;
+  char: string;
+};
 
-// ─── CII Stats section ────────────────────────────────────────────────────────
+const metricCards = [
+  { label: "productive", value: "86.7%", sub: "26 / 30 sampled frames" },
+  { label: "mean P-confidence", value: "0.939", sub: "Claude Sonnet judge" },
+  { label: "COLMAP points", value: "1,770", sub: "registered site anchors" },
+  { label: "reprojection", value: "1.199px", sub: "spatial fit error" },
+];
 
-function CIIStatsSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10%" });
+const evidenceRows = [
+  ["00.0s", "P", "laying concrete blocks", "Zone A", "0.95"],
+  ["425.3s", "P", "scaffold work at elevation", "Zone B", "0.94"],
+  ["808.1s", "NC", "idle / walking interval", "Zone B", "0.82"],
+  ["1234.0s", "P", "material staging", "Zone C", "0.91"],
+];
 
-  const stats = [
-    {
-      value: "86.7%",
-      label: "Productive (P)",
-      desc: "Workers actively contributing to deliverable work",
-      color: "#4ade80",
-      delay: 0,
-    },
-    {
-      value: "0%",
-      label: "Contributory (C)",
-      desc: "Necessary support activities per CII standard",
-      color: "#FFD700",
-      delay: 0.1,
-    },
-    {
-      value: "13.3%",
-      label: "Non-Contributory (NC)",
-      desc: "Idle, waiting, or rework — target for elimination",
-      color: "#FF6B35",
-      delay: 0.2,
-    },
-  ];
-
-  return (
-    <section
-      ref={ref}
-      className="w-full py-20 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a] construction-grid"
-    >
-      <div className="max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
-        >
-          <span className="inline-block mono text-xs tracking-widest text-[#FFD700] mb-4 uppercase">
-            CII Activity Classification
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-4">
-            30 sampled frames. Real numbers.
-          </h2>
-          <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed">
-            Every payout is anchored to verified productive time — not
-            self-reported hours. The ledger never lies.
-          </p>
-        </motion.div>
-
-        {/* Stacked bar */}
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          animate={inView ? { opacity: 1, scaleX: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="flex rounded-full overflow-hidden h-4 mb-12 origin-left"
-        >
-          <div style={{ width: "86.7%", background: "#4ade80" }} />
-          <div style={{ width: "0%", background: "#FFD700" }} />
-          <div style={{ flex: 1, background: "#FF6B35" }} />
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {stats.map((s) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: s.delay + 0.3 }}
-              className="rounded-2xl border border-white/10 bg-white/5 p-8 flex flex-col gap-3"
-            >
-              <span
-                className="text-5xl font-semibold tracking-tight"
-                style={{ color: s.color }}
-              >
-                {s.value}
-              </span>
-              <span className="text-white font-medium">{s.label}</span>
-              <span className="text-neutral-400 text-sm leading-relaxed">
-                {s.desc}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Secondary metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-          {[
-            { val: "1,770", label: "COLMAP 3D points" },
-            { val: "1.199px", label: "Reprojection error" },
-            { val: "30", label: "OSHA rules mapped" },
-          ].map((m, i) => (
-            <motion.div
-              key={m.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: 0.6 + i * 0.08 }}
-              className="rounded-xl border border-white/8 bg-white/3 px-6 py-5 flex flex-col gap-1"
-            >
-              <span className="mono text-2xl font-bold text-[#FFD700]">
-                {m.val}
-              </span>
-              <span className="text-neutral-500 text-sm">{m.label}</span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── RotatingCards data ───────────────────────────────────────────────────────
-
-const HOW_IT_WORKS_CARDS = [
+const systemSteps = [
   {
-    id: "video",
-    background: "linear-gradient(135deg, #1a1a1a 0%, #2a1a00 100%)",
-    content: (
-      <div className="flex flex-col items-center gap-4 text-center px-2">
-        <div className="w-12 h-12 rounded-xl bg-[#FFD700]/15 flex items-center justify-center">
-          <Camera className="w-6 h-6 text-[#FFD700]" />
-        </div>
-        <span className="text-[#FFD700] mono text-xs tracking-widest uppercase">
-          Step 01
-        </span>
-        <h3 className="text-white font-semibold text-sm leading-snug">
-          Video Ingestion
-        </h3>
-        <p className="text-neutral-400 text-xs leading-relaxed">
-          Site cameras stream frames. COLMAP reconstructs 3D camera poses.
-          Every frame gets a verified spatial anchor.
-        </p>
-      </div>
-    ),
+    icon: ScanLine,
+    eyebrow: "01 / capture",
+    title: "hardhat video becomes evidence",
+    body: "Frames are sampled from real masonry footage and treated as a spatial record, not a flat slideshow.",
   },
   {
-    id: "classify",
-    background: "linear-gradient(135deg, #1a1a1a 0%, #001a1a 100%)",
-    content: (
-      <div className="flex flex-col items-center gap-4 text-center px-2">
-        <div className="w-12 h-12 rounded-xl bg-blue-500/15 flex items-center justify-center">
-          <Cpu className="w-6 h-6 text-blue-400" />
-        </div>
-        <span className="text-blue-400 mono text-xs tracking-widest uppercase">
-          Step 02
-        </span>
-        <h3 className="text-white font-semibold text-sm leading-snug">
-          CII Classification
-        </h3>
-        <p className="text-neutral-400 text-xs leading-relaxed">
-          Claude Sonnet vision judges each frame: P / C / NC per Construction
-          Industry Institute standard. No human subjectivity.
-        </p>
-      </div>
-    ),
+    icon: Map,
+    eyebrow: "02 / anchor",
+    title: "COLMAP zones bind claims to place",
+    body: "Camera pose clustering assigns work to site regions: equipment, scaffold, material staging.",
   },
   {
-    id: "payout",
-    background: "linear-gradient(135deg, #1a1a1a 0%, #0a1a00 100%)",
-    content: (
-      <div className="flex flex-col items-center gap-4 text-center px-2">
-        <div className="w-12 h-12 rounded-xl bg-[#4ade80]/15 flex items-center justify-center">
-          <Coins className="w-6 h-6 text-[#4ade80]" />
-        </div>
-        <span className="text-[#4ade80] mono text-xs tracking-widest uppercase">
-          Step 03
-        </span>
-        <h3 className="text-white font-semibold text-sm leading-snug">
-          Solana Payout
-        </h3>
-        <p className="text-neutral-400 text-xs leading-relaxed">
-          Productive time unlocks SPL token rewards. Immutable on-chain ledger.
-          Workers earn based on verified output, not clocked hours.
-        </p>
-      </div>
-    ),
+    icon: Activity,
+    eyebrow: "03 / classify",
+    title: "CII wrench-time labels",
+    body: "Every frame becomes P, C, or NC with confidence and reasoning for downstream audit.",
   },
   {
-    id: "osha",
-    background: "linear-gradient(135deg, #1a1a1a 0%, #1a0000 100%)",
-    content: (
-      <div className="flex flex-col items-center gap-4 text-center px-2">
-        <div className="w-12 h-12 rounded-xl bg-red-500/15 flex items-center justify-center">
-          <ShieldCheck className="w-6 h-6 text-red-400" />
-        </div>
-        <span className="text-red-400 mono text-xs tracking-widest uppercase">
-          Step 04
-        </span>
-        <h3 className="text-white font-semibold text-sm leading-snug">
-          OSHA Compliance
-        </h3>
-        <p className="text-neutral-400 text-xs leading-relaxed">
-          30 OSHA rules cross-referenced against every classified frame.
-          Violations flagged before they become incidents.
-        </p>
-      </div>
-    ),
-  },
-  {
-    id: "ledger",
-    background: "linear-gradient(135deg, #1a1a1a 0%, #100020 100%)",
-    content: (
-      <div className="flex flex-col items-center gap-4 text-center px-2">
-        <div className="w-12 h-12 rounded-xl bg-purple-500/15 flex items-center justify-center">
-          <Layers className="w-6 h-6 text-purple-400" />
-        </div>
-        <span className="text-purple-400 mono text-xs tracking-widest uppercase">
-          Step 05
-        </span>
-        <h3 className="text-white font-semibold text-sm leading-snug">
-          Tamper-Proof Ledger
-        </h3>
-        <p className="text-neutral-400 text-xs leading-relaxed">
-          Camera pose + VLM annotation + CII label = cryptographic proof of
-          work. Disputes resolved by on-chain evidence, not management.
-        </p>
-      </div>
-    ),
+    icon: Coins,
+    eyebrow: "04 / settle",
+    title: "verified work turns into raffle weight",
+    body: "Wrench time drives transparent Solana SPL payout logic with a replayable evidence chain.",
   },
 ];
 
-// ─── Evidence Architecture section ───────────────────────────────────────────
+function AsciiCursor() {
+  const [trail, setTrail] = useState<CursorPoint[]>([]);
+  const counter = useRef(0);
+  const chars = useMemo(() => ["+", "/", ".", ":", "*", "x"], []);
 
-function EvidenceSection() {
+  useEffect(() => {
+    const onMove = (event: MouseEvent) => {
+      counter.current += 1;
+      const point = {
+        id: counter.current,
+        x: event.clientX,
+        y: event.clientY,
+        char: chars[counter.current % chars.length],
+      };
+      setTrail((current) => [point, ...current].slice(0, 12));
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [chars]);
+
   return (
-    <section className="w-full py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a]">
-      <div className="max-w-4xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+    <div className="pointer-events-none fixed inset-0 z-50 hidden md:block">
+      {trail.map((point, index) => (
+        <span
+          key={point.id}
+          className="absolute mono text-[11px] text-[#d69256]"
+          style={{
+            left: point.x + 10,
+            top: point.y + 8,
+            opacity: Math.max(0, 1 - index / trail.length),
+            transform: `translate3d(0, ${index * 2}px, 0) scale(${1 - index * 0.035})`,
+          }}
         >
-          <span className="inline-block mono text-xs tracking-widest text-[#FF6B35] mb-4 uppercase">
-            Evidence Architecture
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-8">
-            Every payout backed by a chain of evidence
-          </h2>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-xl sm:text-2xl text-neutral-300 leading-relaxed font-light"
-        >
-          <BlurHighlight
-            highlightedBits={[
-              "tamper-proof",
-              "camera pose",
-              "COLMAP reconstruction",
-            ]}
-            highlightColor="rgba(255, 215, 0, 0.22)"
-            highlightClassName="text-[#FFD700]"
-            blurAmount={6}
-            blurDuration={0.8}
-            highlightDelay={0.5}
-            highlightDuration={1.2}
-            viewportOptions={{ once: true, amount: 0.5 }}
-          >
-            VINNA builds a tamper-proof audit trail from every job site. camera
-            pose data from COLMAP reconstruction is fused with Claude vision
-            judgments and CII classification — anchoring each payout to a
-            verifiable, immutable record.
-          </BlurHighlight>
-        </motion.div>
-
-        {/* Evidence chain diagram */}
-        <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-0">
-          {[
-            {
-              icon: Camera,
-              label: "Camera Pose",
-              sub: "COLMAP 3D",
-              color: "#FFD700",
-            },
-            {
-              icon: Cpu,
-              label: "VLM Judge",
-              sub: "Claude Sonnet",
-              color: "#60a5fa",
-            },
-            {
-              icon: BarChart3,
-              label: "CII Label",
-              sub: "P / C / NC",
-              color: "#4ade80",
-            },
-            {
-              icon: MapPin,
-              label: "On-Chain",
-              sub: "Solana SPL",
-              color: "#a78bfa",
-            },
-          ].map((item, i) => (
-            <React.Fragment key={item.label}>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.12 }}
-                className="flex flex-col items-center gap-3 px-6 py-5 rounded-2xl border border-white/10 bg-white/5 min-w-[120px]"
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{ background: `${item.color}20` }}
-                >
-                  <item.icon
-                    className="w-5 h-5"
-                    style={{ color: item.color }}
-                  />
-                </div>
-                <span className="text-white text-sm font-medium">
-                  {item.label}
-                </span>
-                <span className="mono text-xs text-neutral-500">
-                  {item.sub}
-                </span>
-              </motion.div>
-              {i < 3 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: i * 0.12 + 0.2 }}
-                  className="hidden sm:block text-neutral-600 text-xl px-3"
-                >
-                  →
-                </motion.div>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-    </section>
+          {point.char}
+        </span>
+      ))}
+    </div>
   );
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
+function AmberParticleField() {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const particleCount = 5600;
+
+  const positions = useMemo(() => {
+    const data = new Float32Array(particleCount * 3);
+    for (let index = 0; index < particleCount; index += 1) {
+      const radius = Math.sqrt(Math.random()) * 7.4;
+      const angle = Math.random() * Math.PI * 2;
+      data[index * 3] = Math.cos(angle) * radius * 1.45;
+      data[index * 3 + 1] = Math.sin(angle) * radius * 0.46 - 0.75;
+      data[index * 3 + 2] = (Math.random() - 0.5) * 2.2;
+    }
+    return data;
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (materialRef.current) {
+      materialRef.current.uniforms.uTime.value = clock.elapsedTime;
+    }
+  });
+
+  return (
+    <points>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+      </bufferGeometry>
+      <shaderMaterial
+        ref={materialRef}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        uniforms={{
+          uTime: { value: 0 },
+          uColorA: { value: new THREE.Color("#c77b42") },
+          uColorB: { value: new THREE.Color("#f1c27d") },
+        }}
+        vertexShader={`
+          uniform float uTime;
+          varying float vAlpha;
+          varying float vWarmth;
+          void main() {
+            vec3 p = position;
+            float wave = sin(p.x * 0.65 + uTime * 0.28) + cos(p.y * 1.8 - uTime * 0.22);
+            p.y += wave * 0.16;
+            p.x += sin(p.y * 1.1 + uTime * 0.16) * 0.24;
+            vec4 mvPosition = modelViewMatrix * vec4(p, 1.0);
+            float depth = clamp(1.0 - abs(p.z) * 0.35, 0.28, 1.0);
+            gl_PointSize = (2.2 + depth * 3.2) * (1.0 / -mvPosition.z);
+            gl_Position = projectionMatrix * mvPosition;
+            vAlpha = depth * 0.72;
+            vWarmth = smoothstep(-4.5, 5.5, p.x + wave);
+          }
+        `}
+        fragmentShader={`
+          uniform vec3 uColorA;
+          uniform vec3 uColorB;
+          varying float vAlpha;
+          varying float vWarmth;
+          void main() {
+            vec2 uv = gl_PointCoord - 0.5;
+            float d = length(uv);
+            float glow = smoothstep(0.5, 0.0, d);
+            vec3 color = mix(uColorA, uColorB, vWarmth);
+            gl_FragColor = vec4(color, glow * vAlpha);
+          }
+        `}
+      />
+    </points>
+  );
+}
+
+function ShaderBackdrop() {
+  return (
+    <div className="absolute inset-0 -z-10 overflow-hidden bg-[#080604]">
+      <Canvas
+        camera={{ position: [0, 0, 7.8], fov: 58 }}
+        dpr={[1, 1.75]}
+        gl={{ antialias: false, alpha: true }}
+      >
+        <AmberParticleField />
+      </Canvas>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_72%,rgba(199,123,66,0.20),transparent_34%),radial-gradient(circle_at_78%_18%,rgba(98,142,127,0.16),transparent_24%),linear-gradient(180deg,rgba(8,6,4,0.16),#080604_92%)]" />
+      <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(241,194,125,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(241,194,125,.6)_1px,transparent_1px)] [background-size:64px_64px]" />
+    </div>
+  );
+}
+
+function ContourPanel({
+  number,
+  title,
+  body,
+}: {
+  number: string;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="group relative min-h-[260px] overflow-hidden rounded-[22px] border border-[#6f4a2f]/40 bg-[#0e0a07]">
+      <div className="absolute inset-0 opacity-65 [background-image:repeating-radial-gradient(ellipse_at_42%_46%,transparent_0_14px,rgba(198,126,73,.52)_15px_16px,transparent_17px_30px)] transition duration-500 group-hover:scale-105 group-hover:opacity-90" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0e0a07]/45 to-[#0e0a07]" />
+      <div className="relative flex h-full flex-col justify-end p-7">
+        <span className="mono mb-3 text-xs uppercase tracking-[0.32em] text-[#c77b42]">
+          {number}
+        </span>
+        <h3 className="text-2xl font-semibold text-[#f4eadb]">{title}</h3>
+        <p className="mt-3 max-w-sm text-sm leading-6 text-[#a99a86]">{body}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function VinnaPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
-      {/* Global smooth cursor trail */}
-      <SmoothCursor
-        color="#FFD700"
-        lineWidth={0.5}
-        pointsCount={35}
-        springStrength={0.5}
-        dampening={0.6}
-        trailOpacity={0.7}
-        velocityScale
-      />
+    <main className="min-h-screen bg-[#080604] text-[#f4eadb]">
+      <AsciiCursor />
+      <section className="relative min-h-screen overflow-hidden px-5 py-6 sm:px-8 lg:px-12">
+        <ShaderBackdrop />
 
-      {/* ── HERO ──────────────────────────────────────────────────────────── */}
-      <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden">
-        {/* SilkWaves — construction amber palette */}
-        <div className="absolute inset-0 z-0">
-          <SilkWaves
-            speed={0.6}
-            scale={2.5}
-            distortion={1.4}
-            curve={0.8}
-            contrast={1.1}
-            colors={[
-              "#0a0a0a",
-              "#1a1000",
-              "#2a1a00",
-              "#3d2a00",
-              "#5c3d00",
-              "#7a5200",
-              "#996600",
-              "#b37a00",
-            ]}
-            brightness={0.85}
-            opacity={0.7}
-            frequency={1.4}
-            complexity={1.1}
-          />
-        </div>
-
-        {/* Hazard stripe top bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 hazard-stripe z-10 opacity-70" />
-
-        {/* Hero content */}
-        <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-8 max-w-5xl mx-auto">
-          {/* Prize badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-6 flex items-center gap-2 rounded-full border border-[#FFD700]/30 bg-[#FFD700]/10 px-4 py-1.5"
-          >
-            <HardHat className="w-4 h-4 text-[#FFD700]" />
-            <span className="mono text-xs text-[#FFD700] tracking-wide">
-              HackTech Caltech · Ironsite Prize Track
-            </span>
-          </motion.div>
-
-          {/* Title — TextScatter interactive chars */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="mb-2"
-          >
-            <TextScatter
-              text="VINNA"
-              as="h1"
-              className="text-7xl sm:text-9xl font-bold tracking-tighter text-white"
-              velocity={180}
-              rotation={60}
-              duration={1.8}
-              returnAfter={0.8}
-            />
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mono text-xs sm:text-sm text-[#FFD700]/70 tracking-widest mb-8 uppercase"
-          >
-            Verifiable Rewards for Construction Safety Intelligence
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.45 }}
-            className="text-lg sm:text-xl text-neutral-300 max-w-2xl leading-relaxed mb-10"
-          >
-            AI classifies every construction frame as Productive, Contributory,
-            or Non-Contributory — then workers earn Solana payouts anchored to
-            verified output.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4"
-          >
-            <button className="rounded-full px-8 py-3 bg-[#FFD700] text-black font-semibold text-sm hover:bg-[#ffc800] transition-colors">
-              See the Demo
-            </button>
-            <button className="rounded-full px-8 py-3 border border-white/20 text-white text-sm hover:bg-white/8 transition-colors">
-              View Architecture
-            </button>
-          </motion.div>
-
-          {/* Tech tags */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="mt-14 flex flex-wrap items-center justify-center gap-3"
-          >
-            {[
-              "Claude Sonnet Vision",
-              "CII Standard",
-              "Solana SPL",
-              "COLMAP 3D",
-              "OSHA 30-Rule Engine",
-            ].map((tag) => (
-              <span
-                key={tag}
-                className="mono text-xs px-3 py-1.5 rounded-full border border-white/15 text-neutral-400"
-              >
-                {tag}
-              </span>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
-        >
-          <span className="mono text-xs text-neutral-600 tracking-widest">
-            SCROLL
-          </span>
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-            className="w-px h-8 bg-gradient-to-b from-[#FFD700]/60 to-transparent"
-          />
-        </motion.div>
-      </section>
-
-      {/* ── HOW IT WORKS — RotatingCards ──────────────────────────────────── */}
-      <section className="w-full py-24 px-4 sm:px-6 bg-[#0a0a0a] overflow-hidden">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-10"
-          >
-            <span className="inline-block mono text-xs tracking-widest text-[#FF6B35] mb-4 uppercase">
-              The Pipeline
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-4">
-              From site camera to paycheck
-            </h2>
-            <p className="text-neutral-400 max-w-lg mx-auto leading-relaxed text-sm">
-              Five stages. Zero ambiguity. Hover to pause, drag to explore.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex items-center justify-center"
-          >
-            <RotatingCards
-              cards={HOW_IT_WORKS_CARDS}
-              radius={260}
-              duration={28}
-              cardWidth={180}
-              cardHeight={220}
-              pauseOnHover
-              draggable
-              mouseWheel
-            />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── CII STATS ─────────────────────────────────────────────────────── */}
-      <CIIStatsSection />
-
-      {/* ── SQUARE MATRIX DIVIDER ─────────────────────────────────────────── */}
-      <div className="w-full h-32 sm:h-40">
-        <SquareMatrix
-          width="100%"
-          height="100%"
-          gridSize={22}
-          speed={1.2}
-          waveFrequency={1.4}
-          waveAmplitude={0.7}
-          preset={1}
-          color="#FFD700"
-          backgroundColor="#0a0a0a"
-          cornerRadius={0.4}
-          cellGap={0.15}
-          peakBrightness={1.6}
-          baseBrightness={0.05}
-          cursorInteraction
-          cursorIntensity={2}
-          opacity={1}
-        />
-      </div>
-
-      {/* ── DEMO PREVIEW — GradientCarousel ───────────────────────────────── */}
-      <section className="w-full py-20 bg-[#0a0a0a]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-10"
-          >
-            <span className="inline-block mono text-xs tracking-widest text-[#4ade80] mb-4 uppercase">
-              Live Demo
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-4">
-              Frames the classifier sees
-            </h2>
-            <p className="text-neutral-400 max-w-lg mx-auto leading-relaxed text-sm">
-              Each image is classified in real time. Drag or scroll to explore.
-            </p>
-          </motion.div>
-        </div>
-
-        <div className="w-full h-[480px] sm:h-[560px]">
-          <GradientCarousel
-            images={[
-              "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=1000&fit=crop&q=80",
-              "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=800&h=1000&fit=crop&q=80",
-              "https://images.unsplash.com/photo-1590725140246-20acddc1ec6b?w=800&h=1000&fit=crop&q=80",
-              "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=1000&fit=crop&q=80",
-              "https://images.unsplash.com/photo-1573166364902-872f1bc6c64a?w=800&h=1000&fit=crop&q=80",
-              "https://images.unsplash.com/photo-1483366774565-c783b9f70e2c?w=800&h=1000&fit=crop&q=80",
-            ]}
-            cardAspectRatio={0.8}
-            gradientIntensity={0.5}
-            gradientSize={0.7}
-            backgroundBlur={28}
-          />
-        </div>
-      </section>
-
-      {/* ── FEATURES4 — Why VINNA wins ────────────────────────────────────── */}
-      <div className="bg-[#0a0a0a]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="pt-16 text-center"
-          >
-            <span className="inline-block mono text-xs tracking-widest text-[#FFD700] mb-4 uppercase">
-              Why VINNA wins
-            </span>
-          </motion.div>
-        </div>
-        <Features4 autoPlay autoPlayDelay={4500} />
-      </div>
-
-      {/* ── EVIDENCE ARCHITECTURE + BlurHighlight ─────────────────────────── */}
-      <EvidenceSection />
-
-      {/* ── SQUARE MATRIX DIVIDER 2 ───────────────────────────────────────── */}
-      <div className="w-full h-24 sm:h-32">
-        <SquareMatrix
-          width="100%"
-          height="100%"
-          gridSize={18}
-          speed={0.8}
-          waveFrequency={0.9}
-          waveAmplitude={0.5}
-          preset={4}
-          color="#FF6B35"
-          backgroundColor="#0a0a0a"
-          cornerRadius={0.9}
-          cellGap={0.2}
-          peakBrightness={1.4}
-          baseBrightness={0.03}
-          cursorInteraction
-          cursorIntensity={1.5}
-          opacity={0.9}
-        />
-      </div>
-
-      {/* ── FOOTER ────────────────────────────────────────────────────────── */}
-      <footer className="w-full py-20 px-4 sm:px-6 bg-[#0a0a0a] border-t border-white/8">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-10 mb-14">
-            {/* Team */}
-            <div>
-              <span className="mono text-xs tracking-widest text-neutral-600 uppercase mb-5 block">
-                Team
-              </span>
-              <div className="flex flex-col gap-3">
-                {[
-                  { name: "Joshua", role: "AI / CII Pipeline" },
-                  { name: "Philip", role: "Solana Smart Contracts" },
-                  { name: "Lucas", role: "Systems (remote)" },
-                ].map((m) => (
-                  <div key={m.name} className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#FFD700]/30 to-[#FF6B35]/30 border border-white/10 flex items-center justify-center text-xs font-semibold text-white">
-                      {m.name[0]}
-                    </div>
-                    <div>
-                      <span className="text-white text-sm font-medium">
-                        {m.name}
-                      </span>
-                      <span className="text-neutral-500 text-xs ml-2">
-                        {m.role}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+        <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between border-b border-[#6f4a2f]/35 pb-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#c77b42]/45 bg-[#1a120c]/80">
+              <HardHat className="h-4 w-4 text-[#f1c27d]" />
             </div>
+            <span className="mono text-sm tracking-[0.32em] text-[#f1c27d]">
+              VINNA
+            </span>
+          </div>
+          <div className="hidden items-center gap-8 mono text-xs uppercase tracking-[0.22em] text-[#8f806d] md:flex">
+            <a href="#system" className="transition hover:text-[#f1c27d]">
+              System
+            </a>
+            <a href="#evidence" className="transition hover:text-[#f1c27d]">
+              Evidence
+            </a>
+            <a href="#settlement" className="transition hover:text-[#f1c27d]">
+              Settlement
+            </a>
+          </div>
+        </nav>
 
-            {/* Stack */}
-            <div>
-              <span className="mono text-xs tracking-widest text-neutral-600 uppercase mb-5 block">
-                Stack
-              </span>
-              <div className="flex flex-col gap-2">
-                {[
-                  ["Vision Judge", "Claude Sonnet 4.6"],
-                  ["Classifier", "CII Standard"],
-                  ["3D Reconstruction", "COLMAP"],
-                  ["Rewards Chain", "Solana SPL Token"],
-                  ["Compliance", "30-Rule OSHA Engine"],
-                ].map(([k, v]) => (
-                  <div key={k} className="flex gap-3 text-sm">
-                    <span className="text-neutral-600 w-36 shrink-0">{k}</span>
-                    <span className="text-neutral-300">{v}</span>
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 pt-20 lg:grid-cols-[1fr_430px] lg:items-end lg:pt-28">
+          <div>
+            <p className="mono mb-6 max-w-xl text-xs uppercase tracking-[0.34em] text-[#c77b42]">
+              spatial proof of work / hardhat video / CII index
+            </p>
+            <h1 className="max-w-5xl text-6xl font-light leading-[0.88] tracking-[-0.08em] text-[#f8efe0] sm:text-8xl lg:text-[9.5rem]">
+              site intelligence that can pay out.
+            </h1>
+            <p className="mt-8 max-w-2xl text-lg leading-8 text-[#b9aa94]">
+              VINNA turns bodycam footage into a verifiable construction ledger:
+              where work happened, whether it was productive, and how that
+              evidence maps to worker rewards.
+            </p>
+
+            <div className="mt-10 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+              {metricCards.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="border border-[#6f4a2f]/45 bg-[#100b07]/70 px-4 py-4 backdrop-blur"
+                >
+                  <div className="text-3xl font-semibold text-[#f1c27d]">
+                    {metric.value}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Brand */}
-            <div className="flex flex-col items-center sm:items-end gap-3">
-              <TextScatter
-                text="VINNA"
-                as="div"
-                className="text-4xl font-bold text-white tracking-tight"
-                velocity={100}
-                rotation={40}
-                duration={1.4}
-                returnAfter={0.6}
-              />
-              <span className="mono text-xs text-neutral-600 text-center sm:text-right max-w-[180px] leading-relaxed">
-                Verifiable Rewards for Construction Safety Intelligence
-              </span>
+                  <div className="mono mt-3 text-[10px] uppercase tracking-[0.18em] text-[#c77b42]">
+                    {metric.label}
+                  </div>
+                  <div className="mt-2 text-xs text-[#8f806d]">{metric.sub}</div>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/6">
-            <span className="mono text-xs text-neutral-700">
-              Presented at HackTech Caltech · Ironsite Prize Track · 2026
-            </span>
-            <div className="flex items-center gap-2">
+          <div className="relative border border-[#6f4a2f]/45 bg-[#0b0806]/80 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+            <div className="mb-4 flex items-center justify-between border-b border-[#6f4a2f]/30 pb-3">
+              <span className="mono text-xs uppercase tracking-[0.24em] text-[#c77b42]">
+                live index
+              </span>
+              <span className="flex items-center gap-2 mono text-xs text-[#76c7ae]">
+                <span className="h-2 w-2 rounded-full bg-[#76c7ae]" />
+                operational
+              </span>
+            </div>
+            <div className="space-y-3">
+              {evidenceRows.map((row) => (
+                <div
+                  key={row[0]}
+                  className="grid grid-cols-[58px_42px_1fr_74px_48px] items-center gap-2 border border-[#2a1d14] bg-[#110c08] px-3 py-3 mono text-[11px] text-[#b9aa94]"
+                >
+                  <span className="text-[#8f806d]">{row[0]}</span>
+                  <span
+                    className={
+                      row[1] === "NC" ? "text-[#d9694f]" : "text-[#76c7ae]"
+                    }
+                  >
+                    {row[1]}
+                  </span>
+                  <span className="truncate text-[#f4eadb]">{row[2]}</span>
+                  <span className="text-[#c77b42]">{row[3]}</span>
+                  <span>{row[4]}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 border border-[#6f4a2f]/30 bg-[#0c0907] p-4">
+              <div className="mono text-[11px] uppercase tracking-[0.2em] text-[#8f806d]">
+                current verdict
+              </div>
+              <div className="mt-3 text-2xl font-semibold text-[#f4eadb]">
+                11 raffle tickets unlocked
+              </div>
+              <p className="mt-2 text-sm leading-6 text-[#a99a86]">
+                Wrench time exceeds the 30% baseline. Evidence chain is ready
+                for Solana devnet settlement.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="system"
+        className="border-y border-[#2a1d14] bg-[#0b0806] px-5 py-20 sm:px-8 lg:px-12"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <div>
+              <p className="mono text-xs uppercase tracking-[0.32em] text-[#c77b42]">
+                system map
+              </p>
+              <h2 className="mt-3 max-w-3xl text-4xl font-light tracking-[-0.04em] text-[#f4eadb] md:text-6xl">
+                not a dashboard. a jobsite blackbox.
+              </h2>
+            </div>
+            <p className="max-w-md text-sm leading-6 text-[#9c8d78]">
+              The interface keeps the fiction simple: every frame enters the
+              ledger, gets spatially anchored, classified, and settled.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-4">
+            {systemSteps.map((step) => (
               <div
-                className="w-2 h-2 rounded-full animate-[safepulse_2s_ease-in-out_infinite]"
-                style={{ background: "#4ade80" }}
-              />
-              <span className="mono text-xs text-neutral-600">
-                System operational
-              </span>
-            </div>
+                key={step.title}
+                className="border border-[#6f4a2f]/35 bg-[#100b07] p-5"
+              >
+                <step.icon className="h-5 w-5 text-[#f1c27d]" />
+                <p className="mono mt-10 text-[11px] uppercase tracking-[0.24em] text-[#c77b42]">
+                  {step.eyebrow}
+                </p>
+                <h3 className="mt-3 text-xl font-semibold text-[#f4eadb]">
+                  {step.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-[#9c8d78]">
+                  {step.body}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
-      </footer>
-    </div>
+      </section>
+
+      <section
+        id="evidence"
+        className="bg-[#080604] px-5 py-20 sm:px-8 lg:px-12"
+      >
+        <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-3">
+          <ContourPanel
+            number="01 / risk terrain"
+            title="zone-aware productivity"
+            body="Frame classifications are grouped by site zone so output has a place, not just a timestamp."
+          />
+          <ContourPanel
+            number="02 / signal decay"
+            title="gaming resistance"
+            body="Temporal consistency makes reward hacking less useful as noisy claims fail to compound."
+          />
+          <ContourPanel
+            number="03 / settlement"
+            title="payable evidence"
+            body="Every raffle ticket can point back to the exact frames and spatial claims that created it."
+          />
+        </div>
+      </section>
+
+      <section
+        id="settlement"
+        className="px-5 pb-24 sm:px-8 lg:px-12"
+      >
+        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="border border-[#6f4a2f]/35 bg-[#0f0a07] p-7">
+            <ShieldCheck className="h-6 w-6 text-[#76c7ae]" />
+            <p className="mono mt-8 text-xs uppercase tracking-[0.28em] text-[#c77b42]">
+              submission claim
+            </p>
+            <h2 className="mt-3 text-4xl font-light tracking-[-0.04em]">
+              spatial work should be auditable.
+            </h2>
+            <p className="mt-5 text-sm leading-7 text-[#a99a86]">
+              VINNA is intentionally dramatic, but the proof path is concrete:
+              CII classification, COLMAP anchoring, risk zones, and on-chain
+              reward logic wired into one evidence chain.
+            </p>
+          </div>
+
+          <div className="border border-[#6f4a2f]/35 bg-[#0f0a07] p-7">
+            <div className="mb-5 flex items-center gap-3">
+              <Terminal className="h-5 w-5 text-[#f1c27d]" />
+              <span className="mono text-xs uppercase tracking-[0.26em] text-[#c77b42]">
+                raffle.py
+              </span>
+            </div>
+            <pre className="overflow-hidden whitespace-pre-wrap mono text-sm leading-7 text-[#d8c6aa]">
+{`=== IRONSITE PRODUCTIVITY RAFFLE ===
+W002: 90.0% productive (900 tickets)
+W003: 90.0% productive (900 tickets)
+W001: 80.0% productive (800 tickets)
+
+WINNER: W003
+PAYOUT: $100 USDC
+MODE: devnet / mock fallback`}
+            </pre>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
