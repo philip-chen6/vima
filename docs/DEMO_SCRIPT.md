@@ -44,7 +44,7 @@
 **Action:** Switch to Tab 3 — `localhost:8765/cii/summary`. The JSON should be loaded.
 
 **Narrate:**
-> "Across 30 frames of real site footage: 86.7% productive. Mean confidence 0.939. High-confidence spatial classification on real-world construction data. This is the number that feeds the raffle."
+> "Across 30 frames of real site footage: 86.7% productive. Mean P-confidence 0.939. High-confidence spatial classification on real-world construction data. This is the number that feeds the raffle."
 
 **What to show:** Point at `wrench_time_pct`, `productive`, and `raffle_tickets` fields in the JSON. Pause briefly on each.
 
