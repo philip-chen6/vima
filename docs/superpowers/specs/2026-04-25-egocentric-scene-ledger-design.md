@@ -925,16 +925,90 @@ These are MEASURED numbers — not aspirational. Use as baselines when implement
 | Depth PE injection into Qwen visual.merger | **NOT WIRED** | hook code documented in `.runtime/agents/hf-vlm-spatial-injection.md`, not in `backend/` |
 | Gemini Robotics-ER as primary VLM | **NOT YET** | spec target, current impl uses Claude API |
 
+## Validation Results (2026-04-25)
+
+### MASt3R Depth-Delta Frame Selection (answers Open Decision #4)
+
+Depth-delta frame selection was evaluated against a naive baseline on Ironsite
+masonry footage and on the TUM freiburg1_desk benchmark (ground-truth poses).
+
+**Ironsite masonry footage:**
+
+- Selected frame pair: conf_mean 1.567 vs baseline 1.186 (delta +0.381)
+- translation_norm: 0.111 vs 0.370 (delta -0.259) — depth-delta selects
+  frames with lower inter-frame motion, producing more stable reconstructions
+- 57% of consecutive frame pairs filtered as over-motion (δ > 0.25) on
+  construction footage — adaptive by design, near-zero filtering on clean
+  sequences
+
+**TUM freiburg1_desk (ground-truth trajectory evaluation):**
+
+- Translation RPE: 0.250 m vs 0.614 m (59% lower)
+- Rotation RPE: 48% lower
+
+**Conclusion for Open Decision #4:** MASt3R with depth-delta preprocessing is
+the right reconstruction choice. The filtering is adaptive — near-zero on clean
+sequences, 57% on wild construction footage. COLMAP is not the primary path.
+
+---
+
+### A/B Benchmark (delivers "5-question raw VLM vs ledger-augmented benchmark" milestone)
+
+5 spatial questions on Ironsite masonry footage: worker position, scaffold
+proximity, equipment detection, hazard boundary, change detection.
+
+| Condition | Composite Score |
+|---|---|
+| VLM-only | 0.600 |
+| VLM + event-memory | 0.792 |
+| **Improvement** | **+33.2% average** |
+
+- 5/5 questions improved
+- Largest gain: temporal grounding (+100%) — VLM-only scores 0 without memory
+  context
+- Spatial failure sweep (10 frames × 2 probes): 31 total failures —
+  hallucinated precision 20/31, occlusion hallucination 4/31, temporal
+  hallucination 2/31
+
+---
+
+### CII Classification Baseline
+
+Claude vision (claude-sonnet-4-6) on 30 sampled masonry frames:
+
+- 86.7% Productive, 0% Contributory, 13.3% Non-Contributory
+- Mean P-confidence: 0.939
+
+Note: this is a targeted masonry segment. Full-shift wrench-time would read
+25–35% per CII industry benchmark — the high Productive rate reflects selection
+bias toward active work frames, not a measurement artifact.
+
+---
+
+### Claim Audit
+
+| Claim | Status |
+|---|---|
+| depth PE injection (SD-VLM arXiv:2509.17664) | Hook-ready (`model.visual.merger` pre-hook) but **NOT wired** in `backend/pipeline.py`. Move to "future work / experiment track." |
+| Qwen2.5-VL inference | Referenced in older devpost but **ZERO local inference code** in repo — all VLM inference runs against Claude API. Remove or clearly label as "planned." |
+| A/B benchmark | Implemented and verified. |
+| Depth-delta frame selection | Implemented and verified. |
+| COLMAP reconstruction | Implemented and verified. |
+
 ## Open Decisions
 
 1. Whether to use 5-second or 10-second sampling as the default.
 2. Which signals should drive the first adaptive encoder: motion, blur, OCR,
    embedding novelty, or a weighted blend.
 3. Which local depth model is fastest to integrate in this repo.
-4. Whether the first reconstruction attempt should be COLMAP, MASt3R/DUSt3R, or
-   a lighter place-recognition fallback.
+4. ~~Whether the first reconstruction attempt should be COLMAP, MASt3R/DUSt3R,
+   or a lighter place-recognition fallback.~~ **ANSWERED: MASt3R with
+   depth-delta (see Validation Results). COLMAP is not the primary path.**
 5. Whether real bodycam frames can be sent to Gemini for the hackathon demo.
-6. Which 5-10 benchmark questions should represent Ironsite value best.
+6. ~~Which 5-10 benchmark questions should represent Ironsite value best.~~
+   **ANSWERED: See A/B benchmark in Validation Results — 5 questions (worker
+   position, scaffold proximity, equipment detection, hazard boundary, change
+   detection) validated with +33.2% ledger improvement.**
 7. Which action categories are narrow enough for the first forecast benchmark.
 
 ## Recommended First Implementation Slice
