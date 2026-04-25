@@ -33,7 +33,7 @@ VINNA is an event-memory augmented spatial reasoning system for egocentric const
 3. **Event memory construction** — Build a structured timeline of what changed, when, and where in the worker's egocentric view
 4. **VLM augmentation** — When the VLM is asked a spatial question, inject relevant event-memory context: before/after frames, change metadata, temporal anchors
 
-**The result:** On our A/B eval using real Ironsite masonry footage, the event-memory-augmented VLM outperformed the baseline VLM by **+33.2% composite score** across 5 spatial question categories — correctly identifying what changed between passes, avoiding hallucinated progress, and grounding distance claims in actual frame evidence instead of guessing.
+**The result:** On our A/B eval using real Ironsite masonry footage, the event-memory-augmented VLM outperformed the baseline VLM by **+32.0% composite score** (0.600 → 0.792) across 5 spatial question categories — correctly identifying what changed between passes, avoiding hallucinated progress, and grounding distance claims in actual frame evidence instead of guessing.
 
 The demo is a side-by-side: ask the same spatial question with and without event memory. Watch the baseline hallucinate. Watch the augmented version get it right.
 
