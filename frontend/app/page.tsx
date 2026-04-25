@@ -30,21 +30,21 @@ function CIIStatsSection() {
 
   const stats = [
     {
-      value: "9.1%",
+      value: "86.7%",
       label: "Productive (P)",
       desc: "Workers actively contributing to deliverable work",
       color: "#4ade80",
       delay: 0,
     },
     {
-      value: "54.5%",
+      value: "0%",
       label: "Contributory (C)",
       desc: "Necessary support activities per CII standard",
       color: "#FFD700",
       delay: 0.1,
     },
     {
-      value: "36.4%",
+      value: "13.3%",
       label: "Non-Contributory (NC)",
       desc: "Idle, waiting, or rework — target for elimination",
       color: "#FF6B35",
@@ -68,7 +68,7 @@ function CIIStatsSection() {
             CII Activity Classification
           </span>
           <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-4">
-            22 sampled frames. Real numbers.
+            30 sampled frames. Real numbers.
           </h2>
           <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed">
             Every payout is anchored to verified productive time — not
@@ -83,8 +83,8 @@ function CIIStatsSection() {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           className="flex rounded-full overflow-hidden h-4 mb-12 origin-left"
         >
-          <div style={{ width: "9.1%", background: "#4ade80" }} />
-          <div style={{ width: "54.5%", background: "#FFD700" }} />
+          <div style={{ width: "86.7%", background: "#4ade80" }} />
+          <div style={{ width: "0%", background: "#FFD700" }} />
           <div style={{ flex: 1, background: "#FF6B35" }} />
         </motion.div>
 
