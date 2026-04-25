@@ -83,7 +83,7 @@ Let the output print live. Don't cut away before the winner line appears.
 
 ---
 
-### Notes for Stephen
+### Recording Notes (Joshua — Stephen exited Apr 11, this is your solo task)
 
 - Speak at a normal pace. The timestamps are loose guides, not hard cuts.
 - If the backend is slow on `/demo` (595ms/frame × 5 = 3s total), pre-load the tab so it's already returned.
