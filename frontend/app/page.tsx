@@ -196,9 +196,9 @@ function ClockworkLoader() {
       <div className="relative h-56 w-56">
         <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.10),transparent_58%)]" />
         <Gear id="gear-main" size={112} teeth={24} duration={7.2} className="left-[72px] top-[70px]" />
-        <Gear id="gear-upper" size={76} teeth={18} duration={4.7} reverse className="left-[126px] top-[42px]" />
-        <Gear id="gear-left" size={66} teeth={16} duration={4.9} reverse className="left-[42px] top-[72px]" />
-        <Gear id="gear-lower" size={78} teeth={18} duration={5.3} reverse className="left-[57px] top-[126px]" />
+        <Gear id="gear-upper" size={76} teeth={18} duration={4.7} reverse className="left-[133px] top-[33px]" />
+        <Gear id="gear-left" size={66} teeth={16} duration={4.9} reverse className="left-[32px] top-[62px]" />
+        <Gear id="gear-lower" size={78} teeth={18} duration={5.3} reverse className="left-[43px] top-[133px]" />
       </div>
     </div>
   );
