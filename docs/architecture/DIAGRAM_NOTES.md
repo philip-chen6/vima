@@ -23,17 +23,14 @@ paper/demo figure in Figma or TikZ and export a static SVG/PDF.
 
 ## Current Diagram Files
 
-- `egocentric-scene-ledger-architecture.excalidraw`
-  High-level system architecture.
-
 - `egocentric-scene-ledger-paper-schematic.excalidraw`
   Paper-style schematic inspired by ViT diagrams: frame tokens, temporal
   embeddings, repeated evidence-fusion block, and output heads.
 
 ## Figure Direction
 
-The right visual metaphor is not a robot-control IDM. It is a **video evidence
-encoder**:
+The right visual metaphor is not a robot-control labeler. It is a **video
+evidence encoder**:
 
 ```text
 bodycam frames
