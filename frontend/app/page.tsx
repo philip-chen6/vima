@@ -55,6 +55,37 @@ const systemSteps = [
   },
 ];
 
+const failureExamples = [
+  {
+    label: "raw VLM",
+    title: "sees a worker laying block",
+    body: "Correct description, wrong accounting. The model does not know whether the camera wearer performed the work.",
+  },
+  {
+    label: "VINNA",
+    title: "binds work to place and evidence",
+    body: "Frames are labeled, spatially clustered, and stored as an auditable ledger before payout logic touches them.",
+  },
+];
+
+const proofCards = [
+  {
+    number: "01 / failure",
+    title: "presence is not productivity",
+    body: "A hardhat camera can pass by active work without the wearer doing that work. The system has to separate visual activity from credit.",
+  },
+  {
+    number: "02 / fix",
+    title: "frames become claims",
+    body: "Each sampled frame gets a wrench-time label, confidence, timestamp, and zone assignment instead of a loose caption.",
+  },
+  {
+    number: "03 / evidence",
+    title: "claims stay replayable",
+    body: "Every metric can point back to the frame ledger, so judges can inspect the exact footage behind the payout.",
+  },
+];
+
 function gearPath(teeth: number, rootRadius: number, outerRadius: number) {
   const points: string[] = [];
   const steps = teeth * 4;
@@ -165,9 +196,9 @@ function ClockworkLoader() {
       <div className="relative h-56 w-56">
         <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.10),transparent_58%)]" />
         <Gear id="gear-main" size={112} teeth={24} duration={7.2} className="left-[72px] top-[70px]" />
-        <Gear id="gear-upper" size={76} teeth={18} duration={4.7} reverse className="left-[140px] top-[24px]" />
-        <Gear id="gear-left" size={66} teeth={16} duration={4.9} reverse className="left-[22px] top-[52px]" />
-        <Gear id="gear-lower" size={78} teeth={18} duration={5.3} reverse className="left-[29px] top-[140px]" />
+        <Gear id="gear-upper" size={76} teeth={18} duration={4.7} reverse className="left-[126px] top-[42px]" />
+        <Gear id="gear-left" size={66} teeth={16} duration={4.9} reverse className="left-[42px] top-[72px]" />
+        <Gear id="gear-lower" size={78} teeth={18} duration={5.3} reverse className="left-[57px] top-[126px]" />
       </div>
     </div>
   );
@@ -398,24 +429,43 @@ export default function VinnaPage() {
           <div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div>
               <p className="mono text-xs uppercase tracking-[0.32em] text-[#c77b42]">
-                proof stack
+                problem
               </p>
               <h2 className="mt-3 max-w-3xl text-4xl font-light tracking-normal text-[#f4eadb] md:text-6xl">
-                not vibes. evidence.
+                cameras see activity. payouts need proof.
               </h2>
             </div>
             <p className="max-w-md text-sm leading-6 text-[#9c8d78]">
-              The product story below the hero should be simple: classify work,
-              anchor it to place, then show the evidence chain.
+              The hard part is not making another video dashboard. It is
+              turning messy egocentric footage into claims that survive audit.
             </p>
           </div>
 
+          <div className="mb-16 grid gap-4 lg:grid-cols-2">
+            {failureExamples.map((example) => (
+              <div
+                key={example.label}
+                className="border border-[#6f4a2f]/35 bg-[#100b07] p-7"
+              >
+                <p className="mono text-xs uppercase tracking-[0.28em] text-[#c77b42]">
+                  {example.label}
+                </p>
+                <h3 className="mt-8 text-3xl font-light tracking-normal text-[#f4eadb]">
+                  {example.title}
+                </h3>
+                <p className="mt-4 max-w-xl text-sm leading-7 text-[#a99a86]">
+                  {example.body}
+                </p>
+              </div>
+            ))}
+          </div>
+
           <div className="mb-16 grid gap-5 lg:grid-cols-[1fr_430px]">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="grid self-start grid-cols-2 gap-3 sm:grid-cols-4">
               {metricCards.map((metric) => (
                 <div
                   key={metric.label}
-                  className="border border-[#6f4a2f]/45 bg-[#100b07]/70 px-4 py-4 backdrop-blur"
+                  className="min-h-[142px] border border-[#6f4a2f]/45 bg-[#100b07]/70 px-4 py-4 backdrop-blur"
                 >
                   <div className="text-3xl font-semibold text-[#f1c27d]">
                     {metric.value}
@@ -500,21 +550,14 @@ export default function VinnaPage() {
         className="bg-[#080604] px-5 py-20 sm:px-8 lg:px-12"
       >
         <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-3">
-          <ContourPanel
-            number="01 / risk terrain"
-            title="zone-aware productivity"
-            body="Frame classifications are grouped by site zone so output has a place, not just a timestamp."
-          />
-          <ContourPanel
-            number="02 / signal decay"
-            title="gaming resistance"
-            body="Temporal consistency makes reward hacking less useful as noisy claims fail to compound."
-          />
-          <ContourPanel
-            number="03 / settlement"
-            title="payable evidence"
-            body="Every raffle ticket can point back to the exact frames and spatial claims that created it."
-          />
+          {proofCards.map((card) => (
+            <ContourPanel
+              key={card.number}
+              number={card.number}
+              title={card.title}
+              body={card.body}
+            />
+          ))}
         </div>
       </section>
 
@@ -526,15 +569,15 @@ export default function VinnaPage() {
           <div className="border border-[#6f4a2f]/35 bg-[#0f0a07] p-7">
             <ShieldCheck className="h-6 w-6 text-[#76c7ae]" />
             <p className="mono mt-8 text-xs uppercase tracking-[0.28em] text-[#c77b42]">
-              submission claim
+              demo claim
             </p>
             <h2 className="mt-3 text-4xl font-light tracking-normal">
-              spatial work should be auditable.
+              show the clip, then show the ledger.
             </h2>
             <p className="mt-5 text-sm leading-7 text-[#a99a86]">
-              VINNA is intentionally dramatic, but the proof path is concrete:
-              CII classification, COLMAP anchoring, risk zones, and on-chain
-              reward logic wired into one evidence chain.
+              The judging story should be concrete: raw footage goes in, a
+              spatial evidence table comes out, and the payout can be traced
+              back to frame-level claims.
             </p>
           </div>
 
