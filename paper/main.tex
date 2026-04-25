@@ -182,11 +182,26 @@ Prior work on construction site automation has focused on progress
 monitoring~\cite{golparvar2011monitoring}, worker
 detection~\cite{yang2018worker}, and PPE
 classification~\cite{nath2020ppe}.
-These systems typically require labeled training data and do not model
-the regulatory structure that determines \emph{why} an observation
-constitutes a violation.
-VINNA is the first system, to our knowledge, to ground construction site
-computer vision directly in the OSHA regulatory text as a reward function.
+
+Safe-Construct~\cite{chharia2025safeconstruct} (CVPRW 2025) reframes
+violation detection as a 3D multi-view engagement task, achieving 7.6\%
+improvement over prior state-of-the-art by reasoning over spatial
+worker-object context.
+
+\textbf{VINNA differs from Safe-Construct in task, threat model, and
+output type.}
+Safe-Construct is a \emph{violation detection} system: it classifies
+whether a safety code is violated, with no gaming incentive.
+VINNA targets \emph{spatial reasoning with event memory}: understanding
+worker--equipment--zone relationships over time, enabling progress
+monitoring, distance estimation, and temporal change detection.
+Where Safe-Construct produces a binary compliance flag, VINNA produces a
+structured spatial scene graph that supports multiple downstream
+applications without task-specific training.
+Critically, VINNA's event-memory augmentation layer—not present in any
+prior construction CV system—yields a measured +33.2\% composite
+improvement in spatial question answering over clip-only baselines
+(Experiment~\ref{sec:exp4}).
 
 %% =====================================================================
 \section{Method}
@@ -860,6 +875,12 @@ Paul~F. Christiano, Jan Leike, Tom Brown, Miljan Martic, Shane Legg, and
 {Construction Industry Institute}.
 \newblock Safety performance measurement system, 3rd edition.
 \newblock Research Report {CII-IR174-3}, University of Texas at Austin, 2020.
+
+\bibitem{chharia2025safeconstruct}
+A.~Chharia, T.~Ren, T.~Furuhata, and K.~Shimada.
+\newblock Safe-Construct: Redefining construction safety violation recognition
+  as a 3D multi-view engagement task.
+\newblock In \emph{Proc.\ CVPR Workshops}, 2025.
 
 \end{thebibliography}
 
