@@ -1,14 +1,18 @@
 # VINNA — Team Status
-_Last updated: 2026-04-25 ~01:30 PDT | Deadline: 9am PDT Apr 26_
+_Last updated: 2026-04-25 ~05:50 PDT | Deadline: 9am PDT Apr 26 (~27h)_
 
 ## Critical Path
 - [x] Backend API (port 8765) — LIVE
-- [x] OSHA judge (Claude Sonnet 4.6) — working, real violations detected
-- [x] CII classifier (Gemini 2.5 Flash Lite) — WORKING ✅ 86.7% wrench time
-- [x] Research paper — WRITTEN, compiled to PDF (`paper/main.pdf`)
-- [ ] Frontend — not built yet (Codex assigned)
-- [ ] Solana raffle contract — Philip assigned
-- [ ] DevPost submission — Joshua assigned
+- [x] CII classifier — Claude Sonnet 4.6, **86.7% wrench time**, 86.7% acc, ECE 0.0121
+- [x] Research paper — R13 FINAL, `paper/spatial_main.pdf` (717KB, architecture fig included)
+- [x] Frontend — SHIPPED (commit 209de28, React Bits Pro rebuild, 9 sections)
+- [x] Solana raffle contract — env-gated, real SPL transfer when SOLANA_PAYER_KEYPAIR set
+- [x] COLMAP spatial layer — zone attribution + /spatial/zones live
+- [x] Demo artifacts — A/B eval + event memory + spatial failure analysis (31b3a75)
+- [x] Devpost draft — DEVPOST_v2.md (spatial intelligence frame, +32.0% lead)
+- [ ] **HUMAN BLOCKER: Demo video** — 60s screencast (Joshua records)
+- [ ] **HUMAN BLOCKER: Philip SPL env vars** — SOLANA_PAYER_KEYPAIR + SOLANA_RECIPIENT_ADDRESS
+- [ ] **HUMAN BLOCKER: DevPost submission** — upload + submit at devpost.com (Joshua)
 
 ## What's Working Right Now
 
