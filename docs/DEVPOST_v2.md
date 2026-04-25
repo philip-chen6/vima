@@ -34,7 +34,6 @@ On 30 frames of real Ironsite masonry bodycam footage:
 - **0% Contributory** (no rework or material handling)
 - **13.3% Non-Contributory** (4 frames of idle/walking)
 - Mean P-confidence: **0.939**
-- ECE calibration: **0.0121** (well-calibrated)
 - Session latency: **595ms/frame** at **1.68 fps**
 
 ### 2. Temporal gaming resistance
@@ -65,7 +64,7 @@ Worker productivity percentages map to raffle ticket allocations. Winners are dr
 
 ## Challenges
 
-**Calibration under class imbalance.** Real masonry footage is mostly productive — 86.7% P in 30 frames. Getting a well-calibrated classifier (ECE 0.0121) on heavily imbalanced data required careful confidence thresholding in the prompt and explicit reasoning chain requirements, not just output labels.
+**Calibration under class imbalance.** Real masonry footage is mostly productive — 86.7% P in 30 frames. Getting confident classifications on heavily imbalanced data required careful confidence thresholding in the prompt and explicit reasoning chain requirements, not just output labels.
 
 **Gaming threat model.** Most construction AI ignores adversarial workers. We had to think through the full threat surface: what does a worker with a headcam do when their wages depend on classification output? Spatial anchoring and temporal consistency requirements are the answer — but designing those constraints took the majority of the architecture work.
 
