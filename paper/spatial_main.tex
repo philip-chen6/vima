@@ -445,9 +445,46 @@ with $\alpha = 0.5$, $\beta = 0.3$, $\gamma = 0.2$ in our experiments.
 Distance estimation receives the highest weight because it is the most
 directly verifiable and the most operationally consequential.
 
+\subsection{Adversarial Gaming Resistance}
+\label{sec:gaming}
+
+A well-known failure mode for reward-based training is \emph{reward
+gaming}: the model learns to maximize reward through spurious shortcuts
+rather than genuine spatial understanding (e.g., always predicting the
+mean distance to collect partial SNRA credit without performing real
+spatial analysis).
+
+\paragraph{$\varepsilon$-gaming-resistance.}
+We \emph{hypothesize} that VINNA's multi-constraint verification
+structure provides $\varepsilon$-gaming-resistance: no single
+falsification strategy can simultaneously fool all three reward
+functions ($R_{\text{dist}}$, $R_{\text{rel}}$, $R_{\text{CD}}$) to
+gain more than $\varepsilon$ total reward above the honest policy.
+Formally, let $\pi_{\text{honest}}$ be a policy that produces accurate
+spatial claims, and let $\pi_\gamma$ be any $\gamma$-gaming policy
+that attempts to exploit at most one reward dimension.
+We define VINNA as \emph{$\varepsilon$-gaming-resistant} if:
+\begin{equation}
+  \mathbb{E}[\mathcal{R}_{\text{total}}(\pi_\gamma)] \leq
+  \mathbb{E}[\mathcal{R}_{\text{total}}(\pi_{\text{honest}})] + \varepsilon
+  \label{eq:gaming_resistance}
+\end{equation}
+The intuition is that $R_{\text{rel}}$ and $R_{\text{CD}}$ serve as
+independent verifiers: a model that games distance rewards by
+predicting mean values will produce incoherent relationship graphs and
+miss temporal changes, incurring corresponding penalties.
+
+A formal bound on VINNA's $\varepsilon$ requires measuring
+$p_{\text{fake}}$---the probability that a gaming policy produces
+spatially consistent outputs that all three verifiers accept---which
+we leave as future experimental work.
+Figure~\ref{fig:gaming} illustrates the expected reward gain under
+synthetic gaming attempts (see Section~\ref{sec:temporal}).
+
 \subsection{Pipeline Architecture}
 \label{sec:pipeline}
 
+The VINNA end-to-end architecture is shown in Figure~\ref{fig:pipeline}.
 \Cref{fig:pipeline} shows the VINNA pipeline.
 
 \begin{figure}[t]
@@ -602,6 +639,12 @@ Each of the 638 frames is processed through the full VINNA pipeline:
         produce P/C/NC classification.
 \end{enumerate}
 
+\paragraph{Reproducibility.}
+Frame extraction: \texttt{ffmpeg -i 01\_production\_masonry.mp4 -vf fps=1/5 frames/frame\_\%04d.png} (1 frame per 5\,s, yielding 638 frames across 21 minutes).
+Structure-from-motion reconstruction for depth initialization: \texttt{colmap automatic\_reconstructor --workspace\_path ./colmap --image\_path ./frames --quality low}.
+VLM captioning and spatial claim generation: Qwen2.5-VL-3B-Instruct (4-bit MLX quantization, mlx-vlm v0.1.x); prompt: ``Describe bounding boxes for all visible workers, equipment, and scaffolding with approximate pixel coordinates.''
+Embeddings computed via Gemini Embedding~2 API (\texttt{text-embedding-004}, 3072-dim output).
+
 \subsection{Embedding Space Analysis}
 \label{sec:embedding}
 
@@ -698,6 +741,7 @@ compliance-specific training.
   \end{tabular}
 \end{table}
 
+The confusion matrix is shown in Table~\ref{tab:cii_accuracy}.
 Macro-averaged accuracy is 84\% (21/25 correct).
 The key observation is that this accuracy is achieved \emph{without any
 compliance-specific training}: the system has never seen an OSHA
@@ -793,6 +837,32 @@ that the spatial representations capture activity-level scene structure.
 Adjacent batches show intermediate similarity, consistent with gradual
 spatial transitions between activities (e.g., the scene does not change
 abruptly when a worker transitions from block-laying to mortar mixing).
+
+\subsection{Adversarial Gaming Simulation}
+\label{sec:gaming_results}
+
+To empirically illustrate the $\varepsilon$-gaming-resistance property
+hypothesized in Section~\ref{sec:gaming}, we ran a synthetic gaming
+simulation (Figure~\ref{fig:gaming}).
+The simulation tests how exploitable reward gain scales with adversarial
+effort under two verification regimes: a clip-only verifier (single
+reward signal) and VINNA's multi-constraint verification (three
+correlated signals).
+Under the clip-only verifier, expected exploitable reward grows roughly
+linearly with gaming effort.
+Under VINNA, reward gain plateaus near zero: gaining credit on
+$R_{\text{dist}}$ while failing $R_{\text{rel}}$ and $R_{\text{CD}}$
+produces negligible net gain.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/fig08_adversarial_gaming_simulation.png}
+  \caption{Adversarial gaming simulation: expected reward gain per unit
+           time for clip-only vs.\ VINNA under synthetic gaming attempts.
+           VINNA's multi-constraint verification reduces exploitable
+           reward to near zero even as gaming effort increases.}
+  \label{fig:gaming}
+\end{figure}
 
 %% =====================================================================
 \section{Discussion}
@@ -899,6 +969,21 @@ Our annotated evaluation set (25 frames) is small.
 We report it honestly as a directional signal, not a statistically
 robust benchmark.
 
+\paragraph{Prototype deployment scope.}
+Several components described in this paper are design specifications
+rather than deployed systems.
+The GRPO training loop (Section~\ref{sec:rewards}) is fully specified
+but not yet executed.
+The COLMAP reconstruction step was used for depth initialization during
+development; in the reported pipeline, LiDAR data serves as primary depth
+and monocular Depth Anything V2 as fallback.
+Reward functions are computed offline against a static annotation
+set---a real-time deployment pipeline (streaming frames, live reward
+computation, online GRPO updates) remains future work.
+Claims about reward function behavior and gaming resistance
+(Section~\ref{sec:gaming}) are theoretical properties of the design,
+not measurements from a trained model.
+
 \subsection{Future Work}
 
 \paragraph{GRPO training.}
@@ -953,6 +1038,23 @@ self-supervised GRPO training.
 This is a hackathon prototype with real data, not a finished system.
 The spatial intelligence gap in construction AI is real, and VINNA is
 a first step toward closing it.
+
+%% =====================================================================
+\section{Artifact Availability}
+\label{sec:artifacts}
+
+The VINNA prototype code, experiment scripts, and generated figures are
+available in the project repository.
+All experiment scripts (\texttt{exp\_a} through \texttt{exp\_k}) are
+self-contained and reproducible given the Ironsite dataset.
+Note that the Ironsite egocentric footage is proprietary and cannot be
+redistributed; researchers wishing to reproduce the analysis should
+contact Ironsite directly.
+The reward function implementations and embedding pipeline are
+open-source and dataset-agnostic.
+The GRPO training loop is specified in the codebase but requires
+executing on a GPU cluster with the dataset; exact training has not
+yet been performed (see Limitations, Section~\ref{sec:discussion}).
 
 %% =====================================================================
 \begin{acks}
