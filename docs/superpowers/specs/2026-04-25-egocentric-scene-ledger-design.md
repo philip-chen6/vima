@@ -860,6 +860,71 @@ Mitigation:
 - record track confidence
 - keep frame-level raw observations available
 
+## Current Empirical Baseline
+
+Results from existing runs on `01_production_masonry.mp4` and TUM freiburg1_desk.
+These are MEASURED numbers — not aspirational. Use as baselines when implementing each module.
+
+### Module 0 — Adaptive Video Encoder (depth-delta implementation)
+
+- Signal used: normalized RMSE between consecutive DepthAnythingV2-Small depth maps
+- Filtering threshold δ > 0.25 = over-motion frame, skip for reconstruction
+- On Ironsite masonry footage: **57% of pairs filtered** as over-motion
+- On TUM freiburg1_desk (ground-truth poses): depth-delta selected frames achieve
+  **59% lower translation RPE** (0.250m vs 0.614m raw sampling) and **48% lower rotation RPE**
+- TUM undistorted frames outperform raw: undistortion amplifies the depth-delta signal
+- Implementation: `lifebase/scripts/tools/depth_delta_selector.py`
+
+### Module 2 — SLAM / Reconstruction (MASt3R pairwise)
+
+- Model: DuneMASt3R-Small-336
+- Depth-delta selected frames (13 pairs) vs baseline (13 rejected pairs):
+  - `conf_mean_avg`: **1.5669 vs 1.1855 (+0.3814)**
+  - `translation_norm_avg`: **0.1113 vs 0.3695 (−0.2582)** — tighter camera baselines
+  - `cosine_sim_avg`: 0.4627 vs 0.4011
+- Results JSON: `.runtime/eth3d/mast3r_results.json`
+- Interpretation: depth-delta pre-filtering improves MASt3R confidence and reduces
+  degenerate near-degenerate camera motion pairs
+
+### Module 4 — COLMAP Reconstruction (Ironsite masonry)
+
+- Frames registered: **19 / 31 sampled (61.3%)**
+- Points reconstructed: **1,770**
+- Mean reprojection error: **1.199px**
+- Mean track length: **4.23 frames**
+- 12 unregistered frames correlate with rapid camera panning — these are the same
+  frames filtered by depth-delta. Failure mode is a feature: unregistered frames
+  get `adversarial_flag: moving_camera_can_fake_activity` in the ledger.
+
+### Module 5 — VLM Observation Layer (Claude Sonnet as baseline)
+
+- Model: `claude-sonnet-4-6` (current baseline — switch to Gemini Robotics-ER per spec)
+- 30 sampled frames, CII classification:
+  - **86.7% Productive (P)**, 0% Contributory, **13.3% Non-Contributory**
+  - Mean confidence: **0.893**
+- Note: high P% reflects active masonry footage, not a random shift sample
+- 8-class construction ontology implemented: worker, scaffold, guardrail, handrail,
+  open_edge, ladder, material_stack, blocked_path
+
+### Benchmark 1 — Raw VLM vs Ledger-Augmented QA (existing A/B)
+
+- 5 spatial questions on masonry footage, two conditions: VLM-only vs VLM+event-memory
+- **A/B result: +33.2% composite score improvement** (VLM-only: 0.600 → Ledger: 0.792)
+- 31 failure instances detected in VLM-only condition (hallucination / wrong spatial claims)
+- Ledger context: event timeline + spatial anchors + depth ordering
+- This is the quantitative demo for Benchmark 1 in the spec
+
+### Claim Audit
+
+| Claim | Status | Evidence |
+|-------|--------|----------|
+| depth-delta achieves 59% RPE improvement | **VERIFIED** | TUM freiburg1_desk benchmark |
+| MASt3R +0.38 conf_mean with depth-delta | **VERIFIED** | `.runtime/eth3d/mast3r_results.json` |
+| VLM+ledger +33.2% over VLM-only | **VERIFIED** | `demo/ab_comparison.json` |
+| COLMAP 61.3% registration on masonry | **VERIFIED** | backend pipeline results |
+| Depth PE injection into Qwen visual.merger | **NOT WIRED** | hook code documented in `.runtime/agents/hf-vlm-spatial-injection.md`, not in `backend/` |
+| Gemini Robotics-ER as primary VLM | **NOT YET** | spec target, current impl uses Claude API |
+
 ## Open Decisions
 
 1. Whether to use 5-second or 10-second sampling as the default.
