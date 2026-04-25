@@ -9,7 +9,7 @@ Spatially-anchored worker intelligence and incentive system for egocentric const
 - **COLMAP camera pose clustering** — zone attribution (Near Equipment / Scaffold / Material Staging)
 - **Solana devnet raffle payout** weighted by wrench-time productivity (real SPL transfer, env-gated)
 
-Results on 30 frames of real Ironsite masonry footage: **86.7% productive**, mean confidence 0.939, ECE 0.0121.
+Results on 30 frames of real Ironsite masonry footage: **86.7% productive**, mean confidence 0.939.
 
 ## Team
 

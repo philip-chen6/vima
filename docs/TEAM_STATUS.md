@@ -3,7 +3,7 @@ _Last updated: 2026-04-25 ~05:50 PDT | Deadline: 9am PDT Apr 26 (~27h)_
 
 ## Critical Path
 - [x] Backend API (port 8765) — LIVE
-- [x] CII classifier — Claude Sonnet 4.6, **86.7% wrench time**, 86.7% acc, ECE 0.0121
+- [x] CII classifier — Claude Sonnet 4.6, **86.7% wrench time**, 86.7% acc, mean P-conf 0.939
 - [x] Research paper — R13 FINAL, `paper/spatial_main.pdf` (717KB, architecture fig included)
 - [x] Frontend — SHIPPED (commit 209de28, React Bits Pro rebuild, 9 sections)
 - [x] Solana raffle contract — env-gated, real SPL transfer when SOLANA_PAYER_KEYPAIR set
