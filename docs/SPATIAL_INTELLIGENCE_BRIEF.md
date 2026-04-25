@@ -27,7 +27,7 @@ Three capabilities, in order of difficulty:
 - "Clearance between scaffold and ceiling: ~1.8m"
 - "Worker density: 3 workers within 5m radius of egocentric camera"
 
-**How:** Depth map + detection bboxes -> project to metric space. SNRA (Smooth Numerical Reward Approximation) sigmoid converts continuous distance predictions into verifiable reward signals. From the Smooth Operator paper -- this is what makes spatial claims *checkable*.
+**How:** Depth map + detection bboxes -> project to metric space. SNRA (Smooth Numerical Reward Approximation) sigmoid converts continuous distance predictions into verifiable reward signals. This is what makes spatial claims *checkable*.
 
 ### 3. Spatial Change Detection (frame pairs across time)
 - "Scaffold section moved ~2m north since walkthrough T1"
@@ -105,9 +105,9 @@ Three capabilities, in order of difficulty:
 - Frame pairs provide ground truth for change claims (detection set diff)
 - All spatial claims are **programmatically verifiable** -- this is the GRPO insight from Faithful GRPO (FGRPO)
 
-## Key Papers
+## Relevant Research
 
-| Paper | Insight for VINNA |
+| Work | Insight for VINNA |
 |---|---|
 | **SpatialVLM** (CVPR 2024) | Data gen pipeline: monocular depth -> spatial QA at scale. Our recipe for training data. |
 | **SpatialRGPT** (NeurIPS 2024) | Depth plugin for VLMs + spatial benchmarks. Proves depth-augmented VLMs outperform raw VLMs on spatial reasoning. |

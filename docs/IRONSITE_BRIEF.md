@@ -105,7 +105,7 @@ The demo: VLM-only gets the answer wrong (hallucinates progress, misses a change
 - OSHA safety judge: frame + geometry -> Claude Sonnet -> structured violation JSON
 - CII classifier: Gemini Flash -> P/C/NC per frame
 - Solana raffle: wrench-time % -> raffle tickets -> USDC payout
-- Research paper: spatial reward signals for GRPO fine-tuning
+- Spatial reward prototype: frame-level signals for future model improvement
 
 ### Where VINNA Aligns Well
 - Safety violations ARE a spatial reasoning failure mode (model must understand "worker is X meters from unguarded edge")
@@ -122,7 +122,7 @@ VINNA currently:
 - Doesn't show a before/after comparison (model-only vs model-augmented)
 - Doesn't address temporal/change detection (the #1 thing Ironsite cares about)
 - The Solana raffle is clever but orthogonal to spatial reasoning
-- The paper is impressive but judges want a working demo, not theory
+- The old theory-heavy framing is less useful than a working demo
 
 ### The Pivot That Wins
 
@@ -137,7 +137,7 @@ Keep the OSHA judge. Kill the raffle for the Ironsite pitch. Add:
 The demo script: "Here's what Claude says when you ask about progress on this site. It hallucinated that rebar was installed -- look, it wasn't. Here's what Claude says when we give it our event timeline first. It correctly identifies no rebar change. Our event-memory layer costs 0.02 cents per frame and runs in 60 seconds on a 20-minute clip."
 
 ### What To Keep For YC Track
-The Solana raffle, the OSHA reward function theory, the research paper -- all good for the YC x HackTech pitch about "Opal expanding into construction." But for the Ironsite judges specifically, lead with the spatial reasoning failure + fix.
+The Solana raffle and OSHA reward-function theory can remain background context. For the Ironsite judges specifically, lead with the spatial reasoning failure + fix.
 
 ---
 
