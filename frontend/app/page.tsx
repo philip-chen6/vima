@@ -227,9 +227,6 @@ function TopographicBackdrop() {
       >
         <TopographicField />
       </Canvas>
-      <div className="absolute left-6 top-24 mono text-[10px] uppercase tracking-[0.34em] text-[#c8956c]/55 md:left-12">
-        topographic / rgb pseudo-site map
-      </div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_24%,rgba(98,142,127,0.10),transparent_24%),radial-gradient(circle_at_48%_72%,rgba(199,123,66,0.10),transparent_32%),linear-gradient(180deg,rgba(8,6,4,0.08),rgba(8,6,4,0.72)_94%)]" />
       <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(241,194,125,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(241,194,125,.7)_1px,transparent_1px)] [background-size:78px_78px]" />
     </div>
@@ -296,21 +293,40 @@ export default function VinnaPage() {
           </div>
         </nav>
 
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 pt-20 lg:grid-cols-[1fr_430px] lg:items-end lg:pt-28">
-          <div>
-            <p className="mono mb-6 max-w-xl text-xs uppercase tracking-[0.34em] text-[#c77b42]">
-              spatial proof of work / hardhat video / CII index
-            </p>
-            <h1 className="max-w-5xl text-6xl font-light leading-[0.88] tracking-normal text-[#f8efe0] sm:text-8xl lg:text-[9.5rem]">
+        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-96px)] max-w-7xl items-center">
+          <div className="max-w-5xl">
+            <h1 className="text-6xl font-light leading-[0.88] tracking-normal text-[#f8efe0] sm:text-8xl lg:text-[9.5rem]">
               map the work before you pay it.
             </h1>
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-[#b9aa94]">
-              VINNA turns bodycam footage into a verifiable construction ledger:
-              where work happened, whether it was productive, and how that
-              evidence maps to worker rewards.
+            <p className="mt-8 max-w-xl text-lg leading-8 text-[#cdbda4]">
+              Hardhat footage becomes a spatial ledger for proof of work.
             </p>
+          </div>
+        </div>
+      </section>
 
-            <div className="mt-10 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+      <section
+        id="system"
+        className="border-y border-[#2a1d14] bg-[#0b0806] px-5 py-20 sm:px-8 lg:px-12"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <div>
+              <p className="mono text-xs uppercase tracking-[0.32em] text-[#c77b42]">
+                proof stack
+              </p>
+              <h2 className="mt-3 max-w-3xl text-4xl font-light tracking-normal text-[#f4eadb] md:text-6xl">
+                not vibes. evidence.
+              </h2>
+            </div>
+            <p className="max-w-md text-sm leading-6 text-[#9c8d78]">
+              The product story below the hero should be simple: classify work,
+              anchor it to place, then show the evidence chain.
+            </p>
+          </div>
+
+          <div className="mb-16 grid gap-5 lg:grid-cols-[1fr_430px]">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {metricCards.map((metric) => (
                 <div
                   key={metric.label}
@@ -326,72 +342,50 @@ export default function VinnaPage() {
                 </div>
               ))}
             </div>
-          </div>
 
-          <div className="relative border border-[#6f4a2f]/45 bg-[#0b0806]/80 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
-            <div className="mb-4 flex items-center justify-between border-b border-[#6f4a2f]/30 pb-3">
-              <span className="mono text-xs uppercase tracking-[0.24em] text-[#c77b42]">
-                live index
-              </span>
-              <span className="flex items-center gap-2 mono text-xs text-[#76c7ae]">
-                <span className="h-2 w-2 rounded-full bg-[#76c7ae]" />
-                operational
-              </span>
-            </div>
-            <div className="space-y-3">
-              {evidenceRows.map((row) => (
-                <div
-                  key={row[0]}
-                  className="grid grid-cols-[58px_42px_1fr_74px_48px] items-center gap-2 border border-[#2a1d14] bg-[#110c08] px-3 py-3 mono text-[11px] text-[#b9aa94]"
-                >
-                  <span className="text-[#8f806d]">{row[0]}</span>
-                  <span
-                    className={
-                      row[1] === "NC" ? "text-[#d9694f]" : "text-[#76c7ae]"
-                    }
+            <div className="relative border border-[#6f4a2f]/45 bg-[#0b0806]/80 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
+              <div className="mb-4 flex items-center justify-between border-b border-[#6f4a2f]/30 pb-3">
+                <span className="mono text-xs uppercase tracking-[0.24em] text-[#c77b42]">
+                  frame ledger
+                </span>
+                <span className="flex items-center gap-2 mono text-xs text-[#76c7ae]">
+                  <span className="h-2 w-2 rounded-full bg-[#76c7ae]" />
+                  verified
+                </span>
+              </div>
+              <div className="space-y-3">
+                {evidenceRows.map((row) => (
+                  <div
+                    key={row[0]}
+                    className="grid grid-cols-[58px_42px_1fr_74px_48px] items-center gap-2 border border-[#2a1d14] bg-[#110c08] px-3 py-3 mono text-[11px] text-[#b9aa94]"
                   >
-                    {row[1]}
-                  </span>
-                  <span className="truncate text-[#f4eadb]">{row[2]}</span>
-                  <span className="text-[#c77b42]">{row[3]}</span>
-                  <span>{row[4]}</span>
+                    <span className="text-[#8f806d]">{row[0]}</span>
+                    <span
+                      className={
+                        row[1] === "NC" ? "text-[#d9694f]" : "text-[#76c7ae]"
+                      }
+                    >
+                      {row[1]}
+                    </span>
+                    <span className="truncate text-[#f4eadb]">{row[2]}</span>
+                    <span className="text-[#c77b42]">{row[3]}</span>
+                    <span>{row[4]}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-5 border border-[#6f4a2f]/30 bg-[#0c0907] p-4">
+                <div className="mono text-[11px] uppercase tracking-[0.2em] text-[#8f806d]">
+                  current verdict
                 </div>
-              ))}
-            </div>
-            <div className="mt-5 border border-[#6f4a2f]/30 bg-[#0c0907] p-4">
-              <div className="mono text-[11px] uppercase tracking-[0.2em] text-[#8f806d]">
-                current verdict
+                <div className="mt-3 text-2xl font-semibold text-[#f4eadb]">
+                  11 raffle tickets unlocked
+                </div>
+                <p className="mt-2 text-sm leading-6 text-[#a99a86]">
+                  Wrench time exceeds the 30% baseline. Evidence chain is ready
+                  for Solana devnet settlement.
+                </p>
               </div>
-              <div className="mt-3 text-2xl font-semibold text-[#f4eadb]">
-                11 raffle tickets unlocked
-              </div>
-              <p className="mt-2 text-sm leading-6 text-[#a99a86]">
-                Wrench time exceeds the 30% baseline. Evidence chain is ready
-                for Solana devnet settlement.
-              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="system"
-        className="border-y border-[#2a1d14] bg-[#0b0806] px-5 py-20 sm:px-8 lg:px-12"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <div>
-              <p className="mono text-xs uppercase tracking-[0.32em] text-[#c77b42]">
-                system map
-              </p>
-              <h2 className="mt-3 max-w-3xl text-4xl font-light tracking-normal text-[#f4eadb] md:text-6xl">
-                not a dashboard. a jobsite blackbox.
-              </h2>
-            </div>
-            <p className="max-w-md text-sm leading-6 text-[#9c8d78]">
-              The interface keeps the fiction simple: every frame enters the
-              ledger, gets spatially anchored, classified, and settled.
-            </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-4">
