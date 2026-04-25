@@ -77,14 +77,12 @@ function ClockworkLoader() {
         leaving ? "opacity-0" : "opacity-100"
       }`}
     >
-      <div className="relative h-44 w-44">
-        <div className="absolute inset-0 rounded-full border border-[#6f4a2f]/35 bg-[radial-gradient(circle,rgba(241,194,125,0.16),transparent_54%)]" />
-        <Cog className="absolute left-[52px] top-[48px] h-20 w-20 animate-spin text-[#d49a63] [animation-duration:6s]" />
-        <Cog className="absolute left-[18px] top-[86px] h-14 w-14 animate-spin text-[#9f6d45] [animation-direction:reverse] [animation-duration:4s]" />
-        <Cog className="absolute right-[18px] top-[24px] h-12 w-12 animate-spin text-[#efd19b] [animation-duration:3.5s]" />
-        <span className="absolute bottom-[-34px] left-1/2 -translate-x-1/2 mono text-[10px] uppercase tracking-[0.34em] text-[#c77b42]">
-          indexing site memory
-        </span>
+      <div className="relative h-56 w-56">
+        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.10),transparent_58%)]" />
+        <Cog className="absolute left-[72px] top-[76px] h-24 w-24 animate-spin text-white/78 drop-shadow-[0_0_22px_rgba(255,255,255,0.18)] [animation-duration:7s]" />
+        <Cog className="absolute left-[128px] top-[28px] h-16 w-16 animate-spin text-white/86 [animation-direction:reverse] [animation-duration:4.35s]" />
+        <Cog className="absolute left-[38px] top-[48px] h-14 w-14 animate-spin text-white/70 [animation-direction:reverse] [animation-duration:4.65s]" />
+        <Cog className="absolute left-[34px] top-[128px] h-16 w-16 animate-spin text-white/72 [animation-duration:5.1s]" />
       </div>
     </div>
   );
@@ -132,9 +130,9 @@ function TopographicField() {
         depthWrite={false}
         uniforms={{
           uTime: { value: 0 },
-          uAmber: { value: new THREE.Color("#c8956c") },
-          uGold: { value: new THREE.Color("#f1c27d") },
-          uCoral: { value: new THREE.Color("#d8734f") },
+          uAmber: { value: new THREE.Color("#b9a07f") },
+          uGold: { value: new THREE.Color("#efe3cf") },
+          uCoral: { value: new THREE.Color("#8f7b68") },
           uBg: { value: new THREE.Color("#080604") },
         }}
         vertexShader={`
@@ -197,17 +195,17 @@ function TopographicField() {
 
             float minor = abs(fract(elevation * 18.0) - 0.5);
             float major = abs(fract(elevation * 6.0) - 0.5);
-            float minorLine = 1.0 - smoothstep(0.018, 0.052, minor);
-            float majorLine = 1.0 - smoothstep(0.018, 0.072, major);
+            float minorLine = 1.0 - smoothstep(0.022, 0.064, minor);
+            float majorLine = 1.0 - smoothstep(0.028, 0.092, major);
 
             vec3 contourColor = mix(uCoral, uGold, smoothstep(0.18, 0.88, elevation));
-            float glow = minorLine * 0.28 + majorLine * 0.72;
-            vec3 color = uBg + contourColor * glow;
+            float glow = minorLine * 0.46 + majorLine * 1.08;
+            vec3 color = uBg + contourColor * glow * 1.12;
 
             float vignette = smoothstep(0.92, 0.2, distance(uv, vec2(0.5)));
             float lowGrid = (sin((uv.x + uv.y) * 680.0) * 0.5 + 0.5) * 0.015;
             color += uAmber * lowGrid;
-            color = mix(uBg * 0.55, color, vignette);
+            color = mix(uBg * 0.42, color, vignette);
 
             gl_FragColor = vec4(color, 1.0);
           }
@@ -219,19 +217,20 @@ function TopographicField() {
 
 function TopographicBackdrop() {
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden bg-[#080604]">
+    <div className="absolute inset-0 z-0 overflow-hidden bg-[#080604]">
       <Canvas
         orthographic
-        camera={{ position: [0, 0, 1], zoom: 1 }}
+        camera={{ position: [0, 0, 3], zoom: 1 }}
+        className="opacity-95"
         dpr={[1, 1.75]}
-        gl={{ antialias: false, alpha: true }}
+        gl={{ antialias: false, alpha: false }}
       >
         <TopographicField />
       </Canvas>
       <div className="absolute left-6 top-24 mono text-[10px] uppercase tracking-[0.34em] text-[#c8956c]/55 md:left-12">
         topographic / rgb pseudo-site map
       </div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_24%,rgba(98,142,127,0.12),transparent_24%),radial-gradient(circle_at_48%_72%,rgba(199,123,66,0.16),transparent_32%),linear-gradient(180deg,rgba(8,6,4,0.18),#080604_94%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_24%,rgba(98,142,127,0.10),transparent_24%),radial-gradient(circle_at_48%_72%,rgba(199,123,66,0.10),transparent_32%),linear-gradient(180deg,rgba(8,6,4,0.08),rgba(8,6,4,0.72)_94%)]" />
       <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(241,194,125,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(241,194,125,.7)_1px,transparent_1px)] [background-size:78px_78px]" />
     </div>
   );
