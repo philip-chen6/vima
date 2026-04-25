@@ -711,7 +711,7 @@ export default function VinnaPage() {
               </span>
               <div className="flex flex-col gap-2">
                 {[
-                  ["Vision Judge", "Claude Sonnet 3.7"],
+                  ["Vision Judge", "Claude Sonnet 4.6"],
                   ["Classifier", "CII Standard"],
                   ["3D Reconstruction", "COLMAP"],
                   ["Rewards Chain", "Solana SPL Token"],
@@ -744,7 +744,7 @@ export default function VinnaPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/6">
             <span className="mono text-xs text-neutral-700">
-              Presented at HackTech Caltech · Ironsite Prize Track · 2025
+              Presented at HackTech Caltech · Ironsite Prize Track · 2026
             </span>
             <div className="flex items-center gap-2">
               <div
