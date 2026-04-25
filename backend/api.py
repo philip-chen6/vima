@@ -1,5 +1,6 @@
 # uv run api.py
 import os, json, pathlib, base64, tempfile, shutil
+from collections import Counter
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -74,6 +75,40 @@ def demo():
     timestamps = [15.0, 45.0, 90.0, 180.0, 300.0]
     events = [{"event_id": f"NC event candidate {t:.1f}s", "timestamp_s": t} for t in timestamps]
     return JSONResponse(run_batch(events, video_path=VIDEO_PATH))
+
+
+CII_RESULTS_PATH = pathlib.Path.home() / "Desktop/workspace/lifebase/.runtime/agents/ironsite-cii-fixed/cii-final.json"
+
+
+@app.get("/cii/summary")
+def cii_summary():
+    """CII wrench-time summary for Solana raffle. Returns P/C/NC counts + raffle tickets."""
+    if not CII_RESULTS_PATH.exists():
+        raise HTTPException(404, "CII results not found. Run the classifier first.")
+    results = json.loads(CII_RESULTS_PATH.read_text())
+    cats = Counter(r["category"] for r in results)
+    total = len(results)
+    p_pct = 100 * cats.get("P", 0) / total if total else 0
+    baseline = 30.0
+    tickets = max(0, int((p_pct - baseline) / 5))
+    return JSONResponse({
+        "total_frames": total,
+        "productive": cats.get("P", 0),
+        "contributory": cats.get("C", 0),
+        "non_contributory": cats.get("NC", 0),
+        "wrench_time_pct": round(p_pct, 1),
+        "baseline_pct": baseline,
+        "raffle_tickets": tickets,
+        "model": "gemini-2.5-flash-lite",
+    })
+
+
+@app.get("/cii/frames")
+def cii_frames():
+    """Full per-frame CII classifications."""
+    if not CII_RESULTS_PATH.exists():
+        raise HTTPException(404, "CII results not found.")
+    return JSONResponse(json.loads(CII_RESULTS_PATH.read_text()))
 
 
 if __name__ == "__main__":
