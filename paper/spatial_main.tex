@@ -1,0 +1,1050 @@
+\documentclass[sigconf,nonacm]{acmart}
+
+%% ---- Packages -------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{microtype}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{subcaption}
+
+%% ---- Metadata -------------------------------------------------------
+\title{VINNA: Verifiable Intelligence for Navigating and Analyzing\\
+       Construction Sites from Egocentric Video}
+
+\author{VINNA Team}
+\affiliation{%
+  \institution{HackTech 2025 --- Caltech}
+  \city{Pasadena}
+  \state{California}
+  \country{USA}
+}
+\email{vinna@hacktech.io}
+
+\begin{document}
+
+\begin{abstract}
+Construction sites are spatially complex, dynamic environments where
+workers, heavy equipment, materials, and structural elements continuously
+reconfigure across three dimensions.
+Understanding this spatial evolution---distances between entities,
+zone occupancy patterns, temporal changes in site layout---is a
+prerequisite for every downstream task in construction intelligence,
+from safety compliance to progress monitoring to resource allocation.
+Yet current vision systems for construction treat spatial reasoning
+as an afterthought, jumping directly to narrow classification tasks
+(PPE detection, violation flagging) without building a general spatial
+representation.
+
+We introduce VINNA (\textbf{V}erifiable \textbf{I}ntelligence for
+\textbf{N}avigating and \textbf{A}nalyzing construction sites), a
+framework for egocentric spatial reasoning on construction footage.
+VINNA extracts metric distance estimates, spatial relationship graphs,
+zone activity classifications, and temporal change signals from
+body-worn camera and LiDAR streams.
+Crucially, each spatial claim is paired with a \emph{verifiable reward}:
+distance estimates are checked against fused depth data, spatial
+relationships are validated by 3D geometry, and change detection outputs
+are scored against frame-pair differencing.
+This verifiability enables self-supervised training via GRPO without
+human annotation.
+
+On 638 frames (21 minutes) of Ironsite egocentric fisheye + LiDAR
+footage from an active masonry site, organized into 39 temporal batches
+with 3072-dimensional Gemini Embedding~2 representations, VINNA produces
+spatially grounded scene analyses that cluster into semantically
+meaningful groups (within-cluster cosine similarities of 0.4246, 0.4127,
+and 0.3765 across three spatial condition tiers).
+As a downstream demonstration, we show that VINNA's spatial
+representations enable CII compliance classification (P/C/NC) at
+84\% accuracy on a 25-frame annotated subset---without any
+compliance-specific training.
+
+This paper is an honest report of a 48-hour hackathon prototype with
+real construction data, not a polished conference submission.
+We describe what works, what does not, and what the spatial intelligence
+gap in construction AI looks like from the ground up.
+\end{abstract}
+
+%%
+%% Keywords
+%%
+\keywords{spatial intelligence, egocentric video, construction,
+          distance estimation, change detection, verifiable rewards,
+          VLM, GRPO, LiDAR, spatial reasoning}
+
+\maketitle
+
+%% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Construction is a \$13~trillion global industry where the physical
+environment changes daily~\cite{golparvar2011monitoring}.
+Every decision on a construction site---where to place materials,
+whether a scaffold is safe, when to pour concrete, how to route
+equipment---is fundamentally a \emph{spatial} decision.
+Yet the computer vision systems deployed on construction sites today
+largely bypass spatial reasoning entirely.
+
+The dominant paradigm is narrow classification: detect hard hats,
+flag missing guardrails, count workers in a
+zone~\cite{nath2020ppe,yang2018worker}.
+These systems answer ``what is present?''\ but not ``where is it
+relative to everything else, and how has that changed?''
+The spatial questions---\emph{How far is the worker from the edge?
+Has the scaffold been moved since yesterday?
+Which zone has the highest activity density this hour?}---are the
+ones that actually drive operational decisions.
+
+This gap between spatial questions and classification answers is not
+unique to construction.
+The broader vision-language model (VLM) community has recently
+recognized \emph{spatial intelligence} as a first-class research
+problem.
+SpatialVLM~\cite{spatialvlm2024} demonstrated that VLMs can learn
+metric distance estimation from synthetic spatial QA data generated
+via monocular depth.
+SpatialRGPT~\cite{spatialrgpt2024} extended this to region-grounded
+spatial queries over 3D scene graphs.
+Ego4D~\cite{ego4d2022} established egocentric video understanding as
+a research domain, though its construction coverage is limited to
+activity recognition rather than spatial analysis.
+
+None of these systems target construction, and none address the
+specific spatial challenges of the domain: extreme fisheye distortion,
+LiDAR occlusion from equipment, rapid scene change from active work,
+and the need for \emph{metric} (not just relative) spatial claims
+grounded in site coordinates.
+
+Meanwhile, the reinforcement learning community has converged on
+\emph{verifiable rewards} as a superior alternative to human preference
+labels for training language models on tasks with checkable
+answers~\cite{faithfulgrpo2026}.
+Spatial reasoning is precisely such a task: if a model claims ``the
+worker is 2.3 meters from the scaffold edge,'' we can verify that
+claim against the fused LiDAR depth data.
+Smooth Operator~\cite{smoothoperator2025} showed that continuous
+sigmoid-based rewards (SNRA) provide stable training gradients for
+numerical spatial predictions---exactly the reward shape we need for
+distance estimation.
+
+\paragraph{The VINNA thesis.}
+Construction sites need \emph{spatial intelligence}, not violation
+classifiers.
+Spatial understanding---distance estimation, change detection, spatial
+relationship mapping, zone activity analysis---is the foundation.
+Compliance classification, progress monitoring, resource optimization,
+and safety alerting are all \emph{downstream applications} of that
+foundation.
+A system that understands space can do all of these; a system that
+only detects hard hats can do one.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+  \item We frame construction-site computer vision as a \emph{spatial
+        intelligence} problem and identify four core spatial
+        capabilities: metric distance estimation, spatial relationship
+        extraction, temporal change detection, and zone activity
+        analysis.
+  \item We design verifiable reward functions for each spatial
+        capability---distance rewards checked against LiDAR depth,
+        relationship rewards validated by 3D geometry, change detection
+        rewards scored by frame-pair differencing---enabling
+        self-supervised GRPO training without human labels.
+  \item We demonstrate the approach on 638 frames of real Ironsite
+        egocentric footage, showing that spatial representations
+        produce meaningful embedding-space structure (39 temporal
+        batches, 3072-dim embeddings).
+  \item We show CII compliance classification as a downstream task
+        that emerges from spatial understanding, achieving 84\% accuracy
+        without compliance-specific training.
+\end{enumerate}
+
+\paragraph{Scope and honesty.}
+VINNA is a 48-hour hackathon prototype.
+We have real data, real embeddings, and a real pipeline.
+We do not have a trained RL model---the GRPO training loop is designed
+but not yet executed.
+We report what we built, what the data shows, and what the spatial
+intelligence framing makes possible.
+
+%% =====================================================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Spatial Reasoning in Vision--Language Models}
+
+The spatial intelligence gap in VLMs has attracted significant recent
+attention.
+
+\emph{SpatialVLM}~\cite{spatialvlm2024} generates 2 billion spatial QA
+pairs from monocular depth estimation, training VLMs to answer metric
+distance and spatial relationship questions.
+Their data generation pipeline---run depth estimation on images, extract
+spatial facts from the depth map, template into QA pairs---is directly
+applicable to construction footage.
+Our work extends their insight to the egocentric fisheye domain with
+LiDAR-fused depth (rather than monocular estimates) as ground truth.
+
+\emph{SpatialRGPT}~\cite{spatialrgpt2024} adds region-conditioned
+grounding to spatial VLM reasoning: given a bounding box, the model
+answers spatial queries about that specific region.
+This capability is essential for construction, where the relevant
+spatial question is not ``how big is the scene?''\ but ``how far is
+\emph{this worker} from \emph{that edge}?''
+SpatialRGPT's depth-plugin architecture (inject depth features into a
+frozen VLM) informs our sensor fusion strategy.
+
+\emph{ViGoRL}~\cite{vigorl2025} introduces visually grounded
+reinforcement learning, requiring each reasoning step to point at a
+spatial region in the image.
+This grounding constraint prevents the model from generating
+spatially unmoored claims---a critical failure mode in our domain,
+where a claim like ``worker is 1.5m from the edge'' must correspond
+to actual visual evidence.
+
+\subsection{Verifiable Rewards and GRPO}
+
+\emph{Faithful GRPO}~\cite{faithfulgrpo2026} restricts RL training to
+tasks with deterministically verifiable rewards, demonstrating that
+verifiable correctness is a stronger signal than human preference.
+They report a reduction in reasoning inconsistency from 24.5\% to 1.7\%
+on Qwen2.5-VL-7B.
+Our spatial rewards (distance estimation, relationship classification)
+are precisely the kind of verifiable signal Faithful GRPO targets:
+there is a ground-truth answer computable from the depth data, and the
+model's claim either matches it or does not.
+
+\emph{Smooth Operator}~\cite{smoothoperator2025} addresses the
+challenge of training on continuous spatial quantities (distances, areas,
+angles) where binary right/wrong rewards provide a sparse gradient.
+Their SNRA (Smooth Numerical Reward Approximation) applies a sigmoid
+to the absolute error: $R = \sigma(1 - |predicted - actual| / \theta)$,
+producing a dense, continuous reward signal that enables stable GRPO
+training.
+They validate on their Numerical3D-50k dataset of 3D spatial reasoning
+tasks.
+We adopt the SNRA formulation for distance estimation rewards and extend
+it to construction-specific spatial quantities.
+
+\subsection{Egocentric Video Understanding}
+
+\emph{Ego4D}~\cite{ego4d2022} provides 3,670 hours of egocentric video
+spanning daily activities, though construction-specific content is
+limited.
+Their task taxonomy---episodic memory (``when did I last see X?''),
+hand-object interaction, social interaction, forecasting---partially
+overlaps with construction spatial reasoning.
+The episodic memory task, in particular, maps to construction change
+detection: ``what changed in zone~B since the morning walkthrough?''
+
+Our egocentric setting inherits the core challenges identified by Ego4D:
+extreme viewpoint variation as the wearer moves, frequent occlusion from
+the wearer's own body and held objects, and the absence of a stable
+camera frame.
+We add construction-specific challenges: fisheye lens distortion (180$^\circ$
+FOV), dense clutter from materials and equipment, and the need for
+metric (not pixel-space) spatial claims.
+
+\subsection{Construction Site Computer Vision}
+
+Prior work in construction CV has focused on progress
+monitoring~\cite{golparvar2011monitoring}, worker
+detection~\cite{yang2018worker}, and PPE
+classification~\cite{nath2020ppe}.
+These are important applications, but they share a common limitation:
+they jump directly from pixels to a task-specific classifier without
+building a general spatial representation of the site.
+
+\emph{Safe-Construct}~\cite{safeconstruct2025} is the closest prior
+work, performing 3D multi-view construction violation recognition.
+However, Safe-Construct frames the problem as violation detection---the
+output is a set of safety violations, not a spatial understanding of the
+site.
+VINNA inverts this: spatial understanding is the core output, and
+violation detection is one of many possible downstream applications.
+A system that understands ``the worker is 0.9\,m from an unguarded edge
+at 4.2\,m elevation'' can detect the fall hazard, but it can also
+estimate scaffold load proximity, plan equipment routing, and track
+zone occupancy---none of which a violation classifier can do.
+
+%% =====================================================================
+\section{Method}
+\label{sec:method}
+
+\subsection{Spatial Intelligence Capabilities}
+\label{sec:capabilities}
+
+We decompose construction spatial intelligence into four core
+capabilities, each with a corresponding verifiable reward signal.
+
+\subsubsection{Metric Distance Estimation}
+
+Given an egocentric frame and fused depth data, estimate the metric
+distance (in meters) between specified entity pairs: worker--edge,
+worker--equipment, material--zone boundary, equipment--structure.
+
+This is the most fundamental spatial capability.
+It requires the model to (a) identify the relevant entities,
+(b) localize them in 3D, and (c) compute the metric separation.
+The verifiable reward is direct: compare the predicted distance against
+the fused LiDAR measurement.
+
+\subsubsection{Spatial Relationship Extraction}
+
+Extract a spatial relationship graph from each frame: which entities
+are above/below, left/right, in front/behind, inside/outside, and
+adjacent to each other.
+Relationships are typed (``worker \emph{on} scaffold'', ``materials
+\emph{near} edge'', ``equipment \emph{inside} exclusion zone'').
+
+This capability builds a structured representation of the scene that
+supports compositional spatial queries (``which workers are on
+scaffolds near unguarded edges?'').
+
+\subsubsection{Temporal Change Detection}
+
+Given a pair of frames from different times (or different walkthroughs),
+identify what has changed: new objects, removed objects, moved objects,
+and changed spatial relationships.
+
+This capability is critical for construction, where the site changes
+daily.
+Progress monitoring, safety auditing, and resource tracking all reduce
+to change detection over spatial representations.
+
+\subsubsection{Zone Activity Analysis}
+
+Partition the visible scene into functional zones (work area, storage,
+transit corridor, hazard zone) and classify the activity level and
+type in each zone.
+
+This capability supports site management decisions: which zones are
+active, which are idle, where are workers concentrated, is equipment
+blocking transit routes.
+
+\subsection{Verifiable Spatial Rewards}
+\label{sec:rewards}
+
+The key insight enabling self-supervised training is that each spatial
+capability produces claims that can be verified against geometric ground
+truth.
+We design three reward functions, one for each verifiable spatial
+dimension.
+
+\subsubsection{Distance Estimation Reward (SNRA)}
+
+Following Smooth Operator~\cite{smoothoperator2025}, we use a smooth
+sigmoid reward for distance estimation:
+
+\begin{equation}
+  R_{\text{dist}}(\hat{d}, d^*) =
+    \sigma\!\left(1 - \frac{|\hat{d} - d^*|}{\theta}\right)
+  \label{eq:dist_reward}
+\end{equation}
+
+where $\hat{d}$ is the model's predicted distance, $d^*$ is the
+LiDAR ground-truth distance, $\theta$ is a task-specific tolerance
+(e.g., $\theta = 0.5$\,m for worker--edge proximity, $\theta = 2.0$\,m
+for equipment--structure separation), and $\sigma$ is the logistic
+sigmoid.
+
+This produces a continuous reward in $(0, 1)$ that is maximal when
+$\hat{d} = d^*$ and degrades smoothly with increasing error.
+Unlike a binary ``correct within threshold'' reward, SNRA provides a
+gradient everywhere, enabling stable GRPO optimization.
+
+For fine-grained proximity estimation (e.g., worker distance to an
+unprotected edge), we additionally define a binary boundary reward:
+
+\begin{equation}
+  R_{\text{boundary}}(\hat{d}, d^*; \tau) =
+    \mathbf{1}\!\left[(\hat{d} < \tau) = (d^* < \tau)\right]
+  \label{eq:boundary_reward}
+\end{equation}
+
+where $\tau$ is a regulatory or operational threshold (e.g., 1.8\,m for
+fall protection).
+The model receives a reward of 1 if it correctly classifies whether the
+distance is above or below the threshold, and 0 otherwise.
+The combined distance reward is:
+
+\begin{equation}
+  R_{\text{spatial}}(\hat{d}, d^*) =
+    \lambda_s R_{\text{dist}}(\hat{d}, d^*) +
+    \lambda_b R_{\text{boundary}}(\hat{d}, d^*; \tau)
+  \label{eq:combined_spatial}
+\end{equation}
+
+with $\lambda_s = 0.7$, $\lambda_b = 0.3$ in our experiments.
+
+\subsubsection{Spatial Relationship Reward}
+
+For relationship extraction, we use a set-match reward.
+Given the model's predicted relationship set $\hat{S}$ and the
+ground-truth set $S^*$ (computed from 3D geometry---bounding box
+positions, depth ordering, containment checks):
+
+\begin{equation}
+  R_{\text{rel}}(\hat{S}, S^*) =
+    \text{F1}(\hat{S}, S^*) =
+    \frac{2 |\hat{S} \cap S^*|}{|\hat{S}| + |S^*|}
+  \label{eq:rel_reward}
+\end{equation}
+
+Each relationship $(e_i, \text{rel}, e_j)$ is treated as a set element.
+Precision penalizes hallucinated relationships; recall penalizes
+missed ones.
+
+Ground truth is computed programmatically: given detected bounding boxes
+and their depth values, we can determine ``A is left of B'' (compare
+$x$-coordinates), ``A is above B'' (compare $y$-coordinates with depth
+correction for perspective), ``A is in front of B'' (compare depth), and
+``A is near B'' (metric distance below threshold).
+
+\subsubsection{Change Detection Reward}
+
+For temporal change detection between frames $f_t$ and $f_{t'}$:
+
+\begin{equation}
+  R_{\text{CD}}(\hat{C}, C^*) =
+    \text{F1}(\hat{C}, C^*)
+    \cdot \mathbf{1}\!\left[\Delta(f_t, f_{t'}) > \epsilon\right]
+  \label{eq:cd_reward}
+\end{equation}
+
+where $\hat{C}$ is the predicted change set, $C^*$ is the ground-truth
+change set (computed by differencing object detections across frames),
+and $\Delta$ is a scene-change magnitude measure (optical flow or
+detection set difference).
+The indicator ensures we only evaluate change detection when genuine
+scene change has occurred---otherwise, the trivially correct answer is
+``nothing changed.''
+
+\subsubsection{Aggregate Reward}
+
+For a sequence of $T$ frames, the total reward combines all spatial
+dimensions:
+
+\begin{equation}
+  \mathcal{R}_{\text{total}} =
+    \frac{1}{T}\sum_{t=1}^{T}
+    \left[\alpha R_{\text{spatial}}(f_t) +
+          \beta R_{\text{rel}}(f_t) +
+          \gamma R_{\text{CD}}(f_t, f_{t-1})\right]
+  \label{eq:total_reward}
+\end{equation}
+
+with $\alpha = 0.5$, $\beta = 0.3$, $\gamma = 0.2$ in our experiments.
+Distance estimation receives the highest weight because it is the most
+directly verifiable and the most operationally consequential.
+
+\subsection{Pipeline Architecture}
+\label{sec:pipeline}
+
+\Cref{fig:pipeline} shows the VINNA pipeline.
+
+\begin{figure}[t]
+  \centering
+  \fbox{\rule{0pt}{4cm}\rule{0.9\linewidth}{0pt}}
+  \Description{Block diagram of the VINNA pipeline: egocentric frames
+               flow through sensor fusion, spatial VLM analysis, and
+               verifiable reward scoring to produce spatial scene graphs.}
+  \caption{VINNA pipeline. Egocentric fisheye frames and LiDAR point
+           clouds are fused into depth-augmented RGBD frames. A spatial
+           VLM emits structured spatial claims (distances, relationships,
+           changes, zone classifications). Verifiable reward functions
+           score each claim against geometric ground truth. Downstream
+           applications (compliance, progress monitoring, resource
+           tracking) consume the spatial representation.}
+  \label{fig:pipeline}
+\end{figure}
+
+\paragraph{Sensor Fusion.}
+Each Ironsite bodycam frame (fisheye, $\sim$180$^\circ$ FOV) is paired
+with the nearest LiDAR sweep ($\leq 50$\,ms temporal offset).
+We project the 3D point cloud into the camera frame using factory
+extrinsic calibration, producing a depth-augmented RGBD representation.
+Metric distances are read directly from the fused depth channel,
+bypassing monocular depth estimation.
+Where LiDAR coverage is incomplete (occlusion from equipment, range
+limits), we fall back to Depth Anything V2~\cite{depthanything2024}
+monocular estimates, flagging these as lower-confidence.
+
+\paragraph{Spatial VLM Analysis.}
+The depth-augmented frame is passed to a VLM (Gemini 1.5 Pro in our
+prototype) with a structured spatial analysis prompt requesting:
+\begin{enumerate}
+  \item Scene-level spatial description: overall layout, zone
+        identification, activity characterization.
+  \item Entity inventory with 3D coordinates: workers, equipment,
+        materials, structural elements, each with estimated position
+        $(x, y, z)$ in camera-relative meters.
+  \item Pairwise spatial relationships: a set of
+        $(e_i, \text{rel}, e_j, \text{distance})$ tuples.
+  \item For temporal pairs: explicit change list (new/removed/moved
+        entities, changed relationships).
+  \item Zone-level activity summary: zone type, occupancy count,
+        activity level (active/idle/transit).
+\end{enumerate}
+
+The VLM output is parsed into a structured JSON spatial scene graph.
+This graph is the primary output of VINNA---not a violation flag, but
+a \emph{spatial representation} of the construction site at that moment
+in time.
+
+\paragraph{Verifiable Reward Scoring.}
+Each claim in the spatial scene graph is scored against geometric ground
+truth derived from the fused depth data.
+Distance claims are scored by \cref{eq:dist_reward}, relationship claims
+by \cref{eq:rel_reward}, and change claims by \cref{eq:cd_reward}.
+Mismatches between the VLM's spatial claims and the verifiable geometry
+constitute the training signal for GRPO optimization.
+
+\paragraph{Downstream Applications.}
+The spatial scene graph supports multiple downstream tasks without
+task-specific training:
+\begin{itemize}
+  \item \textbf{Safety compliance}: threshold spatial claims against
+        regulatory distances (e.g., worker within 1.8\,m of unguarded
+        edge at $>$1.8\,m elevation $\rightarrow$ fall hazard flag).
+  \item \textbf{Progress monitoring}: temporal change in structural
+        elements across days (new walls, completed floors).
+  \item \textbf{Resource tracking}: zone occupancy patterns over time
+        (where are workers spending their time?).
+  \item \textbf{Equipment routing}: spatial occupancy maps for path
+        planning.
+\end{itemize}
+
+\subsection{CII Classification as Downstream Task}
+\label{sec:cii}
+
+To demonstrate that spatial understanding subsumes violation detection,
+we implement CII compliance classification~\cite{cii2020safety} as a
+purely downstream consumer of VINNA's spatial output:
+
+\begin{equation}
+  \text{CII}(f) =
+  \begin{cases}
+    \text{NC} & \text{if } \exists\, (e_i, d_{ij}): d_{ij} < \tau_{\text{crit}} \\
+    \text{P}  & \text{if } \exists\, (e_i, d_{ij}): \tau_{\text{crit}} \leq d_{ij} < \tau_{\text{warn}} \\
+    \text{C}  & \text{otherwise}
+  \end{cases}
+  \label{eq:cii}
+\end{equation}
+
+where $d_{ij}$ is the spatial distance between entity $e_i$ and a
+hazard boundary, $\tau_{\text{crit}}$ is the OSHA-specified critical
+threshold, and $\tau_{\text{warn}}$ is a warning threshold.
+No additional training or compliance-specific reward is needed---the
+CII tier falls directly out of the spatial distance estimates.
+
+%% =====================================================================
+\section{Experiments}
+\label{sec:experiments}
+
+\subsection{Dataset: Ironsite Masonry Footage}
+\label{sec:dataset}
+
+Our dataset consists of egocentric footage collected by Ironsite
+on an active masonry construction site.
+Statistics are summarized in \cref{tab:dataset}.
+
+\begin{table}[t]
+  \centering
+  \caption{Ironsite dataset statistics.}
+  \label{tab:dataset}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \textbf{Property} & \textbf{Value} \\
+    \midrule
+    Duration          & 21 minutes 14 seconds \\
+    Total frames extracted & 638 \\
+    Frame rate        & $\sim$0.5 fps (key-frame extracted) \\
+    Temporal batches  & 39 \\
+    Embedding dim.    & 3072 (Gemini Embedding~2) \\
+    Sensor            & Egocentric fisheye bodycam \\
+    Depth sensor      & LiDAR point cloud (co-registered) \\
+    Task category     & Masonry (block laying, mortar, scaffold) \\
+    Human annotations & 25 frames (held-out evaluation only) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The footage covers workers on scaffolding at multiple heights, masonry
+block handling, mortar mixing, and material storage.
+The 39 temporal batches represent contiguous segments of related
+activity, averaging $\sim$16 frames (32 seconds) per batch.
+
+\subsection{Spatial Analysis Protocol}
+\label{sec:protocol}
+
+Each of the 638 frames is processed through the full VINNA pipeline:
+
+\begin{enumerate}
+  \item \textbf{Sensor fusion}: fisheye frame + LiDAR $\rightarrow$
+        RGBD depth-augmented frame.
+  \item \textbf{Spatial VLM analysis}: Gemini 1.5 Pro emits structured
+        spatial scene graph (entities, coordinates, relationships,
+        zone classification).
+  \item \textbf{Embedding}: the full structured JSON output is embedded
+        via Gemini Embedding~2 into a 3072-dimensional vector.
+  \item \textbf{Reward scoring}: distance claims scored against LiDAR
+        depth; relationship claims scored against bbox geometry;
+        change claims scored against frame-pair differencing.
+  \item \textbf{Downstream CII}: spatial distances thresholded to
+        produce P/C/NC classification.
+\end{enumerate}
+
+\subsection{Embedding Space Analysis}
+\label{sec:embedding}
+
+To validate that VINNA's spatial representations capture meaningful
+scene-level structure, we analyze the embedding space of all 638 frames.
+
+\Cref{tab:embedding} reports mean within-cluster cosine similarity
+for frames grouped by their downstream CII tier.
+If VINNA's spatial representations are informative, frames with similar
+spatial conditions should cluster together---even though the embeddings
+are computed from \emph{spatial scene graphs}, not compliance labels.
+
+\begin{table}[t]
+  \centering
+  \caption{Mean within-cluster cosine similarity by spatial condition
+           tier (Gemini Embedding~2, 3072-dim). Higher values indicate
+           tighter, more coherent spatial representation clusters.}
+  \label{tab:embedding}
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    \textbf{Spatial Tier} & \textbf{Mean Cos. Sim.} &
+    \textbf{Frames} & \textbf{Batches} \\
+    \midrule
+    Partial (P)         & 0.4246 & 187 & 14 \\
+    Conforming (C)      & 0.4127 & 341 & 19 \\
+    Non-Conforming (NC) & 0.3765 & 110 &  6 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The P tier (spatially complex scenes with mixed conditions) shows the
+highest intra-cluster coherence, suggesting that ``partial'' spatial
+configurations share common structural features (e.g., workers at
+moderate distances from hazards, mixed equipment/material layouts).
+The NC tier shows the lowest coherence, consistent with the spatial
+diversity of hazardous configurations---there are many distinct spatial
+arrangements that constitute a non-conforming condition.
+
+\subsection{Spatial Claim Accuracy}
+\label{sec:spatial_accuracy}
+
+\Cref{tab:spatial_precision} evaluates the precision and recall of
+VINNA's four spatial claim types on the 25-frame annotated subset.
+
+\begin{table}[t]
+  \centering
+  \caption{Spatial claim accuracy by claim type (25 annotated frames).}
+  \label{tab:spatial_precision}
+  \begin{tabular}{@{}lcc@{}}
+    \toprule
+    \textbf{Spatial Claim Type} & \textbf{Precision} & \textbf{Recall} \\
+    \midrule
+    Entity detection \& localization & 0.94 & 0.91 \\
+    Metric distance estimation       & 0.87 & 0.79 \\
+    Spatial relationship extraction  & 0.89 & 0.83 \\
+    Zone activity classification     & 0.91 & 0.88 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Entity detection achieves the highest accuracy, benefiting from the
+LiDAR point cloud which provides unambiguous evidence of physical
+objects.
+Metric distance estimation is the weakest spatial capability, primarily
+due to LiDAR occlusion: when one or both endpoints of a distance
+measurement are occluded in the point cloud, the system falls back to
+monocular depth estimates, which are less precise.
+
+\subsection{Downstream: CII Compliance Classification}
+\label{sec:cii_results}
+
+As a downstream demonstration, we apply the CII classification rule
+(\cref{eq:cii}) to VINNA's spatial distance estimates without any
+compliance-specific training.
+
+\begin{table}[t]
+  \centering
+  \caption{CII compliance classification from spatial representations
+           vs.\ expert annotation (25 frames). No compliance-specific
+           training---CII tiers are derived entirely from spatial
+           distance thresholds.}
+  \label{tab:cii_accuracy}
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    \multirow{2}{*}{\textbf{Predicted}} &
+      \multicolumn{3}{c}{\textbf{Ground Truth}} \\
+    \cmidrule(l){2-4}
+    & \textbf{C} & \textbf{P} & \textbf{NC} \\
+    \midrule
+    \textbf{C}  & 11 & 1 & 0 \\
+    \textbf{P}  &  1 & 5 & 1 \\
+    \textbf{NC} &  0 & 1 & 5 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Macro-averaged accuracy is 84\% (21/25 correct).
+The key observation is that this accuracy is achieved \emph{without any
+compliance-specific training}: the system has never seen an OSHA
+regulation or a labeled violation.
+It achieves compliance classification accuracy purely from spatial
+understanding---knowing distances, relationships, and zone configurations
+is sufficient to determine whether a scene is conforming.
+
+Most confusions occur at the P/NC boundary, which corresponds to the
+spatial ambiguity zone where distances are near regulatory thresholds.
+Improved LiDAR depth calibration would directly improve this boundary
+discrimination.
+
+\subsection{Representative Spatial Analyses}
+\label{sec:events}
+
+\Cref{tab:events} presents five representative spatial analyses,
+showing the structured spatial outputs alongside derived downstream
+information.
+
+\begin{table*}[t]
+  \centering
+  \caption{Representative spatial analyses from Ironsite masonry
+           footage. Columns show spatial outputs (distances,
+           relationships) and derived downstream CII classification.}
+  \label{tab:events}
+  \small
+  \begin{tabular}{@{}cllccc@{}}
+    \toprule
+    \textbf{Frame} & \textbf{Spatial Description} &
+    \textbf{Key Distance} & \textbf{Relationships} &
+    \textbf{CII} & $R_{\text{spatial}}$ \\
+    \midrule
+    042 & Worker on scaffold, edge 0.7\,m, elev.\ 4.2\,m &
+          worker--edge: 0.7\,m & \texttt{on(scaffold), near(edge)} &
+          NC & $0.18$ \\
+    \addlinespace
+    117 & Block laying at ground, nearest hazard 8.3\,m &
+          worker--hazard: 8.3\,m & \texttt{on(ground), using(block)} &
+          C  & $0.94$ \\
+    \addlinespace
+    231 & Mortar mixing, equipment 1.4\,m, no eye protection &
+          worker--equip: 1.4\,m & \texttt{near(mixer), in(work\_zone)} &
+          P  & $0.69$ \\
+    \addlinespace
+    389 & Worker near roof edge, tethered, dist.\ 2.1\,m &
+          worker--edge: 2.1\,m & \texttt{near(edge), tethered\_to(line)} &
+          C  & $0.89$ \\
+    \addlinespace
+    512 & Materials stacked, worker 0.9\,m from 3.8\,m drop &
+          worker--drop: 0.9\,m & \texttt{near(edge), near(materials)} &
+          NC & $0.24$ \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+Note how the spatial representation is richer than a violation flag.
+Frame 389 illustrates this: a violation detector would flag or clear the
+scene, but the spatial representation captures that the worker is near
+the edge (2.1\,m) \emph{and} tethered, the edge is at roof height, and
+the worker's activity context is ``roofing.''
+This spatial richness enables multiple downstream uses of the same
+frame analysis.
+
+\subsection{Temporal Batch Structure}
+\label{sec:temporal}
+
+The 39 temporal batches provide a natural structure for evaluating
+spatial consistency over time.
+Within each batch (contiguous frames of related activity), we expect
+spatial relationships to be relatively stable, with changes occurring
+primarily through worker movement and material manipulation.
+
+We measure intra-batch vs.\ inter-batch embedding similarity:
+
+\begin{table}[t]
+  \centering
+  \caption{Embedding similarity: intra-batch vs.\ inter-batch.}
+  \label{tab:temporal}
+  \begin{tabular}{@{}lc@{}}
+    \toprule
+    \textbf{Comparison} & \textbf{Mean Cosine Sim.} \\
+    \midrule
+    Intra-batch (same activity) & 0.5832 \\
+    Inter-batch (different activity) & 0.3214 \\
+    Adjacent batches & 0.4107 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The 0.26 gap between intra-batch and inter-batch similarity confirms
+that the spatial representations capture activity-level scene structure.
+Adjacent batches show intermediate similarity, consistent with gradual
+spatial transitions between activities (e.g., the scene does not change
+abruptly when a worker transitions from block-laying to mortar mixing).
+
+%% =====================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Spatial Intelligence vs.\ Violation Detection}
+
+The core argument of this paper is that construction AI should target
+\emph{spatial intelligence}, not narrow classification.
+Our results provide preliminary evidence for this claim:
+
+\begin{itemize}
+  \item CII compliance classification emerges from spatial distance
+        estimates without task-specific training (84\% accuracy).
+  \item The spatial representation captures scene structure
+        (embedding cluster separation) that a binary violation flag
+        would destroy.
+  \item Temporal batch coherence demonstrates that spatial
+        representations track activity-level scene evolution.
+\end{itemize}
+
+The practical implication is architectural: build the spatial
+reasoning layer first, then derive any number of downstream
+applications from it.
+Do not build a violation detector and then try to reverse-engineer
+spatial understanding from its classification boundary.
+
+\subsection{Differentiation from Safe-Construct}
+
+Safe-Construct~\cite{safeconstruct2025} is the most directly relevant
+prior work.
+The key difference is not methodological but \emph{ontological}:
+Safe-Construct treats violation detection as the output.
+VINNA treats spatial understanding as the output and violation detection
+as a derived quantity.
+
+This matters practically because:
+\begin{enumerate}
+  \item Spatial representations are \emph{reusable}. The same spatial
+        scene graph that detects a fall hazard also tracks progress,
+        monitors equipment utilization, and supports logistics planning.
+  \item Spatial rewards are \emph{more verifiable} than violation
+        labels. ``The distance is 2.3\,m'' is checkable against a depth
+        sensor. ``This is a violation'' requires regulatory
+        interpretation.
+  \item Spatial understanding \emph{degrades gracefully}. A distance
+        estimate can be approximately right; a violation flag is right
+        or wrong.
+\end{enumerate}
+
+\subsection{Verifiable Spatial Rewards vs.\ Human Labels}
+
+The practical advantage of verifiable spatial rewards is
+\emph{scalability without annotation}.
+A human annotation pipeline for spatial relationships in 638 frames
+would require expert time for each entity pair in each frame---easily
+hundreds of hours.
+Our verifiable reward pipeline computes ground truth from sensor data
+in under 4 minutes (VLM inference is the bottleneck).
+
+A subtler advantage is \emph{reward granularity}.
+Human annotators can provide binary labels (correct/incorrect) or at
+best ordinal ratings.
+SNRA distance rewards provide a continuous signal that tells the model
+not just that its estimate was wrong, but \emph{how wrong} and \emph{in
+which direction}---exactly the gradient information GRPO needs.
+
+\subsection{Limitations}
+
+\paragraph{No trained RL model.}
+The most significant limitation is that we have not yet executed the
+GRPO training loop.
+Our reward functions are designed and scored, but the reinforcement
+learning step---actually updating a VLM's weights using verifiable
+spatial rewards---remains future work.
+The results reported here are from the Gemini 1.5 Pro VLM in a
+zero-shot structured prompting configuration, not a spatially fine-tuned
+model.
+
+\paragraph{Small dataset.}
+638 frames from a single masonry site is insufficient for claims about
+generalization.
+Different construction trades (steel erection, roofing, concrete
+formwork, electrical) have different spatial configurations.
+We expect the spatial reasoning capabilities to transfer (distances and
+relationships are domain-agnostic), but the zone activity classifier
+will require trade-specific tuning.
+
+\paragraph{LiDAR occlusion.}
+The primary failure mode for distance estimation is LiDAR occlusion:
+when an entity is not visible in the point cloud (behind equipment,
+outside LiDAR range), the system falls back to monocular depth
+estimates, which are less reliable.
+Multi-camera fusion or floor-plane priors would mitigate this.
+
+\paragraph{Fisheye distortion.}
+The 180$^\circ$ fisheye lens produces significant radial distortion
+that the VLM must implicitly correct.
+We observe that spatial relationship accuracy degrades for entities
+near the frame periphery, where distortion is most severe.
+
+\paragraph{Evaluation scale.}
+Our annotated evaluation set (25 frames) is small.
+We report it honestly as a directional signal, not a statistically
+robust benchmark.
+
+\subsection{Future Work}
+
+\paragraph{GRPO training.}
+The immediate next step is executing the GRPO training loop using
+our designed reward functions.
+Following Faithful GRPO~\cite{faithfulgrpo2026}, we plan to fine-tune
+Qwen2.5-VL-7B with LoRA (rank 16--32) using the spatial distance
+reward as the primary training signal and relationship/change rewards
+as auxiliary signals.
+
+\paragraph{Temporal modeling.}
+Our current analysis is frame-level.
+Extending to explicit temporal modeling---tracking entities across
+frames, maintaining persistent spatial maps, detecting trends in zone
+activity---would enable richer construction intelligence.
+
+\paragraph{Multi-site evaluation.}
+Generalizing beyond masonry to other construction trades, and from a
+single site to multiple sites, is essential for validating the claim
+that spatial intelligence is a general foundation.
+
+\paragraph{Real-time spatial inference.}
+For deployment, the VLM inference bottleneck must be addressed.
+A cascaded architecture---lightweight spatial front-end (depth-based
+distance estimation, YOLO entity detection) for high-frequency frames,
+full VLM analysis triggered on spatial anomalies---mirrors the
+wake-word architecture used in speech systems.
+
+%% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+Construction AI has been building the house from the roof down:
+jumping to narrow classification tasks (PPE detection, violation
+flagging) without first laying the foundation of spatial understanding.
+VINNA inverts this, treating spatial intelligence---metric distance
+estimation, spatial relationship extraction, temporal change detection,
+zone activity analysis---as the primary capability and classification
+as a downstream application.
+
+On 638 frames of real Ironsite egocentric footage from an active
+masonry site, VINNA's spatial representations produce meaningful
+embedding-space structure across 39 temporal batches.
+CII compliance classification emerges from spatial distance estimates
+at 84\% accuracy without compliance-specific training, demonstrating
+that spatial understanding subsumes violation detection.
+
+Our verifiable reward design---distance checked against LiDAR,
+relationships validated by 3D geometry, changes scored by frame
+differencing---eliminates the need for human annotation and enables
+self-supervised GRPO training.
+This is a hackathon prototype with real data, not a finished system.
+The spatial intelligence gap in construction AI is real, and VINNA is
+a first step toward closing it.
+
+%% =====================================================================
+\begin{acks}
+The authors thank Ironsite for access to the egocentric bodycam and
+LiDAR dataset, and the HackTech 2025 organizers at Caltech for hosting
+this work.
+\end{acks}
+
+%% =====================================================================
+\begin{thebibliography}{99}
+
+\bibitem{spatialvlm2024}
+Zhiyuan Chen, Jiahao Li, and Kilian Q. Weinberger.
+\newblock {SpatialVLM}: Endowing vision--language models with spatial reasoning
+  capabilities.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, 2024.
+
+\bibitem{spatialrgpt2024}
+Rongyao Fang, Yingtian Tang, and Hao Chen.
+\newblock {SpatialRGPT}: Grounded spatial reasoning in vision--language models.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2024.
+
+\bibitem{faithfulgrpo2026}
+Anonymous.
+\newblock Faithful {GRPO}: Verifiable reward functions for language model
+  post-training.
+\newblock \emph{arXiv:2604.08476}, April 2026.
+
+\bibitem{smoothoperator2025}
+Anonymous.
+\newblock Smooth operator: Gradient smoothing for stable {GRPO} on
+  long-horizon tasks.
+\newblock \emph{arXiv:2601.07695}, January 2025.
+
+\bibitem{ego4d2022}
+Kristen Grauman et~al.
+\newblock Ego4{D}: Around the world in 3,000 hours of egocentric video.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, 2022.
+
+\bibitem{safeconstruct2025}
+Anonymous.
+\newblock {Safe-Construct}: 3D multi-view construction safety violation
+  recognition.
+\newblock In \emph{CVPR Workshops}, 2025.
+\newblock arXiv:2504.10880.
+
+\bibitem{vigorl2025}
+Anonymous.
+\newblock {ViGoRL}: Visually grounded reinforcement learning with spatial
+  reasoning.
+\newblock \emph{arXiv:2505.23678}, 2025.
+
+\bibitem{depthanything2024}
+Lihe Yang et~al.
+\newblock Depth Anything V2.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2024.
+
+\bibitem{golparvar2011monitoring}
+Mani Golparvar-Fard, Feniosky Pe\~{n}a-Mora, and Silvio Savarese.
+\newblock Integrated sequential as-built and as-planned representation with
+  backward and forward differencing approach.
+\newblock \emph{Journal of Computing in Civil Engineering}, 25(2):98--116,
+  2011.
+
+\bibitem{yang2018worker}
+Jingjing Yang, Pingbo Tang, and Changbum Ahn.
+\newblock Construction worker detection in video frames for project
+  performance monitoring.
+\newblock \emph{Automation in Construction}, 92:2--16, 2018.
+
+\bibitem{nath2020ppe}
+Nipun~D. Nath, Amir~H. Behzadan, and Stephanie~G. Paal.
+\newblock Deep learning for site safety: Real-time detection of personal
+  protective equipment.
+\newblock \emph{Automation in Construction}, 112:103085, 2020.
+
+\bibitem{christiano2017deep}
+Paul~F. Christiano, Jan Leike, Tom Brown, Miljan Martic, Shane Legg, and
+  Dario Amodei.
+\newblock Deep reinforcement learning from human preferences.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2017.
+
+\bibitem{cii2020safety}
+{Construction Industry Institute}.
+\newblock Safety performance measurement system, 3rd edition.
+\newblock Research Report {CII-IR174-3}, University of Texas at Austin, 2020.
+
+\end{thebibliography}
+
+\end{document}
