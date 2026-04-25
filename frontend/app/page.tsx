@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { useEffect, useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {
   Activity,
+  Cog,
   Coins,
   HardHat,
   Map,
@@ -12,13 +13,7 @@ import {
   ShieldCheck,
   Terminal,
 } from "lucide-react";
-
-type CursorPoint = {
-  id: number;
-  x: number;
-  y: number;
-  char: string;
-};
+import TextScatter from "@/components/react-bits/text-scatter";
 
 const metricCards = [
   { label: "productive", value: "86.7%", sub: "26 / 30 sampled frames" },
@@ -61,61 +56,66 @@ const systemSteps = [
   },
 ];
 
-function AsciiCursor() {
-  const [trail, setTrail] = useState<CursorPoint[]>([]);
-  const counter = useRef(0);
-  const chars = useMemo(() => ["+", "/", ".", ":", "*", "x"], []);
+function ClockworkLoader() {
+  const [visible, setVisible] = useState(true);
+  const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
-    const onMove = (event: MouseEvent) => {
-      counter.current += 1;
-      const point = {
-        id: counter.current,
-        x: event.clientX,
-        y: event.clientY,
-        char: chars[counter.current % chars.length],
-      };
-      setTrail((current) => [point, ...current].slice(0, 12));
+    const fadeTimer = window.setTimeout(() => setLeaving(true), 1050);
+    const removeTimer = window.setTimeout(() => setVisible(false), 1450);
+    return () => {
+      window.clearTimeout(fadeTimer);
+      window.clearTimeout(removeTimer);
     };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [chars]);
+  }, []);
+
+  if (!visible) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 hidden md:block">
-      {trail.map((point, index) => (
-        <span
-          key={point.id}
-          className="absolute mono text-[11px] text-[#d69256]"
-          style={{
-            left: point.x + 10,
-            top: point.y + 8,
-            opacity: Math.max(0, 1 - index / trail.length),
-            transform: `translate3d(0, ${index * 2}px, 0) scale(${1 - index * 0.035})`,
-          }}
-        >
-          {point.char}
+    <div
+      className={`pointer-events-none fixed inset-0 z-[80] grid place-items-center bg-[#080604] transition duration-500 ${
+        leaving ? "opacity-0" : "opacity-100"
+      }`}
+    >
+      <div className="relative h-44 w-44">
+        <div className="absolute inset-0 rounded-full border border-[#6f4a2f]/35 bg-[radial-gradient(circle,rgba(241,194,125,0.16),transparent_54%)]" />
+        <Cog className="absolute left-[52px] top-[48px] h-20 w-20 animate-spin text-[#d49a63] [animation-duration:6s]" />
+        <Cog className="absolute left-[18px] top-[86px] h-14 w-14 animate-spin text-[#9f6d45] [animation-direction:reverse] [animation-duration:4s]" />
+        <Cog className="absolute right-[18px] top-[24px] h-12 w-12 animate-spin text-[#efd19b] [animation-duration:3.5s]" />
+        <span className="absolute bottom-[-34px] left-1/2 -translate-x-1/2 mono text-[10px] uppercase tracking-[0.34em] text-[#c77b42]">
+          indexing site memory
         </span>
-      ))}
+      </div>
     </div>
   );
 }
 
-function AmberParticleField() {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const particleCount = 5600;
+function SurveyCursor() {
+  const [position, setPosition] = useState({ x: -120, y: -120 });
 
-  const positions = useMemo(() => {
-    const data = new Float32Array(particleCount * 3);
-    for (let index = 0; index < particleCount; index += 1) {
-      const radius = Math.sqrt(Math.random()) * 7.4;
-      const angle = Math.random() * Math.PI * 2;
-      data[index * 3] = Math.cos(angle) * radius * 1.45;
-      data[index * 3 + 1] = Math.sin(angle) * radius * 0.46 - 0.75;
-      data[index * 3 + 2] = (Math.random() - 0.5) * 2.2;
-    }
-    return data;
+  useEffect(() => {
+    const onMove = (event: MouseEvent) => {
+      setPosition({ x: event.clientX, y: event.clientY });
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
   }, []);
+
+  return (
+    <div
+      className="pointer-events-none fixed z-50 hidden h-12 w-12 -translate-x-1/2 -translate-y-1/2 mix-blend-screen md:block"
+      style={{ left: position.x, top: position.y }}
+    >
+      <div className="absolute left-1/2 top-0 h-full w-px bg-[#d69256]/35" />
+      <div className="absolute left-0 top-1/2 h-px w-full bg-[#d69256]/35" />
+      <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f1c27d]/70" />
+    </div>
+  );
+}
+
+function TopographicField() {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const { viewport } = useThree();
 
   useFrame(({ clock }) => {
     if (materialRef.current) {
@@ -124,67 +124,115 @@ function AmberParticleField() {
   });
 
   return (
-    <points>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-      </bufferGeometry>
+    <mesh scale={[viewport.width, viewport.height, 1]}>
+      <planeGeometry args={[1, 1]} />
       <shaderMaterial
         ref={materialRef}
-        transparent
+        transparent={false}
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
         uniforms={{
           uTime: { value: 0 },
-          uColorA: { value: new THREE.Color("#c77b42") },
-          uColorB: { value: new THREE.Color("#f1c27d") },
+          uAmber: { value: new THREE.Color("#c8956c") },
+          uGold: { value: new THREE.Color("#f1c27d") },
+          uCoral: { value: new THREE.Color("#d8734f") },
+          uBg: { value: new THREE.Color("#080604") },
         }}
         vertexShader={`
-          uniform float uTime;
-          varying float vAlpha;
-          varying float vWarmth;
+          varying vec2 vUv;
           void main() {
-            vec3 p = position;
-            float wave = sin(p.x * 0.65 + uTime * 0.28) + cos(p.y * 1.8 - uTime * 0.22);
-            p.y += wave * 0.16;
-            p.x += sin(p.y * 1.1 + uTime * 0.16) * 0.24;
-            vec4 mvPosition = modelViewMatrix * vec4(p, 1.0);
-            float depth = clamp(1.0 - abs(p.z) * 0.35, 0.28, 1.0);
-            gl_PointSize = (2.2 + depth * 3.2) * (1.0 / -mvPosition.z);
-            gl_Position = projectionMatrix * mvPosition;
-            vAlpha = depth * 0.72;
-            vWarmth = smoothstep(-4.5, 5.5, p.x + wave);
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
           }
         `}
         fragmentShader={`
-          uniform vec3 uColorA;
-          uniform vec3 uColorB;
-          varying float vAlpha;
-          varying float vWarmth;
+          uniform float uTime;
+          uniform vec3 uAmber;
+          uniform vec3 uGold;
+          uniform vec3 uCoral;
+          uniform vec3 uBg;
+          varying vec2 vUv;
+
+          vec2 hash(vec2 p) {
+            p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+            return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+          }
+
+          float noise(vec2 p) {
+            const float K1 = 0.366025404;
+            const float K2 = 0.211324865;
+            vec2 i = floor(p + (p.x + p.y) * K1);
+            vec2 a = p - i + (i.x + i.y) * K2;
+            vec2 o = (a.x > a.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+            vec2 b = a - o + K2;
+            vec2 c = a - 1.0 + 2.0 * K2;
+            vec3 h = max(0.5 - vec3(dot(a,a), dot(b,b), dot(c,c)), 0.0);
+            vec3 n = h * h * h * h * vec3(
+              dot(a, hash(i)),
+              dot(b, hash(i + o)),
+              dot(c, hash(i + 1.0))
+            );
+            return dot(n, vec3(70.0));
+          }
+
+          float fbm(vec2 p) {
+            float v = 0.0;
+            float a = 0.52;
+            mat2 r = mat2(0.82, -0.58, 0.58, 0.82);
+            for (int i = 0; i < 5; i++) {
+              v += a * noise(p);
+              p = r * p * 2.03 + 7.1;
+              a *= 0.48;
+            }
+            return v;
+          }
+
           void main() {
-            vec2 uv = gl_PointCoord - 0.5;
-            float d = length(uv);
-            float glow = smoothstep(0.5, 0.0, d);
-            vec3 color = mix(uColorA, uColorB, vWarmth);
-            gl_FragColor = vec4(color, glow * vAlpha);
+            vec2 uv = vUv;
+            vec2 p = uv * vec2(2.25, 1.22);
+            p.x += 0.17 * sin(p.y * 3.2 + uTime * 0.08);
+            p.y += 0.08 * cos(p.x * 4.0 - uTime * 0.06);
+
+            float elevation = fbm(p * 2.9 + vec2(uTime * 0.026, -uTime * 0.018));
+            elevation = elevation * 0.5 + 0.5;
+
+            float minor = abs(fract(elevation * 18.0) - 0.5);
+            float major = abs(fract(elevation * 6.0) - 0.5);
+            float minorLine = 1.0 - smoothstep(0.018, 0.052, minor);
+            float majorLine = 1.0 - smoothstep(0.018, 0.072, major);
+
+            vec3 contourColor = mix(uCoral, uGold, smoothstep(0.18, 0.88, elevation));
+            float glow = minorLine * 0.28 + majorLine * 0.72;
+            vec3 color = uBg + contourColor * glow;
+
+            float vignette = smoothstep(0.92, 0.2, distance(uv, vec2(0.5)));
+            float lowGrid = (sin((uv.x + uv.y) * 680.0) * 0.5 + 0.5) * 0.015;
+            color += uAmber * lowGrid;
+            color = mix(uBg * 0.55, color, vignette);
+
+            gl_FragColor = vec4(color, 1.0);
           }
         `}
       />
-    </points>
+    </mesh>
   );
 }
 
-function ShaderBackdrop() {
+function TopographicBackdrop() {
   return (
     <div className="absolute inset-0 -z-10 overflow-hidden bg-[#080604]">
       <Canvas
-        camera={{ position: [0, 0, 7.8], fov: 58 }}
+        orthographic
+        camera={{ position: [0, 0, 1], zoom: 1 }}
         dpr={[1, 1.75]}
         gl={{ antialias: false, alpha: true }}
       >
-        <AmberParticleField />
+        <TopographicField />
       </Canvas>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_72%,rgba(199,123,66,0.20),transparent_34%),radial-gradient(circle_at_78%_18%,rgba(98,142,127,0.16),transparent_24%),linear-gradient(180deg,rgba(8,6,4,0.16),#080604_92%)]" />
-      <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(241,194,125,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(241,194,125,.6)_1px,transparent_1px)] [background-size:64px_64px]" />
+      <div className="absolute left-6 top-24 mono text-[10px] uppercase tracking-[0.34em] text-[#c8956c]/55 md:left-12">
+        topographic / rgb pseudo-site map
+      </div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_24%,rgba(98,142,127,0.12),transparent_24%),radial-gradient(circle_at_48%_72%,rgba(199,123,66,0.16),transparent_32%),linear-gradient(180deg,rgba(8,6,4,0.18),#080604_94%)]" />
+      <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(241,194,125,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(241,194,125,.7)_1px,transparent_1px)] [background-size:78px_78px]" />
     </div>
   );
 }
@@ -216,18 +264,25 @@ function ContourPanel({
 export default function VinnaPage() {
   return (
     <main className="min-h-screen bg-[#080604] text-[#f4eadb]">
-      <AsciiCursor />
+      <ClockworkLoader />
+      <SurveyCursor />
       <section className="relative min-h-screen overflow-hidden px-5 py-6 sm:px-8 lg:px-12">
-        <ShaderBackdrop />
+        <TopographicBackdrop />
 
         <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between border-b border-[#6f4a2f]/35 pb-5">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#c77b42]/45 bg-[#1a120c]/80">
               <HardHat className="h-4 w-4 text-[#f1c27d]" />
             </div>
-            <span className="mono text-sm tracking-[0.32em] text-[#f1c27d]">
-              VINNA
-            </span>
+            <TextScatter
+              as="span"
+              text="VINNA"
+              velocity={34}
+              rotation={10}
+              duration={0.45}
+              returnAfter={0.18}
+              className="mono text-sm tracking-[0.32em] text-[#f1c27d]"
+            />
           </div>
           <div className="hidden items-center gap-8 mono text-xs uppercase tracking-[0.22em] text-[#8f806d] md:flex">
             <a href="#system" className="transition hover:text-[#f1c27d]">
@@ -247,8 +302,8 @@ export default function VinnaPage() {
             <p className="mono mb-6 max-w-xl text-xs uppercase tracking-[0.34em] text-[#c77b42]">
               spatial proof of work / hardhat video / CII index
             </p>
-            <h1 className="max-w-5xl text-6xl font-light leading-[0.88] tracking-[-0.08em] text-[#f8efe0] sm:text-8xl lg:text-[9.5rem]">
-              site intelligence that can pay out.
+            <h1 className="max-w-5xl text-6xl font-light leading-[0.88] tracking-normal text-[#f8efe0] sm:text-8xl lg:text-[9.5rem]">
+              map the work before you pay it.
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-8 text-[#b9aa94]">
               VINNA turns bodycam footage into a verifiable construction ledger:
@@ -330,7 +385,7 @@ export default function VinnaPage() {
               <p className="mono text-xs uppercase tracking-[0.32em] text-[#c77b42]">
                 system map
               </p>
-              <h2 className="mt-3 max-w-3xl text-4xl font-light tracking-[-0.04em] text-[#f4eadb] md:text-6xl">
+              <h2 className="mt-3 max-w-3xl text-4xl font-light tracking-normal text-[#f4eadb] md:text-6xl">
                 not a dashboard. a jobsite blackbox.
               </h2>
             </div>
@@ -395,7 +450,7 @@ export default function VinnaPage() {
             <p className="mono mt-8 text-xs uppercase tracking-[0.28em] text-[#c77b42]">
               submission claim
             </p>
-            <h2 className="mt-3 text-4xl font-light tracking-[-0.04em]">
+            <h2 className="mt-3 text-4xl font-light tracking-normal">
               spatial work should be auditable.
             </h2>
             <p className="mt-5 text-sm leading-7 text-[#a99a86]">
