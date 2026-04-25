@@ -906,6 +906,20 @@ These are MEASURED numbers — not aspirational. Use as baselines when implement
 - 8-class construction ontology implemented: worker, scaffold, guardrail, handrail,
   open_edge, ladder, material_stack, blocked_path
 
+**Gemini Robotics-ER implementation notes (from API research 2026-04-25):**
+
+- `gemini-robotics-er-1.6-preview` returns structured JSON bounding boxes natively:
+  `[ymin, xmin, ymax, xmax]` normalized 0–1000, max 25 objects per frame
+- Maps **1:1 to the `box_2d` field in the Observation schema** — just a coord flip
+  (`y,x → x,y`) and rescale (0–1000 → pixel space). No custom parser needed.
+- Also returns **trajectory waypoints**: sequential `[y, x]` points for predicted
+  movement paths → directly populates `predicted_trajectory` in the Forecast schema
+- 2D only, no 3D. This is the intended split: Gemini Robotics-ER provides semantic
+  labels + trajectory intent; MASt3R + COLMAP + DepthPro provide spatial grounding.
+  Two layers fusing in the ledger.
+- Implementation estimate: ~40 lines (prompt frame, parse JSON, coord transform,
+  write observation record)
+
 ### Benchmark 1 — Raw VLM vs Ledger-Augmented QA (existing A/B)
 
 - 5 spatial questions on masonry footage, two conditions: VLM-only vs VLM+event-memory
@@ -1009,7 +1023,17 @@ bias toward active work frames, not a measurement artifact.
    **ANSWERED: See A/B benchmark in Validation Results — 5 questions (worker
    position, scaffold proximity, equipment detection, hazard boundary, change
    detection) validated with +33.2% ledger improvement.**
-7. Which action categories are narrow enough for the first forecast benchmark.
+7. ~~Which action categories are narrow enough for the first forecast benchmark.~~
+   **ANSWERED (2026-04-25): Use Ego4D STA (Short-Term Anticipation) schema.**
+   Ego4D forecasting = locomotion trajectory + future hand positions + short-term
+   object interaction anticipation + long-term action anticipation. The money schema
+   is **STA**: object bounding box + verb + noun + time-to-contact. Frame VINNA
+   module 5 as "emits Ego4D-style forecasting records from the scene ledger" —
+   metric spatial grounding (MASt3R/DepthPro) supplies the 3D that Ego4D lacks.
+   External eval anchor: `Egocentric-10K-Evaluation` (30K pre-labeled frames) — do
+   not claim benchmarked until we actually run the eval pipeline against their
+   annotations. Fisheye intrinsics in Ego4D (OpenCV model, k1–k4) match the
+   undistortion pipeline that produced the 59% RPE gain.
 
 ## Recommended First Implementation Slice
 
