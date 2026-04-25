@@ -1,0 +1,225 @@
+% OSHA CFR 29 Part 1926 — Binary Reward Function Summary Table
+% Include in paper with: \input{osha_table}
+% Requires packages: booktabs, xcolor, colortbl, longtable, array, multirow
+
+\definecolor{criticalbg}{HTML}{FDDEDE}
+\definecolor{highbg}{HTML}{FEF3CD}
+\definecolor{mediumbg}{HTML}{D9EAD3}
+\definecolor{lowbg}{HTML}{CFE2F3}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\begin{longtable}{@{}l L{2.2cm} L{2.8cm} L{5.5cm} c c c@{}}
+\caption{OSHA CFR 29 \S1926 Binary Reward Functions for VLM Egocentric Evaluation.
+Each function maps a specific regulation to a yes/no question answerable from a single bodycam frame.
+Severity: \textbf{C}ritical, \textbf{H}igh, \textbf{M}edium.}
+\label{tab:osha_rewards} \\
+
+\toprule
+\textbf{ID} &
+\textbf{CFR \S} &
+\textbf{Rule Name} &
+\textbf{Binary Question (VLM Prompt)} &
+\textbf{Cat.} &
+\textbf{Sev.} &
+\textbf{Verif.} \\
+\midrule
+\endfirsthead
+
+\multicolumn{7}{c}{{\tablename\ \thetable{} -- continued}} \\
+\toprule
+\textbf{ID} &
+\textbf{CFR \S} &
+\textbf{Rule Name} &
+\textbf{Binary Question (VLM Prompt)} &
+\textbf{Cat.} &
+\textbf{Sev.} &
+\textbf{Verif.} \\
+\midrule
+\endhead
+
+\midrule \multicolumn{7}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+% ── Fall Protection ───────────────────────────────────────────────────────────
+\rowcolor{criticalbg}
+RF-001 & 1926.502(d)(16) & PFAS Harness Worn &
+Is the worker wearing a full-body fall arrest harness with dorsal D-ring at shoulder level? &
+FP & C & \checkmark \\
+
+\rowcolor{criticalbg}
+RF-002 & 1926.502(d)(17) & Lanyard Connected &
+Is the worker's lanyard/SRL snap hook visibly engaged to a rated anchorage point? &
+FP & C & \checkmark \\
+
+\rowcolor{criticalbg}
+RF-003 & 1926.502(b)(1) & Guardrail Top Rail &
+Is a continuous top rail at 39–45 in.\ present along all unprotected platform edges? &
+FP & C & \checkmark \\
+
+\rowcolor{highbg}
+RF-004 & 1926.502(j)(1) & Safety Net Below &
+Is a compliant safety net installed beneath the work area when PFAS/guardrails are absent? &
+FP & H & \checkmark \\
+
+\rowcolor{highbg}
+RF-026 & 1926.502(c)(1) & Safety Monitor &
+Is a dedicated safety monitor present on the same level, unoccupied by other tasks, with LOS to all workers? &
+FP & H & \checkmark \\
+
+\midrule
+% ── Scaffolding ───────────────────────────────────────────────────────────────
+\rowcolor{criticalbg}
+RF-005 & 1926.451(g)(1) & Scaffold Fall Protection &
+Are workers on scaffold $>$10 ft behind a complete guardrail system or wearing a connected PFAS? &
+SC & C & \checkmark \\
+
+\rowcolor{highbg}
+RF-006 & 1926.451(b)(1) & Scaffold Full Planking &
+Is the scaffold platform fully planked with no gaps $>$1 in.\ and no missing or broken planks? &
+SC & H & \checkmark \\
+
+\rowcolor{highbg}
+RF-007 & 1926.451(e)(1) & Scaffold Proper Access &
+Are workers accessing the scaffold via a ladder or stairway, NOT by climbing cross-bracing? &
+SC & H & \checkmark \\
+
+\rowcolor{highbg}
+RF-028 & 1926.451(c)(1) & Mudsills \& Base Plates &
+Are scaffold base plates and mudsills present under every leg, with scaffold plumb and stable? &
+SC & H & \checkmark \\
+
+\midrule
+% ── Ladders ───────────────────────────────────────────────────────────────────
+\rowcolor{highbg}
+RF-008 & 1926.1053(b)(1) & Three-Point Contact &
+Is the worker facing the ladder and maintaining $\geq$3 points of contact while climbing? &
+LA & H & \checkmark \\
+
+\rowcolor{highbg}
+RF-009 & 1926.1053(b)(4) & Portable Ladder Secured &
+Is the portable ladder tied/hooked at the top and set at approximately a 75° angle? &
+LA & H & \checkmark \\
+
+\rowcolor{mediumbg}
+RF-010 & 1926.1053(b)(22) & No Ladder as Walkway &
+Is the ladder used only as a climbing device, NOT placed horizontally as a bridge or platform? &
+LA & M & \checkmark \\
+
+\rowcolor{mediumbg}
+RF-027 & 1926.1053(b)(5)(i) & Stepladder Open/Locked &
+Are the stepladder spreaders fully open and locked before the worker climbs? &
+LA & M & \checkmark \\
+
+\midrule
+% ── PPE ───────────────────────────────────────────────────────────────────────
+\rowcolor{criticalbg}
+RF-011 & 1926.100(a) & Hard Hat Worn &
+Is the worker wearing a hard hat properly positioned on the top of the head? &
+PP & C & \checkmark \\
+
+\rowcolor{highbg}
+RF-012 & 1926.102(a)(1) & Eye Protection Worn &
+Is the worker wearing safety glasses, goggles, or face shield during cutting/grinding/welding? &
+PP & H & \checkmark \\
+
+\rowcolor{mediumbg}
+RF-013 & 1926.101(a) & Hearing Protection &
+Is the worker wearing earplugs or earmuffs when operating loud equipment ($\geq$90 dBA)? &
+PP & M & \checkmark \\
+
+\rowcolor{highbg}
+RF-014 & 1926.95(a) & Hi-Vis Vest Worn &
+Is the worker wearing an ANSI Class 2/3 fluorescent vest near vehicle traffic or equipment? &
+PP & H & \checkmark \\
+
+\rowcolor{highbg}
+RF-025 & 1926.28(a) & Task-Appropriate PPE &
+For the visible hazardous task, is the worker wearing the complete required PPE ensemble? &
+PP & H & \checkmark \\
+
+\midrule
+% ── Electrical ────────────────────────────────────────────────────────────────
+\rowcolor{criticalbg}
+RF-015 & 1926.416(a)(1) & Energized Parts Guarded &
+Are all exposed energized conductors de-energized, insulated, or behind barriers? &
+EL & C & \checkmark \\
+
+\rowcolor{criticalbg}
+RF-016 & 1926.404(b)(1)(ii) & GFCI on Temp Power &
+Are all temporary receptacles serving portable tools protected by a GFCI device? &
+EL & C & \checkmark \\
+
+\rowcolor{highbg}
+RF-017 & 1926.416(e)(1) & Extension Cord Intact &
+Are all extension cords free of cuts, fraying, tape splices, and exposed conductors? &
+EL & H & \checkmark \\
+
+\rowcolor{criticalbg}
+RF-029 & 1926.403(b)(2) & Panel Overcurrent Intact &
+Is the temp panel cover closed, slots filled, no bypassed breakers, no burn marks? &
+EL & C & \checkmark \\
+
+\midrule
+% ── Excavations ───────────────────────────────────────────────────────────────
+\rowcolor{criticalbg}
+RF-018 & 1926.652(a)(1) & Excavation Protected &
+Does an excavation $\geq$5 ft deep have sloping, shoring, or a trench box before workers enter? &
+EX & C & \checkmark \\
+
+\rowcolor{highbg}
+RF-019 & 1926.651(c)(2) & Spoil Pile Setback &
+Is the spoil pile set back $\geq$2 ft from the trench edge with no material overhanging? &
+EX & H & \checkmark \\
+
+\rowcolor{highbg}
+RF-020 & 1926.651(e) & Egress Ladder in Trench &
+Is a ladder, ramp, or stairway inside the excavation reachable within 25 ft lateral travel? &
+EX & H & \checkmark \\
+
+\rowcolor{highbg}
+RF-030 & 1926.651(j)(2) & Warning Barrier at Edge &
+Is the excavation perimeter protected by physical barriers (fence, jersey barrier, etc.)? &
+EX & H & \checkmark \\
+
+\midrule
+% ── Steel Erection ────────────────────────────────────────────────────────────
+\rowcolor{criticalbg}
+RF-021 & 1926.753(c)(1) & Decking Sequentially Secured &
+Is metal decking placed sequentially with no overhanging panels, fastened before workers walk on it? &
+SE & C & \checkmark \\
+
+\rowcolor{criticalbg}
+RF-022 & 1926.760(a)(1) & Connector PFAS Connected &
+Is each ironworker making connections at $>$15 ft wearing a connected PFAS or positioning device? &
+SE & C & \checkmark \\
+
+\midrule
+% ── Housekeeping ──────────────────────────────────────────────────────────────
+\rowcolor{mediumbg}
+RF-023 & 1926.25(a) & Work Area Clear of Debris &
+Is the work area and passageway clear of protruding nails, scrap lumber, and tripping hazards? &
+HK & M & \checkmark \\
+
+\rowcolor{mediumbg}
+RF-024 & 1926.25(b) & Combustible Scrap Removed &
+Is combustible scrap cleared from the work zone and not accumulated near ignition sources? &
+HK & M & \checkmark \\
+
+\end{longtable}
+
+\vspace{0.5em}
+\noindent\textbf{Category codes:}
+FP~=~Fall Protection (§1926.500–503),\;
+SC~=~Scaffolding (§1926.450–454),\;
+LA~=~Ladders (§1926.1050–1060),\;
+PP~=~PPE (§1926.28, §1926.95–107),\;
+EL~=~Electrical (§1926.400–449),\;
+EX~=~Excavations (§1926.650–652),\;
+SE~=~Steel Erection (§1926.750–761),\;
+HK~=~Housekeeping (§1926.25).
+\textbf{Sev.:} C~=~Critical, H~=~High, M~=~Medium.
+All 30 functions are binary (reward $\in \{0,1\}$) and \textbf{Verif.}~=~\checkmark indicates no human judgment required beyond VLM visual inference.

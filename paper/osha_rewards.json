@@ -1,0 +1,569 @@
+{
+  "metadata": {
+    "title": "OSHA CFR 29 Part 1926 — Binary Reward Function Mapping for VLM Egocentric Evaluation",
+    "description": "Maps specific OSHA construction safety regulations to verifiable binary reward functions evaluable from egocentric bodycam frames by a vision-language model (VLM). Each entry defines the regulatory basis, the yes/no question posed to the VLM, visual cues used to answer it, and reward metadata.",
+    "standard": "29 CFR Part 1926 — Safety and Health Regulations for Construction",
+    "source": "U.S. Department of Labor, Occupational Safety and Health Administration",
+    "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926",
+    "version": "2024",
+    "note": "reward_value: 1.0 = compliant (safe), 0.0 = non-compliant (violation observed)"
+  },
+  "reward_functions": [
+    {
+      "id": "RF-001",
+      "cfr_section": "1926.502(d)(16)",
+      "rule_name": "Personal Fall Arrest System — Harness Worn",
+      "regulatory_text": "Body harnesses shall be worn and a lanyard shall be attached to the D-ring located in the center of the wearer's back near shoulder level, or above the wearer's head.",
+      "binary_question": "Is the worker wearing a full-body fall arrest harness with the dorsal D-ring visible at the upper back or shoulder level?",
+      "visual_cues": [
+        "Shoulder straps forming an X or Y pattern across the chest",
+        "Chest strap connecting left and right shoulder straps",
+        "Leg loops visible at upper thigh",
+        "Dorsal D-ring visible at upper back (if rear view available)",
+        "Waist belt or sub-pelvic strap present"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Fall Protection",
+      "elevation_threshold_ft": 6,
+      "notes": "Applies to workers on walking/working surfaces with unprotected sides/edges ≥6 ft above lower level. Body belt alone does NOT satisfy this requirement."
+    },
+    {
+      "id": "RF-002",
+      "cfr_section": "1926.502(d)(17)",
+      "rule_name": "Lanyard Connected to Anchorage",
+      "regulatory_text": "Lanyards and vertical lifelines shall have a minimum breaking strength of 5,000 pounds. Snap hooks shall not be connected to loops made in webbing-type lanyards.",
+      "binary_question": "Is the worker's lanyard or self-retracting lifeline visibly connected (snap hook engaged) to an overhead or rated anchorage point?",
+      "visual_cues": [
+        "Lanyard extending from dorsal D-ring upward to an anchor",
+        "Snap hook locked onto a horizontal lifeline, beam, or anchor connector",
+        "Self-retracting lifeline (SRL) canister visible above worker, line taut toward D-ring",
+        "No free-dangling lanyard end"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Fall Protection",
+      "notes": "Harness worn but unconnected = 0.0. Lanyard must be connected AND snap hook gate must appear closed/locked."
+    },
+    {
+      "id": "RF-003",
+      "cfr_section": "1926.502(b)(1)",
+      "rule_name": "Guardrail — Top Rail Present at Unprotected Edge",
+      "regulatory_text": "Top edge height of top rails, or equivalent guardrail system members, shall be 42 inches (plus or minus 3 inches) above the walking/working level.",
+      "binary_question": "Is there a continuous guardrail top rail at approximately 39–45 inches height along any unprotected floor edge or open-sided platform visible in the frame?",
+      "visual_cues": [
+        "Horizontal rail running parallel to open edge at mid-to-upper torso height",
+        "Rail supported by vertical posts at regular intervals",
+        "No gap or missing section in the rail along the visible edge length",
+        "Rail color: yellow, orange, or silver pipe (construction typical)"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Fall Protection",
+      "notes": "If unprotected edge is visible AND no guardrail is present, reward = 0.0. If edge is not visible or worker is clearly ≤4 ft from ground, treat as not applicable."
+    },
+    {
+      "id": "RF-004",
+      "cfr_section": "1926.502(j)(1)",
+      "rule_name": "Safety Net Installed Below Work Area",
+      "regulatory_text": "Safety nets shall be installed as close as practicable under the walking/working surface on which employees are working, but in no case more than 30 feet (9.1 m) below such level.",
+      "binary_question": "Is a safety net (mesh netting system) visibly installed beneath the active work area when workers are at height without guardrails or PFAS?",
+      "visual_cues": [
+        "Large-mesh or knotted netting suspended below the work deck",
+        "Net attached to perimeter supports or structural members",
+        "Net appears taut and free of large tears or accumulated debris",
+        "Visible border ropes and attachment points at net perimeter"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Fall Protection",
+      "notes": "Only applicable when guardrails or PFAS are not feasible. Frame must show overhead or lateral view of net system."
+    },
+    {
+      "id": "RF-005",
+      "cfr_section": "1926.451(g)(1)",
+      "rule_name": "Scaffold Fall Protection — Guardrail or PFAS",
+      "regulatory_text": "Each employee on a scaffold more than 10 feet (3.1 m) above a lower level shall be protected from falling to that lower level. Guardrail systems shall be installed along all open sides and ends of platforms.",
+      "binary_question": "Are workers on a scaffold platform above 10 feet either (a) behind a complete guardrail system on open edges, or (b) wearing a connected PFAS?",
+      "visual_cues": [
+        "Scaffold guardrail: top rail + mid rail + toeboard visible on open scaffold edge",
+        "OR: worker wearing full-body harness with lanyard attached to scaffold structure",
+        "No missing guardrail sections on visible open edges",
+        "Toeboard (4-inch minimum) visible at platform floor level"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Scaffolding"
+    },
+    {
+      "id": "RF-006",
+      "cfr_section": "1926.451(b)(1)",
+      "rule_name": "Scaffold Platform Planking — Full Planked",
+      "regulatory_text": "Each platform on all working levels of scaffolds shall be fully planked or decked between the front uprights and the guardrail supports.",
+      "binary_question": "Is the scaffold work platform fully planked with no visible gaps wider than 1 inch between planks, and no missing planks?",
+      "visual_cues": [
+        "Continuous wood or metal deck across full scaffold platform width",
+        "No openings wider than ~1 inch between adjacent planks",
+        "Planks overhang front/back supports by 6–12 inches (or secured from movement)",
+        "No broken, split, or missing planks"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Scaffolding"
+    },
+    {
+      "id": "RF-007",
+      "cfr_section": "1926.451(e)(1)",
+      "rule_name": "Scaffold Access — Proper Ladder or Stairway",
+      "regulatory_text": "When scaffold platforms are more than 2 feet (0.6 m) above or below a point of access, portable ladders, hook-on ladders, attachable ladders, stair towers, stairway-type ladders, ramps, walkways, integral prefabricated scaffold access, or direct access from another scaffold, structure, personnel hoist, or similar surface shall be used.",
+      "binary_question": "Are workers accessing the scaffold via a ladder, stairway, or other compliant access route rather than climbing the cross-bracing or frame?",
+      "visual_cues": [
+        "Worker on a dedicated scaffold access ladder attached to scaffold frame",
+        "Stair tower with handrails visible adjacent to scaffold",
+        "Worker NOT gripping and stepping on diagonal cross-braces",
+        "Worker NOT jumping between scaffold and structure"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Scaffolding"
+    },
+    {
+      "id": "RF-008",
+      "cfr_section": "1926.1053(b)(1)",
+      "rule_name": "Ladder — Three-Point Contact Maintained",
+      "regulatory_text": "When ascending or descending, the employee shall face the ladder. Employees shall use at least three points of contact (hands and feet) when climbing or descending a ladder.",
+      "binary_question": "Is the worker climbing or descending the ladder while facing it AND maintaining at least three points of contact (two hands + one foot, or two feet + one hand) at all times?",
+      "visual_cues": [
+        "Worker body oriented toward ladder, not facing away",
+        "Both hands visible gripping rungs or side rails while at least one foot is on a rung",
+        "Worker not carrying tools or materials in hands while climbing (tool belt or bags only)",
+        "No single-hand climbing with body twisted sideways"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Ladders"
+    },
+    {
+      "id": "RF-009",
+      "cfr_section": "1926.1053(b)(4)",
+      "rule_name": "Portable Ladder — Secured at Top",
+      "regulatory_text": "Non-self-supporting ladders shall be used at an angle such that the horizontal distance from the top support to the foot of the ladder is approximately one-quarter of the working length of the ladder. Ladders shall be secured at the top where a person could kick the bottom out.",
+      "binary_question": "Is the portable ladder secured at the top (tied, hooked, or held) and positioned at approximately a 75-degree angle (4:1 rise-to-run ratio)?",
+      "visual_cues": [
+        "Ladder top resting on surface with visible tie-off strap, hook, or standoff bracket",
+        "Ladder angle appears steep (roughly 75 degrees from horizontal)",
+        "Base does not appear to be on slippery surface or edge",
+        "Ladder top extends approximately 3 feet above landing if used for roof access"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Ladders"
+    },
+    {
+      "id": "RF-010",
+      "cfr_section": "1926.1053(b)(22)",
+      "rule_name": "Ladder — Not Used as Horizontal Walkway",
+      "regulatory_text": "Ladders shall not be used as platforms, runways, or scaffolds.",
+      "binary_question": "Is the ladder being used only as a vertical or angled climbing device, and NOT positioned horizontally as a walkway, bridge, or working platform?",
+      "visual_cues": [
+        "Ladder in upright angled or vertical position",
+        "No workers standing on a horizontally-placed ladder between two surfaces",
+        "Ladder not spanning a gap as a makeshift bridge",
+        "Workers not kneeling or working on a ladder laid flat"
+      ],
+      "reward_type": "binary",
+      "severity": "medium",
+      "verifiable": true,
+      "category": "Ladders"
+    },
+    {
+      "id": "RF-011",
+      "cfr_section": "1926.100(a)",
+      "rule_name": "Hard Hat / Head Protection Worn",
+      "regulatory_text": "Employees working in areas where there is a possible danger of head injury from impact, or from falling or flying objects, or from electrical shock and burns, shall be protected by protective helmets.",
+      "binary_question": "Is the worker wearing a hard hat or safety helmet on their head (not hanging from belt or held in hand)?",
+      "visual_cues": [
+        "Hard hat or safety helmet visible on top of worker's head",
+        "Hat properly oriented with brim forward (or reverse-donned Type II if labeled)",
+        "Hat appears to sit level, not tilted back off crown",
+        "No baseball cap or beanie worn in place of a hard hat"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "PPE"
+    },
+    {
+      "id": "RF-012",
+      "cfr_section": "1926.102(a)(1)",
+      "rule_name": "Eye and Face Protection Worn",
+      "regulatory_text": "Employees shall be provided with eye and face protection equipment when machines or operations present potential eye or face injury from physical, chemical, or radiation agents.",
+      "binary_question": "Is the worker wearing appropriate eye protection (safety glasses, goggles, or face shield) when performing grinding, cutting, chipping, welding, or chemical handling?",
+      "visual_cues": [
+        "Safety glasses with side shields on worker's face",
+        "Goggles with elastic strap around head",
+        "Face shield flipped down over face (with safety glasses underneath)",
+        "Welding helmet in lowered position during welding arc",
+        "No bare eyes during visible spark-generating or chemical operations"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "PPE"
+    },
+    {
+      "id": "RF-013",
+      "cfr_section": "1926.101(a)",
+      "rule_name": "Hearing Protection Worn in High-Noise Areas",
+      "regulatory_text": "When the sound levels exceed those shown in Table D-2 of this section, feasible administrative or engineering controls shall be utilized. If such controls fail to reduce sound levels within the levels of Table D-2, personal protective equipment as required in this section shall be provided and used.",
+      "binary_question": "Is the worker wearing hearing protection (earplugs or earmuffs) when operating or working adjacent to loud equipment (jackhammers, cut-off saws, concrete breakers, etc.)?",
+      "visual_cues": [
+        "Foam or flanged earplugs visible in ear canals",
+        "Over-ear earmuffs worn on or around ears",
+        "Earmuffs attached to hard hat (cap-mounted muffs) in deployed position",
+        "Loud power tool or pneumatic equipment visible in scene",
+        "Worker within 6 feet of running jackhammer, compressor, or circular saw without protection"
+      ],
+      "reward_type": "binary",
+      "severity": "medium",
+      "verifiable": true,
+      "category": "PPE"
+    },
+    {
+      "id": "RF-014",
+      "cfr_section": "1926.95(a)",
+      "rule_name": "High-Visibility Vest Worn Near Equipment/Traffic",
+      "regulatory_text": "Protective equipment, including personal protective equipment for eyes, face, head, and extremities, protective clothing, respiratory devices, and protective shields and barriers, shall be provided, used, and maintained in a sanitary and reliable condition wherever it is necessary by reason of hazards of processes or environment.",
+      "binary_question": "Is the worker wearing a high-visibility safety vest (ANSI Class 2 or 3, fluorescent yellow-green or orange) when working in or near vehicle traffic or active equipment swing zones?",
+      "visual_cues": [
+        "Fluorescent yellow-green or orange vest over outer clothing",
+        "Retroreflective silver/gray stripes on vest (horizontal around torso, over shoulders)",
+        "Vest worn over jacket or shirt, not removed or bunched",
+        "Active vehicle, crane, or earthmoving equipment visible in background of scene"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "PPE"
+    },
+    {
+      "id": "RF-015",
+      "cfr_section": "1926.416(a)(1)",
+      "rule_name": "Electrical — Energized Parts Guarded",
+      "regulatory_text": "No employer shall permit an employee to work in such proximity to any part of an electric power circuit that the employee could contact the electric power circuit in the course of work, unless the employee is protected against electric shock by deenergizing the circuit and grounding it or by guarding it effectively by insulation or other means.",
+      "binary_question": "Are all exposed energized electrical components (panels, junction boxes, bare conductors) either de-energized, guarded with insulating covers, or protected by an insulating barrier preventing worker contact?",
+      "visual_cues": [
+        "Electrical panel or box with door closed and latched",
+        "Exposed wiring ends covered with wire nuts or electrical tape",
+        "Insulating rubber blankets draped over energized bus bars or conductors",
+        "No bare copper or aluminum conductors within arm's reach of worker",
+        "GFCI (Ground Fault Circuit Interrupter) adapter or inline GFCI visible on cord"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Electrical"
+    },
+    {
+      "id": "RF-016",
+      "cfr_section": "1926.404(b)(1)(ii)",
+      "rule_name": "GFCI Protection on Temporary Wiring",
+      "regulatory_text": "Ground-fault circuit interrupters. All 120-volt, single-phase 15- and 20-ampere receptacle outlets on construction sites, which are not a part of the permanent wiring of the building or structure and which are in use by employees, shall have approved ground-fault circuit interrupters for personnel protection.",
+      "binary_question": "Are all temporary power receptacles on the job site protected by a GFCI device (either integral GFCI outlet, inline GFCI adapter, or GFCI breaker panel) rather than standard non-GFCI outlets?",
+      "visual_cues": [
+        "GFCI outlet (with TEST/RESET buttons) visible at receptacle",
+        "Inline GFCI adapter (pigtail with reset button) between extension cord and outlet",
+        "Power distribution box (spider box) with GFCI breakers or indicators",
+        "No plain 3-prong outlets without GFCI protection serving portable tools on jobsite",
+        "Extension cord connected to GFCI-protected source, not standard wall outlet"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Electrical"
+    },
+    {
+      "id": "RF-017",
+      "cfr_section": "1926.416(e)(1)",
+      "rule_name": "Extension Cords — Insulation Intact, No Damage",
+      "regulatory_text": "Worn or frayed electric cords or cables shall not be used. Extension cord sets used with portable electric tools and appliances shall be of three-wire type and shall be designed for hard or extra-hard usage.",
+      "binary_question": "Are all visible electrical extension cords free from cuts, fraying, splices with electrical tape, kinks, or exposed inner conductors?",
+      "visual_cues": [
+        "Cord jacket smooth and continuous with no visible splits or abrasions",
+        "No tape wrapping over damaged sections",
+        "No inner wires (white, black, green) visible through outer jacket",
+        "Cord not run through doorways that could crush it",
+        "Plug ends intact with ground prong present"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Electrical"
+    },
+    {
+      "id": "RF-018",
+      "cfr_section": "1926.652(a)(1)",
+      "rule_name": "Excavation — Sloping or Protective System",
+      "regulatory_text": "Each employee in an excavation shall be protected from cave-ins by an adequate protective system designed in accordance with paragraph (b) or (c) of this section except when excavations are made entirely in stable rock; or excavations are less than 5 feet (1.52 m) in depth and examination of the ground by a competent person provides no indication of a potential cave-in.",
+      "binary_question": "Is an excavation 5 feet or deeper equipped with a cave-in protection system — either sloped walls at a compliant angle, shoring/sheeting, or a trench box — before workers enter?",
+      "visual_cues": [
+        "Sloped trench walls (soil angled back at ≥1.5H:1V for Type C, ≤90° for Type A)",
+        "Hydraulic shoring jacks or timber shoring between trench walls",
+        "Steel or aluminum trench shield (trench box) visible inside excavation",
+        "Workers inside excavation with at least one protection method visible",
+        "No vertical unshored walls with workers present in trenches >5 ft deep"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Excavations"
+    },
+    {
+      "id": "RF-019",
+      "cfr_section": "1926.651(c)(2)",
+      "rule_name": "Excavation — Spoil Pile Set Back 2 Feet",
+      "regulatory_text": "Employees shall not be permitted to work on the faces of sloped or benched excavations above other employees except when employees at the lower levels are adequately protected from top falling ground or rock. Excavated material (spoil) and other materials and equipment shall be kept at least 2 feet (0.61 m) from the edge of excavations.",
+      "binary_question": "Is the excavation spoil pile (excavated soil/material) placed at least 2 feet back from the trench edge, with no material perched at or overhanging the edge?",
+      "visual_cues": [
+        "Visible gap of at least ~2 feet between soil mound and trench lip",
+        "Spoil pile not directly at the trench edge or leaning over it",
+        "No loose rocks, tools, or materials within 2 feet of trench edge",
+        "Trench edge clearly visible with setback zone free of material"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Excavations"
+    },
+    {
+      "id": "RF-020",
+      "cfr_section": "1926.651(e)",
+      "rule_name": "Excavation — Egress Ladder Within 25 Feet of Workers",
+      "regulatory_text": "When employees are required to be in trenches 4 feet (1.22 m) deep or more, an adequate means of egress such as a ladder, stairway, or ramp shall be provided and located so as to require no more than 25 feet (7.62 m) of lateral travel for employees.",
+      "binary_question": "Is there at least one ladder, ramp, or stairway visible inside or at the edge of the excavation that workers inside can reach with 25 feet of lateral travel?",
+      "visual_cues": [
+        "Ladder extending from trench floor up to surface level, protruding ≥3 ft above grade",
+        "Earthen ramp sloping from trench bottom to surface",
+        "Stairway cut into sloped wall",
+        "Workers not trapped in section with no visible egress within reasonable distance",
+        "Ladder secured or footed so it cannot slide"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Excavations"
+    },
+    {
+      "id": "RF-021",
+      "cfr_section": "1926.753(c)(1)",
+      "rule_name": "Steel Erection — Decking Secured, No Shakeout Deck Gaps",
+      "regulatory_text": "Steel joists and steel joist girders, once placed, shall be secured to their support as specified in the AISC standard specifications. During the placing of structural steel members, employees shall not be allowed to walk or work on the beams or steel unless the structural member is adequately supported.",
+      "binary_question": "During steel deck installation, is metal decking being placed sequentially with no unsupported panels overhanging more than one joist bay, and are placed panels fastened before workers walk on them?",
+      "visual_cues": [
+        "Metal decking panels laid flat on joists without large unsupported cantilevers",
+        "Workers fastening deck (shooting pins or puddle welds) before walking on newly placed sections",
+        "No stacked loose deck panels teetering on structure",
+        "Deck bundles properly placed over multiple bearing points, not cantilevered"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Steel Erection"
+    },
+    {
+      "id": "RF-022",
+      "cfr_section": "1926.760(a)(1)",
+      "rule_name": "Steel Erection — Connector PFAS at Connectors' Work Level",
+      "regulatory_text": "Each connector shall, at heights over 15 and up to 30 feet above a lower level, be provided with and shall wear a personal fall arrest system, positioning device system or fall restraint system and be provided with a means to connect to the work surface.",
+      "binary_question": "Is each steel connector (ironworker making connections at height >15 ft) wearing a connected PFAS, positioning device, or fall restraint system while making connections?",
+      "visual_cues": [
+        "Ironworker in harness with lanyard visibly clipped to beam, column, or trolley line",
+        "Positioning lanyard (shorter, double-leg) around column",
+        "Self-retracting lifeline canister above worker, attached to overhead anchor",
+        "Worker not free-climbing beam without any connection",
+        "At least one of the two snap hooks engaged at all times (100% tie-off)"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Steel Erection"
+    },
+    {
+      "id": "RF-023",
+      "cfr_section": "1926.25(a)",
+      "rule_name": "Housekeeping — Work Areas Clear of Debris and Tripping Hazards",
+      "regulatory_text": "During the course of construction, alteration, or repairs, form and scrap lumber with protruding nails, and all other debris, shall be kept cleared from work areas, passageways, and stairs, in and around buildings or other structures.",
+      "binary_question": "Is the immediate work area and visible passageway free of protruding nails, scrap lumber, loose debris, or materials stacked in walkways that create tripping hazards?",
+      "visual_cues": [
+        "Floor/ground surface clear of loose boards, cut-offs, wire, or rubble in walking path",
+        "No lumber with nails facing upward lying in work area",
+        "Passageway at least 18–28 inches wide and clear of obstruction",
+        "Materials neatly stacked away from pedestrian routes",
+        "No power cords snaking across high-traffic walkway unsecured"
+      ],
+      "reward_type": "binary",
+      "severity": "medium",
+      "verifiable": true,
+      "category": "Housekeeping"
+    },
+    {
+      "id": "RF-024",
+      "cfr_section": "1926.25(b)",
+      "rule_name": "Housekeeping — Combustible Scrap Disposed Regularly",
+      "regulatory_text": "Combustible scrap and debris shall be removed at regular intervals during the course of construction. Safe means shall be provided to facilitate such removal.",
+      "binary_question": "Is combustible material (wood scraps, cardboard, paper wrapping, rags) cleared from the immediate work zone and not accumulated in piles adjacent to heat sources, ignition points, or egress paths?",
+      "visual_cues": [
+        "No large accumulations of wood offcuts, cardboard, or packaging near welding or cutting operations",
+        "Trash receptacles or dumpster present and accessible",
+        "No combustible pile within 10 feet of an open flame, grinder sparks, or hot work",
+        "Rags or solvent-soaked materials in closed metal containers, not piled loosely"
+      ],
+      "reward_type": "binary",
+      "severity": "medium",
+      "verifiable": true,
+      "category": "Housekeeping"
+    },
+    {
+      "id": "RF-025",
+      "cfr_section": "1926.28(a)",
+      "rule_name": "PPE — Appropriate PPE Worn for Hazardous Process",
+      "regulatory_text": "The employer is responsible for requiring the wearing of appropriate personal protective equipment in all operations where there is an exposure to hazardous conditions or where this part indicates the need for using such equipment to reduce the hazards to the employees.",
+      "binary_question": "For the specific hazardous task visible (welding, grinding, chemical handling, concrete work), is the worker wearing the full set of PPE appropriate to that task without any required item missing?",
+      "visual_cues": [
+        "Welding: helmet down, leather gloves, leather jacket/sleeves, PFAS if elevated",
+        "Grinding: face shield + safety glasses underneath, hearing protection, gloves",
+        "Concrete work: eye protection, rubber gloves, rubber boots, dust mask",
+        "Roofing: hard hat, PFAS harness connected, non-slip boots",
+        "No bare skin exposed during arc welding or chemical splashing operations"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "PPE"
+    },
+    {
+      "id": "RF-026",
+      "cfr_section": "1926.502(c)(1)",
+      "rule_name": "Safety Monitor System — Monitor Dedicated and Visible",
+      "regulatory_text": "The safety monitoring system shall designate a competent person to monitor the safety of other employees. The safety monitor shall be on the same walking/working surface and within visual sighting distance of the employee being monitored.",
+      "binary_question": "When a safety monitor system is in use (low-slope roof without guardrails or PFAS), is a dedicated safety monitor visibly present on the same level, not engaged in other work, and positioned to observe all workers?",
+      "visual_cues": [
+        "One person standing/walking without tools, watching other workers",
+        "Monitor is on the same roof deck, not on a ladder or distant platform",
+        "Monitor is not performing construction tasks (not holding a tool, not bent over working)",
+        "Workers are within the monitor's line of sight",
+        "Monitor wears distinguishing colored vest if designated that way"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Fall Protection"
+    },
+    {
+      "id": "RF-027",
+      "cfr_section": "1926.1053(b)(5)(i)",
+      "rule_name": "Stepladder — Not Used in Fully Closed (Leaning) Position",
+      "regulatory_text": "A stepladder shall not be used in a folded position as a straight ladder or as a platform. The spreader braces shall be fully open and locked before anyone climbs the ladder.",
+      "binary_question": "If a stepladder is in use, are the spreader braces fully extended and locked (ladder fully open in A-frame position), and is the worker not using it in a closed, leaning configuration?",
+      "visual_cues": [
+        "Stepladder in A-frame configuration with both sides fully spread",
+        "Spreader bar or locking hinge visible in locked/flat position",
+        "Worker climbing front section only",
+        "Ladder not leaning against wall in folded position",
+        "Top cap not used as a standing platform (worker below the top two rungs)"
+      ],
+      "reward_type": "binary",
+      "severity": "medium",
+      "verifiable": true,
+      "category": "Ladders"
+    },
+    {
+      "id": "RF-028",
+      "cfr_section": "1926.451(c)(1)",
+      "rule_name": "Scaffold — Mudsills and Base Plates Present",
+      "regulatory_text": "Supported scaffolds with a height to base width (including outrigger supports, if used) ratio of more than four to one (4:1) shall be restrained from tipping by guying, tying, bracing, or equivalent means.",
+      "binary_question": "Are the scaffold base plates and mudsills (wooden base pads) visible and present under each leg of the scaffold, with the scaffold not tipping or leaning?",
+      "visual_cues": [
+        "Metal screw-type base plates (adjustable jacks) visible at bottom of each leg",
+        "Wooden mudsill (at least 2x10 or equivalent) under each base plate",
+        "Scaffold appears plumb (vertical), not visibly leaning",
+        "Legs not resting directly on bare dirt, mud, or uneven ground without base",
+        "Casters (if mobile scaffold) locked with brake engaged"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Scaffolding"
+    },
+    {
+      "id": "RF-029",
+      "cfr_section": "1926.403(b)(2)",
+      "rule_name": "Electrical — Temporary Panel Overcurrent Protection Intact",
+      "regulatory_text": "Overcurrent protection shall not exceed 15 amperes for 14 AWG, 20 amperes for 12 AWG, and 30 amperes for 10 AWG copper; or 15 amperes for 12 AWG and 25 amperes for 10 AWG aluminum after derating.",
+      "binary_question": "Is the temporary electrical distribution panel cover closed, with all breaker slots filled (no open knockouts), no bypassed breakers, and no signs of overheating or scorching?",
+      "visual_cues": [
+        "Panel door closed and latched",
+        "No open breaker slots with exposed bus bars",
+        "All breakers appear to be standard breakers, not pennies or wire jumpers",
+        "No burn marks, discoloration, or melted insulation around panel",
+        "Panel mounted on stable surface, not hanging from single cable"
+      ],
+      "reward_type": "binary",
+      "severity": "critical",
+      "verifiable": true,
+      "category": "Electrical"
+    },
+    {
+      "id": "RF-030",
+      "cfr_section": "1926.651(j)(2)",
+      "rule_name": "Excavation — Warning Barrier at Edge",
+      "regulatory_text": "Adequate barrier physical protection shall be provided at all remotely located excavations. All wells, pits, shafts, and similar excavations shall be barricaded or covered. Upon completion of exploration and similar operations, temporary wells, pits, shafts, and similar excavations shall be backfilled.",
+      "binary_question": "Is the perimeter of open excavations visible from the frame protected by physical barriers (jersey barriers, barricades, safety fence, or equivalent) preventing inadvertent entry by workers or vehicles?",
+      "visual_cues": [
+        "Orange plastic safety fencing staked around excavation perimeter",
+        "Concrete jersey barriers or water-filled barriers along trench edge",
+        "Yellow warning tape strung between stanchions at edge",
+        "No open, unmarked excavation accessible directly from pedestrian path",
+        "Spoil pile and equipment positioned to visually cue edge location"
+      ],
+      "reward_type": "binary",
+      "severity": "high",
+      "verifiable": true,
+      "category": "Excavations"
+    }
+  ],
+  "summary_stats": {
+    "total_rules": 30,
+    "by_category": {
+      "Fall Protection": 5,
+      "Scaffolding": 4,
+      "Ladders": 4,
+      "PPE": 5,
+      "Electrical": 4,
+      "Excavations": 4,
+      "Steel Erection": 2,
+      "Housekeeping": 2
+    },
+    "by_severity": {
+      "critical": 12,
+      "high": 13,
+      "medium": 5,
+      "low": 0
+    },
+    "all_verifiable": true,
+    "reward_types": {
+      "binary": 30,
+      "continuous": 0,
+      "f1": 0
+    }
+  }
+}
