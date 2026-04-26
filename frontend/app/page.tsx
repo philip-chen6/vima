@@ -31,46 +31,46 @@ const HEADING_GRADIENT = ["#f7ecef", "#f2a7b8", "#f7ecef"];
 
 // Sourced directly from backend/cii-results.json. Every row below is a
 // real frame the model classified — labels, timestamps, confidences, and
-// activities are not edited. The 4 rows below are picks at i=0, 10, 20, 24
-// masonry video (0-60s). Times below are sampled from the masonry capture
-// at 0s, 18s, 41s, 58s — they reference the same footage as masonry-source.mp4.
+// activities are not edited. The 4 rows below are picks at i=0, 10, 24, 29
+// in the 30-frame run (so they span the full 0–60s timeline including
+// the one NC frame the run actually emitted).
 const ledgerReceipts = [
   {
     id: "f-000",
     time: "0.0s",
     label: "P",
     claim: "laying concrete blocks",
-    zone: "zone a",
+    zone: "frame_000",
     confidence: "0.95",
     status: "settles",
     weight: "1.00x",
   },
   {
     id: "f-010",
-    time: "18.4s",
+    time: "20.7s",
     label: "P",
     claim: "laying concrete on site",
-    zone: "zone b",
+    zone: "frame_010",
     confidence: "0.95",
     status: "settles",
     weight: "1.00x",
   },
   {
     id: "f-024",
-    time: "41.2s",
+    time: "49.7s",
     label: "NC",
     claim: "no workers visible",
-    zone: "zone c",
+    zone: "frame_024",
     confidence: "0.99",
     status: "blocked",
     weight: "0.00x",
   },
   {
     id: "f-029",
-    time: "58.1s",
+    time: "60.0s",
     label: "P",
     claim: "laying concrete blocks",
-    zone: "zone c",
+    zone: "frame_029",
     confidence: "0.95",
     status: "settles",
     weight: "1.00x",
@@ -81,18 +81,18 @@ const ledgerMath = [
   ["eligible frames", "26 / 30"],
   ["wrench time", "86.7%"],
   ["reward weight", "0.867"],
-  ["audit hash", "9f2c...81a"],
+  ["audit hash", "6d08...e811d"],
 ];
 
 // Stats sourced from real artifacts: 30 frames + 86.7% wrench time +
-// 0.79 mean confidence is direct from eval-results.json (5 masonry frames). Depth-drop rate
+// 0.939 mean confidence are direct from cii-results.json. Depth-drop rate
 // is from the live depth-filter-log.json — 39 of 59 pairs (66%) on this
 // run. Paper headline number was 57% on a different run; we show the live
 // run so judges can verify against /data/depth-filter-log.json.
 const stats = [
   ["sampled frames", "30"],
   ["wrench time", "86.7%"],
-  ["mean frame conf", "0.79"],
+  ["mean P-confidence", "0.939"],
   ["depth-drop rate", "66%"],
 ];
 
@@ -446,7 +446,7 @@ function VimaFooter() {
               className="landing-footer-meta"
             >
               <span>HackTech 2026 · Ironsite track</span>
-              <span style={{ fontVariantNumeric: "tabular-nums" }}>30 frames · 3 zones · 86.7% wrench time</span>
+              <span style={{ fontVariantNumeric: "tabular-nums" }}>30 frames · 118 episodes · 86.7% wrench time</span>
               <span>video intelligence · no lidar</span>
             </div>
           </div>
@@ -1141,7 +1141,7 @@ export default function VimaLandingPage() {
                 }}
               >
                 <div style={{ fontSize: "10px", letterSpacing: "0.06em", color: TEXT_MUTED }}>
-                  vima · claim 03 of 21
+                  vima · claim 01 of 118
                 </div>
                 <div
                   style={{
@@ -1156,7 +1156,7 @@ export default function VimaLandingPage() {
                 >
                   <div>
                     <div style={{ color: SAKURA_HOT, fontSize: "9px", letterSpacing: "0.08em", marginBottom: "10px" }}>
-                      masonry_work_candidate
+                      masonry_at_open_edge
                     </div>
                     <div
                       style={{
@@ -1166,10 +1166,10 @@ export default function VimaLandingPage() {
                         color: WASHI,
                       }}
                     >
-                      worker raises trowel at frame 0:42
+                      worker leans over open CMU edge at t=0.5s
                     </div>
                     <div style={{ marginTop: "10px", fontSize: "10px", color: TEXT_MUTED }}>
-                      confidence 0.95 · zone a
+                      confidence 0.82 · open_edge · 1.8 m
                     </div>
                   </div>
                   <div
@@ -1185,7 +1185,7 @@ export default function VimaLandingPage() {
                   </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: "9px", color: TEXT_MUTED }}>
-                  <span>frame · 03 / 21</span>
+                  <span>frame · 01 / 118</span>
                   <span>session · live</span>
                 </div>
               </div>

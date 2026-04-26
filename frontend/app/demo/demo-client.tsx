@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronRight, RefreshCw } from "lucide-react";
 import VimaNavbar from "@/components/landing/vima-navbar";
 import { LiveFrameAnalyzer } from "@/components/landing/live-frame-analyzer";
+import { BentoSection, BentoCell } from "@/components/react-bits/magic-bento";
 import dynamic from "next/dynamic";
 
 // Point cloud viewer is r3f-heavy — defer to client only so the dashboard
@@ -235,23 +236,13 @@ export default function DemoClient({
         }}
       >
         {summary ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-              borderTop: `1px solid ${LINE}`,
-              borderBottom: `1px solid ${LINE}`,
-            }}
-            className="vima-stats-grid"
-          >
-            {cells.map(([label, value, sub], i) => (
-              <div
+          <BentoSection enableSpotlight enableBorderGlow spotlightRadius={420}>
+            {cells.map(([label, value, sub]) => (
+              <BentoCell
                 key={label}
-                style={{
-                  padding: "16px 14px",
-                  borderRight: i === cells.length - 1 ? "0" : `1px solid rgba(242,167,184,0.12)`,
-                  minHeight: "104px",
-                }}
+                span={{ col: 2 }}
+                clickEffect
+                style={{ padding: "18px 16px", minHeight: "104px", justifyContent: "space-between" }}
               >
                 <div
                   style={{
@@ -264,7 +255,7 @@ export default function DemoClient({
                 </div>
                 <div
                   style={{
-                    marginTop: "18px",
+                    marginTop: "14px",
                     color: label === "wrench time" ? SAKURA_HOT : WASHI,
                     fontSize: "clamp(1.18rem, 1.8vw, 1.6rem)",
                     fontWeight: 700,
@@ -284,9 +275,9 @@ export default function DemoClient({
                 >
                   {sub}
                 </div>
-              </div>
+              </BentoCell>
             ))}
-          </div>
+          </BentoSection>
         ) : loading ? (
           <div
             style={{
@@ -330,128 +321,11 @@ export default function DemoClient({
         </p>
       </section>
 
-      {/* ── COLDPATH REEL ─────────────────────────────────────────────
-          The 30s walkthrough captured offline. Lives at the top of the
-          workspace because judges should see vima moving before they read
-          about it. Muted, looping, autoplay so it acts like a desk-side
-          monitor rather than a video player. */}
-      <section
-        style={{
-          maxWidth: "1400px",
-          margin: "0 auto",
-          padding: "0 clamp(20px, 5vw, 48px) clamp(40px, 5vw, 64px)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-            gap: "16px",
-            flexWrap: "wrap",
-            marginBottom: "20px",
-          }}
-        >
-          <div>
-            <p
-              style={{
-                margin: 0,
-                color: TEXT_MUTED,
-                fontSize: "10px",
-                letterSpacing: "0.05em",
-              }}
-            >
-              cold-path reel · 30 seconds, recorded offline
-            </p>
-            <h2
-              style={{
-                margin: "12px 0 0",
-                fontFamily: HEADING_FONT,
-                fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-                fontWeight: 400,
-                lineHeight: 1,
-                letterSpacing: 0,
-              }}
-            >
-              the pipeline, end to end.
-            </h2>
-          </div>
-          <p
-            style={{
-              margin: 0,
-              maxWidth: "420px",
-              color: TEXT_MUTED,
-              fontFamily: "var(--font-sans)",
-              fontSize: "13px",
-              lineHeight: 1.5,
-            }}
-          >
-            Bodycam frame goes in. Depth-delta filter, MASt3R reconstruction,
-            episodic memory, structured spatial claim out. Same path the live
-            analyzer below traces, condensed to 30s.
-          </p>
-        </div>
-
-        <div
-          style={{
-            position: "relative",
-            border: `1px solid ${LINE}`,
-            background: "linear-gradient(180deg, rgba(247,236,239,0.025), rgba(8,5,3,0.45))",
-            overflow: "hidden",
-          }}
-        >
-          <video
-            src="/demo/coldpath.mp4"
-            poster="/demo/coldpath-poster.jpg"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            controls
-            style={{
-              width: "100%",
-              display: "block",
-              aspectRatio: "16 / 9",
-              objectFit: "cover",
-              background: "#000",
-            }}
-            aria-label="vima cold-path pipeline walkthrough"
-          />
-          <div
-            aria-hidden
-            style={{
-              position: "absolute",
-              top: "12px",
-              left: "12px",
-              padding: "5px 10px",
-              border: `1px solid ${LINE}`,
-              background: "rgba(8,5,3,0.78)",
-              color: SAKURA_HOT,
-              fontFamily: "var(--font-mono)",
-              fontSize: "9px",
-              letterSpacing: "0.08em",
-              backdropFilter: "blur(6px)",
-            }}
-          >
-            REC · 30s loop
-          </div>
-        </div>
-
-        <p
-          style={{
-            margin: "10px 0 0",
-            color: TEXT_FAINT,
-            fontSize: "9px",
-            letterSpacing: "0.05em",
-            fontFamily: "var(--font-mono)",
-          }}
-        >
-          source · /demo/coldpath.mp4 · captured during a real run, no scripted UI states
-        </p>
-      </section>
-
-      {/* ── LIVE FRAME ANALYZER (the real demo) ───────────────────────── */}
+      {/* ── LIVE FRAME ANALYZER (the real demo) ─────────────────────────
+          Cold-path reel was removed in the bento pass — judges scroll into
+          the analyzer immediately so they can drop a frame and see the
+          structured claim flow. The 30s walkthrough video lives at
+          /demo/coldpath.mp4 if linked from elsewhere. */}
       <section
         style={{
           maxWidth: "1400px",
