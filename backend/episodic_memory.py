@@ -296,7 +296,7 @@ def build_episodic_memory(input_path: pathlib.Path, output_path: pathlib.Path, m
 
     result = {
         "metadata": {
-            "tool": "VINNA object-event episodic memory",
+            "tool": "VIMA object-event episodic memory",
             "input": str(input_path),
             "source_depth_backend": depth_memory.get("metadata", {}).get("backends_used", []),
             "source_mask_preview": depth_memory.get("metadata", {}).get("preview_video"),

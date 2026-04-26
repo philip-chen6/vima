@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "tool": "VINNA object-event episodic memory",
+    "tool": "VIMA object-event episodic memory",
     "input": "demo/depth_track_memory.json",
     "source_depth_backend": [
       "depth_anything_hf"
     ],
-    "source_mask_preview": "runs/vinna-hardhat/depth_preview/depth_tracks.mp4",
+    "source_mask_preview": "runs/vima-hardhat/depth_preview/depth_tracks.mp4",
     "frames": 10,
     "frame_events": 35,
     "episodes": 10,

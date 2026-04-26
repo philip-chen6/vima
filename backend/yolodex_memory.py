@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build VINNA object-event memory from Yolodex YOLO labels.
+Build VIMA object-event memory from Yolodex YOLO labels.
 
 No training. This consumes:
   tools/yolodex/runs/<project>/frames/frame_*.jpg
@@ -24,7 +24,7 @@ except ImportError as exc:  # pragma: no cover
     raise SystemExit("Pillow is required. Run from tools/yolodex with uv sync first.") from exc
 
 
-DEFAULT_RUN_DIR = pathlib.Path("tools/yolodex/runs/vinna-hardhat")
+DEFAULT_RUN_DIR = pathlib.Path("tools/yolodex/runs/vima-hardhat")
 DEFAULT_OUTPUT = pathlib.Path("demo/object_event_memory.json")
 
 
@@ -120,7 +120,7 @@ def build_memory(run_dir: pathlib.Path, fps: float) -> dict:
 
     return {
         "metadata": {
-            "tool": "VINNA object-event memory from vendored Yolodex labels",
+            "tool": "VIMA object-event memory from vendored Yolodex labels",
             "run_dir": str(run_dir),
             "frames": len(rows),
             "classes": classes,

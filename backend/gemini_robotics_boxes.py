@@ -16,7 +16,7 @@ from typing import Any
 from PIL import Image
 
 
-DEFAULT_IMAGE = pathlib.Path("tools/yolodex/runs/vinna-hardhat/frames/frame_000001.jpg")
+DEFAULT_IMAGE = pathlib.Path("tools/yolodex/runs/vima-hardhat/frames/frame_000001.jpg")
 DEFAULT_OUTPUT = pathlib.Path("demo/gemini_robotics_boxes.json")
 DEFAULT_MODEL = "gemini-robotics-er-1.6-preview"
 DEFAULT_QUERIES = [

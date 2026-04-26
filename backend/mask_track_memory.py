@@ -2,7 +2,7 @@
 """
 Build mask tracks from Yolodex labels.
 
-This is the SAM-ready stage of the VINNA perception stack:
+This is the SAM-ready stage of the VIMA perception stack:
   boxes -> masks -> persistent object tracks -> episodic memory
 
 If a real SAM 2 backend is available later, it should replace
@@ -21,7 +21,7 @@ from typing import Iterable
 from PIL import Image, ImageDraw, ImageFont
 
 
-DEFAULT_RUN_DIR = pathlib.Path("tools/yolodex/runs/vinna-hardhat")
+DEFAULT_RUN_DIR = pathlib.Path("tools/yolodex/runs/vima-hardhat")
 DEFAULT_OUTPUT = pathlib.Path("demo/mask_track_memory.json")
 DEFAULT_SAM_MODEL = "facebook/sam-vit-base"
 
@@ -385,7 +385,7 @@ def build_mask_memory(
 
     result = {
         "metadata": {
-            "tool": "VINNA box-prompt mask tracks",
+            "tool": "VIMA box-prompt mask tracks",
             "run_dir": str(run_dir),
             "fps": fps,
             "mask_backend": backend_used,

@@ -12,7 +12,7 @@ from memory_retrieval import compact_episode, load_episodes, retrieve
 
 
 DEFAULT_MEMORY = pathlib.Path("demo/episodic_memory.json")
-DEFAULT_FRAMES_DIR = pathlib.Path("tools/yolodex/runs/vinna-hardhat/frames")
+DEFAULT_FRAMES_DIR = pathlib.Path("tools/yolodex/runs/vima-hardhat/frames")
 DEFAULT_OUTPUT = pathlib.Path("demo/qwen_answer.json")
 DEFAULT_MODEL = "Qwen/Qwen2-VL-2B-Instruct"
 

@@ -1,5 +1,5 @@
 {
-  "image": "tools/yolodex/runs/vinna-hardhat/frames/frame_000001.jpg",
+  "image": "tools/yolodex/runs/vima-hardhat/frames/frame_000001.jpg",
   "model": "gemini-robotics-er-1.6-preview",
   "queries": [
     "worker",

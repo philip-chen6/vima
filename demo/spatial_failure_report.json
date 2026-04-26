@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "tool": "VINNA Spatial Failure Collector",
+    "tool": "VIMA Spatial Failure Collector",
     "model_tested": "claude-sonnet-4-6",
     "frames_analyzed": 10,
     "total_probes": 20,
@@ -27,7 +27,7 @@
   "results": [
     {
       "frame_idx": 1,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0001.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0001.jpg",
       "question_id": "distance_worker_edge",
       "question": "How far in meters is the nearest worker from the nearest unguarded edge or drop-off? Give a specific numeric estimate.",
       "failure_type_tested": "metric_distance",
@@ -83,7 +83,7 @@
     },
     {
       "frame_idx": 1,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0001.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0001.jpg",
       "question_id": "spatial_layout_metric",
       "question": "Describe the spatial layout of this construction area using metric distances. Include the dimensions of the working area, heights of structures, and distances between key objects.",
       "failure_type_tested": "scene_reconstruction",
@@ -152,7 +152,7 @@
     },
     {
       "frame_idx": 4,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0004.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0004.jpg",
       "question_id": "material_distances",
       "question": "List every distinct material visible in this frame and estimate each material's distance from the camera in meters.",
       "failure_type_tested": "object_enumeration_and_distance",
@@ -224,7 +224,7 @@
     },
     {
       "frame_idx": 4,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0004.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0004.jpg",
       "question_id": "cross_frame_change",
       "question": "Compared to an early-stage construction site, what has changed here? Describe specific structural additions and estimate their dimensions.",
       "failure_type_tested": "temporal_reasoning",
@@ -292,7 +292,7 @@
     },
     {
       "frame_idx": 7,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0007.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0007.jpg",
       "question_id": "spatial_layout_metric",
       "question": "Describe the spatial layout of this construction area using metric distances. Include the dimensions of the working area, heights of structures, and distances between key objects.",
       "failure_type_tested": "scene_reconstruction",
@@ -358,7 +358,7 @@
     },
     {
       "frame_idx": 7,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0007.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0007.jpg",
       "question_id": "occlusion_awareness",
       "question": "What objects or areas are occluded (hidden) in this frame? Estimate what is behind the nearest visible obstruction and how far away it might be.",
       "failure_type_tested": "occlusion_hallucination",
@@ -433,7 +433,7 @@
     },
     {
       "frame_idx": 10,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0010.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0010.jpg",
       "question_id": "cross_frame_change",
       "question": "Compared to an early-stage construction site, what has changed here? Describe specific structural additions and estimate their dimensions.",
       "failure_type_tested": "temporal_reasoning",
@@ -486,7 +486,7 @@
     },
     {
       "frame_idx": 10,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0010.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0010.jpg",
       "question_id": "distance_worker_edge",
       "question": "How far in meters is the nearest worker from the nearest unguarded edge or drop-off? Give a specific numeric estimate.",
       "failure_type_tested": "metric_distance",
@@ -537,7 +537,7 @@
     },
     {
       "frame_idx": 13,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0013.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0013.jpg",
       "question_id": "occlusion_awareness",
       "question": "What objects or areas are occluded (hidden) in this frame? Estimate what is behind the nearest visible obstruction and how far away it might be.",
       "failure_type_tested": "occlusion_hallucination",
@@ -613,7 +613,7 @@
     },
     {
       "frame_idx": 13,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0013.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0013.jpg",
       "question_id": "material_distances",
       "question": "List every distinct material visible in this frame and estimate each material's distance from the camera in meters.",
       "failure_type_tested": "object_enumeration_and_distance",
@@ -678,7 +678,7 @@
     },
     {
       "frame_idx": 16,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0016.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0016.jpg",
       "question_id": "distance_worker_edge",
       "question": "How far in meters is the nearest worker from the nearest unguarded edge or drop-off? Give a specific numeric estimate.",
       "failure_type_tested": "metric_distance",
@@ -741,7 +741,7 @@
     },
     {
       "frame_idx": 16,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0016.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0016.jpg",
       "question_id": "spatial_layout_metric",
       "question": "Describe the spatial layout of this construction area using metric distances. Include the dimensions of the working area, heights of structures, and distances between key objects.",
       "failure_type_tested": "scene_reconstruction",
@@ -825,7 +825,7 @@
     },
     {
       "frame_idx": 19,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0019.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0019.jpg",
       "question_id": "material_distances",
       "question": "List every distinct material visible in this frame and estimate each material's distance from the camera in meters.",
       "failure_type_tested": "object_enumeration_and_distance",
@@ -878,7 +878,7 @@
     },
     {
       "frame_idx": 19,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0019.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0019.jpg",
       "question_id": "cross_frame_change",
       "question": "Compared to an early-stage construction site, what has changed here? Describe specific structural additions and estimate their dimensions.",
       "failure_type_tested": "temporal_reasoning",
@@ -929,7 +929,7 @@
     },
     {
       "frame_idx": 22,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0022.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0022.jpg",
       "question_id": "spatial_layout_metric",
       "question": "Describe the spatial layout of this construction area using metric distances. Include the dimensions of the working area, heights of structures, and distances between key objects.",
       "failure_type_tested": "scene_reconstruction",
@@ -999,7 +999,7 @@
     },
     {
       "frame_idx": 22,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0022.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0022.jpg",
       "question_id": "occlusion_awareness",
       "question": "What objects or areas are occluded (hidden) in this frame? Estimate what is behind the nearest visible obstruction and how far away it might be.",
       "failure_type_tested": "occlusion_hallucination",
@@ -1067,7 +1067,7 @@
     },
     {
       "frame_idx": 25,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0025.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0025.jpg",
       "question_id": "cross_frame_change",
       "question": "Compared to an early-stage construction site, what has changed here? Describe specific structural additions and estimate their dimensions.",
       "failure_type_tested": "temporal_reasoning",
@@ -1127,7 +1127,7 @@
     },
     {
       "frame_idx": 25,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0025.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0025.jpg",
       "question_id": "distance_worker_edge",
       "question": "How far in meters is the nearest worker from the nearest unguarded edge or drop-off? Give a specific numeric estimate.",
       "failure_type_tested": "metric_distance",
@@ -1187,7 +1187,7 @@
     },
     {
       "frame_idx": 30,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0030.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0030.jpg",
       "question_id": "occlusion_awareness",
       "question": "What objects or areas are occluded (hidden) in this frame? Estimate what is behind the nearest visible obstruction and how far away it might be.",
       "failure_type_tested": "occlusion_hallucination",
@@ -1244,7 +1244,7 @@
     },
     {
       "frame_idx": 30,
-      "frame_path": "/tmp/vinna-cii-frames/frame_0030.jpg",
+      "frame_path": "/tmp/vima-cii-frames/frame_0030.jpg",
       "question_id": "material_distances",
       "question": "List every distinct material visible in this frame and estimate each material's distance from the camera in meters.",
       "failure_type_tested": "object_enumeration_and_distance",

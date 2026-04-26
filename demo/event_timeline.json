@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "tool": "VINNA Event Memory Layer",
+    "tool": "VIMA Event Memory Layer",
     "frames_ingested": 32,
     "events_detected": 5,
     "timestamp": "2026-04-25T02:32:03Z"

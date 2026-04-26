@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VINNA Component 3: A/B Evaluation
+VIMA Component 3: A/B Evaluation
 ===================================
 Compares VLM-only spatial reasoning vs VLM+memory-augmented reasoning.
 Runs 5 spatial questions two ways, generates comparison table + visualization.
@@ -21,7 +21,7 @@ API_BASE = "http://localhost:8765"
 OUTPUT_DIR = pathlib.Path(__file__).parent
 COMPARISON_PATH = OUTPUT_DIR / "ab_comparison.json"
 DASHBOARD_PATH = OUTPUT_DIR / "demo_dashboard.png"
-SAMPLE_FRAMES_DIR = pathlib.Path("/tmp/vinna-cii-frames")
+SAMPLE_FRAMES_DIR = pathlib.Path("/tmp/vima-cii-frames")
 
 # 5 spatial questions for A/B comparison
 AB_QUESTIONS = [
@@ -194,7 +194,7 @@ def generate_dashboard(comparison_data: dict):
                            left=0.08, right=0.95, top=0.90, bottom=0.08)
 
     # === Title ===
-    fig.suptitle("VINNA — Spatial Reasoning: VLM-Only vs VLM + Event Memory",
+    fig.suptitle("VIMA — Spatial Reasoning: VLM-Only vs VLM + Event Memory",
                  fontsize=18, fontweight="bold", color="#e6edf3", y=0.96)
 
     # Color palette
@@ -311,7 +311,7 @@ def generate_dashboard(comparison_data: dict):
     ax4.spines["right"].set_visible(False)
 
     # Watermark
-    fig.text(0.98, 0.01, "VINNA | HackTech 2026 | Ironsite Challenge",
+    fig.text(0.98, 0.01, "VIMA | HackTech 2026 | Ironsite Challenge",
              fontsize=8, color=c_muted, ha="right", va="bottom", alpha=0.5)
 
     plt.savefig(str(DASHBOARD_PATH), dpi=150, facecolor=fig.get_facecolor(), bbox_inches="tight")
@@ -321,7 +321,7 @@ def generate_dashboard(comparison_data: dict):
 
 def main():
     print("=" * 70)
-    print("VINNA A/B Evaluation: VLM-Only vs VLM + Event Memory")
+    print("VIMA A/B Evaluation: VLM-Only vs VLM + Event Memory")
     print("=" * 70)
 
     # Step 1: Build the event memory
@@ -406,7 +406,7 @@ def main():
 
     comparison = {
         "metadata": {
-            "tool": "VINNA A/B Evaluation",
+            "tool": "VIMA A/B Evaluation",
             "model": "claude-sonnet-4-6",
             "questions_tested": len(results),
             "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ"),

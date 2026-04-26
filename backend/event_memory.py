@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VINNA Component 2: Event Memory Layer
+VIMA Component 2: Event Memory Layer
 =======================================
 Lightweight temporal memory system that detects visual change events across
 construction footage frames using color histograms, edge density, and structural
@@ -17,7 +17,7 @@ import json, time, pathlib, base64
 import numpy as np
 from PIL import Image, ImageFilter
 
-FRAMES_DIR = pathlib.Path("/tmp/vinna-cii-frames")
+FRAMES_DIR = pathlib.Path("/tmp/vima-cii-frames")
 FULL_FRAMES_DIR = pathlib.Path("/Users/qtzx/Desktop/workspace/lifebase/.runtime/agents/ironsite-cii/frames")
 OUTPUT_DIR = pathlib.Path(__file__).parent
 TIMELINE_PATH = OUTPUT_DIR / "event_timeline.json"
@@ -249,7 +249,7 @@ class EventMemory:
         """Export the full timeline as JSON."""
         return {
             "metadata": {
-                "tool": "VINNA Event Memory Layer",
+                "tool": "VIMA Event Memory Layer",
                 "frames_ingested": len(self.frames),
                 "events_detected": len(self.events),
                 "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -269,7 +269,7 @@ class EventMemory:
 
 def main():
     print("=" * 70)
-    print("VINNA Event Memory Layer")
+    print("VIMA Event Memory Layer")
     print("=" * 70)
 
     memory = EventMemory()

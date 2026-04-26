@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "tool": "VINNA mask-aware depth memory",
+    "tool": "VIMA mask-aware depth memory",
     "input": "../../demo/mask_track_memory.json",
-    "run_dir": "runs/vinna-hardhat",
+    "run_dir": "runs/vima-hardhat",
     "backend_requested": "depth-anything",
     "backends_used": [
       "depth_anything_hf"
@@ -10,7 +10,7 @@
     "hf_model": "depth-anything/Depth-Anything-V2-Small-hf",
     "depth_semantics": "higher relative_closeness means closer to camera",
     "banding": "near/mid/far is quantile-ranked per frame and per track; absolute_depth_band preserves fixed-threshold score bands",
-    "preview_video": "runs/vinna-hardhat/depth_preview/depth_tracks.mp4"
+    "preview_video": "runs/vima-hardhat/depth_preview/depth_tracks.mp4"
   },
   "tracks": [
     {
@@ -418,7 +418,7 @@
             395.5,
             260.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000001_worker_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000001_worker_01.png",
           "mask_area_frac": 0.0116,
           "centroid_norm": [
             0.551,
@@ -443,7 +443,7 @@
             170.0,
             420.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000001_scaffold_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000001_scaffold_01.png",
           "mask_area_frac": 0.2094,
           "centroid_norm": [
             0.117,
@@ -468,7 +468,7 @@
             510.0,
             260.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000001_scaffold_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000001_scaffold_02.png",
           "mask_area_frac": 0.07,
           "centroid_norm": [
             0.708,
@@ -493,7 +493,7 @@
             595.0,
             470.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000001_concrete_block_wall_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000001_concrete_block_wall_01.png",
           "mask_area_frac": 0.2465,
           "centroid_norm": [
             0.612,
@@ -518,7 +518,7 @@
             294.0,
             264.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000001_guardrail_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000001_guardrail_01.png",
           "mask_area_frac": 0.0018,
           "centroid_norm": [
             0.146,
@@ -539,7 +539,7 @@
         "worker_01_near_concrete_block_wall_01",
         "worker_01_edge_context_guardrail_01"
       ],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000001_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000001_depth.png",
       "depth_order_closest_first": [
         "scaffold_01",
         "concrete_block_wall_01",
@@ -561,7 +561,7 @@
             340.0,
             292.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000002_worker_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000002_worker_01.png",
           "mask_area_frac": 0.0106,
           "centroid_norm": [
             0.489,
@@ -586,7 +586,7 @@
             640.0,
             381.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000002_worker_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000002_worker_02.png",
           "mask_area_frac": 0.0516,
           "centroid_norm": [
             0.947,
@@ -611,7 +611,7 @@
             480.0,
             315.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000002_scaffold_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000002_scaffold_02.png",
           "mask_area_frac": 0.0625,
           "centroid_norm": [
             0.659,
@@ -636,7 +636,7 @@
             544.0,
             430.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000002_concrete_block_wall_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000002_concrete_block_wall_01.png",
           "mask_area_frac": 0.1199,
           "centroid_norm": [
             0.525,
@@ -661,7 +661,7 @@
             628.0,
             306.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000002_material_stack_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000002_material_stack_01.png",
           "mask_area_frac": 0.0275,
           "centroid_norm": [
             0.854,
@@ -686,7 +686,7 @@
             294.0,
             282.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000002_guardrail_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000002_guardrail_01.png",
           "mask_area_frac": 0.0128,
           "centroid_norm": [
             0.182,
@@ -708,7 +708,7 @@
         "worker_02_near_concrete_block_wall_01",
         "worker_01_edge_context_guardrail_01"
       ],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000002_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000002_depth.png",
       "depth_order_closest_first": [
         "worker_02",
         "concrete_block_wall_01",
@@ -731,7 +731,7 @@
             640.0,
             480.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000003_worker_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000003_worker_02.png",
           "mask_area_frac": 0.2764,
           "centroid_norm": [
             0.834,
@@ -756,7 +756,7 @@
             640.0,
             480.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000003_scaffold_03.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000003_scaffold_03.png",
           "mask_area_frac": 0.1564,
           "centroid_norm": [
             0.911,
@@ -781,7 +781,7 @@
             343.0,
             328.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000003_material_stack_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000003_material_stack_02.png",
           "mask_area_frac": 0.0442,
           "centroid_norm": [
             0.329,
@@ -806,7 +806,7 @@
             401.0,
             244.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000003_guardrail_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000003_guardrail_02.png",
           "mask_area_frac": 0.0306,
           "centroid_norm": [
             0.333,
@@ -824,7 +824,7 @@
         }
       ],
       "relations": [],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000003_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000003_depth.png",
       "depth_order_closest_first": [
         "worker_02",
         "scaffold_03",
@@ -845,7 +845,7 @@
             393.5,
             380.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000004_worker_03.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000004_worker_03.png",
           "mask_area_frac": 0.0353,
           "centroid_norm": [
             0.514,
@@ -870,7 +870,7 @@
             565.5,
             480.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000004_scaffold_03.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000004_scaffold_03.png",
           "mask_area_frac": 0.2043,
           "centroid_norm": [
             0.699,
@@ -895,7 +895,7 @@
             208.0,
             418.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000004_material_stack_03.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000004_material_stack_03.png",
           "mask_area_frac": 0.0784,
           "centroid_norm": [
             0.138,
@@ -920,7 +920,7 @@
             356.0,
             255.5
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000004_guardrail_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000004_guardrail_02.png",
           "mask_area_frac": 0.0584,
           "centroid_norm": [
             0.186,
@@ -940,7 +940,7 @@
       "relations": [
         "worker_03_edge_context_guardrail_02"
       ],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000004_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000004_depth.png",
       "depth_order_closest_first": [
         "scaffold_03",
         "worker_03",
@@ -961,7 +961,7 @@
             640.0,
             343.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000005_worker_03.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000005_worker_03.png",
           "mask_area_frac": 0.1049,
           "centroid_norm": [
             0.765,
@@ -986,7 +986,7 @@
             640.0,
             310.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000005_guardrail_03.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000005_guardrail_03.png",
           "mask_area_frac": 0.085,
           "centroid_norm": [
             0.606,
@@ -1011,7 +1011,7 @@
             640.0,
             385.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000005_open_edge_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000005_open_edge_01.png",
           "mask_area_frac": 0.1465,
           "centroid_norm": [
             0.472,
@@ -1032,7 +1032,7 @@
         "worker_03_edge_context_guardrail_03",
         "worker_03_edge_context_open_edge_01"
       ],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000005_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000005_depth.png",
       "depth_order_closest_first": [
         "worker_03",
         "guardrail_03",
@@ -1052,7 +1052,7 @@
             640.0,
             480.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000006_worker_04.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000006_worker_04.png",
           "mask_area_frac": 0.0187,
           "centroid_norm": [
             0.963,
@@ -1077,7 +1077,7 @@
             479.0,
             393.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000006_material_stack_04.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000006_material_stack_04.png",
           "mask_area_frac": 0.0246,
           "centroid_norm": [
             0.575,
@@ -1102,7 +1102,7 @@
             640.0,
             404.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000006_open_edge_01.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000006_open_edge_01.png",
           "mask_area_frac": 0.1778,
           "centroid_norm": [
             0.429,
@@ -1122,7 +1122,7 @@
       "relations": [
         "worker_04_edge_context_open_edge_01"
       ],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000006_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000006_depth.png",
       "depth_order_closest_first": [
         "worker_04",
         "open_edge_01",
@@ -1142,7 +1142,7 @@
             303.0,
             345.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000007_worker_05.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000007_worker_05.png",
           "mask_area_frac": 0.0293,
           "centroid_norm": [
             0.415,
@@ -1167,7 +1167,7 @@
             537.0,
             480.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000007_scaffold_04.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000007_scaffold_04.png",
           "mask_area_frac": 0.1922,
           "centroid_norm": [
             0.699,
@@ -1192,7 +1192,7 @@
             640.0,
             450.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000007_concrete_block_wall_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000007_concrete_block_wall_02.png",
           "mask_area_frac": 0.0613,
           "centroid_norm": [
             0.869,
@@ -1217,7 +1217,7 @@
             302.0,
             316.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000007_material_stack_05.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000007_material_stack_05.png",
           "mask_area_frac": 0.0587,
           "centroid_norm": [
             0.149,
@@ -1242,7 +1242,7 @@
             345.0,
             245.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000007_guardrail_04.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000007_guardrail_04.png",
           "mask_area_frac": 0.0171,
           "centroid_norm": [
             0.229,
@@ -1262,7 +1262,7 @@
       "relations": [
         "worker_05_edge_context_guardrail_04"
       ],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000007_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000007_depth.png",
       "depth_order_closest_first": [
         "scaffold_04",
         "material_stack_05",
@@ -1284,7 +1284,7 @@
             640.0,
             279.5
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000008_worker_06.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000008_worker_06.png",
           "mask_area_frac": 0.0117,
           "centroid_norm": [
             0.976,
@@ -1309,7 +1309,7 @@
             364.0,
             480.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000008_scaffold_05.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000008_scaffold_05.png",
           "mask_area_frac": 0.4336,
           "centroid_norm": [
             0.285,
@@ -1334,7 +1334,7 @@
             640.0,
             432.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000008_concrete_block_wall_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000008_concrete_block_wall_02.png",
           "mask_area_frac": 0.0544,
           "centroid_norm": [
             0.902,
@@ -1359,7 +1359,7 @@
             456.0,
             413.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000008_material_stack_06.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000008_material_stack_06.png",
           "mask_area_frac": 0.0397,
           "centroid_norm": [
             0.561,
@@ -1379,7 +1379,7 @@
       "relations": [
         "worker_06_near_concrete_block_wall_02"
       ],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000008_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000008_depth.png",
       "depth_order_closest_first": [
         "concrete_block_wall_02",
         "material_stack_06",
@@ -1400,7 +1400,7 @@
             392.0,
             275.5
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000009_worker_07.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000009_worker_07.png",
           "mask_area_frac": 0.0195,
           "centroid_norm": [
             0.535,
@@ -1425,7 +1425,7 @@
             162.0,
             480.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000009_scaffold_05.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000009_scaffold_05.png",
           "mask_area_frac": 0.2291,
           "centroid_norm": [
             0.118,
@@ -1450,7 +1450,7 @@
             570.5,
             208.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000009_scaffold_06.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000009_scaffold_06.png",
           "mask_area_frac": 0.0351,
           "centroid_norm": [
             0.728,
@@ -1475,7 +1475,7 @@
             638.0,
             458.5
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000009_concrete_block_wall_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000009_concrete_block_wall_02.png",
           "mask_area_frac": 0.2776,
           "centroid_norm": [
             0.677,
@@ -1500,7 +1500,7 @@
             382.0,
             257.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000009_guardrail_05.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000009_guardrail_05.png",
           "mask_area_frac": 0.011,
           "centroid_norm": [
             0.31,
@@ -1521,7 +1521,7 @@
         "worker_07_near_concrete_block_wall_02",
         "worker_07_edge_context_guardrail_05"
       ],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000009_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000009_depth.png",
       "depth_order_closest_first": [
         "concrete_block_wall_02",
         "scaffold_05",
@@ -1543,7 +1543,7 @@
             314.0,
             480.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000010_worker_08.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000010_worker_08.png",
           "mask_area_frac": 0.1655,
           "centroid_norm": [
             0.361,
@@ -1568,7 +1568,7 @@
             428.0,
             315.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000010_worker_09.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000010_worker_09.png",
           "mask_area_frac": 0.0086,
           "centroid_norm": [
             0.63,
@@ -1593,7 +1593,7 @@
             202.0,
             480.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000010_scaffold_05.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000010_scaffold_05.png",
           "mask_area_frac": 0.2747,
           "centroid_norm": [
             0.14,
@@ -1618,7 +1618,7 @@
             610.0,
             274.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000010_scaffold_06.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000010_scaffold_06.png",
           "mask_area_frac": 0.1268,
           "centroid_norm": [
             0.779,
@@ -1643,7 +1643,7 @@
             640.0,
             440.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000010_concrete_block_wall_02.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000010_concrete_block_wall_02.png",
           "mask_area_frac": 0.1438,
           "centroid_norm": [
             0.717,
@@ -1668,7 +1668,7 @@
             569.5,
             276.0
           ],
-          "mask_path": "runs/vinna-hardhat/masks/frame_000010_guardrail_06.png",
+          "mask_path": "runs/vima-hardhat/masks/frame_000010_guardrail_06.png",
           "mask_area_frac": 0.0029,
           "centroid_norm": [
             0.672,
@@ -1691,7 +1691,7 @@
         "worker_08_edge_context_guardrail_06",
         "worker_09_edge_context_guardrail_06"
       ],
-      "depth_map_path": "runs/vinna-hardhat/depth/frame_000010_depth.png",
+      "depth_map_path": "runs/vima-hardhat/depth/frame_000010_depth.png",
       "depth_order_closest_first": [
         "worker_08",
         "concrete_block_wall_02",

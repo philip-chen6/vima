@@ -12,7 +12,7 @@ from typing import Any
 from PIL import Image
 
 
-DEFAULT_RUN_DIR = pathlib.Path("tools/yolodex/runs/vinna-hardhat")
+DEFAULT_RUN_DIR = pathlib.Path("tools/yolodex/runs/vima-hardhat")
 DEFAULT_ROBOTICS = pathlib.Path("demo/gemini_robotics_boxes.json")
 
 

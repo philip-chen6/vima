@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Add mask-aware depth to VINNA object tracks.
+Add mask-aware depth to VIMA object tracks.
 
 The preferred backend is a monocular depth model such as Depth Anything V2 via
 Hugging Face transformers. The script also includes a deterministic geometric
@@ -320,7 +320,7 @@ def build_depth_memory(
 
     result = {
         "metadata": {
-            "tool": "VINNA mask-aware depth memory",
+            "tool": "VIMA mask-aware depth memory",
             "input": str(input_path),
             "run_dir": str(run_dir),
             "backend_requested": backend,

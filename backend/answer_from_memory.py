@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Answer questions from VINNA episodic memory with cited evidence."""
+"""Answer questions from VIMA episodic memory with cited evidence."""
 
 from __future__ import annotations
 
