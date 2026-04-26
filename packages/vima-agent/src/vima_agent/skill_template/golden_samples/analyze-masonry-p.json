@@ -1,0 +1,53 @@
+{
+  "activity": "elevated site observation",
+  "confidence": 0.62,
+  "episode": "scaffold_zone_visible",
+  "event_id": "vima-agent upload",
+  "frame_path": "/tmp/tmpkznf2lea.jpg",
+  "in_safe_envelope": null,
+  "model": "claude-sonnet-4-6",
+  "pnc": "C",
+  "prompt": "vima-v1",
+  "reasoning": "Source frame shows elevated construction zone with scaffold tubing, stacked CMU wall, and an apparent open edge at height with no visible guardrail \u2014 contributory context with a credible fall-protection flag. No direct productive masonry action is visible from this vantage.",
+  "spatial_claims": [
+    {
+      "distance_m": 1.5,
+      "location": "foreground right, vertical yellow tube structure",
+      "object": "scaffold"
+    },
+    {
+      "distance_m": 3.0,
+      "location": "mid-right, stacked wall courses",
+      "object": "concrete_block"
+    },
+    {
+      "distance_m": 3.5,
+      "location": "center-right, near wall",
+      "object": "material_stack"
+    },
+    {
+      "distance_m": 2.0,
+      "location": "foreground center, top of wall/elevated surface",
+      "object": "open_edge"
+    },
+    {
+      "distance_m": null,
+      "location": "absent on visible open edge",
+      "object": "guardrail"
+    }
+  ],
+  "surface": "scaffold",
+  "timestamp_s": 15.0,
+  "violation_flags": [
+    {
+      "evidence": "Open edge visible at elevated wall/platform level with no guardrail present",
+      "rule": "OSHA 1926.502(b) \u2014 guardrail systems required at unprotected edges \u22656ft",
+      "severity": "high"
+    },
+    {
+      "evidence": "Scaffold structure visible without confirmed guardrail on working platform; depth insufficient to verify full compliance",
+      "rule": "OSHA 1926.451(g) \u2014 fall protection on scaffolding",
+      "severity": "medium"
+    }
+  ]
+}

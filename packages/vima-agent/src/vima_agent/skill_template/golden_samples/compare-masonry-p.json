@@ -1,0 +1,62 @@
+{
+  "baseline": {
+    "activity": "crane operation near structure",
+    "confidence": 0.72,
+    "pnc": "C",
+    "prompt": "baseline"
+  },
+  "image": "frame_000.jpg",
+  "vima": {
+    "activity": "elevated site navigation",
+    "confidence": 0.62,
+    "episode": "scaffold_zone_visible",
+    "event_id": "vima-agent compare",
+    "frame_path": "/tmp/tmpi10s32j1.jpg",
+    "in_safe_envelope": null,
+    "model": "claude-sonnet-4-6",
+    "pnc": "C",
+    "prompt": "vima-v1",
+    "reasoning": "Source frame shows elevated construction zone with yellow scaffold framing foreground and stacked concrete blocks at an open slab edge right-side; no guardrail visible on exposed edge. PNC classified C as no direct productive masonry action is visible \u2014 camera wearer appears to be traversing or observing the zone. Pseudo-depth point cloud is absent (000.0s timestamp), limiting depth confidence.",
+    "spatial_claims": [
+      {
+        "distance_m": 1.5,
+        "location": "foreground center, structural yellow framing visible",
+        "object": "scaffold"
+      },
+      {
+        "distance_m": 2.5,
+        "location": "right of frame, stacked at wall",
+        "object": "concrete_block"
+      },
+      {
+        "distance_m": 3.0,
+        "location": "upper right, roof/slab edge visible near block stack",
+        "object": "open_edge"
+      },
+      {
+        "distance_m": null,
+        "location": "absent \u2014 no guardrail visible on open edge",
+        "object": "guardrail"
+      },
+      {
+        "distance_m": 3.5,
+        "location": "right background, block/material stack at wall",
+        "object": "material_stack"
+      }
+    ],
+    "surface": "scaffold",
+    "timestamp_s": 15.0,
+    "violation_flags": [
+      {
+        "evidence": "Open slab/roof edge visible upper right with no guardrail or fall protection in view near material stack at elevation",
+        "rule": "OSHA 1926.502(b) \u2014 guardrail systems on walking/working surfaces \u22656ft",
+        "severity": "high"
+      },
+      {
+        "evidence": "Scaffold framing visible with no guardrail or toeboard confirmed; worker surface appears elevated, protective systems not confirmed",
+        "rule": "OSHA 1926.451(g) \u2014 fall protection on scaffolds \u226510ft",
+        "severity": "medium"
+      }
+    ]
+  }
+}
