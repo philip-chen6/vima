@@ -1,0 +1,777 @@
+[
+  {
+    "frame_id": "frame_0000_00000000",
+    "filename": "frame_0000_00000000.jpg",
+    "frame_idx": 0,
+    "timestamp_s": 0.0,
+    "depth": {
+      "url": "/inference/frame_0000_00000000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 114.64927083333333,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0000_00000000/mask.png",
+      "n_masks": 59,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0001_00002000",
+    "filename": "frame_0001_00002000.jpg",
+    "frame_idx": 1,
+    "timestamp_s": 2.0,
+    "depth": {
+      "url": "/inference/frame_0001_00002000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 116.94337239583334,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0001_00002000/mask.png",
+      "n_masks": 55,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0002_00004000",
+    "filename": "frame_0002_00004000.jpg",
+    "frame_idx": 2,
+    "timestamp_s": 4.0,
+    "depth": {
+      "url": "/inference/frame_0002_00004000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 100.51933268229166,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0002_00004000/mask.png",
+      "n_masks": 61,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0003_00006000",
+    "filename": "frame_0003_00006000.jpg",
+    "frame_idx": 3,
+    "timestamp_s": 6.0,
+    "depth": {
+      "url": "/inference/frame_0003_00006000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 107.5863671875,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0003_00006000/mask.png",
+      "n_masks": 53,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0004_00008000",
+    "filename": "frame_0004_00008000.jpg",
+    "frame_idx": 4,
+    "timestamp_s": 8.0,
+    "depth": {
+      "url": "/inference/frame_0004_00008000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 86.71844401041666,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0004_00008000/mask.png",
+      "n_masks": 59,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0005_00010000",
+    "filename": "frame_0005_00010000.jpg",
+    "frame_idx": 5,
+    "timestamp_s": 10.0,
+    "depth": {
+      "url": "/inference/frame_0005_00010000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 84.32735677083333,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0005_00010000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0006_00012000",
+    "filename": "frame_0006_00012000.jpg",
+    "frame_idx": 6,
+    "timestamp_s": 12.0,
+    "depth": {
+      "url": "/inference/frame_0006_00012000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 87.96464518229166,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0006_00012000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0007_00014000",
+    "filename": "frame_0007_00014000.jpg",
+    "frame_idx": 7,
+    "timestamp_s": 14.0,
+    "depth": {
+      "url": "/inference/frame_0007_00014000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 95.63973958333334,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0007_00014000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0008_00016000",
+    "filename": "frame_0008_00016000.jpg",
+    "frame_idx": 8,
+    "timestamp_s": 16.0,
+    "depth": {
+      "url": "/inference/frame_0008_00016000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 93.755673828125,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0008_00016000/mask.png",
+      "n_masks": 57,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0009_00018000",
+    "filename": "frame_0009_00018000.jpg",
+    "frame_idx": 9,
+    "timestamp_s": 18.0,
+    "depth": {
+      "url": "/inference/frame_0009_00018000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 87.88011393229166,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0009_00018000/mask.png",
+      "n_masks": 58,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0010_00020000",
+    "filename": "frame_0010_00020000.jpg",
+    "frame_idx": 10,
+    "timestamp_s": 20.0,
+    "depth": {
+      "url": "/inference/frame_0010_00020000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 98.00865885416667,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0010_00020000/mask.png",
+      "n_masks": 51,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0011_00022000",
+    "filename": "frame_0011_00022000.jpg",
+    "frame_idx": 11,
+    "timestamp_s": 22.0,
+    "depth": {
+      "url": "/inference/frame_0011_00022000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 106.38369791666666,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0011_00022000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0012_00024000",
+    "filename": "frame_0012_00024000.jpg",
+    "frame_idx": 12,
+    "timestamp_s": 24.0,
+    "depth": {
+      "url": "/inference/frame_0012_00024000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 107.067919921875,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0012_00024000/mask.png",
+      "n_masks": 52,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0013_00026000",
+    "filename": "frame_0013_00026000.jpg",
+    "frame_idx": 13,
+    "timestamp_s": 26.0,
+    "depth": {
+      "url": "/inference/frame_0013_00026000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 117.48354166666667,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0013_00026000/mask.png",
+      "n_masks": 57,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0014_00028000",
+    "filename": "frame_0014_00028000.jpg",
+    "frame_idx": 14,
+    "timestamp_s": 28.0,
+    "depth": {
+      "url": "/inference/frame_0014_00028000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 135.59106119791667,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0014_00028000/mask.png",
+      "n_masks": 54,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0015_00030000",
+    "filename": "frame_0015_00030000.jpg",
+    "frame_idx": 15,
+    "timestamp_s": 30.0,
+    "depth": {
+      "url": "/inference/frame_0015_00030000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 96.431064453125,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0015_00030000/mask.png",
+      "n_masks": 55,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0016_00032000",
+    "filename": "frame_0016_00032000.jpg",
+    "frame_idx": 16,
+    "timestamp_s": 32.0,
+    "depth": {
+      "url": "/inference/frame_0016_00032000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 119.20040364583333,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0016_00032000/mask.png",
+      "n_masks": 58,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0017_00034000",
+    "filename": "frame_0017_00034000.jpg",
+    "frame_idx": 17,
+    "timestamp_s": 34.0,
+    "depth": {
+      "url": "/inference/frame_0017_00034000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 121.97033854166666,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0017_00034000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0018_00036000",
+    "filename": "frame_0018_00036000.jpg",
+    "frame_idx": 18,
+    "timestamp_s": 36.0,
+    "depth": {
+      "url": "/inference/frame_0018_00036000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 102.682890625,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0018_00036000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0019_00038000",
+    "filename": "frame_0019_00038000.jpg",
+    "frame_idx": 19,
+    "timestamp_s": 38.0,
+    "depth": {
+      "url": "/inference/frame_0019_00038000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 118.6347265625,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0019_00038000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0020_00040000",
+    "filename": "frame_0020_00040000.jpg",
+    "frame_idx": 20,
+    "timestamp_s": 40.0,
+    "depth": {
+      "url": "/inference/frame_0020_00040000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 117.81780924479166,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0020_00040000/mask.png",
+      "n_masks": 54,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0021_00042000",
+    "filename": "frame_0021_00042000.jpg",
+    "frame_idx": 21,
+    "timestamp_s": 42.0,
+    "depth": {
+      "url": "/inference/frame_0021_00042000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 111.6419921875,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0021_00042000/mask.png",
+      "n_masks": 48,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0022_00044000",
+    "filename": "frame_0022_00044000.jpg",
+    "frame_idx": 22,
+    "timestamp_s": 44.0,
+    "depth": {
+      "url": "/inference/frame_0022_00044000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 66.61694661458333,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0022_00044000/mask.png",
+      "n_masks": 53,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0023_00046000",
+    "filename": "frame_0023_00046000.jpg",
+    "frame_idx": 23,
+    "timestamp_s": 46.0,
+    "depth": {
+      "url": "/inference/frame_0023_00046000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 63.808216145833335,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0023_00046000/mask.png",
+      "n_masks": 59,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0024_00048000",
+    "filename": "frame_0024_00048000.jpg",
+    "frame_idx": 24,
+    "timestamp_s": 48.0,
+    "depth": {
+      "url": "/inference/frame_0024_00048000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 74.83152018229167,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0024_00048000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0025_00050000",
+    "filename": "frame_0025_00050000.jpg",
+    "frame_idx": 25,
+    "timestamp_s": 50.0,
+    "depth": {
+      "url": "/inference/frame_0025_00050000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 73.34854166666666,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0025_00050000/mask.png",
+      "n_masks": 57,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0026_00052000",
+    "filename": "frame_0026_00052000.jpg",
+    "frame_idx": 26,
+    "timestamp_s": 52.0,
+    "depth": {
+      "url": "/inference/frame_0026_00052000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 69.11328450520833,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0026_00052000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0027_00054000",
+    "filename": "frame_0027_00054000.jpg",
+    "frame_idx": 27,
+    "timestamp_s": 54.0,
+    "depth": {
+      "url": "/inference/frame_0027_00054000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 103.10995768229166,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0027_00054000/mask.png",
+      "n_masks": 61,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0028_00056000",
+    "filename": "frame_0028_00056000.jpg",
+    "frame_idx": 28,
+    "timestamp_s": 56.0,
+    "depth": {
+      "url": "/inference/frame_0028_00056000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 38.59816080729167,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0028_00056000/mask.png",
+      "n_masks": 45,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0029_00058000",
+    "filename": "frame_0029_00058000.jpg",
+    "frame_idx": 29,
+    "timestamp_s": 58.0,
+    "depth": {
+      "url": "/inference/frame_0029_00058000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 56.080693359375,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0029_00058000/mask.png",
+      "n_masks": 56,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  },
+  {
+    "frame_id": "frame_0030_00060000",
+    "filename": "frame_0030_00060000.jpg",
+    "frame_idx": 30,
+    "timestamp_s": 60.0,
+    "depth": {
+      "url": "/inference/frame_0030_00060000/depth.png",
+      "depth_min": 0.0,
+      "depth_max": 255.0,
+      "depth_mean": 79.88455729166667,
+      "shape": [
+        480,
+        640
+      ]
+    },
+    "mask": {
+      "url": "/inference/frame_0030_00060000/mask.png",
+      "n_masks": 50,
+      "grid": 8,
+      "shape": [
+        480,
+        640
+      ]
+    }
+  }
+]

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronRight, RefreshCw } from "lucide-react";
 import VimaNavbar from "@/components/landing/vima-navbar";
 import { LiveFrameAnalyzer } from "@/components/landing/live-frame-analyzer";
+import { SpatialInferenceOverlay } from "@/components/landing/spatial-inference-overlay";
 import { BentoSection, BentoCell } from "@/components/react-bits/magic-bento";
 import dynamic from "next/dynamic";
 
@@ -384,6 +385,80 @@ export default function DemoClient({
         </div>
 
         <LiveFrameAnalyzer />
+      </section>
+
+      {/* ── SPATIAL INFERENCE OVERLAY ──────────────────────────────────
+          Depth-Anything-V2 monocular depth + SAM auto-mask segmentation
+          precomputed offline on every masonry frame. The toggle exposes
+          the geometry layer the spatial judge actually reads — depth
+          map, segment masks, and stacked. Static PNGs from /inference/. */}
+      <section
+        id="spatial-inference"
+        style={{
+          maxWidth: "1400px",
+          margin: "0 auto",
+          padding: "clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px)",
+          borderTop: `1px solid ${LINE}`,
+          display: "grid",
+          gridTemplateColumns: "minmax(280px, 360px) minmax(0, 1fr)",
+          gap: "clamp(24px, 4vw, 56px)",
+          alignItems: "start",
+        }}
+        className="vima-recon-grid"
+      >
+        <div>
+          <p style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.05em" }}>
+            inference · depth + segmentation
+          </p>
+          <h2
+            style={{
+              margin: "12px 0 0",
+              fontFamily: HEADING_FONT,
+              fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
+              fontWeight: 400,
+              lineHeight: 1.04,
+            }}
+          >
+            the geometry the judge sees.
+          </h2>
+          <p
+            style={{
+              margin: "16px 0 0",
+              maxWidth: "420px",
+              color: TEXT_SECONDARY,
+              fontFamily: "var(--font-sans)",
+              fontSize: "13.5px",
+              lineHeight: 1.55,
+            }}
+          >
+            Every frame runs through Depth-Anything-V2 for monocular depth and
+            Segment Anything for object masks before the spatial judge ever
+            opens its mouth. Toggle the layers to see the same scene the
+            CII verdict was grounded in.
+          </p>
+
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: "24px 0 0",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+              gap: "10px 18px",
+              color: TEXT_MUTED,
+              fontFamily: "var(--font-mono)",
+              fontSize: "10px",
+              letterSpacing: "0.04em",
+            }}
+          >
+            <li>· depth-anything-v2-small</li>
+            <li>· sam-vit-base · 8×8 prompt grid</li>
+            <li>· ~50 masks per frame</li>
+            <li>· precomputed (apple mps)</li>
+          </ul>
+        </div>
+
+        <SpatialInferenceOverlay />
       </section>
 
       {/* ── DEPTH-DELTA FILTER ACTIVITY ─────────────────────────────
