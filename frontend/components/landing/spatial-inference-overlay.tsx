@@ -18,13 +18,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-// ── Phosphor terminal palette ──────────────────────────────────────────────
+// ── Yozakura terminal palette (matches DESIGN.md) ───────────────────────
+// AMBER kept as alias to sakura-hot so the JSX below doesn't need rewriting.
 const INK = "#080503";
-const AMBER = "#f59e0b";
-const CREAM = "#e8d5c0";
-const TEXT_MUTED = "rgba(232,213,192,0.55)";
-const TEXT_FAINT = "rgba(232,213,192,0.34)";
-const LINE = "rgba(245,158,11,0.22)";
+const AMBER = "#f2a7b8"; // sakura-hot (was amber #f59e0b)
+const CREAM = "#f7ecef"; // washi (was warm cream)
+const TEXT_MUTED = "rgba(247,236,239,0.55)";
+const TEXT_FAINT = "rgba(247,236,239,0.34)";
+const LINE = "rgba(242,167,184,0.22)";
 
 type Layer = "rgb" | "depth" | "mask" | "stack";
 
@@ -187,7 +188,7 @@ export function SpatialInferenceOverlay() {
             style={{
               flex: 1,
               padding: "10px 12px",
-              background: layer === l.id ? "rgba(245,158,11,0.10)" : "transparent",
+              background: layer === l.id ? "rgba(242,167,184,0.10)" : "transparent",
               border: "none",
               borderRight: `1px solid ${LINE}`,
               color: layer === l.id ? AMBER : TEXT_MUTED,

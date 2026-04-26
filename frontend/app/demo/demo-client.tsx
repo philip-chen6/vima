@@ -104,6 +104,47 @@ export default function DemoClient({
   // Undefined until first click. Drives the thumbnail panel below the cloud.
   const [pickedFrame, setPickedFrame] = useState<string | null>(null);
 
+  // Lazily-loaded COLMAP camera intrinsics + extrinsics. Used to warp the
+  // gaussian splat camera to a registered pose when the user clicks a
+  // frustum in the sibling COLMAP point cloud. Schema lives at
+  // frontend/public/data/cameras.json (Josh's reconstruction agent owns it).
+  type CamEntry = {
+    frame: string;
+    position: [number, number, number];
+    rotation_quat: [number, number, number, number];
+    intrinsics?: { fov_deg?: [number, number] };
+  };
+  const [cameras, setCameras] = useState<CamEntry[] | null>(null);
+  useEffect(() => {
+    fetch("/data/cameras.json", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data) return;
+        // Schema is { ..., cameras: [...] } as of josh's 740d89f push.
+        // Tolerate both that shape and a bare array (older format).
+        const arr = Array.isArray(data) ? data : data.cameras;
+        if (Array.isArray(arr)) setCameras(arr);
+      })
+      .catch(() => {
+        // non-fatal — splat just won't auto-position on frustum clicks
+      });
+  }, []);
+
+  // Derive a SplatCameraPose from the picked frame. Vertical FOV is
+  // intrinsics.fov_deg[1] (the second component is height-axis FOV per
+  // SIMPLE_RADIAL convention). Returns null if frame isn't registered.
+  const pickedPose = useMemo(() => {
+    if (!pickedFrame || !cameras) return null;
+    const cam = cameras.find((c) => c.frame === pickedFrame);
+    if (!cam) return null;
+    return {
+      position: cam.position,
+      rotation_quat: cam.rotation_quat,
+      fov_deg: cam.intrinsics?.fov_deg?.[1],
+      label: cam.frame,
+    };
+  }, [pickedFrame, cameras]);
+
   const reload = async () => {
     setRefreshing(true);
     try {
@@ -601,7 +642,12 @@ export default function DemoClient({
                 harmonics — what the masonry site actually looks like in 3D. */}
             <SplatViewer
               src="/reconstruction/masonry-splat-30k.ply"
-              label="gaussian splat · 62,783 primitives · brush v0.3.0 · 30k steps"
+              label={
+                pickedPose
+                  ? `splat · pose: ${pickedPose.label?.replace(".jpg", "")}`
+                  : "gaussian splat · 62,783 primitives · brush v0.3.0 · 30k steps"
+              }
+              cameraPose={pickedPose}
             />
 
             {/* SECONDARY: COLMAP sparse points + camera frustums for

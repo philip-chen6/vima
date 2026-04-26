@@ -21,21 +21,36 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const AMBER = "#f59e0b";
-const CREAM = "#e8d5c0";
-const TEXT_MUTED = "rgba(232,213,192,0.55)";
-const TEXT_FAINT = "rgba(232,213,192,0.34)";
-const LINE = "rgba(245,158,11,0.22)";
+// Yozakura tokens — must match DESIGN.md. AMBER kept as alias to sakura
+// so any downstream JSX referencing it doesn't need surgery.
+const AMBER = "#f2a7b8"; // sakura-hot (was amber #f59e0b)
+const CREAM = "#f7ecef"; // washi (was warm cream)
+const TEXT_MUTED = "rgba(247,236,239,0.55)";
+const TEXT_FAINT = "rgba(247,236,239,0.34)";
+const LINE = "rgba(242,167,184,0.22)";
+
+// COLMAP-style camera pose. position is world-space [x,y,z], rotation_quat
+// is [x,y,z,w] (three.js convention), fov_deg is vertical FOV in degrees.
+export type SplatCameraPose = {
+  position: [number, number, number];
+  rotation_quat: [number, number, number, number];
+  fov_deg?: number;
+  label?: string;
+};
 
 export function SplatViewer({
   src = "/reconstruction/masonry-splat-30k.ply",
   label = "gaussian splat · masonry capture",
+  cameraPose = null,
 }: {
   src?: string;
   label?: string;
+  /** When set, snaps the splat camera to this COLMAP-registered pose.
+   *  Driven by clicking a frustum in the sibling COLMAP point cloud. */
+  cameraPose?: SplatCameraPose | null;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const viewerRef = useRef<unknown>(null);
+  const viewerRef = useRef<any>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error" | "missing">("loading");
   const [error, setError] = useState<string | null>(null);
   const [splatCount, setSplatCount] = useState<number | null>(null);
@@ -124,6 +139,63 @@ export function SplatViewer({
       }
     };
   }, [src]);
+
+  // Imperative camera pose snap. Whenever cameraPose changes (e.g. user
+  // clicks a frustum in the COLMAP viewer), warp the splat's camera to
+  // that exact bodycam position + orientation + FOV. We have to do this
+  // after the viewer is `ready` because viewer.camera doesn't exist
+  // before init resolves.
+  useEffect(() => {
+    if (status !== "ready" || !cameraPose) return;
+    const viewer = viewerRef.current;
+    if (!viewer?.camera) return;
+
+    let cancelled = false;
+    (async () => {
+      // Three.js is already loaded (mkkellogg pulls it in transitively).
+      // Dynamic import keeps the bundler happy and avoids a duplicate copy.
+      const THREE = await import("three");
+      if (cancelled || !viewerRef.current?.camera) return;
+
+      const cam = viewerRef.current.camera;
+      cam.position.set(...cameraPose.position);
+
+      // COLMAP quat → THREE quat. Both use [x,y,z,w] order.
+      const q = new THREE.Quaternion(
+        cameraPose.rotation_quat[0],
+        cameraPose.rotation_quat[1],
+        cameraPose.rotation_quat[2],
+        cameraPose.rotation_quat[3],
+      );
+      cam.quaternion.copy(q);
+
+      // FOV — three.js PerspectiveCamera takes vertical FOV in degrees.
+      // Josh's intrinsics give vertical FOV directly (64.8° for the
+      // SIMPLE_RADIAL model). Update the projection matrix after.
+      if (cameraPose.fov_deg && "fov" in cam) {
+        cam.fov = cameraPose.fov_deg;
+        cam.updateProjectionMatrix?.();
+      }
+
+      // Tell the orbit controls (if any) to re-anchor on this pose so
+      // user drags continue from here instead of snapping back.
+      const controls = viewerRef.current.controls;
+      if (controls?.target) {
+        // Place the orbit target 1 meter ahead along the camera's local -Z.
+        const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
+        controls.target.set(
+          cameraPose.position[0] + fwd.x,
+          cameraPose.position[1] + fwd.y,
+          cameraPose.position[2] + fwd.z,
+        );
+        controls.update?.();
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [cameraPose, status]);
 
   return (
     <div
