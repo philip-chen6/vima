@@ -12,6 +12,10 @@ import PipelineStepper from "@/components/landing/pipeline-stepper";
 import GradientText from "@/components/react-bits/gradient-text";
 import SimpleGraph from "@/components/react-bits/simple-graph";
 import Logo from "@/components/phosphor/logo";
+import Device from "@/components/react-bits/device";
+import { Showcase2 } from "@/components/blocks/showcase-2";
+import { Features3 } from "@/components/blocks/features-3";
+import Comparison3 from "@/components/blocks/comparison-3";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
 
 const INK = "#080503";
@@ -869,9 +873,23 @@ export default function VimaLandingPage() {
         </div>
 
         <EvidenceImageTabs />
+
+        {/* draggable evidence carousel — real frames vima generated claims from.
+            scroll horizontally or grab and drag. each card is one piece of
+            evidence behind a spatial claim. */}
+        <div style={{ marginTop: "clamp(40px, 5vw, 72px)" }}>
+          <Showcase2 />
+        </div>
       </section>
 
-      <SectionDivider id="ledger" label="ledger" index="02" />
+      <SectionDivider id="claims" label="claims" index="02" />
+      <section id="claims" data-gsap="section" data-scroll-section style={sectionStyle}>
+        {/* 4-shapes-of-spatial-truth section. opposite-scrolling marquees
+            of frames on the right, claim-type taxonomy on the left. */}
+        <Features3 />
+      </section>
+
+      <SectionDivider id="ledger" label="ledger" index="03" />
       <section
         id="ledger"
         data-gsap="section"
@@ -996,7 +1014,175 @@ export default function VimaLandingPage() {
         </div>
       </section>
 
-      <SectionDivider id="pipeline" label="pipeline" index="03" />
+      <SectionDivider id="verify" label="verify" index="04" />
+      <section id="verify" data-gsap="section" data-scroll-section style={sectionStyle}>
+        <SectionAtmosphere src="/vima-loader-rebar.png" position="center" opacity={0.28} />
+        <div
+          className="landing-verify"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) auto",
+            gap: "clamp(28px, 5vw, 64px)",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
+            <p
+              data-gsap="section-kicker"
+              style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.05em" }}
+            >
+              verify · the human side of accountable AI
+            </p>
+            <h2
+              data-gsap="section-title"
+              style={{
+                margin: "14px 0 0",
+                maxWidth: "640px",
+                fontFamily: HEADING_FONT,
+                fontSize: "clamp(2rem, 4.6vw, 4.4rem)",
+                fontWeight: 400,
+                lineHeight: 0.97,
+                letterSpacing: 0,
+              }}
+            >
+              <GradientText colors={HEADING_GRADIENT} animationSpeed={6.5} direction="diagonal">
+                every claim earns its truth.
+              </GradientText>
+            </h2>
+            <p
+              data-gsap="section-copy"
+              style={{
+                margin: "22px 0 0",
+                maxWidth: "560px",
+                color: TEXT_SECONDARY,
+                fontFamily: "var(--font-sans)",
+                fontSize: "clamp(0.95rem, 1.12vw, 1.05rem)",
+                lineHeight: 1.62,
+                letterSpacing: "0.005em",
+              }}
+            >
+              The model proposes, humans confirm. A swipe-deck on iOS turns spatial
+              claims into seconds-long verifications. Right to confirm, left to reject.
+              Every confirmation earns XP. Every twenty-five claims spins a wheel that
+              can pay out real SOL.
+            </p>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: "28px 0 0",
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "12px 18px",
+                color: TEXT_MUTED,
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.04em",
+              }}
+            >
+              <li>· tinder-style swipe deck</li>
+              <li>· 15 XP per claim, 30 for rare</li>
+              <li>· streak bonus at 10 + 25</li>
+              <li>· lottery wheel every 25 claims</li>
+              <li>· SOL prizes 0.001 → 0.5 legendary</li>
+              <li>· payouts queue to solana wallet</li>
+            </ul>
+          </div>
+          <div
+            data-gsap="section-copy"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "560px",
+            }}
+          >
+            <Device
+              scale={0.85}
+              enableParallax
+              enableRotate
+              parallaxStrength={12}
+              rotateStrength={2.5}
+            >
+              {/* TODO: replace this placeholder with a real screenshot of the
+                  iOS swipe deck (export from app.vima.mobile build, ~390x844 png)
+                  and pass via the `image` prop instead of children. */}
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  background:
+                    "linear-gradient(180deg, #1a0d14 0%, #080503 60%), radial-gradient(ellipse at 50% 0%, rgba(242,167,184,0.18), transparent 60%)",
+                  color: WASHI,
+                  fontFamily: "var(--font-mono)",
+                  padding: "56px 18px 32px",
+                  gap: "12px",
+                  textAlign: "left",
+                }}
+              >
+                <div style={{ fontSize: "10px", letterSpacing: "0.06em", color: TEXT_MUTED }}>
+                  vima · claim 17 of 30
+                </div>
+                <div
+                  style={{
+                    flex: 1,
+                    border: `1px solid ${LINE}`,
+                    background: "rgba(247,236,239,0.04)",
+                    padding: "18px 16px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div>
+                    <div style={{ color: SAKURA_HOT, fontSize: "9px", letterSpacing: "0.08em", marginBottom: "10px" }}>
+                      action_observed
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: HEADING_FONT,
+                        fontSize: "20px",
+                        lineHeight: 1.18,
+                        color: WASHI,
+                      }}
+                    >
+                      worker raises trowel at frame 0:42
+                    </div>
+                    <div style={{ marginTop: "10px", fontSize: "10px", color: TEXT_MUTED }}>
+                      confidence 0.95 · zone a
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      borderTop: `1px solid ${LINE}`,
+                      paddingTop: "10px",
+                      fontSize: "9px",
+                      color: TEXT_FAINT,
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    swipe → confirm · 15 XP
+                  </div>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "9px", color: TEXT_MUTED }}>
+                  <span>streak · 12</span>
+                  <span>next spin · 8</span>
+                </div>
+              </div>
+            </Device>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider id="benchmark" label="benchmark" index="05" />
+      <section id="benchmark" data-gsap="section" data-scroll-section style={sectionStyle}>
+        {/* vima vs. manual labeling — claims-per-minute throughput chart. */}
+        <Comparison3 />
+      </section>
+
+      <SectionDivider id="pipeline" label="pipeline" index="06" />
       <section id="pipeline" data-gsap="section" data-scroll-section style={sectionStyle}>
         <SectionAtmosphere src="/vima-loader-site.png" position="center" opacity={0.32} />
         <div className="landing-pink-streak landing-pink-streak--pipeline" aria-hidden="true" />
@@ -1050,7 +1236,7 @@ export default function VimaLandingPage() {
         <PipelineStepper />
       </section>
 
-      <SectionDivider id="cta" label="settlement" index="04" />
+      <SectionDivider id="cta" label="settlement" index="07" />
       <section
         id="cta"
         data-gsap="section"
