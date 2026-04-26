@@ -96,6 +96,158 @@ function summarizeObject(claims: SpatialClaim[]) {
   return names.join(" · ");
 }
 
+function claimBox(claim: SpatialClaim, index: number) {
+  const text = `${claim.object} ${claim.location}`.toLowerCase();
+  const presets = [
+    { x: 56, y: 18, w: 24, h: 30 },
+    { x: 23, y: 22, w: 27, h: 24 },
+    { x: 42, y: 34, w: 30, h: 16 },
+    { x: 12, y: 31, w: 22, h: 18 },
+  ];
+  const base = presets[index % presets.length];
+
+  if (text.includes("wall")) return { ...base, x: 52, y: 12, w: 30, h: 34 };
+  if (text.includes("ground") || text.includes("floor")) return { ...base, x: 18, y: 42, w: 58, h: 11 };
+  if (text.includes("worker") || text.includes("person")) return { ...base, x: 31, y: 16, w: 18, h: 32 };
+  if (text.includes("wrench") || text.includes("tool")) return { ...base, x: 57, y: 36, w: 18, h: 10 };
+  if (text.includes("guardrail") || text.includes("edge")) return { ...base, x: 8, y: 28, w: 82, h: 10 };
+
+  return base;
+}
+
+function ProcessedEvidenceOverlay({
+  episode,
+  status,
+}: {
+  episode: Episode;
+  status: ReviewStatus;
+}) {
+  const severity = inferSeverity(episode);
+  const accent = severityColor(severity);
+  const visibleClaims = episode.spatial_claims.slice(0, 4);
+  const statusText = status === "pending" ? "needs review" : status;
+
+  return (
+    <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+      <svg viewBox="0 0 100 56.25" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
+        <defs>
+          <pattern id="review-grid" width="6" height="6" patternUnits="userSpaceOnUse">
+            <path d="M 6 0 L 0 0 0 6" fill="none" stroke="rgba(247,236,239,0.14)" strokeWidth="0.15" />
+          </pattern>
+          <linearGradient id="review-mask" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor={SAKURA_HOT} stopOpacity="0.28" />
+            <stop offset="100%" stopColor={SAKURA} stopOpacity="0.08" />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="100" height="56.25" fill="url(#review-grid)" opacity="0.7" />
+        <path d="M0 43 C18 38 25 49 41 43 S70 35 100 40 L100 56.25 L0 56.25Z" fill="url(#review-mask)" opacity="0.46" />
+        <path d="M5 10 H95 M5 28.1 H95 M5 46 H95" stroke="rgba(242,167,184,0.22)" strokeWidth="0.2" strokeDasharray="1.2 1.8" />
+        {visibleClaims.map((claim, index) => {
+          const box = claimBox(claim, index);
+          const stroke = index === 0 ? accent : SAKURA_HOT;
+          const labelY = box.y > 8 ? box.y - 1.8 : box.y + box.h + 3.2;
+          return (
+            <g key={`${claim.object}-${claim.location}-${index}`}>
+              <rect
+                x={box.x}
+                y={box.y}
+                width={box.w}
+                height={box.h}
+                fill={index === 0 ? "rgba(242,167,184,0.13)" : "rgba(166,77,121,0.10)"}
+                stroke={stroke}
+                strokeWidth="0.55"
+                strokeDasharray={index === 0 ? "0" : "1.2 0.9"}
+                vectorEffect="non-scaling-stroke"
+              />
+              <path
+                d={`M${box.x} ${box.y + box.h * 0.52} L${box.x + box.w} ${box.y + box.h * 0.46}`}
+                stroke={stroke}
+                strokeWidth="0.35"
+                vectorEffect="non-scaling-stroke"
+                opacity="0.8"
+              />
+              <circle cx={box.x + box.w * 0.5} cy={box.y + box.h * 0.5} r="1.15" fill={stroke} opacity="0.85" />
+              <text
+                x={box.x}
+                y={labelY}
+                fill={WASHI}
+                fontSize="2.15"
+                fontFamily="monospace"
+                letterSpacing="0.04"
+                style={{ paintOrder: "stroke", stroke: INK, strokeWidth: 0.7 }}
+              >
+                {claim.object.slice(0, 18)}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+
+      <div
+        className="vima-review-scan"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: "22%",
+          height: "2px",
+          background: `linear-gradient(90deg, transparent, ${SAKURA_HOT}, transparent)`,
+          opacity: 0.65,
+          boxShadow: `0 0 18px ${SAKURA_HOT}55`,
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          right: 12,
+          top: 12,
+          padding: "8px 10px",
+          color: WASHI,
+          background: "rgba(8,5,3,0.82)",
+          border: `1px solid ${accent}88`,
+          fontSize: "10px",
+          letterSpacing: "0.04em",
+          display: "grid",
+          gap: "4px",
+          textAlign: "right",
+        }}
+      >
+        <span style={{ color: accent }}>{statusText}</span>
+        <span style={{ color: TEXT_MUTED }}>{visibleClaims.length} overlays · {(episode.confidence * 100).toFixed(0)}%</span>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          left: 12,
+          right: 12,
+          bottom: 12,
+          display: "flex",
+          gap: "8px",
+          flexWrap: "wrap",
+        }}
+      >
+        {["source frame", "depth pass", "mask pass", "claim eval"].map((label, index) => (
+          <span
+            key={label}
+            style={{
+              color: index === 3 && status === "pending" ? accent : TEXT_SECONDARY,
+              background: "rgba(8,5,3,0.76)",
+              border: `1px solid ${index === 3 && status === "pending" ? `${accent}88` : LINE}`,
+              padding: "6px 8px",
+              fontSize: "9px",
+              letterSpacing: "0.04em",
+            }}
+          >
+            {label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Stat({
   label,
   value,
@@ -285,6 +437,32 @@ export default function ReviewClient({
 
           .vima-review-stats > div:nth-child(2n) {
             border-right: 0 !important;
+          }
+        }
+
+        @keyframes vima-review-scan {
+          0% {
+            transform: translateY(-80px);
+            opacity: 0;
+          }
+
+          18% {
+            opacity: 0.7;
+          }
+
+          100% {
+            transform: translateY(290px);
+            opacity: 0;
+          }
+        }
+
+        .vima-review-scan {
+          animation: vima-review-scan 3.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .vima-review-scan {
+            animation: none;
           }
         }
       `}</style>
@@ -482,6 +660,12 @@ export default function ReviewClient({
                 <div style={{ color: TEXT_MUTED, display: "grid", placeItems: "center", height: "100%" }}>
                   loading source frame
                 </div>
+              )}
+              {activeEpisode && (
+                <ProcessedEvidenceOverlay
+                  episode={activeEpisode}
+                  status={reviewState[activeEpisode.episode] ?? "pending"}
+                />
               )}
               <div
                 style={{
