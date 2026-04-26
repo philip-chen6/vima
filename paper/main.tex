@@ -17,14 +17,14 @@
 \title{Verifiable Reward Functions for Construction Site Spatial Safety:\\
        Binary OSHA Compliance as Self-Supervised Signal}
 
-\author{VINNA Team}
+\author{VIMA Team}
 \affiliation{%
   \institution{HackTech 2025 --- Caltech}
   \city{Pasadena}
   \state{California}
   \country{USA}
 }
-\email{vinna@hacktech.io}
+\email{vima@hacktech.io}
 
 \begin{document}
 
@@ -34,7 +34,7 @@ States, accounting for over \$171 billion in annual injury costs.
 Current safety inspection relies on periodic manual audits that cannot
 scale to the volume of egocentric footage captured by modern bodycam and
 LiDAR sensor systems.
-We introduce VINNA (\textbf{V}erifiable \textbf{I}nspection via \textbf{N}eural
+We introduce VIMA (\textbf{V}erifiable \textbf{I}nspection via \textbf{N}eural
 \textbf{N}ative \textbf{A}nalysis), a self-supervised spatial-reasoning
 framework that maps OSHA CFR~29~Part~1926 regulations directly to
 binary verifiable reward functions, eliminating the need for human
@@ -172,7 +172,7 @@ established egocentric scene understanding as a first-class research
 problem.
 Their narration and annotation protocols informed our frame-level
 structured output schema.
-Unlike Ego4D, which targets activity recognition, VINNA targets
+Unlike Ego4D, which targets activity recognition, VIMA targets
 \emph{compliance detection} --- a task with binary ground truth that
 does not require human narrators.
 
@@ -188,19 +188,19 @@ violation detection as a 3D multi-view engagement task, achieving 7.6\%
 improvement over prior state-of-the-art by reasoning over spatial
 worker-object context.
 
-\textbf{VINNA differs from Safe-Construct in dataset, task scope, and
+\textbf{VIMA differs from Safe-Construct in dataset, task scope, and
 temporal modeling.}
 Safe-Construct targets \emph{safety violation detection} on multi-view
 RGB rigs with synchronized cameras; its output is a violation
 classification useful for retrospective auditing.
-VINNA targets \emph{temporal spatial reasoning} on egocentric monocular
+VIMA targets \emph{temporal spatial reasoning} on egocentric monocular
 video: understanding how worker--equipment--zone relationships evolve
 across frames, with event-memory augmentation that supplies the VLM with
 a structured changelog of scene state.
 The two systems address different stages of construction intelligence:
-Safe-Construct closes the retrospective audit loop; VINNA closes the
+Safe-Construct closes the retrospective audit loop; VIMA closes the
 real-time situational awareness loop.
-VINNA's event-memory layer yields a measured +32.0\% composite
+VIMA's event-memory layer yields a measured +32.0\% composite
 improvement in spatial question answering over clip-only baselines in our
 A/B evaluation (Experiment~\ref{sec:exp4}); this comparison is against a
 VLM-only baseline, not against Safe-Construct.
@@ -344,14 +344,14 @@ position), the constraint is released.
 \subsection{Pipeline Architecture}
 \label{sec:pipeline}
 
-\cref{fig:pipeline} shows the end-to-end VINNA pipeline.
+\cref{fig:pipeline} shows the end-to-end VIMA pipeline.
 
 \begin{figure}[t]
   \centering
   \fbox{\rule{0pt}{4cm}\rule{0.9\linewidth}{0pt}}
-  \Description{Block diagram of the VINNA pipeline showing sensor fusion,
+  \Description{Block diagram of the VIMA pipeline showing sensor fusion,
                VLM judge, and reward function components.}
-  \caption{VINNA pipeline: egocentric fisheye frame and LiDAR point
+  \caption{VIMA pipeline: egocentric fisheye frame and LiDAR point
            cloud are fused, passed to the spatial VLM judge, which emits
            a structured claim with OSHA violation flags. Verifiable
            reward functions score each claim without human annotation.}
@@ -401,7 +401,7 @@ zero at $t = 1$.
 \subsection{Verifiability and Auditability}
 \label{sec:verifiability}
 
-A core claim of VINNA is that every reward signal maps to a specific,
+A core claim of VIMA is that every reward signal maps to a specific,
 citable regulation.
 This has two practical consequences:
 
@@ -544,14 +544,14 @@ the computed reward values.
 \subsection{Baseline: CII Classification Accuracy}
 \label{sec:baseline}
 
-We compare VINNA's automatic CII tier assignment against a manual
+We compare VIMA's automatic CII tier assignment against a manual
 annotation pass conducted by a OSHA-trained compliance consultant
 (25 randomly sampled frames, single annotator).
 Results are reported in \cref{tab:cii_accuracy}.
 
 \begin{table}[t]
   \centering
-  \caption{VINNA CII classification vs.\ manual annotation (25 frames).
+  \caption{VIMA CII classification vs.\ manual annotation (25 frames).
            Diagonal entries are correct classifications.}
   \label{tab:cii_accuracy}
   \begin{tabular}{@{}lccc@{}}
@@ -583,7 +583,7 @@ Five questions covering worker positioning, material layout, structural
 change detection, safety distances, and egress path planning were posed
 to two pipeline variants: (a)~\textbf{VLM-only}: the frame is passed to
 the VLM with no temporal context; (b)~\textbf{VLM+Memory}: the VLM also
-receives a temporal event log derived from the VINNA change-detection
+receives a temporal event log derived from the VIMA change-detection
 layer, describing prior scene-change events up to the current frame.
 Each response is scored on three sub-dimensions---specificity (precision
 of spatial claims), calibration (acknowledgment of uncertainty), and
@@ -725,7 +725,7 @@ human-preference labels is \emph{reproducibility}.
 Human annotators disagree on whether a given condition constitutes a
 P or NC violation; regulatory text does not.
 By grounding rewards in specific CFR citations with quantitative
-predicates, VINNA produces a reward signal that is consistent across
+predicates, VIMA produces a reward signal that is consistent across
 runs, auditable by compliance officers, and legally defensible.
 
 A subtler advantage is \emph{scalability}.
@@ -780,7 +780,7 @@ way as code changes.
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have presented VINNA, a self-supervised spatial safety reasoning system
+We have presented VIMA, a self-supervised spatial safety reasoning system
 that eliminates the need for human-annotated training data by grounding
 its reward functions directly in OSHA CFR~29~Part~1926 regulations.
 

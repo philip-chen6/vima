@@ -1,4 +1,4 @@
-# VINNA — Spatial Reasoning Research
+# vima — Spatial Reasoning Research
 
 Last updated: 2026-04-25 01:25 PDT | Sources: Claude + Codex + WebSearch swarm
 

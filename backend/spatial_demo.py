@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VINNA Spatial Intelligence Demo
+VIMA Spatial Intelligence Demo
 ================================
 Takes egocentric construction video frames and outputs spatial claims with evidence.
 
@@ -33,7 +33,7 @@ from spatial_judge import judge_spatial, judge_change, judge_spatial_query
 
 # ── Frame extraction ────────────────────────────────────────────────────────
 
-def extract_frame(video_path: str, timestamp_s: float, out_dir: str = "/tmp/vinna-spatial-frames") -> str:
+def extract_frame(video_path: str, timestamp_s: float, out_dir: str = "/tmp/vima-spatial-frames") -> str:
     """ffmpeg: extract single frame at timestamp."""
     pathlib.Path(out_dir).mkdir(parents=True, exist_ok=True)
     out = f"{out_dir}/frame_{timestamp_s:.1f}.jpg"
@@ -251,7 +251,7 @@ def cmd_query(args) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="VINNA Spatial Intelligence Demo — spatial reasoning from egocentric construction video",
+        description="VIMA Spatial Intelligence Demo — spatial reasoning from egocentric construction video",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

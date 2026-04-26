@@ -325,7 +325,7 @@ def create_figure(ssim_values, quadrant_ssim, events, major_thresh, minor_thresh
 
     # ── Supertitle ────────────────────────────────────────────────────────
     fig.suptitle(
-        "VINNA Experiment G: Frame-to-Frame Spatial Change Detection\n"
+        "VIMA Experiment G: Frame-to-Frame Spatial Change Detection\n"
         f"SSIM-based change analysis  |  {len(ssim_values)} consecutive frame pairs  |  "
         f"{len(major_events)} major + {len(minor_events)} minor spatial events detected",
         fontsize=13, fontweight="bold", color=YELLOW, y=0.97
@@ -342,7 +342,7 @@ def create_figure(ssim_values, quadrant_ssim, events, major_thresh, minor_thresh
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("VINNA Experiment G: Frame-to-Frame Spatial Change Detection")
+    print("VIMA Experiment G: Frame-to-Frame Spatial Change Detection")
     print("=" * 70)
 
     ssim_values, quadrant_ssim = compute_ssim_timeline()

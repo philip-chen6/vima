@@ -1,4 +1,4 @@
-# VINNA Architecture
+# vima Architecture
 
 ## Data Flow
 

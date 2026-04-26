@@ -1,4 +1,4 @@
-# VINNA — Spatial Intelligence for Construction Sites
+# vima — Spatial Intelligence for Construction Sites
 
 _HackTech 2026 @ Caltech — Ironsite Prize Track_
 
@@ -18,13 +18,13 @@ Not another OSHA violation checklist. Every construction AI startup ships that. 
 
 The failure of existing VLMs isn't perception. Point Claude or GPT-5 at a construction frame and they label objects fine. The failure is **verifiability**. There's no ground truth signal anchoring the model's spatial claims to physical reality. Distances are hallucinated. Progress that didn't happen gets reported. And critically — if you tie rewards to unverified output, workers immediately learn to game the system.
 
-VINNA solves that. Spatial anchoring + temporal gaming resistance + on-chain payout transparency. Not a checklist. A reward infrastructure.
+vima solves that. Spatial anchoring + temporal gaming resistance + on-chain payout transparency. Not a checklist. A reward infrastructure.
 
 ---
 
 ## What It Does
 
-VINNA is a spatially-anchored worker intelligence and incentive system for egocentric construction video. It does three things that matter:
+vima is a spatially-anchored worker intelligence and incentive system for egocentric construction video. It does three things that matter:
 
 ### 1. Frame-level spatial classification (CII)
 Every frame gets a Construction Industry Institute (CII) wrench-time label: **Productive (P)**, **Contributory (C)**, or **Non-Contributory (NC)**. Not "is this worker wearing PPE" — "is this worker doing value-adding work?"
@@ -37,7 +37,7 @@ On 30 frames of real Ironsite masonry bodycam footage:
 - Session latency: **595ms/frame** at **1.68 fps**
 
 ### 2. Temporal gaming resistance
-The core threat model: financially-motivated workers with headcams will game any reward system tied to raw classification. VINNA builds in resistance through spatially-anchored frame classification. We tested gaming advantage over time — **by frame 30, the advantage of trying to game the classifier is gone**. The system anchors each classification to spatial context from COLMAP point clouds and SNRA-weighted confidence; inconsistent gaming attempts produce incoherent spatial signals that don't accumulate reward.
+The core threat model: financially-motivated workers with headcams will game any reward system tied to raw classification. vima builds in resistance through spatially-anchored frame classification. We tested gaming advantage over time — **by frame 30, the advantage of trying to game the classifier is gone**. The system anchors each classification to spatial context from COLMAP point clouds and SNRA-weighted confidence; inconsistent gaming attempts produce incoherent spatial signals that don't accumulate reward.
 
 ### 3. Verifiable on-chain payout
 Worker productivity percentages map to raffle ticket allocations. Winners are drawn proportionally to wrench time and paid out via Solana SPL tokens on devnet. Every payout has a cryptographically-signed TX signature, linkable on Solscan. The evidence chain is: frame → spatial classification → wrench time % → raffle weight → on-chain SPL transfer. Auditable end-to-end.
@@ -88,7 +88,7 @@ Worker productivity percentages map to raffle ticket allocations. Winners are dr
 
 1. **Multi-worker from real sensor metadata** — Current demo simulates 3 workers from a single bodycam. Production version reads `worker_id` from headcam hardware metadata.
 
-2. **Cross-session progress tracking** — Extend spatial anchoring to track 3D site state across multiple walkthroughs. "Zone B had 3 material deliveries this week." That's where VINNA becomes a construction intelligence platform, not just a per-session tool.
+2. **Cross-session progress tracking** — Extend spatial anchoring to track 3D site state across multiple walkthroughs. "Zone B had 3 material deliveries this week." That's where vima becomes a construction intelligence platform, not just a per-session tool.
 
 3. **GRPO fine-tuning on verified signals** — The CII classification pipeline generates labeled (frame, classification, confidence, spatial_context) tuples that are verifiable without human annotation. Natural GRPO training signal for a spatial reasoning specialist model.
 

@@ -1,0 +1,50 @@
+.animatedGradientText {
+  position: relative;
+  display: inline-flex;
+  max-width: fit-content;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  color: inherit;
+  overflow: hidden;
+}
+
+.animatedGradientText.withBorder {
+  padding: 0.28rem 0.62rem;
+  border-radius: 2px;
+}
+
+.gradientOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.gradientOverlay::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  transform: translate(-50%, -50%);
+  border-radius: inherit;
+  background-color: #080503;
+}
+
+.textContent {
+  position: relative;
+  z-index: 2;
+  display: inline;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.pauseOnHover:hover .textContent,
+.pauseOnHover:hover .gradientOverlay {
+  animation-play-state: paused;
+}

@@ -1,4 +1,4 @@
-# VINNA API Contract
+# vima API Contract
 
 Base URL: `http://localhost:8765`
 

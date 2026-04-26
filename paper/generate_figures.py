@@ -1,5 +1,5 @@
 """
-VINNA Research Paper — Figure Generator
+VIMA Research Paper — Figure Generator
 Generates all 6 publication-quality figures with Bloomberg terminal aesthetic.
 """
 
@@ -26,7 +26,7 @@ BLUE     = "#3399ff"
 WHITE    = "#e8e8f0"
 DIMWHITE = "#8888aa"
 
-FIGDIR = Path("/tmp/vinna-hacktech/paper/figures")
+FIGDIR = Path("/tmp/vima-hacktech/paper/figures")
 FIGDIR.mkdir(parents=True, exist_ok=True)
 
 plt.rcParams.update({
@@ -80,7 +80,7 @@ def fig_embedding_similarity():
     ax.set_ylim(0.33, 0.46)
     ax.set_ylabel("Cosine Similarity Score")
     ax.set_title("Cosine Similarity by CII Activity Class\n"
-                 "[Gemini Embedding 2 · VINNA Demo · n=30 frames]",
+                 "[Gemini Embedding 2 · VIMA Demo · n=30 frames]",
                  pad=12)
     ax.yaxis.grid(True, zorder=0)
     ax.set_axisbelow(True)
@@ -98,7 +98,7 @@ def fig_embedding_similarity():
 def fig_reward_functions():
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
     fig.patch.set_facecolor(BG)
-    fig.suptitle("OSHA Reward Function Design  |  VINNA Agent",
+    fig.suptitle("OSHA Reward Function Design  |  VIMA Agent",
                  fontsize=14, color=WHITE, y=1.02)
 
     # --- Panel A: Binary OSHA step function ---
@@ -189,7 +189,7 @@ def fig_cii_distribution():
               fontsize=10, ncol=1)
 
     ax.set_title("CII Activity Classification Distribution\n"
-                 "VINNA Demo · 30 Annotated Frames · Masonry Construction",
+                 "VIMA Demo · 30 Annotated Frames · Masonry Construction",
                  pad=16)
     save(fig, "fig_cii_distribution.png")
 
@@ -249,7 +249,7 @@ def fig_pipeline():
                 color=DIMWHITE, fontsize=7.2, style="italic",
                 multialignment="center")
 
-    ax.set_title("VINNA Pipeline Architecture  —  End-to-End Safety Intelligence",
+    ax.set_title("VIMA Pipeline Architecture  —  End-to-End Safety Intelligence",
                  color=WHITE, fontsize=13, pad=10)
 
     save(fig, "fig_pipeline.png")
@@ -285,7 +285,7 @@ def fig_violation_severity():
 
     ax.set_xlim(0, 1.25)
     ax.set_xlabel("Violation Severity Score (0–1)")
-    ax.set_title("OSHA Violations Detected  |  VINNA Demo — Masonry Video\n"
+    ax.set_title("OSHA Violations Detected  |  VIMA Demo — Masonry Video\n"
                  "[Gemini 2.5 Flash spatial reasoning + OSHA 29 CFR 1926 verification]",
                  pad=12)
     ax.xaxis.grid(True, zorder=0)
@@ -361,7 +361,7 @@ def fig_temporal_timeline():
     ax.set_ylim(0.2, 1.05)
     ax.set_xlabel("Timestamp (seconds)  —  Masonry Construction Video")
     ax.set_ylabel("Composite Safety Score")
-    ax.set_title("Temporal Safety Score Timeline  |  VINNA Agent Monitoring\n"
+    ax.set_title("Temporal Safety Score Timeline  |  VIMA Agent Monitoring\n"
                  "[Gemini 2.5 Flash · OSHA 1926 · 1276s masonry demo]",
                  pad=12)
     ax.yaxis.grid(True, zorder=0)
@@ -378,7 +378,7 @@ def fig_temporal_timeline():
 # Main
 # ─────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("Generating VINNA figures...")
+    print("Generating VIMA figures...")
     fig_embedding_similarity()
     fig_reward_functions()
     fig_cii_distribution()

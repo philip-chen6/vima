@@ -377,7 +377,7 @@ def create_figure(displacements, speeds, headings, traj_x, traj_y, phases):
     linearity = net_disp / (total_dist + 1e-8)
 
     fig.suptitle(
-        "VINNA Experiment J: Egocentric Trajectory Estimation from Construction Bodycam\n"
+        "VIMA Experiment J: Egocentric Trajectory Estimation from Construction Bodycam\n"
         f"Optical flow displacement  |  {n_frames} frames  |  "
         f"Total path: {total_dist:.0f} px  |  Net displacement: {net_disp:.0f} px  |  "
         f"Linearity: {linearity:.3f}",
@@ -395,7 +395,7 @@ def create_figure(displacements, speeds, headings, traj_x, traj_y, phases):
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("VINNA Experiment J: Egocentric Trajectory Estimation")
+    print("VIMA Experiment J: Egocentric Trajectory Estimation")
     print("=" * 70)
 
     displacements, speeds, headings, traj_x, traj_y = compute_trajectory()

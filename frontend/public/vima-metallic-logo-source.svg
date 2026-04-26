@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 200" role="img" aria-labelledby="title desc">
+  <title id="title">v i m a. logo source</title>
+  <desc id="desc">source svg lockup for the vima metallic landing logo</desc>
+  <path
+    d="M 80 10 L 140.62177826491072 45 L 140.62177826491072 115 L 80 150 L 19.37822173508929 115 L 19.37822173508929 45 Z M 96 52.28718707889796 L 112 80 L 96 107.71281292110203 L 64 107.71281292110204 L 48 80 L 64 52.287187078897965 Z"
+    fill="#f7ecef"
+    fill-rule="evenodd"
+    stroke="#f2a7b8"
+    stroke-width="1.5"
+    transform="translate(20 20)"
+  />
+  <text
+    x="198"
+    y="143"
+    fill="#f7ecef"
+    font-family="Times New Roman, Times, serif"
+    font-size="150"
+    font-weight="400"
+    letter-spacing="0"
+    xml:space="preserve"
+  >v i m a.</text>
+</svg>

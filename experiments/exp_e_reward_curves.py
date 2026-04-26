@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-VINNA Experiment E: Reward Function Curves
+VIMA Experiment E: Reward Function Curves
 ==========================================
-Plots the three reward signals used in the VINNA framework:
+Plots the three reward signals used in the VIMA framework:
 
   (a) Binary OSHA Reward: r(x) = {1 if violation detected correctly, 0 else}
       Shown as step function with varying detection thresholds.
@@ -250,7 +250,7 @@ ax_d.annotate("r = α·r_binary + β·r_SNRA + γ·r_F1",
               ha="center")
 
 # ── title + footer ──────────────────────────────────────────────────────────
-fig.suptitle("Exp. E: VINNA Verifiable Reward Function Design Space",
+fig.suptitle("Exp. E: VIMA Verifiable Reward Function Design Space",
              fontsize=16, color=GOLD, fontweight="bold", y=0.99, fontfamily="monospace")
 
 fig.text(0.5, 0.005,

@@ -1,4 +1,4 @@
-# VINNA — Verifiable Intelligence for Navigating and Analyzing Construction Sites
+# vima — Verifiable Intelligence for Navigating and Analyzing Construction Sites
 
 _HackTech 2026 @ Caltech — Ironsite Prize Track_
 
@@ -24,7 +24,7 @@ We wanted to fix that without fine-tuning a 70B model or inventing new architect
 
 ## What It Does
 
-VINNA is an event-memory augmented spatial reasoning system for egocentric construction video. It sits between raw bodycam footage and a frontier VLM and makes the VLM measurably better at spatial questions.
+vima is an event-memory augmented spatial reasoning system for egocentric construction video. It sits between raw bodycam footage and a frontier VLM and makes the VLM measurably better at spatial questions.
 
 **The pipeline:**
 
@@ -81,7 +81,7 @@ The demo is a side-by-side: ask the same spatial question with and without event
 
 ## What's Next
 
-1. **Integrate with Ironsite's pipeline** — VINNA's event-memory layer is designed to slot into the egocentric-video-to-intelligence pipeline Ironsite already runs. No new hardware, no new capture process. Just better spatial answers from the footage they're already collecting.
+1. **Integrate with Ironsite's pipeline** — vima's event-memory layer is designed to slot into the egocentric-video-to-intelligence pipeline Ironsite already runs. No new hardware, no new capture process. Just better spatial answers from the footage they're already collecting.
 
 2. **Multi-visit change tracking** — The current system detects changes within a single walkthrough. The next step is tracking changes across visits — what's different about this area compared to yesterday's footage? That's the real unlock for construction progress monitoring.
 

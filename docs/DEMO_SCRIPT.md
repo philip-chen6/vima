@@ -1,4 +1,4 @@
-# VINNA Demo Video Script
+# vima Demo Video Script
 ## HackTech 2026 — Ironsite Prize Track
 ## Target: 60–90 seconds | Screen recording with narration
 
@@ -19,12 +19,12 @@
 
 ### SEGMENT 1 — Frontend Homepage (0–10s)
 
-**Action:** Screen is on the VINNA frontend homepage. Slowly scroll or hover to show the headline and key sections. Don't rush.
+**Action:** Screen is on the vima frontend homepage. Slowly scroll or hover to show the headline and key sections. Don't rush.
 
 **Narrate:**
-> "This is VINNA — spatial intelligence for construction sites. Not a violation checker. A system that tracks what workers are actually doing, builds tamper-resistant evidence, and pays out on-chain based on verified productivity."
+> "This is vima — spatial intelligence for construction sites. Not a violation checker. A system that tracks what workers are actually doing, builds tamper-resistant evidence, and pays out on-chain based on verified productivity."
 
-**What to show:** VINNA title, the spatial intelligence tagline, evidence architecture section if visible.
+**What to show:** vima title, the spatial intelligence tagline, evidence architecture section if visible.
 
 ---
 
@@ -71,7 +71,7 @@ Let the output print live. Don't cut away before the winner line appears.
 **Action:** Switch back to browser Tab 1 — frontend. Scroll to the evidence architecture or payout section.
 
 **Narrate:**
-> "Every payout is backed by an evidence chain: bodycam frame to spatial classification to wrench time percentage to raffle weight to on-chain SPL transfer. Tamper-resistant by construction. Workers can verify they're measured fairly. Site managers can audit every number. That's VINNA."
+> "Every payout is backed by an evidence chain: bodycam frame to spatial classification to wrench time percentage to raffle weight to on-chain SPL transfer. Tamper-resistant by construction. Workers can verify they're measured fairly. Site managers can audit every number. That's vima."
 
 **What to show:** The evidence architecture visual if it's on the frontend. If not, hold on the homepage while narrating — the confidence is in the voice.
 

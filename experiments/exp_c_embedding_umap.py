@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-VINNA Experiment C: Embedding Space UMAP Projection
+VIMA Experiment C: Embedding Space UMAP Projection
 ====================================================
 Takes the 3072-dimensional spatial embeddings from the ironsite spatial pipeline
 (39 batches, each with a vision-model embedding of the construction scene),
 reduces to 2D via UMAP, and clusters by activity type / zone.
 
 Demonstrates that the embedding space captures meaningful semantic structure
-(similar activities cluster together) -- a key claim for the VINNA spatial
+(similar activities cluster together) -- a key claim for the VIMA spatial
 reward function.
 
 Output: paper/figures/exp_c_embedding_umap.png (300 dpi)

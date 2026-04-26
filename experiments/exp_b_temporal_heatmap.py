@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VINNA Experiment B: Temporal Activity Heatmap
+VIMA Experiment B: Temporal Activity Heatmap
 =============================================
 Frame-by-frame P/C/NC classification over time rendered as a colored heatstrip,
 showing the construction activity rhythm across the full video timeline.

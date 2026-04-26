@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VINNA Component 1: Spatial Failure Collector
+VIMA Component 1: Spatial Failure Collector
 =============================================
 Sends 10 diverse construction frames to the VLM with targeted spatial questions,
 collects responses, and identifies WHERE frontier VLMs fail at spatial reasoning.
@@ -13,7 +13,7 @@ import json, time, base64, pathlib, sys
 import requests
 
 API_BASE = "http://localhost:8765"
-FRAMES_DIR = pathlib.Path("/tmp/vinna-cii-frames")
+FRAMES_DIR = pathlib.Path("/tmp/vima-cii-frames")
 OUTPUT_DIR = pathlib.Path(__file__).parent
 REPORT_PATH = OUTPUT_DIR / "spatial_failure_report.json"
 
@@ -196,7 +196,7 @@ def classify_failure(question_meta: dict, response: dict) -> dict:
 
 def main():
     print("=" * 70)
-    print("VINNA Spatial Failure Collector")
+    print("VIMA Spatial Failure Collector")
     print("=" * 70)
 
     all_results = []
@@ -263,7 +263,7 @@ def main():
 
     report = {
         "metadata": {
-            "tool": "VINNA Spatial Failure Collector",
+            "tool": "VIMA Spatial Failure Collector",
             "model_tested": "claude-sonnet-4-6",
             "frames_analyzed": len(FRAME_INDICES),
             "total_probes": len(all_results),

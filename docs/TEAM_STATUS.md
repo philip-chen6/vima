@@ -1,4 +1,4 @@
-# VINNA — Team Status
+# vima — Team Status
 _Last updated: 2026-04-25 ~05:50 PDT | Deadline: 9am PDT Apr 26 (~27h)_
 
 ## Critical Path

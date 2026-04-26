@@ -307,7 +307,7 @@ def create_figure(results, centroid_map, H, W):
 
     # ── Supertitle ────────────────────────────────────────────────────────
     fig.suptitle(
-        "VINNA Experiment F: Spatial Anchor Detection from Egocentric Construction Video\n"
+        "VIMA Experiment F: Spatial Anchor Detection from Egocentric Construction Video\n"
         f"Contour-based anchor extraction  |  {len(results)} frames  |  "
         f"Mean anchors/frame: {totals.mean():.1f}  |  Mean coverage: {coverages.mean()*100:.1f}%",
         fontsize=13, fontweight="bold", color=YELLOW, y=0.97
@@ -324,7 +324,7 @@ def create_figure(results, centroid_map, H, W):
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("VINNA Experiment F: Spatial Anchor Detection")
+    print("VIMA Experiment F: Spatial Anchor Detection")
     print("=" * 70)
 
     results, centroid_map, H, W = extract_anchors()

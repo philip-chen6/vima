@@ -1,6 +1,6 @@
 """
 exp_k_risk_terrain.py
-VINNA — Risk Terrain + SNRA Dual-Panel Visualization
+VIMA — Risk Terrain + SNRA Dual-Panel Visualization
 Sources:
   proof/cold_path_results.json  — 10 frames, CII labels, violation counts
   demo/event_timeline.json      — 32 frames, change_score, similarity_to_prev
@@ -149,7 +149,7 @@ leg = ax_a.legend(handles=legend_patches, loc="upper right",
                   edgecolor="#333333", fontsize=7.5,
                   labelcolor=TEXT_CLR)
 
-ax_a.set_title("VINNA — CII Classification Timeline",
+ax_a.set_title("VIMA — CII Classification Timeline",
                color=TEXT_CLR, fontsize=14, pad=10, loc="left",
                fontweight="bold")
 

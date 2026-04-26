@@ -1,8 +1,8 @@
-# VINNA Adversarial Review -- R1
+# VIMA Adversarial Review -- R1
 
 **Reviewer:** Opus 4.6 (adversarial academic reviewer, simulating top-tier CVPR/NeurIPS PC member)
 **Date:** April 25, 2026
-**Paper:** "VINNA: Verifiable Spatial Intelligence for Construction Safety Reward Attribution"
+**Paper:** "VIMA: Verifiable Spatial Intelligence for Construction Safety Reward Attribution"
 **Versions examined:** main.tex (vinna/paper/), paper_v2.tex, paper_v3.tex, intro_v3.tex, experiments.tex, reward_formalization.tex (research_pack), all prior adversarial reviews (R1-R3), resolution documents, reward_ledger.json, evidence_manifest.json, exp2_summary.json, exp4_reward_results.json
 **Scope:** Comprehensive adversarial pass for workshop submission readiness
 
@@ -84,25 +84,25 @@ The paper's headline number is driven by its least-supported assumption.
 
 ### 5. Safe-Construct differentiation is critically weak
 
-Safe-Construct (Chharia et al., CVPRW 2025) reframes construction safety violation detection as a 3D multi-view engagement task. The current paper cites it and says VINNA shares its "geometry-first philosophy." This is a novelty suicide note.
+Safe-Construct (Chharia et al., CVPRW 2025) reframes construction safety violation detection as a 3D multi-view engagement task. The current paper cites it and says VIMA shares its "geometry-first philosophy." This is a novelty suicide note.
 
 The actual differences are real and significant but unstated:
 
-**(a) Task frame.** Safe-Construct detects safety violations (binary: safe/unsafe per code). VINNA attributes productivity rewards (P/C/NC with financial payout). These have completely different adversarial threat models. Nobody games a safety violation detector -- workers are not paid for being flagged unsafe. Workers absolutely game a reward system.
+**(a) Task frame.** Safe-Construct detects safety violations (binary: safe/unsafe per code). VIMA attributes productivity rewards (P/C/NC with financial payout). These have completely different adversarial threat models. Nobody games a safety violation detector -- workers are not paid for being flagged unsafe. Workers absolutely game a reward system.
 
-**(b) Adversarial model.** Safe-Construct assumes benign camera operators and ground-truth labels. VINNA explicitly models a financially-motivated adversary. This is a novel threat model for construction AI.
+**(b) Adversarial model.** Safe-Construct assumes benign camera operators and ground-truth labels. VIMA explicitly models a financially-motivated adversary. This is a novel threat model for construction AI.
 
-**(c) Output type.** Safe-Construct outputs a classification. VINNA outputs a cryptographically signed evidence ledger entry that is the input to an on-chain reward contract. The evidence record, not the classification, is the contribution.
+**(c) Output type.** Safe-Construct outputs a classification. VIMA outputs a cryptographically signed evidence ledger entry that is the input to an on-chain reward contract. The evidence record, not the classification, is the contribution.
 
-**(d) Camera model.** Safe-Construct uses synchronized multi-view camera rigs. VINNA uses a single egocentric headcam -- the realistic wearable constraint. Monocular SfM on a moving sequence is structurally harder than multi-view with known baselines.
+**(d) Camera model.** Safe-Construct uses synchronized multi-view camera rigs. VIMA uses a single egocentric headcam -- the realistic wearable constraint. Monocular SfM on a moving sequence is structurally harder than multi-view with known baselines.
 
-**(e) Reward layer.** Safe-Construct has no financial incentive integration. VINNA closes the loop from evidence to raffle/payout.
+**(e) Reward layer.** Safe-Construct has no financial incentive integration. VIMA closes the loop from evidence to raffle/payout.
 
 The paper must state these differences explicitly in a differentiation paragraph. Without it, a reviewer who knows Safe-Construct will reject on novelty grounds.
 
 **Fix:** Add a 4-5 sentence differentiation paragraph after the Safe-Construct citation in Related Work. Example:
 
-> "Unlike Safe-Construct, VINNA targets a fundamentally different task: productivity reward attribution under adversarial gaming incentives. Where Safe-Construct operates on multi-view synchronized rigs with trusted camera operators, VINNA runs on a single egocentric headcam worn by a financially-motivated actor who may attempt to game the reward system. The output is not a violation classification but a cryptographically linked evidence ledger that serves as the direct input to an on-chain reward contract. This evidence-to-payout pipeline, the adversarial threat model it addresses, and the monocular constraint it operates under have no analog in prior construction safety work."
+> "Unlike Safe-Construct, VIMA targets a fundamentally different task: productivity reward attribution under adversarial gaming incentives. Where Safe-Construct operates on multi-view synchronized rigs with trusted camera operators, VIMA runs on a single egocentric headcam worn by a financially-motivated actor who may attempt to game the reward system. The output is not a violation classification but a cryptographically linked evidence ledger that serves as the direct input to an on-chain reward contract. This evidence-to-payout pipeline, the adversarial threat model it addresses, and the monocular constraint it operates under have no analog in prior construction safety work."
 
 ### 6. The verifiable reward framing borrows heavily from DeepSeek-R1 / GRPO without sufficient domain-specific novelty
 
@@ -135,13 +135,13 @@ The 61.3% registration rate is reported as though it characterizes construction 
 
 ### 9. Missing baselines
 
-The paper compares VINNA against nothing. Essential missing baselines:
+The paper compares VIMA against nothing. Essential missing baselines:
 
 **(a) Clip-only VLM classification without spatial anchoring** -- this is the obvious ablation. Run the same classification on the same frames without COLMAP anchoring and compare reviewer agreement (if human study is run) or at minimum report the classification distribution.
 
-**(b) Existing construction activity recognition** -- Akhavian & Behzadan (2016) did smartphone-based CII activity recognition. How does VINNA's CII accuracy compare? Even a qualitative positioning table would help.
+**(b) Existing construction activity recognition** -- Akhavian & Behzadan (2016) did smartphone-based CII activity recognition. How does VIMA's CII accuracy compare? Even a qualitative positioning table would help.
 
-**(c) Commercial systems** -- Procore, OpenSpace, Buildots do construction monitoring. A qualitative comparison table (VINNA vs. Procore vs. OpenSpace on criteria: on-device?, evidence-anchored?, adversarial model?) would position the contribution.
+**(c) Commercial systems** -- Procore, OpenSpace, Buildots do construction monitoring. A qualitative comparison table (VIMA vs. Procore vs. OpenSpace on criteria: on-device?, evidence-anchored?, adversarial model?) would position the contribution.
 
 **Fix:** Add at minimum baseline (a) as an ablation and baseline (c) as a positioning table.
 
@@ -171,7 +171,7 @@ Negatives:
 - The paper has two identities. main.tex (original v1) is about OSHA binary compliance rewards, Gemini embeddings, LiDAR fusion, and cosine similarity analysis. paper_v2/v3 is about evidence-anchored productivity reward attribution, COLMAP, Qwen VLM, and Solana raffle. These are different papers. The final submission must be one or the other, not a merge.
 - Some prose is overconfident: "We argue that spatial anchoring is... a prerequisite" is a strong claim for a system that has never verified a single window.
 - The Solana raffle component is mentioned as a contribution but never evaluated. No contract is deployed, no transaction exists, no gas analysis is performed. It is vaporware.
-- Figure paths use relative paths like `../../output/vinna-paper/figures/` which will break on compilation.
+- Figure paths use relative paths like `../../output/vima-paper/figures/` which will break on compilation.
 - The $171B figure in the abstract has no citation in paper_v2/v3 (it is cited in main.tex v1 as Liberty Mutual 2023).
 
 ### 12. The paper_v3.tex (the latest) has not integrated critical components

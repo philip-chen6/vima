@@ -1,7 +1,7 @@
 {
   "export_type": "cii_cold_path_60s_summary",
   "generated_at": "2026-04-25T09:31:17Z",
-  "pipeline": "VINNA CII Cold Path",
+  "pipeline": "VIMA CII Cold Path",
   "source_video": "/Users/qtzx/Downloads/01_production_masonry.mp4",
   "video_duration_s": 1276.0,
   "analysis_window_s": 60,

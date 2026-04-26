@@ -26,7 +26,7 @@
 
 \begin{document}
 
-\title{VINNA: Evidence-Anchored Reward Attribution for Construction Productivity Under Adversarial Gaming}
+\title{VIMA: Evidence-Anchored Reward Attribution for Construction Productivity Under Adversarial Gaming}
 
 \author{Joshua Lin}
 \affiliation{%
@@ -55,11 +55,11 @@
 
 \begin{abstract}
 Construction sites lose an estimated \$171 billion annually to productivity measurement failures~\cite{libertymutual2023}, yet existing AI safety systems cannot close the incentive loop because any classifier-driven reward signal is gameable by financially-motivated workers who learn to trigger productive-activity labels without performing real work.
-We propose VINNA, an evidence-anchored reward attribution pipeline that treats the productivity classifier not as a decision authority but as a \emph{witness} whose claims must pass through independently verifiable gates before any payout is issued.
+We propose VIMA, an evidence-anchored reward attribution pipeline that treats the productivity classifier not as a decision authority but as a \emph{witness} whose claims must pass through independently verifiable gates before any payout is issued.
 Each reward candidate is bound to three witnesses: a COLMAP-derived camera pose from structure-from-motion reconstruction, a local VLM semantic object annotation (Qwen2.5-VL), and a CII activity classification---all gated by a five-stage verification protocol requiring human ground-truth confirmation.
 On a single egocentric masonry video from the Ironsite hackathon dataset (1,276 seconds, 640$\times$480 at 15\,fps), our prototype reconstructs a sparse 3D map from 19 of 31 sampled frames (1,770 points, 1.199\,px mean reprojection error), generating a cryptographically linked, tamper-evident evidence record.
 Under our adversarial threat model, the three-gate architecture reduces the expected false reward rate from 30\% per window (clip-only baseline) to 0.15\%---a theoretical 200$\times$ reduction whose key assumption ($p_{\mathrm{forge}} = 0.05$) we identify as the primary target for empirical validation.
-We argue that spatial anchoring is a \emph{prerequisite}---not an accuracy improvement---for any construction reward system that must withstand adversarial gaming, and present VINNA as a design pattern and prototype whose central hypothesis remains to be tested in a controlled human study.
+We argue that spatial anchoring is a \emph{prerequisite}---not an accuracy improvement---for any construction reward system that must withstand adversarial gaming, and present VIMA as a design pattern and prototype whose central hypothesis remains to be tested in a controlled human study.
 \end{abstract}
 
 \keywords{egocentric video, construction productivity, verifiable rewards, structure from motion, adversarial gaming, spatial intelligence}
@@ -90,7 +90,7 @@ This failure mode is not hypothetical---it is the construction-domain analog of 
 The critical difference is that in construction, the adversary is a human worker with physical access to the measurement environment, not a software agent in a simulator.
 
 \paragraph{Contributions.}
-VINNA addresses this gap with three contributions:
+VIMA addresses this gap with three contributions:
 \begin{enumerate}[leftmargin=1.4em,itemsep=0.2em]
 \item \textbf{Evidence-anchored reward ledger.} We formalize a multiplicative reward function $R(w) = H(w) \cdot A(w) \cdot S(w) \cdot \mathrm{score}(L(w))$ where $H$ is a human ground-truth gate, $A$ an adversarial review gate, $S$ a COLMAP-derived spatial anchor confidence, and $\mathrm{score}(L(\cdot))$ maps CII activity labels to reward values.
 Every candidate is bound to SHA-256-hashed source frames, registered camera poses, and VLM annotations in a tamper-evident ledger.
@@ -103,7 +103,7 @@ The prototype achieves 61.3\% frame registration (19/31 frames) with 1,770 3D po
 \end{enumerate}
 
 Our central claim is intentionally scoped: spatial anchoring is a \emph{prerequisite} for adversarially robust construction rewards.
-We present VINNA as a design pattern and prototype; the hypothesis that spatial anchoring improves human reviewer accuracy remains to be tested in a controlled study, for which we propose a protocol in Section~\ref{sec:exp2}.
+We present VIMA as a design pattern and prototype; the hypothesis that spatial anchoring improves human reviewer accuracy remains to be tested in a controlled study, for which we propose a protocol in Section~\ref{sec:exp2}.
 
 %%-------------------------------------------------------------------
 \section{Related Work}
@@ -113,29 +113,29 @@ We present VINNA as a design pattern and prototype; the hypothesis that spatial 
 \subsection{Egocentric Video Understanding}
 
 First-person video datasets have matured substantially since Ego4D~\cite{ego4d} catalogued 3,600 hours of daily activity across 74 locations, establishing benchmarks for episodic memory, action anticipation, and hand-object interaction.
-Ego-Exo4D~\cite{grauman2024egoexo4d} extended this paradigm with simultaneous egocentric and exocentric capture of skilled tasks including carpentry, demonstrating that expert commentary and paired views reduce label ambiguity---the multi-witness philosophy that VINNA operationalizes for construction rewards.
+Ego-Exo4D~\cite{grauman2024egoexo4d} extended this paradigm with simultaneous egocentric and exocentric capture of skilled tasks including carpentry, demonstrating that expert commentary and paired views reduce label ambiguity---the multi-witness philosophy that VIMA operationalizes for construction rewards.
 Recent survey work~\cite{plizzari2024outlook} identifies \emph{long-horizon reliability} as the central open problem: models degrade under rapid viewpoint change and hand-object occlusion, the two dominant failure modes on active masonry sites.
-Wei et al.~\cite{wei2024multimodal} show that fusing depth, optical flow, and RGB streams improves egocentric recognition under domain shift, motivating VINNA's layered evidence architecture where motion proxies, VLM semantics, and geometry are treated as \emph{independent} witnesses rather than fused into a single score.
+Wei et al.~\cite{wei2024multimodal} show that fusing depth, optical flow, and RGB streams improves egocentric recognition under domain shift, motivating VIMA's layered evidence architecture where motion proxies, VLM semantics, and geometry are treated as \emph{independent} witnesses rather than fused into a single score.
 
 \subsection{Construction AI Safety and Productivity}
 
 Safety inspection has been the primary lens for AI on construction sites.
 Safe-Construct~\cite{chharia2025safeconstruct} (CVPRW 2025) reframes violation detection as a 3D multi-view engagement task, achieving 7.6\% improvement over prior state-of-the-art by reasoning over spatial worker-object context.
 
-\textbf{VINNA differs from Safe-Construct in task, threat model, camera constraint, and output type.}
+\textbf{VIMA differs from Safe-Construct in task, threat model, camera constraint, and output type.}
 Safe-Construct is a \emph{violation detection} system: it classifies whether a safety code is violated, with no gaming incentive---workers are not rewarded for being flagged unsafe.
-VINNA targets \emph{productivity reward attribution}, where the adversarial threat model is inverted: a financially-motivated worker actively seeks to trigger false-positive productive labels.
-Where Safe-Construct operates on multi-view synchronized camera rigs with trusted operators, VINNA runs on a single egocentric headcam worn by the incentivized actor---a monocular constraint that makes SfM structurally harder than multi-view with known baselines.
+VIMA targets \emph{productivity reward attribution}, where the adversarial threat model is inverted: a financially-motivated worker actively seeks to trigger false-positive productive labels.
+Where Safe-Construct operates on multi-view synchronized camera rigs with trusted operators, VIMA runs on a single egocentric headcam worn by the incentivized actor---a monocular constraint that makes SfM structurally harder than multi-view with known baselines.
 The output is not a classification but a cryptographically linked evidence ledger that serves as the direct input to a reward contract, a complete evidence-to-payout pipeline with no analog in prior construction safety work.
 
 Chen et al.~\cite{chen2025vlm_construction} benchmarked VLMs on 10,000 construction images, finding strong zero-shot performance but noting that object detection and activity understanding remain decoupled.
-VINNA explicitly separates these into semantic anchors and activity proxies, blocking reward issuance until both streams concur under human review.
-Kim et al.~\cite{kim2025optimizing} fine-tune a VLM with RAG for OSHA compliance monitoring; VINNA treats such an external VLM as an optional witness that augments rather than replaces local evidence.
+VIMA explicitly separates these into semantic anchors and activity proxies, blocking reward issuance until both streams concur under human review.
+Kim et al.~\cite{kim2025optimizing} fine-tune a VLM with RAG for OSHA compliance monitoring; VIMA treats such an external VLM as an optional witness that augments rather than replaces local evidence.
 
 Automated construction productivity measurement has a long history predating neural approaches.
 The CII P/C/NC taxonomy builds on classical work-sampling methodology~\cite{cii252}, operationalized here via vision-language model classification rather than human observer sampling.
 Golparvar-Fard et al.~\cite{golparvar2011d4ar} pioneered using 4D augmented reality from time-lapse site photos for progress monitoring---the original ``spatial grounding improves productivity attribution'' work.
-Akhavian and Behzadan~\cite{akhavian2016smartphone} demonstrated smartphone-based construction activity recognition using sensor data and CII taxonomy labels, establishing the closest prior baseline for wearable-sensor CII classification that VINNA extends to video.
+Akhavian and Behzadan~\cite{akhavian2016smartphone} demonstrated smartphone-based construction activity recognition using sensor data and CII taxonomy labels, establishing the closest prior baseline for wearable-sensor CII classification that VIMA extends to video.
 
 \subsection{Verifiable Reward Systems}
 
@@ -143,7 +143,7 @@ DeepSeek-R1~\cite{guo2025deepseekr1} demonstrated that RL from rule-based, binar
 Liu et al.~\cite{liu2025grpo} formalize the dynamics: GRPO's mean-centred loss converges to a fixed point that strictly improves on the reference policy.
 RLVR studies~\cite{rlvr_reasoning2025} show that verifiable binary rewards implicitly encourage correct intermediate steps even when only final answers are supervised.
 
-\textbf{VINNA extends verifiable rewards from symbolic domains (math, code) to physical labor.}
+\textbf{VIMA extends verifiable rewards from symbolic domains (math, code) to physical labor.}
 In math and code, the verifier is an automated checker and gaming is impossible---the answer is correct or not.
 In construction, the verifier is a multi-gate evidence chain including a human, and gaming is the primary threat: the worker controls the physical environment the sensor observes.
 This asymmetry demands a reward architecture where intermediate spatial evidence (not just the terminal label) contributes to verification, and where the reward function is multiplicative rather than additive to prevent partial-credit gaming.
@@ -152,10 +152,10 @@ This asymmetry demands a reward architecture where intermediate spatial evidence
 
 SpatialVLM~\cite{chen2024spatialvlm} trained a VLM on two billion spatial VQA examples, establishing that metric spatial understanding is learnable at scale.
 N3D-VLM~\cite{n3dvlm2024} extends grounding to native 3D point-cloud inputs, enabling region-level anchoring.
-Egocentric multi-view reasoning~\cite{egocentricmultiview2025} shows that VLMs transferring spatial understanding across viewpoints still require explicit geometric grounding---VINNA addresses this by anchoring every candidate window to a COLMAP keyframe and camera pose, making spatial context replayable rather than implicit in model weights.
+Egocentric multi-view reasoning~\cite{egocentricmultiview2025} shows that VLMs transferring spatial understanding across viewpoints still require explicit geometric grounding---VIMA addresses this by anchoring every candidate window to a COLMAP keyframe and camera pose, making spatial context replayable rather than implicit in model weights.
 
 On the attestation side, Hamledari and Fischer~\cite{hamledari2021scan} pioneered combining robotic reality capture with blockchain-enabled smart contracts for automated construction payment.
-Ye et al.~\cite{ye2025scantobim} updated this with scan-to-BIM as the off-chain oracle, demonstrating that the bottleneck is not the payment rail but the trustworthiness of the progress signal---exactly the gap that VINNA's evidence ledger targets.
+Ye et al.~\cite{ye2025scantobim} updated this with scan-to-BIM as the off-chain oracle, demonstrating that the bottleneck is not the payment rail but the trustworthiness of the progress signal---exactly the gap that VIMA's evidence ledger targets.
 
 %%-------------------------------------------------------------------
 \section{Problem Formulation}
@@ -226,14 +226,14 @@ We formalize this as independent gate probabilities in Experiment 3 (Section~\re
 \label{sec:system}
 %%-------------------------------------------------------------------
 
-VINNA comprises five components arranged in a processing pipeline.
+VIMA comprises five components arranged in a processing pipeline.
 All components run locally; no worker video is transmitted to external services.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.96\linewidth]{figures/fig_pipeline.png}
-\Description{Block diagram of the VINNA pipeline showing five sequential components: frame sampling with SHA-256 hashing, COLMAP structure-from-motion reconstruction, Qwen2.5-VL semantic annotation, CII activity classification, and evidence ledger construction, with a reward gate enforcing all five verification conditions.}
-\caption{VINNA system architecture. Five local components process egocentric video into an evidence ledger.
+\Description{Block diagram of the VIMA pipeline showing five sequential components: frame sampling with SHA-256 hashing, COLMAP structure-from-motion reconstruction, Qwen2.5-VL semantic annotation, CII activity classification, and evidence ledger construction, with a reward gate enforcing all five verification conditions.}
+\caption{VIMA system architecture. Five local components process egocentric video into an evidence ledger.
 The reward gate (right) enforces all five verification conditions before any payout is issued.}
 \label{fig:sysarch}
 \end{figure}
@@ -412,7 +412,7 @@ The attacker fabricates clips that fool the VLM with probability $p_{\text{vlm}}
 Expected false rewards: $E_A = 12 \times 0.30 = 3.60$.
 Probability of at least one false reward: $P(\geq 1) = 1 - (1 - 0.30)^{12} = 0.986$.
 
-\textbf{Strategy B (VINNA three-gate, optimistic assumptions).}
+\textbf{Strategy B (VIMA three-gate, optimistic assumptions).}
 The attacker must independently bypass:
 (i)~spatial anchor forgery ($p_{\text{forge}} = 0.05$, requiring 3D geometry consistency across frames),
 (ii)~VLM fooling ($p_{\text{vlm}} = 0.30$),
@@ -420,7 +420,7 @@ The attacker must independently bypass:
 Joint probability: $p_B = 0.05 \times 0.30 \times 0.10 = 1.5 \times 10^{-3}$.
 Expected false rewards: $E_B = 12 \times 0.0015 = 0.018$.
 
-\textbf{Strategy B$'$ (VINNA three-gate, conservative assumptions).}
+\textbf{Strategy B$'$ (VIMA three-gate, conservative assumptions).}
 Using the observed COLMAP registration rate as a proxy: $p_{\text{forge}} = 0.613$, $p_{\text{human}} = 1 - (1 - 0.10)^3 = 0.972$ (majority vote of 3 reviewers with 10\% error), adversarial review $p_A = 0.80$.
 Expected reduction factor: $S \cdot p_H \cdot p_A = 0.613 \times 0.972 \times 0.80 \approx 0.477$, i.e., a 2.1$\times$ reduction.
 
@@ -433,8 +433,8 @@ The 200$\times$ headline requires $p_{\mathrm{forge}} = 0.05$, which is assumed,
 Strategy & $p$/window & $E[\text{false}]$ & $P(\geq 1)$ & Reduction \\
 \midrule
 A: Clip-only          & 0.3000 & 3.60  & 0.986 & --- \\
-B: VINNA (optimistic) & 0.0015 & 0.018 & 0.018 & 200$\times$ \\
-B$'$: VINNA (conserv.)& 0.143  & 1.72  & 0.854 & 2.1$\times$ \\
+B: VIMA (optimistic) & 0.0015 & 0.018 & 0.018 & 200$\times$ \\
+B$'$: VIMA (conserv.)& 0.143  & 1.72  & 0.854 & 2.1$\times$ \\
 \bottomrule
 \end{tabular}
 \label{tab:gaming}
@@ -444,7 +444,7 @@ B$'$: VINNA (conserv.)& 0.143  & 1.72  & 0.854 & 2.1$\times$ \\
 The 200$\times$ reduction depends entirely on $p_{\mathrm{forge}} = 0.05$---the probability that an adversary produces a COLMAP-consistent spatial anchor from deceptive footage.
 This is our least-supported assumption.
 A construction worker standing in front of a textured wall and miming tool use would produce valid SIFT features; we hypothesize that the resulting 3D reconstruction would show inconsistencies (e.g., no tool-surface contact geometry, anomalous camera trajectory) that a trained reviewer would catch, but this has not been tested.
-\textbf{Measuring $p_{\mathrm{forge}}$ empirically, via a deception study with confederate workers, is the highest-priority next step for validating VINNA's threat model.}
+\textbf{Measuring $p_{\mathrm{forge}}$ empirically, via a deception study with confederate workers, is the highest-priority next step for validating VIMA's threat model.}
 
 %%-------------------------------------------------------------------
 \section{Results}
@@ -515,7 +515,7 @@ Zero-label windows would fail semantic anchor checks, providing an additional ga
 
 \subsection{Positioning vs.\ Commercial Systems}
 
-Table~\ref{tab:comparison} positions VINNA against existing construction monitoring approaches.
+Table~\ref{tab:comparison} positions VIMA against existing construction monitoring approaches.
 
 \begin{table}[h]
 \centering
@@ -530,14 +530,14 @@ Manual walk-through   & --- & No  & No  & No & --- \\
 OpenSpace / Buildots  & No  & Partial & No & No & No \\
 Procore time tracking & No  & No & No & Shift-level & No \\
 Safe-Construct~\cite{chharia2025safeconstruct} & No & Yes & No & No & No \\
-\textbf{VINNA (this work)} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{Per-window} & \textbf{Yes} \\
+\textbf{VIMA (this work)} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{Per-window} & \textbf{Yes} \\
 \bottomrule
 \end{tabular}
 \label{tab:comparison}
 \end{table}
 
-VINNA is the only system that combines on-device execution, evidence-anchored reward attribution, and an explicit adversarial threat model.
-This comparison is qualitative; VINNA's quantitative advantage over these systems has not been measured.
+VIMA is the only system that combines on-device execution, evidence-anchored reward attribution, and an explicit adversarial threat model.
+This comparison is qualitative; VIMA's quantitative advantage over these systems has not been measured.
 
 \subsection{What ``Verifiable'' Means (and Does Not)}
 
@@ -546,7 +546,7 @@ We are careful to distinguish two senses of verification:
 \item \textbf{Data integrity:} SHA-256 hashes verify that source frames, annotations, and ledger records have not been tampered with. This is a cryptographic guarantee.
 \item \textbf{Semantic correctness:} Confirming that a ``Productive'' label reflects actual productive work requires the full gate chain (spatial anchor + VLM witness + human review). This is a sociotechnical process, not a cryptographic one.
 \end{itemize}
-VINNA provides infrastructure for both, but only the first is fully automated.
+VIMA provides infrastructure for both, but only the first is fully automated.
 The second requires human participation, which the prototype has not yet implemented.
 
 %%-------------------------------------------------------------------
@@ -594,13 +594,13 @@ Deployment requires explicit informed consent, CCPA/BIPA-compliant data retentio
 \label{sec:conclusion}
 %%-------------------------------------------------------------------
 
-VINNA demonstrates that the bottleneck for AI-driven construction productivity incentives is not classification accuracy---it is evidence architecture.
+VIMA demonstrates that the bottleneck for AI-driven construction productivity incentives is not classification accuracy---it is evidence architecture.
 A P/C/NC classifier that outputs a label without a replayable, tamper-evident evidence record cannot support a credible reward system, because it provides no defense against gaming and no mechanism for contested audits.
 
 Our prototype implements the evidence collection pipeline using commodity open-source tools: COLMAP for spatial grounding, Qwen2.5-VL for semantic annotation, and a JSON-based cryptographic ledger for integrity.
 The multiplicative gate structure ($R = H \cdot A \cdot S \cdot \mathrm{score}(L)$) enforces strict necessary conditions that make end-to-end gaming substantially harder than fooling any single component.
 
-We present VINNA as a design pattern with a working prototype, not a fully validated system.
+We present VIMA as a design pattern with a working prototype, not a fully validated system.
 The central hypothesis---that spatial anchoring makes reward attribution more auditable and resistant to gaming---remains to be tested in a controlled human study.
 What we can state with confidence is the architectural claim: any construction reward system that issues financial incentives without binding those incentives to spatial evidence is a system that can be gamed, and a system that can be gamed should not be deployed.
 

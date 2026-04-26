@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VINNA Experiment D: OSHA Violation Severity Distribution
+VIMA Experiment D: OSHA Violation Severity Distribution
 ========================================================
 Simulates violation detection rates across 30 OSHA Construction Safety rules
 (29 CFR 1926) using the spatial judge ontology. Models detection probability

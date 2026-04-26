@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="0" fill="#080503"/>
+  <path
+    d="M32 6 54.52 19v26L32 58 9.48 45V19Z M32 21.6 41.01 26.8v10.4L32 42.4 22.99 37.2V26.8Z"
+    fill="rgba(242,167,184,0.16)"
+    fill-rule="evenodd"
+  />
+  <path
+    d="M32 6 54.52 19v26L32 58 9.48 45V19Z"
+    fill="none"
+    stroke="#f7ecef"
+    stroke-width="3"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M32 21.6 41.01 26.8v10.4L32 42.4 22.99 37.2V26.8Z"
+    fill="#080503"
+    stroke="#f2a7b8"
+    stroke-width="3"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M32 11.5 49.76 21.75v20.5L32 52.5 14.24 42.25v-20.5Z"
+    fill="none"
+    stroke="#a64d79"
+    stroke-width="1"
+    stroke-linejoin="round"
+    opacity="0.58"
+  />
+</svg>

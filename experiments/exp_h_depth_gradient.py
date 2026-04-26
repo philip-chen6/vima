@@ -313,7 +313,7 @@ def create_figure(results, band_results):
 
     # ── Supertitle ────────────────────────────────────────────────────────
     fig.suptitle(
-        "VINNA Experiment H: Depth Gradient Analysis from Egocentric Construction Video\n"
+        "VIMA Experiment H: Depth Gradient Analysis from Egocentric Construction Video\n"
         f"Sobel gradient depth proxy  |  {len(results)} frames  |  "
         f"Mean complexity: {mean_grads.mean():.1f}  |  Entropy range: [{entropies.min():.2f}, {entropies.max():.2f}]",
         fontsize=13, fontweight="bold", color=YELLOW, y=0.97
@@ -330,7 +330,7 @@ def create_figure(results, band_results):
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("VINNA Experiment H: Depth Gradient Analysis")
+    print("VIMA Experiment H: Depth Gradient Analysis")
     print("=" * 70)
 
     results, band_results = compute_gradient_metrics()

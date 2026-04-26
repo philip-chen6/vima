@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VINNA Experiment A: CII Classification Confusion Matrix
+VIMA Experiment A: CII Classification Confusion Matrix
 ========================================================
 Compares two independent VLM judge runs (Claude "fixed" vs Gemini-proxy "original")
 on the same construction video frames. Builds a 3x3 confusion matrix (P/C/NC) and
@@ -119,7 +119,7 @@ p_e = sum((cm[i, :].sum() / n) * (cm[:, i].sum() / n) for i in range(3))
 kappa = (p_o - p_e) / (1 - p_e) if p_e < 1 else 0.0
 
 # ── figure ───────────────────────────────────────────────────────────────────
-cmap = LinearSegmentedColormap.from_list("vinna", ["#1a1a2e", "#FFD700", "#ff4444"], N=256)
+cmap = LinearSegmentedColormap.from_list("vima", ["#1a1a2e", "#FFD700", "#ff4444"], N=256)
 
 fig, (ax_main, ax_bar) = plt.subplots(
     1, 2, figsize=(14, 6), width_ratios=[1.4, 1],

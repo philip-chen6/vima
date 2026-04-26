@@ -1,4 +1,4 @@
-# VINNA — Ironsite Spatial Safety Intelligence
+# vima — Ironsite Spatial Safety Intelligence
 
 **HackTech 2026 @ Caltech** | Ironsite Prize ($17,500) + Workshop Paper Track
 

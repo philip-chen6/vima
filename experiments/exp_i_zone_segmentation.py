@@ -327,7 +327,7 @@ def create_figure(edge_act, motion_act, combined, n_frames):
     tr, tc = top_zone // GRID_N, top_zone % GRID_N
 
     fig.suptitle(
-        "VINNA Experiment I: Spatial Zone Segmentation from Egocentric Construction Video\n"
+        "VIMA Experiment I: Spatial Zone Segmentation from Egocentric Construction Video\n"
         f"4x4 grid activity analysis  |  {n_frames} frames  |  "
         f"Dominant zone: ({tr},{tc})  |  Activity range: [{mean_combined.min():.3f}, {mean_combined.max():.3f}]",
         fontsize=13, fontweight="bold", color=YELLOW, y=0.97
@@ -344,7 +344,7 @@ def create_figure(edge_act, motion_act, combined, n_frames):
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("VINNA Experiment I: Spatial Zone Segmentation")
+    print("VIMA Experiment I: Spatial Zone Segmentation")
     print("=" * 70)
 
     edge_act, motion_act, combined, n_frames = compute_zone_activity()

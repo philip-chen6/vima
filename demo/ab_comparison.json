@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "tool": "VINNA A/B Evaluation",
+    "tool": "VIMA A/B Evaluation",
     "model": "claude-sonnet-4-6",
     "questions_tested": 5,
     "timestamp": "2026-04-25T02:41:22Z"

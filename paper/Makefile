@@ -1,4 +1,4 @@
-# VINNA — HackTech 2025
+# VIMA — HackTech 2025
 # Makefile for compiling the LaTeX paper
 
 PAPER     = main
