@@ -7,6 +7,15 @@
 \usepackage{hyperref}
 \usepackage{xcolor}
 
+\newcommand{\widefigure}[3]{%
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{#1}
+\caption{#2}
+\label{#3}
+\end{figure*}}
+
+
 \hypersetup{
   colorlinks=true,
   linkcolor=black,
@@ -14,15 +23,15 @@
   urlcolor=blue
 }
 
-\title{\vspace{-1.0em}\textbf{VIMA: RGB-Only Spatial Evidence Memory for Construction Video}}
-\author{Philip Chen \quad Hacktech 2026 Ironsite Spatial Intelligence Track}
+\title{\vspace{-1.0em}\textbf{VIMA: Video Intelligence for Multimodal Annotation}\\[-0.15em]{\large RGB-Only Spatial Evidence for Construction Video}}
+\author{Philip Chen \quad Joshua Lin \quad Stephen Hung \quad Lucas He\\Hacktech 2026 Spatial Intelligence Track}
 \date{\vspace{-0.8em}}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Egocentric construction video is a poor substrate for direct visual-language-model (VLM) judgment. In our pilot data, frontier VLMs produced fluent but unsafe spatial claims: hallucinating site objects, mis-estimating scaffold distance, and treating visual activity as evidence without binding it to a frame, object, or location. We present VIMA, an RGB-only spatial evidence memory for hardhat footage. VIMA decomposes video understanding into specialist perception stages---object boxes, SAM masks, monocular depth, depth-delta frame filtering, 3D reconstruction, and episodic retrieval---before any VLM writes an answer. The core contribution is a depth-delta pre-filter: consecutive frames whose normalized depth disagreement exceeds $\delta=0.25$ are treated as over-motion pairs and withheld from reconstruction. In hackathon pilot runs, this filter removed 57\% of wild construction frame pairs, improved MASt3R translational pose error by 59\% on TUM \texttt{freiburg1\_desk}, reduced Ironsite masonry translation norm by 70\% (0.370 to 0.111), and produced a COLMAP reconstruction with 1,770 points, 19/31 registered images, and 1.199px reprojection error. VIMA's final artifact is not a caption but an auditable object-event memory: episode ids, evidence frames, tracks, depth facts, and retrieved answers. This reframes construction AI from ``ask a VLM what happened'' to ``verify spatial claims against recoverable evidence.''
+Egocentric construction video is a poor substrate for direct visual-language-model (VLM) judgment. In our pilot data, frontier VLMs produced fluent but unsafe spatial claims: hallucinating site objects, mis-estimating scaffold distance, and treating visual activity as evidence without binding it to a frame, object, or location. We present VIMA, an RGB-only spatial evidence memory for hardhat footage. VIMA decomposes video understanding into specialist perception stages---object boxes, SAM masks, monocular depth, depth-delta frame filtering, 3D reconstruction, and episodic retrieval---before any VLM writes an answer. The core contribution is a depth-delta pre-filter: consecutive frames whose normalized depth disagreement exceeds $\delta=0.25$ are treated as over-motion pairs and withheld from reconstruction. In hackathon pilot runs, this filter removed 57\% of wild construction frame pairs, improved MASt3R translational pose error by 59\% on TUM \texttt{freiburg1\_desk}, reduced masonry-site translation norm by 70\% (0.370 to 0.111), and produced a COLMAP reconstruction with 1,770 points, 19/31 registered images, and 1.199px reprojection error. VIMA's final artifact is not a caption but an auditable object-event memory: episode ids, evidence frames, tracks, depth facts, and retrieved answers. This reframes construction AI from ``ask a VLM what happened'' to ``verify spatial claims against recoverable evidence.''
 \end{abstract}
 
 \section{Introduction}
@@ -105,7 +114,7 @@ Each episode stores start/end time, evidence frames, involved tracks, spatial re
   \includegraphics[width=\linewidth]{figures/depth_frame.jpg}\\[-0.2em]
   \scriptsize depth
 \end{minipage}
-\caption{VIMA evidence views on an Ironsite masonry clip. The dashboard exposes raw, mask, and depth-conditioned views so an internal reviewer can inspect the claim path.}
+\caption{VIMA evidence views on a masonry-site clip. The dashboard exposes raw, mask, and depth-conditioned views so an internal reviewer can inspect the claim path.}
 \label{fig:evidence}
 \end{figure}
 
@@ -121,15 +130,15 @@ We report preliminary hackathon results, not a full benchmark. The important pat
 \midrule
 Depth-delta filter & Dropped pairs & 57\% \\
 MASt3R on TUM & RPE$_t$ reduction & 59\% \\
-Ironsite masonry & Translation norm & 0.370 $\rightarrow$ 0.111 \\
-Ironsite masonry & Translation improvement & 70\% \\
-Ironsite masonry & Confidence change & +32\% \\
-COLMAP Ironsite & Registered images & 19/31 \\
-COLMAP Ironsite & Sparse points & 1,770 \\
-COLMAP Ironsite & Reprojection error & 1.199px \\
+masonry-site & Translation norm & 0.370 $\rightarrow$ 0.111 \\
+masonry-site & Translation improvement & 70\% \\
+masonry-site & Confidence change & +32\% \\
+COLMAP site run & Registered images & 19/31 \\
+COLMAP site run & Sparse points & 1,770 \\
+COLMAP site run & Reprojection error & 1.199px \\
 \bottomrule
 \end{tabular}
-\caption{Preliminary geometry results from the hackathon pipeline. The TUM result used \texttt{freiburg1\_desk}; Ironsite results used a masonry hardhat clip.}
+\caption{Preliminary geometry results from the hackathon pipeline. The TUM result used \texttt{freiburg1\_desk}; site results used a masonry hardhat clip.}
 \label{tab:geometry}
 \end{table}
 
@@ -168,5 +177,68 @@ VIMA's central claim is that construction VLM systems need a spatial evidence la
 
 \bibliographystyle{plain}
 \bibliography{references}
+
+
+\clearpage
+\onecolumn
+\appendix
+\section{Appendix: Visual Evidence Pack}
+The following figures expand the evidence path used in the demo. They are included to make the report inspectable: raw frames, depth products, frame-selection diagnostics, reconstruction confidence, risk surfaces, point-cloud views, and dashboard screenshots.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/rgb_depth_pair.jpg}
+\caption{RGB frame beside its depth-conditioned view. This is the first sanity check for the RGB-only geometry claim: depth is not treated as metric truth, but it exposes relative spatial structure in the scene.}
+\label{fig:appendix-rgb-depth}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/depth_delta_selection.png}
+\caption{Depth-delta frame selection. Green bars remain below the high-motion threshold; gray bars are rejected before reconstruction. The filter removes unstable pairs caused by fast head motion, blur, or abrupt viewpoint changes.}
+\label{fig:appendix-depth-delta}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/dunemast3r_comparison.png}
+\caption{Selected versus rejected frame-pair comparison. In the pilot run, depth-delta selection raised mean confidence and reduced translation norm relative to rejected baseline pairs.}
+\label{fig:appendix-master-bars}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/reconstruction_panel.png}
+\caption{Reconstruction diagnostic panel: source RGB frames, estimated depth maps, and confidence maps for a selected pair. This figure shows the intermediate products behind the scalar geometry metrics.}
+\label{fig:appendix-reconstruction}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/cii_risk_surface.png}
+\caption{Temporal activity/risk surface over frame index and spatial zone. This was used as an explanatory view for how object-event memory can become zone-aware rather than only timestamp-aware.}
+\label{fig:appendix-risk-surface}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/point_cloud_source.png}
+\caption{Point-cloud style visualization paired with its source frame. The point cloud is an interface artifact for the spatial-memory story: every spatial claim should remain connected to a recoverable video frame.}
+\label{fig:appendix-point-cloud}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/demo_dashboard.png}
+\caption{Internal evidence dashboard. The interface exposes raw, mask, and depth views alongside the memory answer so reviewers can inspect why a claim was retrieved.}
+\label{fig:appendix-dashboard}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/cold_path_dashboard.png}
+\caption{Cold-path prototype screenshot showing the broader proof-chain story: sampled frames become frame-level records, records become spatial claims, and claims become auditable review artifacts.}
+\label{fig:appendix-cold-path}
+\end{figure}
 
 \end{document}

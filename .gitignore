@@ -11,3 +11,4 @@ tools/yolodex/output/
 *.log
 *.out
 missfont.log
+.DS_Store
