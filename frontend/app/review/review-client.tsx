@@ -100,14 +100,41 @@ function closestFrame(ts: number, manifest: FrameManifest[]): FrameManifest | nu
   );
 }
 
-function bracketFrames(ts: number, manifest: FrameManifest[]) {
-  if (manifest.length < 2) return null;
-  for (let i = 0; i < manifest.length - 1; i += 1) {
-    if (manifest[i].timestamp_s <= ts && ts <= manifest[i + 1].timestamp_s) {
-      return { before: manifest[i], after: manifest[i + 1] };
+function frameNumber(filename: string | undefined): number | null {
+  const match = filename?.match(/frame_(\d+)/);
+  if (!match) return null;
+  const parsed = Number(match[1]);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function maxEpisodeFrame(episodes: Episode[]) {
+  return episodes.reduce((maxFrame, episode) => {
+    for (const frame of episode.frames) {
+      const parsed = frameNumber(frame);
+      if (parsed !== null) maxFrame = Math.max(maxFrame, parsed);
     }
-  }
-  return { before: manifest[manifest.length - 2], after: manifest[manifest.length - 1] };
+    return maxFrame;
+  }, 0);
+}
+
+function frameForEpisode(episode: Episode, manifest: FrameManifest[], maxSourceFrame: number): FrameManifest | null {
+  if (!manifest.length) return null;
+  const sourceFrame = frameNumber(episode.frames[0]);
+  if (sourceFrame === null || maxSourceFrame <= 1) return closestFrame(episode.ts_start, manifest);
+
+  const normalized = Math.max(0, Math.min(1, (sourceFrame - 1) / (maxSourceFrame - 1)));
+  const index = Math.round(normalized * (manifest.length - 1));
+  return manifest[index] ?? closestFrame(episode.ts_start, manifest);
+}
+
+function bracketFramesAround(frame: FrameManifest | null, manifest: FrameManifest[]) {
+  if (!frame || manifest.length < 2) return null;
+  const index = manifest.findIndex((candidate) => candidate.filename === frame.filename);
+  if (index < 0) return null;
+  return {
+    before: manifest[Math.max(0, index - 1)],
+    after: manifest[Math.min(manifest.length - 1, index + 1)],
+  };
 }
 
 function statusColor(status: ReviewStatus) {
@@ -429,12 +456,14 @@ export default function ReviewClient({
     () => episodes.find((episode) => episode.episode === activeEpisodeId) ?? episodes[0] ?? null,
     [activeEpisodeId, episodes],
   );
-  const activeFrame = activeEpisode ? closestFrame(activeEpisode.ts_start, manifest) : null;
+  const maxSourceFrame = useMemo(() => maxEpisodeFrame(episodes), [episodes]);
+  const activeFrame = activeEpisode ? frameForEpisode(activeEpisode, manifest, maxSourceFrame) : null;
   const activeInference = useMemo(
     () => inferenceManifest.find((entry) => entry.filename === activeFrame?.filename) ?? null,
     [activeFrame?.filename, inferenceManifest],
   );
-  const bracket = activeEpisode ? bracketFrames(activeEpisode.ts_start, manifest) : null;
+  const bracket = bracketFramesAround(activeFrame, manifest);
+  const sourceFrameLabel = activeEpisode?.frames[0]?.replace(/\.jpg$/i, "") ?? null;
 
   const counts = useMemo(() => {
     const base = { pending: 0, accepted: 0, rejected: 0, skipped: 0 };
@@ -749,7 +778,7 @@ export default function ReviewClient({
                   letterSpacing: "0.05em",
                 }}
               >
-                source frame · {activeFrame?.timestamp_s.toFixed(1) ?? "--"}s
+                source frame · {sourceFrameLabel ? `${sourceFrameLabel} → ` : ""}{activeFrame?.timestamp_s.toFixed(1) ?? "--"}s
               </div>
             </div>
 

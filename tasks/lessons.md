@@ -1,5 +1,6 @@
 # lessons
 
+- review pages that display episode evidence should use the episode's own frame ids as the primary visual anchor. timestamp-only matching can collapse several adjacent 0.5s episodes onto the same exported 2s construction frame and make the evidence look fake.
 - review/eval surfaces need visible processing artifacts on the evidence itself, but never fake them. use real depth/mask/bbox artifacts when they exist, and explicitly say unavailable when they do not.
 - for mintlify docs, do not apply the vima lowercase-fragment rule to page titles, card titles, table headers, or body prose. keep the `v i m a.` wordmark and tiny nav labels lowercase if intentional, but docs should read professionally with normal title/sentence case.
 - when the user asks for svg/tab treatment in a sidebar, treat "tabs" literally: enhance the navigation items with per-tab svg icons and labels, not the destination section headers.
