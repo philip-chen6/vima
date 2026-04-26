@@ -57,6 +57,18 @@ python3 demo/mask_track_memory.py \
 This writes persistent track IDs, prompt masks, relation events, and a local
 mask-track preview under `tools/yolodex/runs/vinna-hardhat/`.
 
+Compile the final object-event episodic memory:
+
+```bash
+python3 demo/episodic_memory.py \
+  --input demo/depth_track_memory.json \
+  --out demo/episodic_memory.json \
+  --query "worker laying blocks near wall"
+```
+
+This emits compact episodes with time ranges, evidence frames, object tracks,
+depth facts, and retrieval text for downstream VLM synthesis.
+
 ## API
 
 - `GET /health` — status check

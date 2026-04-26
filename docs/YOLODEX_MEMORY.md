@@ -41,6 +41,7 @@ Back at the repo root:
 python3 demo/yolodex_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/object_event_memory.json --fps 0.1
 python3 demo/mask_track_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/mask_track_memory.json --fps 0.1
 python3 demo/depth_memory.py --input demo/mask_track_memory.json --out demo/depth_track_memory.json --backend auto
+python3 demo/episodic_memory.py --input demo/depth_track_memory.json --out demo/episodic_memory.json --query "worker laying blocks near wall"
 ```
 
 ## Output
@@ -55,6 +56,7 @@ python3 demo/depth_memory.py --input demo/mask_track_memory.json --out demo/dept
 - `tools/yolodex/runs/vinna-hardhat/depth/*.png`: per-frame relative depth maps
 - `tools/yolodex/runs/vinna-hardhat/depth_preview/depth_tracks.mp4`: depth QA
 - `demo/depth_track_memory.json`: mask-aware object depth bands and per-frame ordering
+- `demo/episodic_memory.json`: compact object-event episodes for retrieval / VLM context
 
 ## Construction Classes
 
@@ -101,3 +103,18 @@ Depth Anything is not metric depth. It produces `relative_closeness` where
 higher means closer to the camera. The overlay uses quantile-ranked
 `near` / `mid` / `far` bands per frame so the demo shows relative spatial order,
 while `absolute_depth_band` preserves fixed-threshold scores for audit.
+
+## Episodic Memory
+
+`demo/episodic_memory.py` compiles frame-level detections into event episodes:
+
+- `masonry_work_candidate`
+- `safety_edge_context`
+- `scaffold_zone_visible`
+- `material_staging_visible`
+- `foreground_worker_present`
+
+Each episode stores start/end time, evidence frames, involved object tracks,
+relations, depth facts, confidence, and `query_text`. The VLM should retrieve
+these episodes first, then answer from their cited evidence instead of watching
+the whole raw clip.

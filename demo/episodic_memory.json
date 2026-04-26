@@ -1,0 +1,591 @@
+{
+  "metadata": {
+    "tool": "VINNA object-event episodic memory",
+    "input": "demo/depth_track_memory.json",
+    "source_depth_backend": [
+      "depth_anything_hf"
+    ],
+    "source_mask_preview": "runs/vinna-hardhat/depth_preview/depth_tracks.mp4",
+    "frames": 10,
+    "frame_events": 35,
+    "episodes": 10,
+    "max_gap_s": 15.0
+  },
+  "summary": {
+    "event_counts": {
+      "masonry_work_candidate": 2,
+      "safety_edge_context": 2,
+      "scaffold_zone_visible": 2,
+      "foreground_worker_present": 2,
+      "material_staging_visible": 2
+    },
+    "episode_types": [
+      "foreground_worker_present",
+      "masonry_work_candidate",
+      "material_staging_visible",
+      "safety_edge_context",
+      "scaffold_zone_visible"
+    ]
+  },
+  "episodes": [
+    {
+      "episode_id": "episode_001",
+      "event_type": "masonry_work_candidate",
+      "time_start_s": 0.0,
+      "time_end_s": 10.0,
+      "duration_s": 10.0,
+      "frames": [
+        "frame_000001.jpg",
+        "frame_000002.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000001.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000002.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "concrete_block_wall_01",
+        "worker_01",
+        "worker_02"
+      ],
+      "labels": [
+        "concrete block wall",
+        "worker"
+      ],
+      "relations": [
+        "worker_01_near_concrete_block_wall_01",
+        "worker_02_near_concrete_block_wall_01"
+      ],
+      "confidence": 0.875,
+      "observation": "Worker and concrete block wall are co-present, with proximity evidence where available.",
+      "spatial_facts": [
+        "scaffold_01 (scaffold) is near depth rank 1",
+        "concrete_block_wall_01 (concrete block wall) is near depth rank 2",
+        "scaffold_02 (scaffold) is mid depth rank 3",
+        "concrete_block_wall_01 concrete block wall depth=near score=0.5753",
+        "worker_01 worker depth=mid score=0.2209",
+        "worker_02 (worker) is near depth rank 1",
+        "material_stack_01 (material stack) is mid depth rank 3",
+        "concrete_block_wall_01 concrete block wall depth=near score=0.6881",
+        "worker_01 worker depth=mid score=0.1563",
+        "worker_02 worker depth=near score=0.7608"
+      ],
+      "query_text": "masonry_work_candidate concrete block wall worker concrete_block_wall_01 worker_01 worker_02 worker_01_near_concrete_block_wall_01 worker_01_near_concrete_block_wall_01 worker_02_near_concrete_block_wall_01 Worker and concrete block wall are co-present, with proximity evidence where available."
+    },
+    {
+      "episode_id": "episode_002",
+      "event_type": "safety_edge_context",
+      "time_start_s": 0.0,
+      "time_end_s": 60.0,
+      "duration_s": 60.0,
+      "frames": [
+        "frame_000001.jpg",
+        "frame_000002.jpg",
+        "frame_000003.jpg",
+        "frame_000004.jpg",
+        "frame_000005.jpg",
+        "frame_000006.jpg",
+        "frame_000007.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000001.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000002.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000003.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000004.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000005.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "guardrail_01",
+        "guardrail_02",
+        "guardrail_03",
+        "guardrail_04",
+        "open_edge_01",
+        "worker_01",
+        "worker_02",
+        "worker_03",
+        "worker_04",
+        "worker_05"
+      ],
+      "labels": [
+        "guardrail",
+        "open edge",
+        "worker"
+      ],
+      "relations": [
+        "worker_01_edge_context_guardrail_01",
+        "worker_03_edge_context_guardrail_02",
+        "worker_03_edge_context_guardrail_03",
+        "worker_03_edge_context_open_edge_01",
+        "worker_04_edge_context_open_edge_01",
+        "worker_05_edge_context_guardrail_04"
+      ],
+      "confidence": 0.849,
+      "observation": "Guardrail or open-edge context is visible near worker/site activity.",
+      "spatial_facts": [
+        "scaffold_01 (scaffold) is near depth rank 1",
+        "concrete_block_wall_01 (concrete block wall) is near depth rank 2",
+        "scaffold_02 (scaffold) is mid depth rank 3",
+        "guardrail_01 guardrail depth=far score=0.1546",
+        "worker_01 worker depth=mid score=0.2209",
+        "worker_02 (worker) is near depth rank 1",
+        "material_stack_01 (material stack) is mid depth rank 3",
+        "guardrail_01 guardrail depth=far score=0.0833",
+        "worker_01 worker depth=mid score=0.1563",
+        "scaffold_03 (scaffold) is near depth rank 2",
+        "material_stack_02 (material stack) is mid depth rank 3",
+        "guardrail_02 guardrail depth=mid score=0.2372"
+      ],
+      "query_text": "safety_edge_context guardrail open edge worker guardrail_01 guardrail_02 guardrail_03 guardrail_04 open_edge_01 worker_01 worker_02 worker_03 worker_04 worker_05 worker_01_edge_context_guardrail_01 worker_01_edge_context_guardrail_01 worker_03_edge_context_guardrail_02 worker_03_edge_context_guardrail_03 worker_03_edge_context_open_edge_01 worker_04_edge_context_open_edge_01 worker_05_edge_context_guardrail_04 Guardrail or open-edge context is visible near worker/site activity."
+    },
+    {
+      "episode_id": "episode_003",
+      "event_type": "scaffold_zone_visible",
+      "time_start_s": 0.0,
+      "time_end_s": 30.0,
+      "duration_s": 30.0,
+      "frames": [
+        "frame_000001.jpg",
+        "frame_000002.jpg",
+        "frame_000003.jpg",
+        "frame_000004.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000001.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000002.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000003.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000004.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "scaffold_01",
+        "scaffold_02",
+        "scaffold_03"
+      ],
+      "labels": [
+        "scaffold"
+      ],
+      "relations": [],
+      "confidence": 0.785,
+      "observation": "Scaffold structure is visible and anchors the spatial zone.",
+      "spatial_facts": [
+        "scaffold_01 (scaffold) is near depth rank 1",
+        "concrete_block_wall_01 (concrete block wall) is near depth rank 2",
+        "scaffold_02 (scaffold) is mid depth rank 3",
+        "scaffold_01 scaffold depth=near score=0.5949",
+        "scaffold_02 scaffold depth=mid score=0.3937",
+        "worker_02 (worker) is near depth rank 1",
+        "material_stack_01 (material stack) is mid depth rank 3",
+        "scaffold_02 scaffold depth=far score=0.0824",
+        "scaffold_03 (scaffold) is near depth rank 2",
+        "material_stack_02 (material stack) is mid depth rank 3",
+        "scaffold_03 scaffold depth=near score=0.3884",
+        "scaffold_03 (scaffold) is near depth rank 1"
+      ],
+      "query_text": "scaffold_zone_visible scaffold scaffold_01 scaffold_02 scaffold_03 Scaffold structure is visible and anchors the spatial zone."
+    },
+    {
+      "episode_id": "episode_004",
+      "event_type": "foreground_worker_present",
+      "time_start_s": 10.0,
+      "time_end_s": 50.0,
+      "duration_s": 40.0,
+      "frames": [
+        "frame_000002.jpg",
+        "frame_000003.jpg",
+        "frame_000004.jpg",
+        "frame_000005.jpg",
+        "frame_000006.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000002.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000003.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000004.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000005.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000006.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "worker_02",
+        "worker_03",
+        "worker_04"
+      ],
+      "labels": [
+        "worker"
+      ],
+      "relations": [],
+      "confidence": 0.76,
+      "observation": "A worker is among the closest tracked objects in the egocentric view.",
+      "spatial_facts": [
+        "worker_02 (worker) is near depth rank 1",
+        "concrete_block_wall_01 (concrete block wall) is near depth rank 2",
+        "material_stack_01 (material stack) is mid depth rank 3",
+        "worker_02 worker depth=near score=0.7608",
+        "scaffold_03 (scaffold) is near depth rank 2",
+        "material_stack_02 (material stack) is mid depth rank 3",
+        "worker_02 worker depth=near score=0.4373",
+        "scaffold_03 (scaffold) is near depth rank 1",
+        "worker_03 (worker) is near depth rank 2",
+        "material_stack_03 (material stack) is mid depth rank 3",
+        "worker_03 worker depth=near score=0.6377",
+        "worker_03 (worker) is near depth rank 1"
+      ],
+      "query_text": "foreground_worker_present worker worker_02 worker_03 worker_04 A worker is among the closest tracked objects in the egocentric view."
+    },
+    {
+      "episode_id": "episode_005",
+      "event_type": "material_staging_visible",
+      "time_start_s": 10.0,
+      "time_end_s": 30.0,
+      "duration_s": 20.0,
+      "frames": [
+        "frame_000002.jpg",
+        "frame_000003.jpg",
+        "frame_000004.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000002.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000003.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000004.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "material_stack_01",
+        "material_stack_02",
+        "material_stack_03"
+      ],
+      "labels": [
+        "material stack"
+      ],
+      "relations": [],
+      "confidence": 0.71,
+      "observation": "Material stack is visible and can anchor staging/storage moments.",
+      "spatial_facts": [
+        "worker_02 (worker) is near depth rank 1",
+        "concrete_block_wall_01 (concrete block wall) is near depth rank 2",
+        "material_stack_01 (material stack) is mid depth rank 3",
+        "material_stack_01 material stack depth=mid score=0.3601",
+        "scaffold_03 (scaffold) is near depth rank 2",
+        "material_stack_02 (material stack) is mid depth rank 3",
+        "material_stack_02 material stack depth=mid score=0.3378",
+        "scaffold_03 (scaffold) is near depth rank 1",
+        "worker_03 (worker) is near depth rank 2",
+        "material_stack_03 (material stack) is mid depth rank 3",
+        "material_stack_03 material stack depth=mid score=0.3265"
+      ],
+      "query_text": "material_staging_visible material stack material_stack_01 material_stack_02 material_stack_03 Material stack is visible and can anchor staging/storage moments."
+    },
+    {
+      "episode_id": "episode_006",
+      "event_type": "material_staging_visible",
+      "time_start_s": 50.0,
+      "time_end_s": 70.0,
+      "duration_s": 20.0,
+      "frames": [
+        "frame_000006.jpg",
+        "frame_000007.jpg",
+        "frame_000008.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000006.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000007.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000008.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "material_stack_04",
+        "material_stack_05",
+        "material_stack_06"
+      ],
+      "labels": [
+        "material stack"
+      ],
+      "relations": [],
+      "confidence": 0.71,
+      "observation": "Material stack is visible and can anchor staging/storage moments.",
+      "spatial_facts": [
+        "worker_04 (worker) is near depth rank 1",
+        "open_edge_01 (open edge) is mid depth rank 2",
+        "material_stack_04 (material stack) is far depth rank 3",
+        "material_stack_04 material stack depth=far score=0.1172",
+        "scaffold_04 (scaffold) is near depth rank 1",
+        "material_stack_05 (material stack) is near depth rank 2",
+        "worker_05 (worker) is mid depth rank 3",
+        "material_stack_05 material stack depth=near score=0.4137",
+        "concrete_block_wall_02 (concrete block wall) is near depth rank 1",
+        "material_stack_06 (material stack) is near depth rank 2",
+        "scaffold_05 (scaffold) is mid depth rank 3",
+        "material_stack_06 material stack depth=near score=0.4215"
+      ],
+      "query_text": "material_staging_visible material stack material_stack_04 material_stack_05 material_stack_06 Material stack is visible and can anchor staging/storage moments."
+    },
+    {
+      "episode_id": "episode_007",
+      "event_type": "masonry_work_candidate",
+      "time_start_s": 60.0,
+      "time_end_s": 90.0,
+      "duration_s": 30.0,
+      "frames": [
+        "frame_000007.jpg",
+        "frame_000008.jpg",
+        "frame_000009.jpg",
+        "frame_000010.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000007.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000008.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000009.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000010.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "concrete_block_wall_02",
+        "worker_05",
+        "worker_06",
+        "worker_07",
+        "worker_08",
+        "worker_09"
+      ],
+      "labels": [
+        "concrete block wall",
+        "worker"
+      ],
+      "relations": [
+        "worker_06_near_concrete_block_wall_02",
+        "worker_07_near_concrete_block_wall_02",
+        "worker_08_near_concrete_block_wall_02",
+        "worker_09_near_concrete_block_wall_02"
+      ],
+      "confidence": 0.85,
+      "observation": "Worker and concrete block wall are co-present, with proximity evidence where available.",
+      "spatial_facts": [
+        "scaffold_04 (scaffold) is near depth rank 1",
+        "material_stack_05 (material stack) is near depth rank 2",
+        "worker_05 (worker) is mid depth rank 3",
+        "concrete_block_wall_02 concrete block wall depth=mid score=0.3957",
+        "worker_05 worker depth=mid score=0.4092",
+        "concrete_block_wall_02 (concrete block wall) is near depth rank 1",
+        "material_stack_06 (material stack) is near depth rank 2",
+        "scaffold_05 (scaffold) is mid depth rank 3",
+        "concrete_block_wall_02 concrete block wall depth=near score=0.4595",
+        "worker_06 worker depth=mid score=0.35",
+        "scaffold_05 (scaffold) is near depth rank 2",
+        "scaffold_06 (scaffold) is mid depth rank 3"
+      ],
+      "query_text": "masonry_work_candidate concrete block wall worker concrete_block_wall_02 worker_05 worker_06 worker_07 worker_08 worker_09 worker_06_near_concrete_block_wall_02 worker_07_near_concrete_block_wall_02 worker_08_near_concrete_block_wall_02 worker_09_near_concrete_block_wall_02 Worker and concrete block wall are co-present, with proximity evidence where available."
+    },
+    {
+      "episode_id": "episode_008",
+      "event_type": "scaffold_zone_visible",
+      "time_start_s": 60.0,
+      "time_end_s": 90.0,
+      "duration_s": 30.0,
+      "frames": [
+        "frame_000007.jpg",
+        "frame_000008.jpg",
+        "frame_000009.jpg",
+        "frame_000010.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000007.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000008.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000009.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000010.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "scaffold_04",
+        "scaffold_05",
+        "scaffold_06"
+      ],
+      "labels": [
+        "scaffold"
+      ],
+      "relations": [],
+      "confidence": 0.785,
+      "observation": "Scaffold structure is visible and anchors the spatial zone.",
+      "spatial_facts": [
+        "scaffold_04 (scaffold) is near depth rank 1",
+        "material_stack_05 (material stack) is near depth rank 2",
+        "worker_05 (worker) is mid depth rank 3",
+        "scaffold_04 scaffold depth=near score=0.4245",
+        "concrete_block_wall_02 (concrete block wall) is near depth rank 1",
+        "material_stack_06 (material stack) is near depth rank 2",
+        "scaffold_05 (scaffold) is mid depth rank 3",
+        "scaffold_05 scaffold depth=mid score=0.3541",
+        "scaffold_05 (scaffold) is near depth rank 2",
+        "scaffold_06 (scaffold) is mid depth rank 3",
+        "scaffold_05 scaffold depth=near score=0.4886",
+        "scaffold_06 scaffold depth=mid score=0.4085"
+      ],
+      "query_text": "scaffold_zone_visible scaffold scaffold_04 scaffold_05 scaffold_06 Scaffold structure is visible and anchors the spatial zone."
+    },
+    {
+      "episode_id": "episode_009",
+      "event_type": "safety_edge_context",
+      "time_start_s": 80.0,
+      "time_end_s": 90.0,
+      "duration_s": 10.0,
+      "frames": [
+        "frame_000009.jpg",
+        "frame_000010.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000009.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000010.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "guardrail_05",
+        "guardrail_06",
+        "worker_07",
+        "worker_08",
+        "worker_09"
+      ],
+      "labels": [
+        "guardrail",
+        "worker"
+      ],
+      "relations": [
+        "worker_07_edge_context_guardrail_05",
+        "worker_08_edge_context_guardrail_06",
+        "worker_09_edge_context_guardrail_06"
+      ],
+      "confidence": 0.815,
+      "observation": "Guardrail or open-edge context is visible near worker/site activity.",
+      "spatial_facts": [
+        "concrete_block_wall_02 (concrete block wall) is near depth rank 1",
+        "scaffold_05 (scaffold) is near depth rank 2",
+        "scaffold_06 (scaffold) is mid depth rank 3",
+        "guardrail_05 guardrail depth=far score=0.1035",
+        "worker_07 worker depth=mid score=0.2691",
+        "worker_08 (worker) is near depth rank 1",
+        "concrete_block_wall_02 (concrete block wall) is near depth rank 2",
+        "scaffold_05 (scaffold) is mid depth rank 3",
+        "guardrail_06 guardrail depth=far score=0.21",
+        "worker_08 worker depth=near score=0.6702",
+        "worker_09 worker depth=far score=0.2086"
+      ],
+      "query_text": "safety_edge_context guardrail worker guardrail_05 guardrail_06 worker_07 worker_08 worker_09 worker_07_edge_context_guardrail_05 worker_08_edge_context_guardrail_06 worker_09_edge_context_guardrail_06 Guardrail or open-edge context is visible near worker/site activity."
+    },
+    {
+      "episode_id": "episode_010",
+      "event_type": "foreground_worker_present",
+      "time_start_s": 90.0,
+      "time_end_s": 90.0,
+      "duration_s": 0.0,
+      "frames": [
+        "frame_000010.jpg"
+      ],
+      "evidence_frames": [
+        {
+          "frame": "frame_000010.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "worker_08"
+      ],
+      "labels": [
+        "worker"
+      ],
+      "relations": [],
+      "confidence": 0.7,
+      "observation": "A worker is among the closest tracked objects in the egocentric view.",
+      "spatial_facts": [
+        "worker_08 (worker) is near depth rank 1",
+        "concrete_block_wall_02 (concrete block wall) is near depth rank 2",
+        "scaffold_05 (scaffold) is mid depth rank 3",
+        "worker_08 worker depth=near score=0.6702"
+      ],
+      "query_text": "foreground_worker_present worker worker_08 A worker is among the closest tracked objects in the egocentric view."
+    }
+  ]
+}
