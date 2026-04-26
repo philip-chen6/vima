@@ -84,11 +84,16 @@ const ledgerMath = [
   ["audit hash", "9f2c...81a"],
 ];
 
+// Stats sourced from real artifacts: 30 frames + 86.7% wrench time +
+// 0.939 mean confidence are direct from cii-results.json. Depth-drop rate
+// is from the live depth-filter-log.json — 39 of 59 pairs (66%) on this
+// run. Paper headline number was 57% on a different run; we show the live
+// run so judges can verify against /data/depth-filter-log.json.
 const stats = [
   ["sampled frames", "30"],
   ["wrench time", "86.7%"],
   ["mean P-confidence", "0.939"],
-  ["depth-drop rate", "57%"],
+  ["depth-drop rate", "66%"],
 ];
 
 const confidenceSeries = ledgerReceipts.map((frame) => ({
@@ -624,9 +629,10 @@ export default function VimaLandingPage() {
             letterSpacing: "0.005em",
           }}
         >
-          Hardhat video becomes an inspectable evidence chain. Depth-delta
-          filtering drops 57% of bad frames, MASt3R reconstruction grounds the
-          rest, episodic memory binds events to time and zone.
+          Hardhat video becomes an inspectable evidence chain. A depth-delta
+          pre-pass drops two thirds of low-signal frame pairs, COLMAP registers
+          the rest into a sparse cloud, and episodic memory binds events to
+          time and frame.
         </p>
 
         <div
@@ -1112,9 +1118,13 @@ export default function VimaLandingPage() {
               parallaxStrength={12}
               rotateStrength={2.5}
             >
-              {/* TODO: replace this placeholder with a real screenshot of the
-                  iOS swipe deck (export from app.vima.mobile build, ~390x844 png)
-                  and pass via the `image` prop instead of children. */}
+              {/* The iOS verify app exists and is shippable on josh's device
+                  (Capacitor + Next 16, app.vima.mobile). What's drawn inside
+                  the device frame below is a faithful mockup of one swipe-
+                  deck card — same fields as the real app emits — so the
+                  landing reads accurately even when the binary isn't on this
+                  laptop. Swap to a real screenshot import when the build
+                  exports a 390x844 PNG of the live deck. */}
               <div
                 style={{
                   width: "100%",
@@ -1314,7 +1324,7 @@ export default function VimaLandingPage() {
             <HexCta
               href="/demo"
               label="open dashboard"
-              detail="inspect frames, zones, confidence, and settlement weight"
+              detail="inspect frames, confidence, depth-filter activity, and the COLMAP point cloud"
             />
           </div>
         </div>
