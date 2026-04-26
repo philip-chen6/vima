@@ -78,6 +78,9 @@ export default function DemoClient({
   const [loading, setLoading] = useState(initialSummary === null);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<"all" | "P" | "C" | "NC">("all");
+  // Frame highlighted by clicking a camera frustum in the 3D viewer.
+  // Undefined until first click. Drives the thumbnail panel below the cloud.
+  const [pickedFrame, setPickedFrame] = useState<string | null>(null);
 
   const reload = async () => {
     setRefreshing(true);
@@ -593,12 +596,84 @@ export default function DemoClient({
             </ul>
           </div>
 
-          <PointCloudViewer
-            src="/reconstruction/sparse.ply"
-            camerasSrc="/data/cameras.json"
-            label="colmap sparse · masonry capture"
-            autoRotate
-          />
+          <div>
+            <PointCloudViewer
+              src="/reconstruction/sparse.ply"
+              camerasSrc="/data/cameras.json"
+              label="colmap sparse · masonry capture"
+              autoRotate
+              onSelectFrame={setPickedFrame}
+            />
+
+            {/* Thumbnail panel — populated when a frustum is clicked.
+                The frustum-name is the COLMAP image filename like
+                "frame_0013_00026000.jpg". We mount the corresponding
+                raw frame from /masonry-frames-raw so judges see the
+                actual bodycam still that camera was capturing. */}
+            {pickedFrame && (
+              <div
+                style={{
+                  marginTop: "12px",
+                  display: "grid",
+                  gridTemplateColumns: "minmax(0, 200px) minmax(0, 1fr)",
+                  gap: "12px",
+                  padding: "12px",
+                  border: `1px solid ${LINE}`,
+                  background: "rgba(8,5,3,0.55)",
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/masonry-frames-raw/${pickedFrame}`}
+                  alt={`bodycam frame ${pickedFrame}`}
+                  style={{
+                    width: "100%",
+                    aspectRatio: "4 / 3",
+                    objectFit: "cover",
+                    border: `1px solid ${LINE}`,
+                    background: "#000",
+                  }}
+                />
+                <div style={{ minWidth: 0 }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: SAKURA_HOT,
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "9px",
+                      letterSpacing: "0.06em",
+                    }}
+                  >
+                    selected frame
+                  </p>
+                  <p
+                    style={{
+                      margin: "6px 0 0",
+                      color: WASHI,
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "11px",
+                      fontVariantNumeric: "tabular-nums",
+                      wordBreak: "break-all",
+                    }}
+                  >
+                    {pickedFrame}
+                  </p>
+                  <p
+                    style={{
+                      margin: "10px 0 0",
+                      color: TEXT_MUTED,
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "12px",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    Bodycam still at this camera pose. Click another frustum
+                    to swap the view.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

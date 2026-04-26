@@ -108,7 +108,7 @@ export default function EvalClient() {
     setLoading(true);
     Promise.all([
       fetch("/data/episodes.json").then((r) => (r.ok ? r.json() : null)),
-      fetch("/masonry-frames/manifest.json").then((r) => (r.ok ? r.json() : null)),
+      fetch("/masonry-frames-raw/manifest.json").then((r) => (r.ok ? r.json() : null)),
     ])
       .then(([eps, m]) => {
         if (cancelled) return;
@@ -254,8 +254,8 @@ export default function EvalClient() {
           <div>
             {bracket ? (
               <ComparisonSlider
-                beforeImage={`/masonry-frames/${bracket.before.filename}`}
-                afterImage={`/masonry-frames/${bracket.after.filename}`}
+                beforeImage={`/masonry-frames-raw/${bracket.before.filename}`}
+                afterImage={`/masonry-frames-raw/${bracket.after.filename}`}
                 beforeAlt={`frame at t=${bracket.before.timestamp_s}s`}
                 afterAlt={`frame at t=${bracket.after.timestamp_s}s`}
                 labelText={{
