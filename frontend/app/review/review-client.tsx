@@ -42,11 +42,14 @@ const WASHI = "#f7ecef";
 const TEXT_SECONDARY = "rgba(247,236,239,0.68)";
 const TEXT_MUTED = "rgba(247,236,239,0.46)";
 const TEXT_FAINT = "rgba(247,236,239,0.34)";
-const LINE = "rgba(242,167,184,0.18)";
-const SAKURA = "#f2a7b8";
+const LINE = "rgba(166,77,121,0.18)";
+const SAKURA = "#A64D79";
+const SAKURA_HOT = "#f2a7b8";
+const PANEL = "rgba(12,7,10,0.72)";
+const PANEL_SOFT = "rgba(166,77,121,0.07)";
 const LANTERN = "#ffd3a6";
 const RED = "#ef476f";
-const GREEN = "#4fd1b8";
+const GREEN = "#78d7a3";
 const HEADING_FONT = '"Times New Roman", Times, serif';
 
 function inferSeverity(episode: Episode): "info" | "warning" | "critical" {
@@ -103,14 +106,15 @@ function Stat({
   accent?: string;
 }) {
   return (
-    <div style={{ border: `1px solid ${LINE}`, padding: "14px 16px", background: "rgba(247,236,239,0.035)" }}>
-      <div style={{ color: TEXT_MUTED, fontSize: "9px", letterSpacing: "0.06em" }}>{label}</div>
+    <div style={{ borderRight: `1px solid ${LINE}`, padding: "12px 16px", background: PANEL_SOFT }}>
+      <div style={{ color: TEXT_MUTED, fontSize: "9px", letterSpacing: "0.04em" }}>{label}</div>
       <div
         style={{
-          marginTop: "10px",
+          marginTop: "8px",
           color: accent,
           fontFamily: "var(--font-mono)",
-          fontSize: "clamp(1.2rem, 2vw, 1.8rem)",
+          fontSize: "clamp(1.05rem, 1.7vw, 1.45rem)",
+          fontWeight: 700,
           fontVariantNumeric: "tabular-nums",
         }}
       >
@@ -138,15 +142,15 @@ function ActionButton({
       onClick={onClick}
       style={{
         border: `1px solid ${color}66`,
-        background: `${color}18`,
+        background: `${color}12`,
         color: WASHI,
-        padding: "12px 14px",
+        padding: "11px 12px",
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
         gap: "9px",
         fontFamily: "var(--font-mono)",
-        fontSize: "11px",
+        fontSize: "10px",
         letterSpacing: "0.04em",
         cursor: "pointer",
       }}
@@ -157,14 +161,21 @@ function ActionButton({
   );
 }
 
-export default function ReviewClient() {
-  const [episodes, setEpisodes] = useState<Episode[]>([]);
-  const [manifest, setManifest] = useState<FrameManifest[]>([]);
-  const [activeEpisodeId, setActiveEpisodeId] = useState<number | null>(null);
+export default function ReviewClient({
+  initialEpisodes = [],
+  initialManifest = [],
+}: {
+  initialEpisodes?: Episode[];
+  initialManifest?: FrameManifest[];
+}) {
+  const [episodes, setEpisodes] = useState<Episode[]>(initialEpisodes);
+  const [manifest, setManifest] = useState<FrameManifest[]>(initialManifest);
+  const [activeEpisodeId, setActiveEpisodeId] = useState<number | null>(initialEpisodes[0]?.episode ?? null);
   const [reviewState, setReviewState] = useState<Record<number, ReviewStatus>>({});
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(initialEpisodes.length > 0);
 
   useEffect(() => {
+    if (initialEpisodes.length && initialManifest.length) return;
     let cancelled = false;
     Promise.all([
       fetch("/data/episodes.json").then((res) => res.json()),
@@ -184,7 +195,7 @@ export default function ReviewClient() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialEpisodes.length, initialManifest.length]);
 
   useEffect(() => {
     const raw = window.localStorage.getItem("vima-review-state");
@@ -246,34 +257,60 @@ export default function ReviewClient() {
       style={{
         minHeight: "100dvh",
         background:
-          "radial-gradient(circle at 72% 8%, rgba(242,167,184,0.13), transparent 30%), linear-gradient(180deg, #080503 0%, #120811 48%, #080503 100%)",
+          "radial-gradient(circle at 78% 0%, rgba(166,77,121,0.16), transparent 28%), linear-gradient(180deg, #080503 0%, #130910 48%, #080503 100%)",
         color: WASHI,
         fontFamily: "var(--font-mono)",
       }}
     >
+      <style jsx global>{`
+        @media (max-width: 1120px) {
+          .vima-review-hero {
+            grid-template-columns: 1fr !important;
+          }
+
+          .vima-review-shell {
+            grid-template-columns: 1fr !important;
+          }
+
+          .vima-review-shell > aside,
+          .vima-review-shell > section {
+            min-height: 0 !important;
+          }
+        }
+
+        @media (max-width: 680px) {
+          .vima-review-stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .vima-review-stats > div:nth-child(2n) {
+            border-right: 0 !important;
+          }
+        }
+      `}</style>
       <header
         style={{
           position: "sticky",
           top: 0,
           zIndex: 20,
           borderBottom: `1px solid ${LINE}`,
-          background: "rgba(8,5,3,0.84)",
+          background: "rgba(8,5,3,0.88)",
           backdropFilter: "blur(18px)",
         }}
       >
         <div
           style={{
-            maxWidth: "1500px",
+            maxWidth: "1400px",
             margin: "0 auto",
-            padding: "14px clamp(18px, 4vw, 42px)",
+            padding: "12px clamp(20px, 5vw, 48px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             gap: "18px",
           }}
         >
-          <Link href="/" style={{ color: WASHI, textDecoration: "none", letterSpacing: "0.08em" }}>
-            vima review
+          <Link href="/" style={{ color: WASHI, textDecoration: "none", letterSpacing: "0.02em", fontFamily: HEADING_FONT, fontSize: "18px" }}>
+            v i m a. <span style={{ color: TEXT_MUTED, fontFamily: "var(--font-mono)", fontSize: "10px" }}>review</span>
           </Link>
           <nav style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
             <Link href="/demo" style={{ color: TEXT_MUTED, textDecoration: "none", fontSize: "11px" }}>
@@ -289,13 +326,14 @@ export default function ReviewClient() {
         </div>
       </header>
 
-      <section style={{ maxWidth: "1500px", margin: "0 auto", padding: "clamp(34px, 5vw, 64px) clamp(18px, 4vw, 42px)" }}>
+      <section style={{ maxWidth: "1400px", margin: "0 auto", padding: "clamp(30px, 5vw, 56px) clamp(20px, 5vw, 48px) 18px" }}>
         <div
+          className="vima-review-hero"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 360px), 1fr))",
-            gap: "clamp(22px, 4vw, 56px)",
-            alignItems: "end",
+            gridTemplateColumns: "minmax(0, 0.95fr) minmax(360px, 0.75fr)",
+            gap: "clamp(24px, 4vw, 56px)",
+            alignItems: "start",
           }}
         >
           <div>
@@ -304,37 +342,40 @@ export default function ReviewClient() {
             </p>
             <h1
               style={{
-                margin: "16px 0 0",
-                maxWidth: "860px",
-                fontFamily: HEADING_FONT,
-                fontSize: "clamp(2.4rem, 6vw, 5.8rem)",
-                lineHeight: 0.92,
-                fontWeight: 400,
-                letterSpacing: 0,
+                margin: "14px 0 0",
+                maxWidth: "720px",
+                fontFamily: "var(--font-semimono)",
+                fontSize: "clamp(1.9rem, 4vw, 3.5rem)",
+                lineHeight: 1,
+                fontWeight: 600,
+                letterSpacing: "0.01em",
               }}
             >
-              review the work claims before they become the ledger.
+              review field claims before they become the ledger.
             </h1>
             <p
               style={{
-                margin: "22px 0 0",
-                maxWidth: "660px",
+                margin: "18px 0 0",
+                maxWidth: "620px",
                 color: TEXT_SECONDARY,
                 fontFamily: "var(--font-sans)",
                 fontSize: "clamp(0.98rem, 1.2vw, 1.1rem)",
-                lineHeight: 1.6,
+                lineHeight: 1.55,
+                letterSpacing: "0.005em",
               }}
             >
-              this is the actual operator loop: vima generated spatial claims from the masonry capture, and a reviewer accepts,
-              rejects, or skips each one while the source evidence stays visible.
+              This is the operator loop: Vima generates spatial claims from the masonry capture, then a reviewer accepts,
+              rejects, or skips each claim while the cited frame evidence stays in view.
             </p>
           </div>
 
           <div
+            className="vima-review-stats"
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: "10px",
+              gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+              border: `1px solid ${LINE}`,
+              background: PANEL,
             }}
           >
             <Stat label="claims found" value={episodes.length ? episodes.length.toString() : loaded ? "0" : "..."} accent={WASHI} />
@@ -346,24 +387,25 @@ export default function ReviewClient() {
       </section>
 
       <section
+        className="vima-review-shell"
         style={{
-          maxWidth: "1500px",
+          maxWidth: "1400px",
           margin: "0 auto",
-          padding: "0 clamp(18px, 4vw, 42px) clamp(48px, 6vw, 80px)",
+          padding: "14px clamp(20px, 5vw, 48px) clamp(48px, 6vw, 80px)",
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
-          gap: "18px",
+          gridTemplateColumns: "340px minmax(0, 1fr) 330px",
+          gap: "12px",
           alignItems: "start",
         }}
       >
-        <aside style={{ border: `1px solid ${LINE}`, background: "rgba(8,5,3,0.48)", minHeight: "720px" }}>
-          <div style={{ padding: "16px", borderBottom: `1px solid ${LINE}` }}>
+        <aside style={{ border: `1px solid ${LINE}`, background: PANEL, minHeight: "680px" }}>
+          <div style={{ padding: "14px 16px", borderBottom: `1px solid ${LINE}` }}>
             <p style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.06em" }}>1 · claim queue</p>
-            <h2 style={{ margin: "8px 0 0", fontFamily: HEADING_FONT, fontSize: "1.6rem", fontWeight: 400 }}>
+            <h2 style={{ margin: "6px 0 0", fontFamily: "var(--font-semimono)", fontSize: "15px", fontWeight: 600, letterSpacing: "0.04em" }}>
               pending review
             </h2>
           </div>
-          <div style={{ maxHeight: "650px", overflowY: "auto" }}>
+          <div style={{ maxHeight: "610px", overflowY: "auto" }}>
             {episodes.slice(0, 48).map((episode) => {
               const status = reviewState[episode.episode] ?? "pending";
               const active = episode.episode === activeEpisode?.episode;
@@ -379,22 +421,22 @@ export default function ReviewClient() {
                     width: "100%",
                     cursor: "pointer",
                     display: "grid",
-                    gap: "8px",
-                    padding: "14px 16px",
+                    gap: "7px",
+                    padding: "13px 16px",
                     borderBottom: `1px solid ${LINE}`,
                     background: active ? "rgba(166,77,121,0.16)" : "transparent",
                   }}
                 >
                   <span style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "center" }}>
-                    <span style={{ color: severityColor(severity), fontSize: "10px", letterSpacing: "0.05em" }}>
+                    <span style={{ color: severityColor(severity), fontSize: "9px", letterSpacing: "0.04em" }}>
                       ep {episode.episode.toString().padStart(3, "0")} · {severity}
                     </span>
-                    <span style={{ color: statusColor(status), fontSize: "9px", letterSpacing: "0.05em" }}>{status}</span>
+                    <span style={{ color: statusColor(status), fontSize: "9px", letterSpacing: "0.04em" }}>{status}</span>
                   </span>
                   <strong style={{ color: WASHI, fontFamily: "var(--font-sans)", fontSize: "13px", lineHeight: 1.35 }}>
                     {episode.summary}
                   </strong>
-                  <span style={{ color: TEXT_FAINT, fontSize: "10px", display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: TEXT_FAINT, fontSize: "10px", display: "flex", justifyContent: "space-between", fontVariantNumeric: "tabular-nums" }}>
                     <span>{episode.ts_start.toFixed(1)}s</span>
                     <span>{episode.spatial_claims.length} spatial claims</span>
                   </span>
@@ -404,11 +446,11 @@ export default function ReviewClient() {
           </div>
         </aside>
 
-        <section style={{ border: `1px solid ${LINE}`, background: "rgba(8,5,3,0.54)", minHeight: "720px" }}>
-          <div style={{ padding: "16px", borderBottom: `1px solid ${LINE}`, display: "flex", justifyContent: "space-between", gap: "16px" }}>
+        <section style={{ border: `1px solid ${LINE}`, background: PANEL, minHeight: "680px" }}>
+          <div style={{ padding: "14px 16px", borderBottom: `1px solid ${LINE}`, display: "flex", justifyContent: "space-between", gap: "16px" }}>
             <div>
               <p style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.06em" }}>2 · evidence viewer</p>
-              <h2 style={{ margin: "8px 0 0", fontFamily: HEADING_FONT, fontSize: "1.7rem", fontWeight: 400 }}>
+              <h2 style={{ margin: "6px 0 0", fontFamily: "var(--font-semimono)", fontSize: "15px", fontWeight: 600, letterSpacing: "0.04em", lineHeight: 1.35 }}>
                 {activeEpisode?.summary ?? "loading claim"}
               </h2>
             </div>
@@ -420,11 +462,11 @@ export default function ReviewClient() {
             )}
           </div>
 
-          <div style={{ padding: "18px" }}>
+          <div style={{ padding: "16px" }}>
             <div
               style={{
                 position: "relative",
-                aspectRatio: "16 / 10",
+                aspectRatio: "16 / 9",
                 border: `1px solid ${LINE}`,
                 overflow: "hidden",
                 background: "#000",
@@ -448,7 +490,7 @@ export default function ReviewClient() {
                   top: 12,
                   padding: "8px 10px",
                   color: WASHI,
-                  background: "rgba(8,5,3,0.76)",
+                  background: "rgba(8,5,3,0.82)",
                   border: `1px solid ${LINE}`,
                   fontSize: "10px",
                   letterSpacing: "0.05em",
@@ -508,10 +550,10 @@ export default function ReviewClient() {
         </section>
 
         <aside style={{ display: "grid", gap: "18px" }}>
-          <section style={{ border: `1px solid ${LINE}`, background: "rgba(8,5,3,0.52)" }}>
-            <div style={{ padding: "16px", borderBottom: `1px solid ${LINE}` }}>
+          <section style={{ border: `1px solid ${LINE}`, background: PANEL }}>
+            <div style={{ padding: "14px 16px", borderBottom: `1px solid ${LINE}` }}>
               <p style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.06em" }}>3 · reviewer action</p>
-              <h2 style={{ margin: "8px 0 0", fontFamily: HEADING_FONT, fontSize: "1.6rem", fontWeight: 400 }}>
+              <h2 style={{ margin: "6px 0 0", fontFamily: "var(--font-semimono)", fontSize: "15px", fontWeight: 600, letterSpacing: "0.04em" }}>
                 resolve this claim
               </h2>
             </div>
@@ -540,20 +582,20 @@ export default function ReviewClient() {
             </div>
           </section>
 
-          <section style={{ border: `1px solid ${LINE}`, background: "rgba(8,5,3,0.52)" }}>
+          <section style={{ border: `1px solid ${LINE}`, background: PANEL }}>
             <div style={{ padding: "16px", borderBottom: `1px solid ${LINE}`, display: "flex", justifyContent: "space-between", gap: "12px" }}>
               <div>
                 <p style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.06em" }}>4 · accepted ledger</p>
-                <h2 style={{ margin: "8px 0 0", fontFamily: HEADING_FONT, fontSize: "1.6rem", fontWeight: 400 }}>
+                <h2 style={{ margin: "6px 0 0", fontFamily: "var(--font-semimono)", fontSize: "15px", fontWeight: 600, letterSpacing: "0.04em" }}>
                   audit output
                 </h2>
               </div>
-              <ClipboardCheck size={22} color={SAKURA} strokeWidth={1.5} />
+              <ClipboardCheck size={21} color={SAKURA_HOT} strokeWidth={1.5} />
             </div>
             <div style={{ padding: "0 16px 16px", maxHeight: "260px", overflowY: "auto" }}>
               {acceptedEpisodes.length === 0 ? (
                 <p style={{ color: TEXT_MUTED, fontFamily: "var(--font-sans)", fontSize: "13px", lineHeight: 1.5 }}>
-                  accepted claims will appear here as an exportable receipt.
+                  Accepted claims will appear here as an exportable receipt.
                 </p>
               ) : (
                 acceptedEpisodes.map((episode) => (
@@ -591,7 +633,7 @@ export default function ReviewClient() {
             </div>
           </section>
 
-          <section style={{ border: `1px solid ${LINE}`, background: "rgba(8,5,3,0.52)", padding: "16px" }}>
+          <section style={{ border: `1px solid ${LINE}`, background: PANEL, padding: "16px" }}>
             <p style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.06em" }}>
               product surface
             </p>
