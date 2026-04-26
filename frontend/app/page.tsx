@@ -1266,7 +1266,7 @@ export default function VimaLandingPage() {
 
         <PipelineStepper />
 
-        <div className="landing-agent-handoff" data-gsap="ledger-panel">
+        <div className="landing-agent-handoff">
           <div className="landing-agent-copy">
             <p>agent handoff · hosted api + cli + skill</p>
             <h3>paste vima into any agent shell.</h3>

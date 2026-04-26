@@ -7,6 +7,8 @@
 - [x] add portable skill template plus print/install commands
 - [x] document one-command agent usage
 - [x] run package tests and entrypoint smoke checks
+- [x] fold the agent cli handoff into the existing landing pipeline section
+- [x] verify landing lint, build, and browser layout
 
 ### result
 
@@ -18,6 +20,10 @@
 - verification passed: 7 package tests, clean temp-venv install, console script
   version check, skill resource readback, live production `doctor`, live cii
   filter, live eval json, and live `analyze --sample masonry-p`.
+- landing now shows the github-subdirectory `uvx --from ... vima doctor`
+  command inside the existing pipeline section, plus api/source links and a
+  small terminal-style command list.
+- fixed the stale frontend seo repository url from `vinna` to `vima`.
 
 ## hero intro gap tighten
 

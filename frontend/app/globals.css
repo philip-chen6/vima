@@ -2431,13 +2431,11 @@ html[data-vima-loader-reveal="true"] [data-landing-backdrop-stage] {
   }
 }
 
+/* The shadcn sidebar install dropped a .dark{} block that overrode all
+   sidebar tokens with its zinc-blue defaults — clobbering the Yozakura
+   values set at :root. We always render dark (html.dark), so the :root
+   tokens are the only source of truth. The .dark block is intentionally
+   empty so future shadcn re-runs don't silently un-theme the rail. */
 .dark {
-  --sidebar: hsl(240 5.9% 10%);
-  --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(240 3.7% 15.9%);
-  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  /* tokens inherited from :root above — Yozakura ink + sakura */
 }

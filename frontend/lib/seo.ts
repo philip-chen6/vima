@@ -5,7 +5,7 @@ export const siteConfig = {
     "Video intelligence for construction sites. Hardhat video becomes CII work labels, COLMAP zone attribution, and auditable SPL payout logic. No lidar.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://vimaspatial.tech",
   ogImage: "/og-image.png",
-  repository: "https://github.com/philip-chen6/vinna",
+  repository: "https://github.com/philip-chen6/vima",
   devpost: "https://devpost.com/software/vima",
   keywords: [
     "vima",
