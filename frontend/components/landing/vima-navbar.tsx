@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
-import { ClipboardCheck } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import gsap from "gsap";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -128,6 +128,29 @@ export default function VimaNavbar() {
   const [activeSection, setActiveSection] = useState("top");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const navigateWithCurtain = useCurtainNavigate();
+
+  // Close the enter dropdown on outside click + escape. Other dropdowns
+  // (proof/ledger/etc) are inside the nav so they get the existing
+  // onMouseLeave handling; "enter" lives in a fixed-position panel
+  // outside the nav, so it needs an explicit close path.
+  useEffect(() => {
+    if (activeDropdown !== "enter") return;
+    const onPointer = (e: PointerEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      if (target.closest(".vima-nav-enter") || target.closest(".vima-nav-enter-panel")) return;
+      setActiveDropdown(null);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActiveDropdown(null);
+    };
+    document.addEventListener("pointerdown", onPointer);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [activeDropdown]);
   const programmaticScrollRef = useRef(false);
   const programmaticScrollIdRef = useRef(0);
   const programmaticTimerRef = useRef<number | undefined>(undefined);
@@ -246,7 +269,13 @@ export default function VimaNavbar() {
         <nav
           className="vima-nav-inner"
           aria-label="main navigation"
-          onMouseLeave={() => setActiveDropdown(null)}
+          onMouseLeave={() => {
+            // 'enter' dropdown lives in a fixed-position panel outside this
+            // nav bar, so the nav-leave shouldn't kill it. Click-outside
+            // listener below handles closing 'enter' instead.
+            if (activeDropdown === "enter") return;
+            setActiveDropdown(null);
+          }}
         >
           <div className="vima-nav-bar">
             <Link
@@ -291,35 +320,84 @@ export default function VimaNavbar() {
             </div>
 
             <div className="vima-nav-actions" data-gsap-intro="intro-nav-actions">
-              <Link
-                href="https://docs.vimaspatial.tech"
-                target="_blank"
-                rel="noreferrer"
-                className="vima-nav-demo"
-                onMouseEnter={() => setActiveDropdown(null)}
+              <div
+                className="vima-nav-enter"
+                data-open={activeDropdown === "enter" ? "true" : "false"}
               >
-                docs
-              </Link>
-              <Link
-                href="/paper.pdf"
-                target="_blank"
-                rel="noreferrer"
-                className="vima-nav-demo"
-                onMouseEnter={() => setActiveDropdown(null)}
-              >
-                paper
-              </Link>
-              <Link
-                href="/review"
-                prefetch
-                className="vima-nav-menu"
-                onMouseEnter={() => setActiveDropdown(null)}
-                onClick={navigateWithCurtain("/review")}
-                aria-label="open review queue"
-              >
-                <ClipboardCheck size={15} strokeWidth={1.7} />
-                <span>review</span>
-              </Link>
+                <button
+                  type="button"
+                  className="vima-nav-menu"
+                  aria-haspopup="menu"
+                  aria-expanded={activeDropdown === "enter"}
+                  aria-label="open enter menu"
+                  onClick={() =>
+                    setActiveDropdown(activeDropdown === "enter" ? null : "enter")
+                  }
+                  onFocus={() => setActiveDropdown("enter")}
+                >
+                  <span>enter</span>
+                  <ChevronDown
+                    size={13}
+                    strokeWidth={1.7}
+                    aria-hidden
+                    style={{
+                      transition: "transform 220ms cubic-bezier(.2,.8,.2,1)",
+                      transform: activeDropdown === "enter" ? "rotate(180deg)" : "rotate(0deg)",
+                    }}
+                  />
+                </button>
+                <AnimatePresence>
+                  {activeDropdown === "enter" && (
+                    <motion.div
+                      key="enter-panel"
+                      className="vima-nav-enter-panel"
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.22, ease: [0.2, 0.8, 0.2, 1] }}
+                      role="menu"
+                    >
+                      {[
+                        { href: "/review", label: "review", detail: "operator queue" },
+                        { href: "/demo", label: "dashboard", detail: "live workspace" },
+                        { href: "/eval", label: "eval", detail: "118 episodes · a/b" },
+                        { href: "https://docs.vimaspatial.tech", label: "docs", detail: "api · agent skill", external: true },
+                        { href: "/paper.pdf", label: "paper", detail: "spatial reasoning · pdf", external: true },
+                      ].map((item) => (
+                        item.external ? (
+                          <a
+                            key={item.href}
+                            href={item.href}
+                            target="_blank"
+                            rel="noreferrer"
+                            role="menuitem"
+                            className="vima-nav-enter-item"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            <span>{item.label}</span>
+                            <span>{item.detail}</span>
+                          </a>
+                        ) : (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            prefetch
+                            role="menuitem"
+                            className="vima-nav-enter-item"
+                            onClick={(e) => {
+                              setActiveDropdown(null);
+                              navigateWithCurtain(item.href)(e);
+                            }}
+                          >
+                            <span>{item.label}</span>
+                            <span>{item.detail}</span>
+                          </Link>
+                        )
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 

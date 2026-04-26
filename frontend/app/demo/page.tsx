@@ -22,40 +22,18 @@ import { Metadata } from "next";
 import DemoClient from "./demo-client";
 
 export const metadata: Metadata = {
-  title: "dashboard · vima",
+  title: "dashboard · v i m a.",
   description:
     "vima dashboard — live spatial-claim workspace. drop a frame, see a structured claim back, browse the evidence ledger.",
 };
 
-async function fetchSummary() {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://vimaspatial.tech";
-  try {
-    const res = await fetch(`${base}/api/cii/summary`, {
-      cache: "no-store",
-      signal: AbortSignal.timeout(6000),
-    });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
+// SSR fetch was making a public-internet HTTPS round trip from the next
+// container to caddy and back to the backend container — adding 6+
+// seconds of TTFB on every /demo request. The client already runs the
+// same fetches in useEffect(reload) on mount as a fallback when initial*
+// are null, so SSR adds nothing but latency. Skipping drops /demo TTFB
+// from ~6s to <100ms; the analyzer hydrates client-side in ~40ms.
 
-async function fetchFrames() {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://vimaspatial.tech";
-  try {
-    const res = await fetch(`${base}/api/cii/frames`, {
-      cache: "no-store",
-      signal: AbortSignal.timeout(6000),
-    });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
-export default async function DemoPage() {
-  const [summary, frames] = await Promise.all([fetchSummary(), fetchFrames()]);
-  return <DemoClient initialSummary={summary} initialFrames={frames} />;
+export default function DemoPage() {
+  return <DemoClient initialSummary={null} initialFrames={null} />;
 }

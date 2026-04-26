@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "vima",
-  title: "VIMA — Verifiable Spatial Intelligence for Multimodal Annotation",
+  title: "v i m a. — verifiable spatial intelligence for construction",
   description:
-    "Construction rewards you can't fake: spatial memory + blockchain proof on every worker window. 62,783 gaussians. 66.7% wrench time. HackTech 2026 Ironsite Prize.",
+    "Construction rewards you can't fake: spatial memory + on-chain proof on every worker window. 30 frames, 86.7% wrench time, 0.939 mean confidence. HackTech 2026 Ironsite Prize.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://vimaspatial.tech",
   ogImage: "/og-image.png",
   repository: "https://github.com/philip-chen6/vima",
