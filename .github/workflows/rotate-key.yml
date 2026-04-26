@@ -1,0 +1,29 @@
+name: Rotate Anthropic Key
+
+on:
+  workflow_dispatch:
+    inputs:
+      api_key:
+        description: "New ANTHROPIC_API_KEY (sk-ant-...)"
+        required: true
+        type: string
+
+jobs:
+  rotate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Update .env and restart backend
+        run: |
+          ssh -i ~/.ssh/deploy_key root@${{ secrets.DEPLOY_HOST }} "
+            sed -i 's/^ANTHROPIC_API_KEY=.*/ANTHROPIC_API_KEY=${{ github.event.inputs.api_key }}/' /opt/vima/.env
+            cd /opt/vima/infra && docker compose --env-file ../.env up -d --remove-orphans
+            echo restarted
+            curl -sf http://localhost:8765/health && echo health_ok || echo health_fail
+          "
