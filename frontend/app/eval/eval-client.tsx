@@ -71,6 +71,37 @@ type CachedAnalysis = {
   message?: string;
 };
 type AnalysisCache = Record<string, Partial<Record<AnalyzerPrompt, CachedAnalysis>>>;
+type TemporalClaim = {
+  type: string;
+  description: string;
+  start_frame: number;
+  end_frame: number;
+  evidence: string;
+  confidence: number;
+  severity: "info" | "warning" | "critical";
+};
+type TemporalRefusal = {
+  between_frames: [number, number];
+  reason: string;
+};
+type TemporalEvalPayload = {
+  source?: "live" | "reference";
+  video?: string;
+  ts?: number;
+  message?: string;
+  detail?: string;
+  error?: string;
+  vima?: {
+    n_frames_examined?: number;
+    elapsed_s?: number;
+    model?: string;
+    claims?: TemporalClaim[];
+    refusals?: TemporalRefusal[];
+  };
+  baseline?: {
+    _note?: string;
+  };
+};
 
 // ── Yozakura tokens (must match landing) ─────────────────────────────────
 const INK = "#080503";
@@ -153,6 +184,7 @@ export default function EvalClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState<"live" | "reference" | "unknown">("unknown");
+  const [temporalEval, setTemporalEval] = useState<TemporalEvalPayload | null>(null);
   const [isRunningLive, setIsRunningLive] = useState(false);
   const [runLiveError, setRunLiveError] = useState<string | null>(null);
 
@@ -171,6 +203,7 @@ export default function EvalClient() {
         );
         setEpisodes(real ?? null);
         setManifest((m as FrameManifest[] | null) ?? null);
+        setTemporalEval((evalPayload as TemporalEvalPayload | null) ?? null);
         setSource(evalPayload?.source === "live" ? "live" : "reference");
       })
       .catch((e) => !cancelled && setError(String(e)))
@@ -180,25 +213,19 @@ export default function EvalClient() {
     };
   }, []);
 
-  async function reloadEvalSource() {
-    const response = await fetch("/api/eval", { cache: "no-store" });
-    const payload = await response.json().catch(() => null);
-    if (!response.ok) {
-      throw new Error(payload?.detail ?? `request failed (${response.status})`);
-    }
-    setSource(payload?.source === "live" ? "live" : "reference");
-  }
-
   async function handleRunLive() {
     setRunLiveError(null);
     setIsRunningLive(true);
     try {
-      const response = await fetch("/api/temporal/run?n=6", { method: "POST" });
-      const payload = await response.json().catch(() => null);
+      const response = await fetch("/api/temporal/run", { method: "POST" });
+      const payload = (await response.json().catch(() => null)) as TemporalEvalPayload | null;
       if (!response.ok) {
-        throw new Error(payload?.detail ?? payload?.error ?? `request failed (${response.status})`);
+        throw new Error(
+          payload?.message ?? payload?.detail ?? payload?.error ?? `request failed (${response.status})`
+        );
       }
-      await reloadEvalSource();
+      setTemporalEval(payload);
+      setSource(payload?.source === "live" ? "live" : "reference");
     } catch (e) {
       setRunLiveError(e instanceof Error ? e.message : "failed to run live eval");
     } finally {
@@ -378,6 +405,8 @@ export default function EvalClient() {
     if (!episodes || episodes.length === 0) return 0;
     return episodes.reduce((acc, e) => acc + e.confidence, 0) / episodes.length;
   }, [episodes]);
+  const temporalClaims = temporalEval?.vima?.claims ?? [];
+  const temporalRefusals = temporalEval?.vima?.refusals ?? [];
 
   return (
     <main
@@ -524,6 +553,181 @@ export default function EvalClient() {
               value={(manifest?.length ?? 0).toString()}
               accent={WASHI}
             />
+          </div>
+        )}
+
+        {temporalEval?.vima && (
+          <div
+            style={{
+              marginTop: "28px",
+              border: `1px solid ${LINE}`,
+              background: "linear-gradient(180deg, rgba(247,236,239,0.04), rgba(8,5,3,0.4))",
+              padding: "clamp(18px, 2vw, 26px)",
+              display: "grid",
+              gap: "18px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "12px",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    margin: 0,
+                    color: TEXT_MUTED,
+                    fontSize: "10px",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  temporal reasoning snapshot
+                </p>
+                <p
+                  style={{
+                    margin: "8px 0 0",
+                    color: TEXT_SECONDARY,
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "14px",
+                    lineHeight: 1.5,
+                    maxWidth: "780px",
+                  }}
+                >
+                  {source === "live"
+                    ? "live output is active. judges are looking at the latest persisted multi-frame state-change run."
+                    : "reference fallback is active. hit run live to swap this box to a fresh multi-frame pass from coldpath.mp4."}
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                  gap: "16px",
+                  minWidth: "min(100%, 420px)",
+                }}
+              >
+                <Stat
+                  label="temporal claims"
+                  value={temporalClaims.length.toString()}
+                  accent={WASHI}
+                  small
+                />
+                <Stat
+                  label="refusals"
+                  value={temporalRefusals.length.toString()}
+                  accent={WASHI}
+                  small
+                />
+                <Stat
+                  label="frames examined"
+                  value={(temporalEval.vima.n_frames_examined ?? 0).toString()}
+                  accent={WASHI}
+                  small
+                />
+                <Stat
+                  label="latency"
+                  value={
+                    typeof temporalEval.vima.elapsed_s === "number"
+                      ? `${temporalEval.vima.elapsed_s.toFixed(1)}s`
+                      : "—"
+                  }
+                  accent={SAKURA_HOT}
+                  small
+                  glow
+                />
+              </div>
+            </div>
+
+            {(temporalClaims.length > 0 || temporalRefusals.length > 0) && (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gap: "12px",
+                }}
+              >
+                {temporalClaims.slice(0, 3).map((claim, i) => (
+                  <div
+                    key={`${claim.type}-${i}`}
+                    style={{
+                      border: `1px solid ${LINE}`,
+                      padding: "16px 18px",
+                      background: "rgba(8,5,3,0.46)",
+                    }}
+                  >
+                    <p
+                      style={{
+                        margin: 0,
+                        color: SEVERITY_COLOR[claim.severity],
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "9px",
+                        letterSpacing: "0.07em",
+                      }}
+                    >
+                      {claim.type} · frames {claim.start_frame} → {claim.end_frame}
+                    </p>
+                    <p
+                      style={{
+                        margin: "10px 0 0",
+                        color: WASHI,
+                        fontFamily: "var(--font-sans)",
+                        fontSize: "14px",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {claim.description}
+                    </p>
+                    <p
+                      style={{
+                        margin: "10px 0 0",
+                        color: TEXT_SECONDARY,
+                        fontFamily: "var(--font-sans)",
+                        fontSize: "12.5px",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {claim.evidence}
+                    </p>
+                  </div>
+                ))}
+                {temporalClaims.length === 0 && temporalRefusals[0] && (
+                  <div
+                    style={{
+                      border: `1px solid ${LINE}`,
+                      padding: "16px 18px",
+                      background: "rgba(8,5,3,0.46)",
+                    }}
+                  >
+                    <p
+                      style={{
+                        margin: 0,
+                        color: TEXT_MUTED,
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "9px",
+                        letterSpacing: "0.07em",
+                      }}
+                    >
+                      refusal · frames {temporalRefusals[0].between_frames[0]} → {temporalRefusals[0].between_frames[1]}
+                    </p>
+                    <p
+                      style={{
+                        margin: "10px 0 0",
+                        color: TEXT_SECONDARY,
+                        fontFamily: "var(--font-sans)",
+                        fontSize: "13px",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {temporalRefusals[0].reason}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </section>
