@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VIMA Dashboard</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">VIMA</p>
+          <h1>Evidence dashboard</h1>
+        </div>
+        <div class="status">
+          <span></span>
+          memory ready
+        </div>
+      </header>
+
+      <section class="layout">
+        <section class="panel viewer">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Frame 000001</p>
+              <h2>Raw footage, masks, and depth</h2>
+            </div>
+            <div class="tabs" aria-label="Evidence layer picker">
+              <button class="tab active" data-layer="raw">raw</button>
+              <button class="tab" data-layer="mask">mask</button>
+              <button class="tab" data-layer="depth">depth</button>
+            </div>
+          </div>
+          <figure class="frame-wrap">
+            <img id="evidence-frame" src="./assets/frame_000001.jpg" alt="Construction evidence frame" />
+            <figcaption id="frame-caption">Raw sampled hardhat frame.</figcaption>
+          </figure>
+        </section>
+
+        <aside class="panel answer">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">Question</p>
+              <h2>Ask the memory</h2>
+            </div>
+          </div>
+          <div class="chat-log" id="chat-log"></div>
+          <form id="query-form" class="query-form">
+            <input
+              id="query-input"
+              type="text"
+              value="Was there masonry work happening near the wall?"
+              autocomplete="off"
+            />
+            <button type="submit">ask</button>
+          </form>
+        </aside>
+      </section>
+
+      <section class="stats" aria-label="Run summary">
+        <div>
+          <strong id="frame-count">--</strong>
+          <span>frames</span>
+        </div>
+        <div>
+          <strong id="episode-count">--</strong>
+          <span>episodes</span>
+        </div>
+        <div>
+          <strong id="event-count">--</strong>
+          <span>object events</span>
+        </div>
+        <div>
+          <strong id="top-confidence">--</strong>
+          <span>top confidence</span>
+        </div>
+      </section>
+
+      <section class="panel episodes">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Timeline</p>
+            <h2>Object-event memory</h2>
+          </div>
+          <p class="muted">candidate episodes from YOLO + masks + depth</p>
+        </div>
+        <div id="episode-list" class="episode-list"></div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
