@@ -16,6 +16,7 @@ const tabs = [
     metric: "frame 03",
     image: "/figures/frame-03-depth-comparison.jpg",
     alt: "side by side hardhat video frame and depth map from the vima masonry run",
+    caption: "left: hardhat masonry frame. right: per-frame depth map used before spatial memory.",
     body: "each bodycam frame gets paired with model depth before it can become a spatial work claim.",
     rows: [
       ["source", "bodycam video"],
@@ -30,6 +31,7 @@ const tabs = [
     metric: "66% dropped",
     image: "/figures/masonry-depth-delta-frame-pairs.png",
     alt: "depth delta frame selection chart for the masonry video sequence",
+    caption: "green bars are kept frame pairs; gray bars are filtered out as low-value reconstruction inputs.",
     body: "low-signal frame pairs get dropped before reconstruction, keeping the pipeline focused on useful motion.",
     rows: [
       ["low", "0.03"],
@@ -44,6 +46,7 @@ const tabs = [
     metric: "152ms",
     image: "/figures/masonry-reconstruction-viz.png",
     alt: "masonry reconstruction visualization showing RGB frames, MASt3R depth, and confidence maps",
+    caption: "source frame pairs, MASt3R depth, and confidence maps shown together for auditability.",
     body: "MASt3R turns adjacent frames into depth and confidence fields that can be audited next to the source images.",
     rows: [
       ["model", "DuneMASt3R"],
@@ -58,6 +61,7 @@ const tabs = [
     metric: "18.0s",
     image: "/figures/masonry-spatial-preview-30s.jpg",
     alt: "pseudo-depth point cloud with person label and source frame from the masonry run",
+    caption: "pseudo-depth point cloud with the detected person label and the exact source frame still attached.",
     body: "the final claim stays tied to a source frame and pseudo-depth point cloud, so review starts from evidence.",
     rows: [
       ["event", "NC candidate"],
@@ -223,7 +227,7 @@ export default function EvidenceImageTabs() {
       <div className="evidence-tabs-copy">
         <div className="evidence-atlas-label">
           <span>proof rail</span>
-          <span>frame / claim / zone / payout</span>
+          <span>depth / filter / reconstruct / claim</span>
         </div>
         <div className="evidence-tabs-nav" role="tablist" aria-label="evidence chain views">
           {tabs.map((tab, index) => (
@@ -277,8 +281,23 @@ export default function EvidenceImageTabs() {
                 />
               </div>
               <figcaption>
-                <span>
-                  {tab.num} · {tab.title}
+                <span style={{ display: "grid", gap: "4px", minWidth: 0 }}>
+                  <span>
+                    {tab.num} · {tab.title}
+                  </span>
+                  <small
+                    style={{
+                      display: "block",
+                      maxWidth: "620px",
+                      color: "rgba(247, 236, 239, 0.56)",
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "11px",
+                      lineHeight: 1.35,
+                      letterSpacing: 0,
+                    }}
+                  >
+                    {tab.caption}
+                  </small>
                 </span>
                 <span>{tab.metric}</span>
               </figcaption>
