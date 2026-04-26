@@ -40,6 +40,7 @@ Back at the repo root:
 ```bash
 python3 demo/yolodex_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/object_event_memory.json --fps 0.1
 python3 demo/mask_track_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/mask_track_memory.json --fps 0.1
+python3 demo/depth_memory.py --input demo/mask_track_memory.json --out demo/depth_track_memory.json --backend auto
 ```
 
 ## Output
@@ -51,6 +52,9 @@ python3 demo/mask_track_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --o
 - `tools/yolodex/runs/vinna-hardhat/masks/*.png`: prompt masks
 - `tools/yolodex/runs/vinna-hardhat/mask_preview/mask_tracks.mp4`: mask-track QA
 - `demo/mask_track_memory.json`: persistent mask tracks and relations
+- `tools/yolodex/runs/vinna-hardhat/depth/*.png`: per-frame relative depth maps
+- `tools/yolodex/runs/vinna-hardhat/depth_preview/depth_tracks.mp4`: depth QA
+- `demo/depth_track_memory.json`: mask-aware object depth bands and per-frame ordering
 
 ## Construction Classes
 
@@ -81,3 +85,18 @@ mask tracks -> depth -> episodic memory -> VLM synthesis
 The current implementation uses a box-prompt mask fallback so the pipeline runs
 without SAM 2 weights. Replace `make_prompt_mask` in `demo/mask_track_memory.py`
 with a SAM 2 backend when the dependency is available; keep the JSON schema.
+
+## Depth Stage
+
+Depth is applied after masks so each object's depth is averaged over the mask,
+not the whole box. The script supports:
+
+- `--backend auto`: use a local Hugging Face depth pipeline if installed,
+  otherwise fall back to a deterministic RGB geometric proxy.
+- `--backend depth-anything`: require the Hugging Face depth pipeline.
+- `--backend proxy`: always use the lightweight local proxy.
+
+The fallback is not metric depth. It produces `relative_closeness` where higher
+means closer to the camera, plus `near` / `mid` / `far` bands. This is enough to
+feed spatial memory and can be swapped for Depth Anything V2 without changing
+the downstream JSON shape.

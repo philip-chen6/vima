@@ -1,0 +1,1629 @@
+{
+  "metadata": {
+    "tool": "VINNA mask-aware depth memory",
+    "input": "../../demo/mask_track_memory.json",
+    "run_dir": "runs/vinna-hardhat",
+    "backend_requested": "depth-anything",
+    "backends_used": [
+      "depth_anything_hf"
+    ],
+    "hf_model": "depth-anything/Depth-Anything-V2-Small-hf",
+    "depth_semantics": "higher relative_closeness means closer to camera",
+    "preview_video": "runs/vinna-hardhat/depth_preview/depth_tracks.mp4"
+  },
+  "tracks": [
+    {
+      "track_id": "worker_01",
+      "label": "worker",
+      "first_frame": "frame_000001.jpg",
+      "last_frame": "frame_000002.jpg",
+      "time_start_s": 0.0,
+      "time_end_s": 10.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.0364,
+      "mean_relative_closeness": 0.1697,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "scaffold_01",
+      "label": "scaffold",
+      "first_frame": "frame_000001.jpg",
+      "last_frame": "frame_000001.jpg",
+      "time_start_s": 0.0,
+      "time_end_s": 0.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.1819,
+      "mean_relative_closeness": 0.5803,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "scaffold_02",
+      "label": "scaffold",
+      "first_frame": "frame_000001.jpg",
+      "last_frame": "frame_000002.jpg",
+      "time_start_s": 0.0,
+      "time_end_s": 10.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.0917,
+      "mean_relative_closeness": 0.2973,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "concrete_block_wall_01",
+      "label": "concrete block wall",
+      "first_frame": "frame_000001.jpg",
+      "last_frame": "frame_000002.jpg",
+      "time_start_s": 0.0,
+      "time_end_s": 10.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.3571,
+      "mean_relative_closeness": 0.5086,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "guardrail_01",
+      "label": "guardrail",
+      "first_frame": "frame_000001.jpg",
+      "last_frame": "frame_000002.jpg",
+      "time_start_s": 0.0,
+      "time_end_s": 10.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.0267,
+      "mean_relative_closeness": 0.1889,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "worker_02",
+      "label": "worker",
+      "first_frame": "frame_000002.jpg",
+      "last_frame": "frame_000003.jpg",
+      "time_start_s": 10.0,
+      "time_end_s": 20.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.127,
+      "mean_relative_closeness": 0.5421,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "material_stack_01",
+      "label": "material stack",
+      "first_frame": "frame_000002.jpg",
+      "last_frame": "frame_000002.jpg",
+      "time_start_s": 10.0,
+      "time_end_s": 10.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0468,
+      "mean_relative_closeness": 0.441,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "scaffold_03",
+      "label": "scaffold",
+      "first_frame": "frame_000003.jpg",
+      "last_frame": "frame_000004.jpg",
+      "time_start_s": 20.0,
+      "time_end_s": 30.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.1957,
+      "mean_relative_closeness": 0.5264,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "material_stack_02",
+      "label": "material stack",
+      "first_frame": "frame_000003.jpg",
+      "last_frame": "frame_000003.jpg",
+      "time_start_s": 20.0,
+      "time_end_s": 20.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.1029,
+      "mean_relative_closeness": 0.293,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "guardrail_02",
+      "label": "guardrail",
+      "first_frame": "frame_000003.jpg",
+      "last_frame": "frame_000004.jpg",
+      "time_start_s": 20.0,
+      "time_end_s": 30.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.0548,
+      "mean_relative_closeness": 0.2227,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "worker_03",
+      "label": "worker",
+      "first_frame": "frame_000004.jpg",
+      "last_frame": "frame_000005.jpg",
+      "time_start_s": 30.0,
+      "time_end_s": 40.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.0935,
+      "mean_relative_closeness": 0.6267,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "material_stack_03",
+      "label": "material stack",
+      "first_frame": "frame_000004.jpg",
+      "last_frame": "frame_000004.jpg",
+      "time_start_s": 30.0,
+      "time_end_s": 30.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.112,
+      "mean_relative_closeness": 0.2996,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "guardrail_03",
+      "label": "guardrail",
+      "first_frame": "frame_000005.jpg",
+      "last_frame": "frame_000005.jpg",
+      "time_start_s": 40.0,
+      "time_end_s": 40.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0981,
+      "mean_relative_closeness": 0.5287,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "open_edge_01",
+      "label": "open edge",
+      "first_frame": "frame_000005.jpg",
+      "last_frame": "frame_000006.jpg",
+      "time_start_s": 40.0,
+      "time_end_s": 50.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.2338,
+      "mean_relative_closeness": 0.3525,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "worker_04",
+      "label": "worker",
+      "first_frame": "frame_000006.jpg",
+      "last_frame": "frame_000006.jpg",
+      "time_start_s": 50.0,
+      "time_end_s": 50.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0153,
+      "mean_relative_closeness": 0.8451,
+      "depth_band": "near"
+    },
+    {
+      "track_id": "material_stack_04",
+      "label": "material stack",
+      "first_frame": "frame_000006.jpg",
+      "last_frame": "frame_000006.jpg",
+      "time_start_s": 50.0,
+      "time_end_s": 50.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.08,
+      "mean_relative_closeness": 0.1201,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "worker_05",
+      "label": "worker",
+      "first_frame": "frame_000007.jpg",
+      "last_frame": "frame_000007.jpg",
+      "time_start_s": 60.0,
+      "time_end_s": 60.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0421,
+      "mean_relative_closeness": 0.3463,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "scaffold_04",
+      "label": "scaffold",
+      "first_frame": "frame_000007.jpg",
+      "last_frame": "frame_000007.jpg",
+      "time_start_s": 60.0,
+      "time_end_s": 60.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.2417,
+      "mean_relative_closeness": 0.4162,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "concrete_block_wall_02",
+      "label": "concrete block wall",
+      "first_frame": "frame_000007.jpg",
+      "last_frame": "frame_000010.jpg",
+      "time_start_s": 60.0,
+      "time_end_s": 90.0,
+      "frames_seen": 4,
+      "mean_mask_area_frac": 0.1802,
+      "mean_relative_closeness": 0.4823,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "material_stack_05",
+      "label": "material stack",
+      "first_frame": "frame_000007.jpg",
+      "last_frame": "frame_000007.jpg",
+      "time_start_s": 60.0,
+      "time_end_s": 60.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.11,
+      "mean_relative_closeness": 0.3818,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "guardrail_04",
+      "label": "guardrail",
+      "first_frame": "frame_000007.jpg",
+      "last_frame": "frame_000007.jpg",
+      "time_start_s": 60.0,
+      "time_end_s": 60.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0405,
+      "mean_relative_closeness": 0.3546,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "worker_06",
+      "label": "worker",
+      "first_frame": "frame_000008.jpg",
+      "last_frame": "frame_000008.jpg",
+      "time_start_s": 70.0,
+      "time_end_s": 70.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0146,
+      "mean_relative_closeness": 0.3207,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "scaffold_05",
+      "label": "scaffold",
+      "first_frame": "frame_000008.jpg",
+      "last_frame": "frame_000010.jpg",
+      "time_start_s": 70.0,
+      "time_end_s": 90.0,
+      "frames_seen": 3,
+      "mean_mask_area_frac": 0.2945,
+      "mean_relative_closeness": 0.4201,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "material_stack_06",
+      "label": "material stack",
+      "first_frame": "frame_000008.jpg",
+      "last_frame": "frame_000008.jpg",
+      "time_start_s": 70.0,
+      "time_end_s": 70.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.1045,
+      "mean_relative_closeness": 0.4773,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "worker_07",
+      "label": "worker",
+      "first_frame": "frame_000009.jpg",
+      "last_frame": "frame_000009.jpg",
+      "time_start_s": 80.0,
+      "time_end_s": 80.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0254,
+      "mean_relative_closeness": 0.1834,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "scaffold_06",
+      "label": "scaffold",
+      "first_frame": "frame_000009.jpg",
+      "last_frame": "frame_000010.jpg",
+      "time_start_s": 80.0,
+      "time_end_s": 90.0,
+      "frames_seen": 2,
+      "mean_mask_area_frac": 0.1112,
+      "mean_relative_closeness": 0.3066,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "guardrail_05",
+      "label": "guardrail",
+      "first_frame": "frame_000009.jpg",
+      "last_frame": "frame_000009.jpg",
+      "time_start_s": 80.0,
+      "time_end_s": 80.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0374,
+      "mean_relative_closeness": 0.1871,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "worker_08",
+      "label": "worker",
+      "first_frame": "frame_000010.jpg",
+      "last_frame": "frame_000010.jpg",
+      "time_start_s": 90.0,
+      "time_end_s": 90.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.158,
+      "mean_relative_closeness": 0.6566,
+      "depth_band": "mid"
+    },
+    {
+      "track_id": "worker_09",
+      "label": "worker",
+      "first_frame": "frame_000010.jpg",
+      "last_frame": "frame_000010.jpg",
+      "time_start_s": 90.0,
+      "time_end_s": 90.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0152,
+      "mean_relative_closeness": 0.2239,
+      "depth_band": "far"
+    },
+    {
+      "track_id": "guardrail_06",
+      "label": "guardrail",
+      "first_frame": "frame_000010.jpg",
+      "last_frame": "frame_000010.jpg",
+      "time_start_s": 90.0,
+      "time_end_s": 90.0,
+      "frames_seen": 1,
+      "mean_mask_area_frac": 0.0343,
+      "mean_relative_closeness": 0.2635,
+      "depth_band": "far"
+    }
+  ],
+  "memory": [
+    {
+      "frame": "frame_000001.jpg",
+      "timestamp_s": 0.0,
+      "objects": [
+        {
+          "track_id": "worker_01",
+          "label": "worker",
+          "bbox_xyxy": [
+            270.5,
+            110.0,
+            395.5,
+            260.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000001_worker_01.png",
+          "mask_area_frac": 0.0356,
+          "centroid_norm": [
+            0.52,
+            0.397
+          ],
+          "depth": {
+            "relative_closeness": 0.1339,
+            "band": "far",
+            "p10": 0.0941,
+            "p90": 0.2588,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 5
+          }
+        },
+        {
+          "track_id": "scaffold_01",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            170.0,
+            420.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000001_scaffold_01.png",
+          "mask_area_frac": 0.1819,
+          "centroid_norm": [
+            0.132,
+            0.436
+          ],
+          "depth": {
+            "relative_closeness": 0.5803,
+            "band": "mid",
+            "p10": 0.1725,
+            "p90": 0.8706,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        },
+        {
+          "track_id": "scaffold_02",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            400.0,
+            0.0,
+            510.0,
+            260.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000001_scaffold_02.png",
+          "mask_area_frac": 0.0734,
+          "centroid_norm": [
+            0.71,
+            0.27
+          ],
+          "depth": {
+            "relative_closeness": 0.3288,
+            "band": "far",
+            "p10": 0.0941,
+            "p90": 0.5373,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        },
+        {
+          "track_id": "concrete_block_wall_01",
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            55.0,
+            235.0,
+            595.0,
+            470.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000001_concrete_block_wall_01.png",
+          "mask_area_frac": 0.4154,
+          "centroid_norm": [
+            0.508,
+            0.734
+          ],
+          "depth": {
+            "relative_closeness": 0.5158,
+            "band": "mid",
+            "p10": 0.2235,
+            "p90": 0.851,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        },
+        {
+          "track_id": "guardrail_01",
+          "label": "guardrail",
+          "bbox_xyxy": [
+            50.0,
+            222.0,
+            294.0,
+            264.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000001_guardrail_01.png",
+          "mask_area_frac": 0.0268,
+          "centroid_norm": [
+            0.268,
+            0.505
+          ],
+          "depth": {
+            "relative_closeness": 0.2175,
+            "band": "far",
+            "p10": 0.0941,
+            "p90": 0.8863,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 4
+          }
+        }
+      ],
+      "relations": [
+        "worker_01_near_concrete_block_wall_01",
+        "worker_01_edge_context_guardrail_01"
+      ],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000001_depth.png",
+      "depth_order_closest_first": [
+        "scaffold_01",
+        "concrete_block_wall_01",
+        "scaffold_02",
+        "guardrail_01",
+        "worker_01"
+      ]
+    },
+    {
+      "frame": "frame_000002.jpg",
+      "timestamp_s": 10.0,
+      "objects": [
+        {
+          "track_id": "worker_01",
+          "label": "worker",
+          "bbox_xyxy": [
+            210.0,
+            142.0,
+            340.0,
+            292.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000002_worker_01.png",
+          "mask_area_frac": 0.0372,
+          "centroid_norm": [
+            0.43,
+            0.464
+          ],
+          "depth": {
+            "relative_closeness": 0.2054,
+            "band": "far",
+            "p10": 0.0824,
+            "p90": 0.4235,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 5
+          }
+        },
+        {
+          "track_id": "worker_02",
+          "label": "worker",
+          "bbox_xyxy": [
+            544.0,
+            56.0,
+            640.0,
+            381.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000002_worker_02.png",
+          "mask_area_frac": 0.0604,
+          "centroid_norm": [
+            0.925,
+            0.48
+          ],
+          "depth": {
+            "relative_closeness": 0.6434,
+            "band": "mid",
+            "p10": 0.2745,
+            "p90": 0.8235,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        },
+        {
+          "track_id": "scaffold_02",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            344.0,
+            0.0,
+            480.0,
+            315.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000002_scaffold_02.png",
+          "mask_area_frac": 0.1099,
+          "centroid_norm": [
+            0.643,
+            0.327
+          ],
+          "depth": {
+            "relative_closeness": 0.2657,
+            "band": "far",
+            "p10": 0.0824,
+            "p90": 0.6588,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 4
+          }
+        },
+        {
+          "track_id": "concrete_block_wall_01",
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            88.0,
+            230.0,
+            544.0,
+            430.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000002_concrete_block_wall_01.png",
+          "mask_area_frac": 0.2988,
+          "centroid_norm": [
+            0.494,
+            0.688
+          ],
+          "depth": {
+            "relative_closeness": 0.5015,
+            "band": "mid",
+            "p10": 0.0824,
+            "p90": 0.8118,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        },
+        {
+          "track_id": "material_stack_01",
+          "label": "material stack",
+          "bbox_xyxy": [
+            486.0,
+            206.0,
+            628.0,
+            306.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000002_material_stack_01.png",
+          "mask_area_frac": 0.0468,
+          "centroid_norm": [
+            0.87,
+            0.533
+          ],
+          "depth": {
+            "relative_closeness": 0.441,
+            "band": "mid",
+            "p10": 0.1216,
+            "p90": 0.7961,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        },
+        {
+          "track_id": "guardrail_01",
+          "label": "guardrail",
+          "bbox_xyxy": [
+            52.0,
+            240.0,
+            294.0,
+            282.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000002_guardrail_01.png",
+          "mask_area_frac": 0.0266,
+          "centroid_norm": [
+            0.27,
+            0.543
+          ],
+          "depth": {
+            "relative_closeness": 0.1604,
+            "band": "far",
+            "p10": 0.0824,
+            "p90": 0.4196,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 6
+          }
+        }
+      ],
+      "relations": [
+        "worker_01_near_concrete_block_wall_01",
+        "worker_02_near_concrete_block_wall_01",
+        "worker_01_edge_context_guardrail_01"
+      ],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000002_depth.png",
+      "depth_order_closest_first": [
+        "worker_02",
+        "concrete_block_wall_01",
+        "material_stack_01",
+        "scaffold_02",
+        "worker_01",
+        "guardrail_01"
+      ]
+    },
+    {
+      "frame": "frame_000003.jpg",
+      "timestamp_s": 20.0,
+      "objects": [
+        {
+          "track_id": "worker_02",
+          "label": "worker",
+          "bbox_xyxy": [
+            414.0,
+            30.0,
+            640.0,
+            480.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000003_worker_02.png",
+          "mask_area_frac": 0.1937,
+          "centroid_norm": [
+            0.823,
+            0.566
+          ],
+          "depth": {
+            "relative_closeness": 0.4408,
+            "band": "mid",
+            "p10": 0.1451,
+            "p90": 0.5647,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        },
+        {
+          "track_id": "scaffold_03",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            504.0,
+            0.0,
+            640.0,
+            480.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000003_scaffold_03.png",
+          "mask_area_frac": 0.1669,
+          "centroid_norm": [
+            0.893,
+            0.499
+          ],
+          "depth": {
+            "relative_closeness": 0.3996,
+            "band": "mid",
+            "p10": 0.0824,
+            "p90": 0.5569,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        },
+        {
+          "track_id": "material_stack_02",
+          "label": "material stack",
+          "bbox_xyxy": [
+            127.0,
+            183.0,
+            343.0,
+            328.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000003_material_stack_02.png",
+          "mask_area_frac": 0.1029,
+          "centroid_norm": [
+            0.367,
+            0.532
+          ],
+          "depth": {
+            "relative_closeness": 0.293,
+            "band": "far",
+            "p10": 0.1725,
+            "p90": 0.4196,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        },
+        {
+          "track_id": "guardrail_02",
+          "label": "guardrail",
+          "bbox_xyxy": [
+            43.0,
+            182.0,
+            401.0,
+            244.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000003_guardrail_02.png",
+          "mask_area_frac": 0.057,
+          "centroid_norm": [
+            0.346,
+            0.443
+          ],
+          "depth": {
+            "relative_closeness": 0.2751,
+            "band": "far",
+            "p10": 0.1373,
+            "p90": 0.451,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 4
+          }
+        }
+      ],
+      "relations": [],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000003_depth.png",
+      "depth_order_closest_first": [
+        "worker_02",
+        "scaffold_03",
+        "material_stack_02",
+        "guardrail_02"
+      ]
+    },
+    {
+      "frame": "frame_000004.jpg",
+      "timestamp_s": 30.0,
+      "objects": [
+        {
+          "track_id": "worker_03",
+          "label": "worker",
+          "bbox_xyxy": [
+            288.5,
+            154.0,
+            393.5,
+            380.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000004_worker_03.png",
+          "mask_area_frac": 0.0456,
+          "centroid_norm": [
+            0.533,
+            0.574
+          ],
+          "depth": {
+            "relative_closeness": 0.658,
+            "band": "mid",
+            "p10": 0.6196,
+            "p90": 0.7529,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        },
+        {
+          "track_id": "scaffold_03",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            380.5,
+            0.0,
+            565.5,
+            480.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000004_scaffold_03.png",
+          "mask_area_frac": 0.2245,
+          "centroid_norm": [
+            0.738,
+            0.499
+          ],
+          "depth": {
+            "relative_closeness": 0.6532,
+            "band": "mid",
+            "p10": 0.1176,
+            "p90": 0.8784,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        },
+        {
+          "track_id": "material_stack_03",
+          "label": "material stack",
+          "bbox_xyxy": [
+            0.0,
+            254.0,
+            208.0,
+            418.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000004_material_stack_03.png",
+          "mask_area_frac": 0.112,
+          "centroid_norm": [
+            0.163,
+            0.7
+          ],
+          "depth": {
+            "relative_closeness": 0.2996,
+            "band": "far",
+            "p10": 0.1176,
+            "p90": 0.6039,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        },
+        {
+          "track_id": "guardrail_02",
+          "label": "guardrail",
+          "bbox_xyxy": [
+            0.0,
+            198.5,
+            356.0,
+            255.5
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000004_guardrail_02.png",
+          "mask_area_frac": 0.0527,
+          "centroid_norm": [
+            0.277,
+            0.472
+          ],
+          "depth": {
+            "relative_closeness": 0.1703,
+            "band": "far",
+            "p10": 0.1176,
+            "p90": 0.1608,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 4
+          }
+        }
+      ],
+      "relations": [
+        "worker_03_edge_context_guardrail_02"
+      ],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000004_depth.png",
+      "depth_order_closest_first": [
+        "worker_03",
+        "scaffold_03",
+        "material_stack_03",
+        "guardrail_02"
+      ]
+    },
+    {
+      "frame": "frame_000005.jpg",
+      "timestamp_s": 40.0,
+      "objects": [
+        {
+          "track_id": "worker_03",
+          "label": "worker",
+          "bbox_xyxy": [
+            206.0,
+            173.0,
+            640.0,
+            343.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000005_worker_03.png",
+          "mask_area_frac": 0.1415,
+          "centroid_norm": [
+            0.661,
+            0.551
+          ],
+          "depth": {
+            "relative_closeness": 0.5955,
+            "band": "mid",
+            "p10": 0.0549,
+            "p90": 0.8706,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        },
+        {
+          "track_id": "guardrail_03",
+          "label": "guardrail",
+          "bbox_xyxy": [
+            0.0,
+            250.0,
+            640.0,
+            310.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000005_guardrail_03.png",
+          "mask_area_frac": 0.0981,
+          "centroid_norm": [
+            0.499,
+            0.582
+          ],
+          "depth": {
+            "relative_closeness": 0.5287,
+            "band": "mid",
+            "p10": 0.0745,
+            "p90": 0.8745,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        },
+        {
+          "track_id": "open_edge_01",
+          "label": "open edge",
+          "bbox_xyxy": [
+            0.0,
+            270.0,
+            640.0,
+            385.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000005_open_edge_01.png",
+          "mask_area_frac": 0.1874,
+          "centroid_norm": [
+            0.499,
+            0.681
+          ],
+          "depth": {
+            "relative_closeness": 0.5294,
+            "band": "mid",
+            "p10": 0.1059,
+            "p90": 0.8431,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        }
+      ],
+      "relations": [
+        "worker_03_edge_context_guardrail_03",
+        "worker_03_edge_context_open_edge_01"
+      ],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000005_depth.png",
+      "depth_order_closest_first": [
+        "worker_03",
+        "open_edge_01",
+        "guardrail_03"
+      ]
+    },
+    {
+      "frame": "frame_000006.jpg",
+      "timestamp_s": 50.0,
+      "objects": [
+        {
+          "track_id": "worker_04",
+          "label": "worker",
+          "bbox_xyxy": [
+            583.0,
+            336.0,
+            640.0,
+            480.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000006_worker_04.png",
+          "mask_area_frac": 0.0153,
+          "centroid_norm": [
+            0.955,
+            0.861
+          ],
+          "depth": {
+            "relative_closeness": 0.8451,
+            "band": "near",
+            "p10": 0.351,
+            "p90": 0.9843,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        },
+        {
+          "track_id": "material_stack_04",
+          "label": "material stack",
+          "bbox_xyxy": [
+            243.0,
+            290.0,
+            479.0,
+            393.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000006_material_stack_04.png",
+          "mask_area_frac": 0.08,
+          "centroid_norm": [
+            0.564,
+            0.711
+          ],
+          "depth": {
+            "relative_closeness": 0.1201,
+            "band": "far",
+            "p10": 0.051,
+            "p90": 0.1922,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        },
+        {
+          "track_id": "open_edge_01",
+          "label": "open edge",
+          "bbox_xyxy": [
+            0.0,
+            232.0,
+            640.0,
+            404.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000006_open_edge_01.png",
+          "mask_area_frac": 0.2802,
+          "centroid_norm": [
+            0.499,
+            0.661
+          ],
+          "depth": {
+            "relative_closeness": 0.1756,
+            "band": "far",
+            "p10": 0.0275,
+            "p90": 0.3647,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        }
+      ],
+      "relations": [
+        "worker_04_edge_context_open_edge_01"
+      ],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000006_depth.png",
+      "depth_order_closest_first": [
+        "worker_04",
+        "open_edge_01",
+        "material_stack_04"
+      ]
+    },
+    {
+      "frame": "frame_000007.jpg",
+      "timestamp_s": 60.0,
+      "objects": [
+        {
+          "track_id": "worker_05",
+          "label": "worker",
+          "bbox_xyxy": [
+            201.0,
+            130.0,
+            303.0,
+            345.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000007_worker_05.png",
+          "mask_area_frac": 0.0421,
+          "centroid_norm": [
+            0.394,
+            0.512
+          ],
+          "depth": {
+            "relative_closeness": 0.3463,
+            "band": "far",
+            "p10": 0.1961,
+            "p90": 0.4824,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 4
+          }
+        },
+        {
+          "track_id": "scaffold_04",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            339.0,
+            0.0,
+            537.0,
+            480.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000007_scaffold_04.png",
+          "mask_area_frac": 0.2417,
+          "centroid_norm": [
+            0.684,
+            0.499
+          ],
+          "depth": {
+            "relative_closeness": 0.4162,
+            "band": "mid",
+            "p10": 0.1098,
+            "p90": 0.5804,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        },
+        {
+          "track_id": "concrete_block_wall_02",
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            491.0,
+            282.0,
+            640.0,
+            450.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000007_concrete_block_wall_02.png",
+          "mask_area_frac": 0.0818,
+          "centroid_norm": [
+            0.883,
+            0.762
+          ],
+          "depth": {
+            "relative_closeness": 0.3088,
+            "band": "far",
+            "p10": 0.149,
+            "p90": 0.4706,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 5
+          }
+        },
+        {
+          "track_id": "material_stack_05",
+          "label": "material stack",
+          "bbox_xyxy": [
+            32.0,
+            192.0,
+            302.0,
+            316.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000007_material_stack_05.png",
+          "mask_area_frac": 0.11,
+          "centroid_norm": [
+            0.261,
+            0.529
+          ],
+          "depth": {
+            "relative_closeness": 0.3818,
+            "band": "mid",
+            "p10": 0.2471,
+            "p90": 0.4902,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        },
+        {
+          "track_id": "guardrail_04",
+          "label": "guardrail",
+          "bbox_xyxy": [
+            30.0,
+            196.0,
+            345.0,
+            245.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000007_guardrail_04.png",
+          "mask_area_frac": 0.0405,
+          "centroid_norm": [
+            0.292,
+            0.458
+          ],
+          "depth": {
+            "relative_closeness": 0.3546,
+            "band": "far",
+            "p10": 0.2314,
+            "p90": 0.4941,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        }
+      ],
+      "relations": [
+        "worker_05_edge_context_guardrail_04"
+      ],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000007_depth.png",
+      "depth_order_closest_first": [
+        "scaffold_04",
+        "material_stack_05",
+        "guardrail_04",
+        "worker_05",
+        "concrete_block_wall_02"
+      ]
+    },
+    {
+      "frame": "frame_000008.jpg",
+      "timestamp_s": 70.0,
+      "objects": [
+        {
+          "track_id": "worker_06",
+          "label": "worker",
+          "bbox_xyxy": [
+            588.0,
+            133.5,
+            640.0,
+            279.5
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000008_worker_06.png",
+          "mask_area_frac": 0.0146,
+          "centroid_norm": [
+            0.959,
+            0.441
+          ],
+          "depth": {
+            "relative_closeness": 0.3207,
+            "band": "far",
+            "p10": 0.1059,
+            "p90": 0.5294,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 4
+          }
+        },
+        {
+          "track_id": "scaffold_05",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            364.0,
+            480.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000008_scaffold_05.png",
+          "mask_area_frac": 0.4403,
+          "centroid_norm": [
+            0.284,
+            0.499
+          ],
+          "depth": {
+            "relative_closeness": 0.3433,
+            "band": "far",
+            "p10": 0.1059,
+            "p90": 0.5333,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        },
+        {
+          "track_id": "concrete_block_wall_02",
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            478.0,
+            248.0,
+            640.0,
+            432.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000008_concrete_block_wall_02.png",
+          "mask_area_frac": 0.0974,
+          "centroid_norm": [
+            0.873,
+            0.708
+          ],
+          "depth": {
+            "relative_closeness": 0.4623,
+            "band": "mid",
+            "p10": 0.2745,
+            "p90": 0.6275,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        },
+        {
+          "track_id": "material_stack_06",
+          "label": "material stack",
+          "bbox_xyxy": [
+            252.0,
+            257.0,
+            456.0,
+            413.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000008_material_stack_06.png",
+          "mask_area_frac": 0.1045,
+          "centroid_norm": [
+            0.553,
+            0.698
+          ],
+          "depth": {
+            "relative_closeness": 0.4773,
+            "band": "mid",
+            "p10": 0.2275,
+            "p90": 0.8588,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        }
+      ],
+      "relations": [
+        "worker_06_near_concrete_block_wall_02"
+      ],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000008_depth.png",
+      "depth_order_closest_first": [
+        "material_stack_06",
+        "concrete_block_wall_02",
+        "scaffold_05",
+        "worker_06"
+      ]
+    },
+    {
+      "frame": "frame_000009.jpg",
+      "timestamp_s": 80.0,
+      "objects": [
+        {
+          "track_id": "worker_07",
+          "label": "worker",
+          "bbox_xyxy": [
+            297.0,
+            133.5,
+            392.0,
+            275.5
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000009_worker_07.png",
+          "mask_area_frac": 0.0254,
+          "centroid_norm": [
+            0.538,
+            0.436
+          ],
+          "depth": {
+            "relative_closeness": 0.1834,
+            "band": "far",
+            "p10": 0.0784,
+            "p90": 0.3882,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 5
+          }
+        },
+        {
+          "track_id": "scaffold_05",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            162.0,
+            480.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000009_scaffold_05.png",
+          "mask_area_frac": 0.1986,
+          "centroid_norm": [
+            0.126,
+            0.499
+          ],
+          "depth": {
+            "relative_closeness": 0.4523,
+            "band": "mid",
+            "p10": 0.1255,
+            "p90": 0.749,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        },
+        {
+          "track_id": "scaffold_06",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            430.5,
+            0.0,
+            570.5,
+            208.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000009_scaffold_06.png",
+          "mask_area_frac": 0.0744,
+          "centroid_norm": [
+            0.781,
+            0.216
+          ],
+          "depth": {
+            "relative_closeness": 0.3949,
+            "band": "mid",
+            "p10": 0.0784,
+            "p90": 0.7137,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        },
+        {
+          "track_id": "concrete_block_wall_02",
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            222.0,
+            231.5,
+            638.0,
+            458.5
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000009_concrete_block_wall_02.png",
+          "mask_area_frac": 0.3093,
+          "centroid_norm": [
+            0.672,
+            0.72
+          ],
+          "depth": {
+            "relative_closeness": 0.6121,
+            "band": "mid",
+            "p10": 0.2706,
+            "p90": 0.8941,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        },
+        {
+          "track_id": "guardrail_05",
+          "label": "guardrail",
+          "bbox_xyxy": [
+            86.0,
+            209.0,
+            382.0,
+            257.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000009_guardrail_05.png",
+          "mask_area_frac": 0.0374,
+          "centroid_norm": [
+            0.365,
+            0.484
+          ],
+          "depth": {
+            "relative_closeness": 0.1871,
+            "band": "far",
+            "p10": 0.0824,
+            "p90": 0.3725,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 4
+          }
+        }
+      ],
+      "relations": [
+        "worker_07_near_concrete_block_wall_02",
+        "worker_07_edge_context_guardrail_05"
+      ],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000009_depth.png",
+      "depth_order_closest_first": [
+        "concrete_block_wall_02",
+        "scaffold_05",
+        "scaffold_06",
+        "guardrail_05",
+        "worker_07"
+      ]
+    },
+    {
+      "frame": "frame_000010.jpg",
+      "timestamp_s": 90.0,
+      "objects": [
+        {
+          "track_id": "worker_08",
+          "label": "worker",
+          "bbox_xyxy": [
+            116.0,
+            60.0,
+            314.0,
+            480.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000010_worker_08.png",
+          "mask_area_frac": 0.158,
+          "centroid_norm": [
+            0.336,
+            0.596
+          ],
+          "depth": {
+            "relative_closeness": 0.6566,
+            "band": "mid",
+            "p10": 0.5294,
+            "p90": 0.7294,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 1
+          }
+        },
+        {
+          "track_id": "worker_09",
+          "label": "worker",
+          "bbox_xyxy": [
+            368.0,
+            175.0,
+            428.0,
+            315.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000010_worker_09.png",
+          "mask_area_frac": 0.0152,
+          "centroid_norm": [
+            0.622,
+            0.519
+          ],
+          "depth": {
+            "relative_closeness": 0.2239,
+            "band": "far",
+            "p10": 0.1255,
+            "p90": 0.3608,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 5
+          }
+        },
+        {
+          "track_id": "scaffold_05",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            202.0,
+            480.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000010_scaffold_05.png",
+          "mask_area_frac": 0.2446,
+          "centroid_norm": [
+            0.157,
+            0.499
+          ],
+          "depth": {
+            "relative_closeness": 0.4647,
+            "band": "mid",
+            "p10": 0.1333,
+            "p90": 0.5961,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 3
+          }
+        },
+        {
+          "track_id": "scaffold_06",
+          "label": "scaffold",
+          "bbox_xyxy": [
+            399.0,
+            0.0,
+            610.0,
+            274.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000010_scaffold_06.png",
+          "mask_area_frac": 0.148,
+          "centroid_norm": [
+            0.787,
+            0.284
+          ],
+          "depth": {
+            "relative_closeness": 0.2183,
+            "band": "far",
+            "p10": 0.0784,
+            "p90": 0.3529,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 6
+          }
+        },
+        {
+          "track_id": "concrete_block_wall_02",
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            202.0,
+            278.0,
+            640.0,
+            440.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000010_concrete_block_wall_02.png",
+          "mask_area_frac": 0.2322,
+          "centroid_norm": [
+            0.657,
+            0.748
+          ],
+          "depth": {
+            "relative_closeness": 0.546,
+            "band": "mid",
+            "p10": 0.3333,
+            "p90": 0.7255,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 2
+          }
+        },
+        {
+          "track_id": "guardrail_06",
+          "label": "guardrail",
+          "bbox_xyxy": [
+            241.5,
+            236.0,
+            569.5,
+            276.0
+          ],
+          "mask_path": "runs/vinna-hardhat/masks/frame_000010_guardrail_06.png",
+          "mask_area_frac": 0.0343,
+          "centroid_norm": [
+            0.633,
+            0.532
+          ],
+          "depth": {
+            "relative_closeness": 0.2635,
+            "band": "far",
+            "p10": 0.1765,
+            "p90": 0.3804,
+            "source": "depth_anything_hf",
+            "rank_closest_in_frame": 4
+          }
+        }
+      ],
+      "relations": [
+        "worker_08_near_concrete_block_wall_02",
+        "worker_09_near_concrete_block_wall_02",
+        "worker_08_edge_context_guardrail_06",
+        "worker_09_edge_context_guardrail_06"
+      ],
+      "depth_map_path": "runs/vinna-hardhat/depth/frame_000010_depth.png",
+      "depth_order_closest_first": [
+        "worker_08",
+        "concrete_block_wall_02",
+        "scaffold_05",
+        "guardrail_06",
+        "worker_09",
+        "scaffold_06"
+      ]
+    }
+  ]
+}
