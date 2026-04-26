@@ -1,9 +1,9 @@
 {
   "query": "Was there masonry work happening near the wall?",
-  "provider": "heuristic",
-  "model": null,
-  "fallback_used": false,
-  "error": null,
+  "provider": "gemini",
+  "model": "gemini-2.5-flash",
+  "fallback_used": true,
+  "error": "TimeoutError: Gemini call exceeded 5s and was terminated.",
   "answer": "Answer: The strongest matching memory is episode_001 (masonry_work_candidate) from 0.0s to 10.0s.\nWhy: Worker and concrete block wall are co-present, with proximity evidence where available.\nSpatial evidence: scaffold_01 (scaffold) is near depth rank 1; concrete_block_wall_01 (concrete block wall) is near depth rank 2; scaffold_02 (scaffold) is mid depth rank 3\nRelations: worker_01_near_concrete_block_wall_01, worker_02_near_concrete_block_wall_01\nEvidence frames: frame_000001.jpg, frame_000002.jpg\nQuery: Was there masonry work happening near the wall?",
   "retrieved_episodes": [
     {
@@ -151,46 +151,6 @@
         "worker_02 (worker) is near depth rank 1",
         "material_stack_01 (material stack) is mid depth rank 3",
         "guardrail_01 guardrail depth=far score=0.0833"
-      ]
-    },
-    {
-      "episode_id": "episode_009",
-      "event_type": "safety_edge_context",
-      "time_start_s": 80.0,
-      "time_end_s": 90.0,
-      "confidence": 0.815,
-      "observation": "Guardrail or open-edge context is visible near worker/site activity.",
-      "evidence_frames": [
-        {
-          "frame": "frame_000009.jpg",
-          "votes": 1
-        },
-        {
-          "frame": "frame_000010.jpg",
-          "votes": 1
-        }
-      ],
-      "involved_tracks": [
-        "guardrail_05",
-        "guardrail_06",
-        "worker_07",
-        "worker_08",
-        "worker_09"
-      ],
-      "relations": [
-        "worker_07_edge_context_guardrail_05",
-        "worker_08_edge_context_guardrail_06",
-        "worker_09_edge_context_guardrail_06"
-      ],
-      "spatial_facts": [
-        "concrete_block_wall_02 (concrete block wall) is near depth rank 1",
-        "scaffold_05 (scaffold) is near depth rank 2",
-        "scaffold_06 (scaffold) is mid depth rank 3",
-        "guardrail_05 guardrail depth=far score=0.1035",
-        "worker_07 worker depth=mid score=0.2691",
-        "worker_08 (worker) is near depth rank 1",
-        "concrete_block_wall_02 (concrete block wall) is near depth rank 2",
-        "scaffold_05 (scaffold) is mid depth rank 3"
       ]
     }
   ]

@@ -5,8 +5,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import multiprocessing as mp
 import os
 import pathlib
+import queue
 from typing import Any
 
 from memory_retrieval import compact_episode, load_episodes, retrieve
@@ -53,14 +55,14 @@ def heuristic_answer(query: str, context: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def gemini_answer(query: str, context: list[dict[str, Any]], model_name: str) -> str:
+def _gemini_worker(
+    output: mp.Queue,
+    api_key: str,
+    model_name: str,
+    query: str,
+    context: list[dict[str, Any]],
+) -> None:
     import google.generativeai as genai
-
-    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-    if not api_key:
-        raise RuntimeError("GEMINI_API_KEY or GOOGLE_API_KEY is required for --provider gemini.")
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(model_name)
 
     prompt = f"""
 You answer from structured construction-video episodic memory.
@@ -77,8 +79,36 @@ Rules:
 - Be explicit when evidence is only a candidate, not proof.
 - Keep the answer short and useful for a construction productivity/safety judge.
 """
-    response = model.generate_content(prompt)
-    return response.text.strip()
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(model_name)
+        response = model.generate_content(prompt)
+        output.put({"ok": True, "text": response.text.strip()})
+    except Exception as exc:  # noqa: BLE001
+        output.put({"ok": False, "error": f"{type(exc).__name__}: {exc}"})
+
+
+def gemini_answer(query: str, context: list[dict[str, Any]], model_name: str, timeout_s: int) -> str:
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY or GOOGLE_API_KEY is required for --provider gemini.")
+
+    output: mp.Queue = mp.Queue()
+    process = mp.Process(target=_gemini_worker, args=(output, api_key, model_name, query, context))
+    process.start()
+    process.join(timeout_s)
+    if process.is_alive():
+        process.terminate()
+        process.join(2)
+        raise TimeoutError(f"Gemini call exceeded {timeout_s}s and was terminated.")
+
+    try:
+        result = output.get_nowait()
+    except queue.Empty as exc:
+        raise RuntimeError("Gemini worker exited without returning a response.") from exc
+    if not result["ok"]:
+        raise RuntimeError(result["error"])
+    return result["text"]
 
 
 def answer_query(
@@ -87,12 +117,21 @@ def answer_query(
     provider: str,
     top_k: int,
     model_name: str,
+    timeout_s: int,
+    fallback_on_error: bool,
 ) -> dict[str, Any]:
     episodes = load_episodes(memory_path)
     retrieved = retrieve(episodes, query, top_k)
     context = build_context(retrieved)
+    error = None
     if provider == "gemini":
-        answer = gemini_answer(query, context, model_name)
+        try:
+            answer = gemini_answer(query, context, model_name, timeout_s)
+        except Exception as exc:  # noqa: BLE001
+            if not fallback_on_error:
+                raise
+            error = f"{type(exc).__name__}: {exc}"
+            answer = heuristic_answer(query, context)
     else:
         answer = heuristic_answer(query, context)
 
@@ -100,6 +139,8 @@ def answer_query(
         "query": query,
         "provider": provider,
         "model": model_name if provider == "gemini" else None,
+        "fallback_used": error is not None,
+        "error": error,
         "answer": answer,
         "retrieved_episodes": context,
     }
@@ -113,10 +154,20 @@ def main() -> int:
     parser.add_argument("--provider", choices=["heuristic", "gemini"], default="heuristic")
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--top-k", type=int, default=4)
+    parser.add_argument("--timeout-s", type=int, default=20)
+    parser.add_argument("--no-fallback", action="store_true")
     args = parser.parse_args()
 
     load_env()
-    result = answer_query(pathlib.Path(args.memory), args.query, args.provider, args.top_k, args.model)
+    result = answer_query(
+        pathlib.Path(args.memory),
+        args.query,
+        args.provider,
+        args.top_k,
+        args.model,
+        args.timeout_s,
+        not args.no_fallback,
+    )
     out = pathlib.Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2), encoding="utf-8")
