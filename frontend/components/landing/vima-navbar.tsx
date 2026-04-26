@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
-import { LayoutDashboard } from "lucide-react";
+import { ClipboardCheck } from "lucide-react";
 import gsap from "gsap";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -310,15 +310,15 @@ export default function VimaNavbar() {
                 paper
               </Link>
               <Link
-                href="/demo"
+                href="/review"
                 prefetch
                 className="vima-nav-menu"
                 onMouseEnter={() => setActiveDropdown(null)}
-                onClick={navigateWithCurtain("/demo")}
-                aria-label="open dashboard"
+                onClick={navigateWithCurtain("/review")}
+                aria-label="open review queue"
               >
-                <LayoutDashboard size={15} strokeWidth={1.7} />
-                <span>dashboard</span>
+                <ClipboardCheck size={15} strokeWidth={1.7} />
+                <span>review</span>
               </Link>
             </div>
           </div>
