@@ -101,34 +101,25 @@ export function Showcase2() {
   });
 
   return (
-    <section className="w-full py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-neutral-950">
+    <section className="w-full bg-transparent">
       <div className="max-w-[1400px] mx-auto w-full">
-        {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        {/* small mono kicker so people know what they're looking at — no
+            big headline because showcase-2 lives inside the evidence
+            section which already has its own H2. */}
+        <p
+          className="mb-4"
+          style={{
+            color: "rgba(247,236,239,0.46)",
+            fontFamily: "var(--font-mono)",
+            fontSize: "10px",
+            letterSpacing: "0.05em",
+          }}
         >
-          <div className="max-w-xl">
-            <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 mb-4">
-              Featured Work
-            </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-neutral-900 dark:text-white leading-[1.15] mb-8 sm:mb-10">
-              Crafting digital experiences that inspire and engage.
-            </h2>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3.5 rounded-full bg-black dark:bg-white text-white dark:text-black font-medium text-sm sm:text-base hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors duration-200"
-            >
-              View Projects
-            </motion.button>
-          </div>
-        </motion.div>
+          frame stream · drag to inspect
+        </p>
 
         {/* Infinite Carousel */}
-        <div className="relative -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden py-20">
+        <div className="relative -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden py-12">
           <motion.div
             ref={scrollerRef}
             className="flex items-end gap-6 cursor-grab active:cursor-grabbing"

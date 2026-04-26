@@ -15,7 +15,6 @@ import Logo from "@/components/phosphor/logo";
 import Device from "@/components/react-bits/device";
 import { Showcase2 } from "@/components/blocks/showcase-2";
 import { Features3 } from "@/components/blocks/features-3";
-import Comparison3 from "@/components/blocks/comparison-3";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
 
 const INK = "#080503";
@@ -1061,10 +1060,12 @@ export default function VimaLandingPage() {
                 letterSpacing: "0.005em",
               }}
             >
-              The model proposes, humans confirm. A swipe-deck on iOS turns spatial
-              claims into seconds-long verifications. Right to confirm, left to reject.
-              Every confirmation earns XP. Every twenty-five claims spins a wheel that
-              can pay out real SOL.
+              Centralized labeling pipelines move at a worker&apos;s reading speed.
+              Vima reduces the unit of work to one tap on a phone. The model
+              proposes, humans confirm. Right to confirm, left to reject. Every
+              confirmation earns XP. Every twenty-five claims spins a wheel
+              that can pay out real SOL, settled on-chain the moment the work
+              clears.
             </p>
             <ul
               style={{
@@ -1175,12 +1176,6 @@ export default function VimaLandingPage() {
           </div>
         </div>
 
-        {/* throughput argument FOR the verification approach: vima vs.
-            manual labeling on claims-per-minute. lives inside verify
-            because it's the case for why the iOS swipe deck wins. */}
-        <div style={{ marginTop: "clamp(56px, 7vw, 112px)" }}>
-          <Comparison3 />
-        </div>
       </section>
 
       <SectionDivider id="pipeline" label="pipeline" index="04" />
