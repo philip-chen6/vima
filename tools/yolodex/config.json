@@ -1,6 +1,6 @@
 {
-  "project": "vima-hardhat",
-  "video_url": "../../data/video01.mp4",
+  "project": "vima-full",
+  "video_url": "data/video01.mp4",
   "classes": [
     "worker",
     "scaffold",
@@ -13,7 +13,7 @@
   ],
   "fps": 0.1,
   "output_dir": "output",
-  "label_mode": "codex",
+  "label_mode": "gemini",
   "num_agents": 1,
   "gemini_model": "gemini-2.5-flash"
 }

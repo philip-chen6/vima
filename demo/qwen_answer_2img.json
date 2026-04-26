@@ -1,0 +1,158 @@
+{
+  "query": "Was there masonry work happening near the concrete block wall? Cite the episode ids and frame filenames.",
+  "model": "Qwen/Qwen2-VL-2B-Instruct",
+  "answer": "The evidence frames for the masonry work near the concrete block wall are:\n\n- frame_000001.jpg\n- frame_000002.jpg\n- frame_000003.jpg\n- frame_000004.jpg\n- frame_000005.jpg",
+  "evidence_images": [
+    "/Users/philip/Projects/vinna/tools/yolodex/runs/vima-hardhat/frames/frame_000001.jpg",
+    "/Users/philip/Projects/vinna/tools/yolodex/runs/vima-hardhat/frames/frame_000002.jpg"
+  ],
+  "retrieved_episodes": [
+    {
+      "episode_id": "episode_001",
+      "event_type": "masonry_work_candidate",
+      "time_start_s": 0.0,
+      "time_end_s": 10.0,
+      "confidence": 0.875,
+      "observation": "Worker and concrete block wall are co-present, with proximity evidence where available.",
+      "evidence_frames": [
+        {
+          "frame": "frame_000001.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000002.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "concrete_block_wall_01",
+        "worker_01",
+        "worker_02"
+      ],
+      "relations": [
+        "worker_01_near_concrete_block_wall_01",
+        "worker_02_near_concrete_block_wall_01"
+      ],
+      "spatial_facts": [
+        "scaffold_01 (scaffold) is near depth rank 1",
+        "concrete_block_wall_01 (concrete block wall) is near depth rank 2",
+        "scaffold_02 (scaffold) is mid depth rank 3",
+        "concrete_block_wall_01 concrete block wall depth=near score=0.5753",
+        "worker_01 worker depth=mid score=0.2209",
+        "worker_02 (worker) is near depth rank 1",
+        "material_stack_01 (material stack) is mid depth rank 3",
+        "concrete_block_wall_01 concrete block wall depth=near score=0.6881"
+      ]
+    },
+    {
+      "episode_id": "episode_007",
+      "event_type": "masonry_work_candidate",
+      "time_start_s": 60.0,
+      "time_end_s": 90.0,
+      "confidence": 0.85,
+      "observation": "Worker and concrete block wall are co-present, with proximity evidence where available.",
+      "evidence_frames": [
+        {
+          "frame": "frame_000007.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000008.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000009.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000010.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "concrete_block_wall_02",
+        "worker_05",
+        "worker_06",
+        "worker_07",
+        "worker_08",
+        "worker_09"
+      ],
+      "relations": [
+        "worker_06_near_concrete_block_wall_02",
+        "worker_07_near_concrete_block_wall_02",
+        "worker_08_near_concrete_block_wall_02",
+        "worker_09_near_concrete_block_wall_02"
+      ],
+      "spatial_facts": [
+        "scaffold_04 (scaffold) is near depth rank 1",
+        "material_stack_05 (material stack) is near depth rank 2",
+        "worker_05 (worker) is mid depth rank 3",
+        "concrete_block_wall_02 concrete block wall depth=mid score=0.3957",
+        "worker_05 worker depth=mid score=0.4092",
+        "concrete_block_wall_02 (concrete block wall) is near depth rank 1",
+        "material_stack_06 (material stack) is near depth rank 2",
+        "scaffold_05 (scaffold) is mid depth rank 3"
+      ]
+    },
+    {
+      "episode_id": "episode_002",
+      "event_type": "safety_edge_context",
+      "time_start_s": 0.0,
+      "time_end_s": 60.0,
+      "confidence": 0.849,
+      "observation": "Guardrail or open-edge context is visible near worker/site activity.",
+      "evidence_frames": [
+        {
+          "frame": "frame_000001.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000002.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000003.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000004.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000005.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "guardrail_01",
+        "guardrail_02",
+        "guardrail_03",
+        "guardrail_04",
+        "open_edge_01",
+        "worker_01",
+        "worker_02",
+        "worker_03",
+        "worker_04",
+        "worker_05"
+      ],
+      "relations": [
+        "worker_01_edge_context_guardrail_01",
+        "worker_03_edge_context_guardrail_02",
+        "worker_03_edge_context_guardrail_03",
+        "worker_03_edge_context_open_edge_01",
+        "worker_04_edge_context_open_edge_01",
+        "worker_05_edge_context_guardrail_04"
+      ],
+      "spatial_facts": [
+        "scaffold_01 (scaffold) is near depth rank 1",
+        "concrete_block_wall_01 (concrete block wall) is near depth rank 2",
+        "scaffold_02 (scaffold) is mid depth rank 3",
+        "guardrail_01 guardrail depth=far score=0.1546",
+        "worker_01 worker depth=mid score=0.2209",
+        "worker_02 (worker) is near depth rank 1",
+        "material_stack_01 (material stack) is mid depth rank 3",
+        "guardrail_01 guardrail depth=far score=0.0833"
+      ]
+    }
+  ]
+}

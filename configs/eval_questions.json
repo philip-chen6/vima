@@ -1,0 +1,32 @@
+[
+  {
+    "id": "masonry_near_wall",
+    "question": "Was there masonry work happening near the concrete block wall?",
+    "expected_evidence": ["episode_001", "episode_007"],
+    "expected_terms": ["masonry", "concrete block wall", "frame_000001", "frame_000007"]
+  },
+  {
+    "id": "scaffold_visible",
+    "question": "Was a scaffold zone visible in the footage?",
+    "expected_evidence": ["episode_003", "episode_008"],
+    "expected_terms": ["scaffold", "frame"]
+  },
+  {
+    "id": "safety_edge_context",
+    "question": "Was there safety edge context near worker activity?",
+    "expected_evidence": ["episode_002", "episode_009"],
+    "expected_terms": ["guardrail", "open edge", "worker"]
+  },
+  {
+    "id": "material_staging",
+    "question": "Was material staging visible?",
+    "expected_evidence": ["episode_005", "episode_010"],
+    "expected_terms": ["material", "staging"]
+  },
+  {
+    "id": "candidate_not_proof",
+    "question": "Is the masonry claim definitive proof or only a candidate?",
+    "expected_evidence": ["episode_001", "episode_007"],
+    "expected_terms": ["candidate", "not definitive", "evidence"]
+  }
+]
