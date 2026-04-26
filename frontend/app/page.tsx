@@ -1016,7 +1016,7 @@ export default function VimaLandingPage() {
             <div className="ledger-audit-tail">
               <div>
                 <span>receipt hash</span>
-                <strong>frames:30 · zones:3 · evidence:ready</strong>
+                <strong>frames:30 · episodes:118 · evidence:ready</strong>
               </div>
               <div>
                 <span>review path</span>
@@ -1075,7 +1075,7 @@ export default function VimaLandingPage() {
               }}
             >
               Centralized labeling pipelines move at a worker&apos;s reading speed.
-              Vima reduces the unit of work to one tap on a phone. The model
+              vima reduces the unit of work to one tap on a phone. The model
               proposes its episodic memory claims, humans confirm or reject.
               Right to accept, left to reject, up to skip. The reviewed claims
               become the audit trail every safety incident depends on.

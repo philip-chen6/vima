@@ -144,7 +144,7 @@ export default function DemoClient({
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "clamp(120px, 14vw, 160px) clamp(20px, 5vw, 48px) clamp(28px, 3vw, 40px)",
+          padding: "clamp(96px, 10vw, 124px) clamp(20px, 5vw, 48px) clamp(20px, 2.4vw, 32px)",
         }}
       >
         <div
@@ -233,7 +233,7 @@ export default function DemoClient({
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "0 clamp(20px, 5vw, 48px) clamp(40px, 5vw, 64px)",
+          padding: "0 clamp(20px, 5vw, 48px) clamp(28px, 3.5vw, 44px)",
         }}
       >
         {summary ? (
@@ -331,7 +331,7 @@ export default function DemoClient({
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "0 clamp(20px, 5vw, 48px) clamp(40px, 5vw, 64px)",
+          padding: "0 clamp(20px, 5vw, 48px) clamp(28px, 3.5vw, 44px)",
         }}
       >
         <div
@@ -397,7 +397,7 @@ export default function DemoClient({
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px)",
+          padding: "clamp(28px, 3.5vw, 44px) clamp(20px, 5vw, 48px)",
           borderTop: `1px solid ${LINE}`,
           display: "grid",
           gridTemplateColumns: "minmax(280px, 360px) minmax(0, 1fr)",
@@ -478,7 +478,7 @@ export default function DemoClient({
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px)",
+          padding: "clamp(28px, 3.5vw, 44px) clamp(20px, 5vw, 48px)",
           borderTop: `1px solid ${LINE}`,
         }}
       >
@@ -638,7 +638,7 @@ export default function DemoClient({
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px)",
+          padding: "clamp(28px, 3.5vw, 44px) clamp(20px, 5vw, 48px)",
           borderTop: `1px solid ${LINE}`,
         }}
       >
@@ -842,7 +842,7 @@ export default function DemoClient({
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px) clamp(80px, 10vw, 140px)",
+          padding: "clamp(28px, 3.5vw, 44px) clamp(20px, 5vw, 48px) clamp(80px, 10vw, 140px)",
           borderTop: `1px solid ${LINE}`,
           display: "grid",
           gridTemplateColumns: "minmax(0, 1fr) auto",
@@ -1014,7 +1014,7 @@ function DepthFilterPanel() {
       style={{
         maxWidth: "1400px",
         margin: "0 auto",
-        padding: "clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px)",
+        padding: "clamp(28px, 3.5vw, 44px) clamp(20px, 5vw, 48px)",
         borderTop: `1px solid ${LINE}`,
       }}
     >
