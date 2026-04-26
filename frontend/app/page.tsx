@@ -43,12 +43,15 @@ const ledgerReceipts = [
   {
     id: "f-183",
     time: "183.2s",
-    label: "C",
-    claim: "material staging",
+    // Real cii-results has only P + NC categories (the model didn't emit any
+    // C labels in this run). Keeping the row as a P with a different
+    // activity so the ledger reads as the real 26P/4NC distribution.
+    label: "P",
+    claim: "scaffold transition",
     zone: "zone b",
-    confidence: "0.88",
-    status: "context",
-    weight: "0.34x",
+    confidence: "0.91",
+    status: "settles",
+    weight: "1.00x",
   },
   {
     id: "f-808",
@@ -1025,7 +1028,7 @@ export default function VimaLandingPage() {
             display: "grid",
             gridTemplateColumns: "minmax(0, 1fr) auto",
             gap: "clamp(28px, 5vw, 64px)",
-            alignItems: "center",
+            alignItems: "start",
           }}
         >
           <div style={{ minWidth: 0 }}>

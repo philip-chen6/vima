@@ -87,20 +87,60 @@ async def analyze_frame(
     examples, no schema. Used by /eval to A/B vima against raw VLM. Surface it
     as a query param so judges can flip between them in the live demo.
     """
-    tmp = tempfile.NamedTemporaryFile(suffix=pathlib.Path(file.filename).suffix, delete=False)
+    import anthropic as _anthropic_pkg
+
+    # Defensive against missing/empty filenames from clients that don't send
+    # one (raw camera blob upload, fetch w/o `name=`, malformed multipart).
+    safe_filename = file.filename or "upload.jpg"
+    safe_suffix = pathlib.Path(safe_filename).suffix or ".jpg"
+    tmp = tempfile.NamedTemporaryFile(suffix=safe_suffix, delete=False)
     try:
         shutil.copyfileobj(file.file, tmp)
         tmp.close()
-        if prompt == "baseline":
-            result = baseline_classify(tmp.name)
-            result["prompt"] = "baseline"
-        else:
-            # vima-prompt-v1 — disable self-consistency for the live endpoint
-            # to keep latency under 5s. Full self-consistency runs in the
-            # offline eval harness where 2x latency is fine.
-            result = vima_classify(tmp.name, event_id=event_id,
-                                   timestamp_s=timestamp, self_consistency=False)
-        return JSONResponse(result)
+        try:
+            if prompt == "baseline":
+                result = baseline_classify(tmp.name)
+                result["prompt"] = "baseline"
+            else:
+                # vima-prompt-v1 — disable self-consistency for the live
+                # endpoint to keep latency under 5s. Full self-consistency
+                # runs in the offline eval harness where 2x latency is fine.
+                result = vima_classify(tmp.name, event_id=event_id,
+                                       timestamp_s=timestamp, self_consistency=False)
+            return JSONResponse(result)
+        except _anthropic_pkg.AuthenticationError:
+            # Anthropic key invalid / expired / not loaded. Don't 500 the
+            # endpoint — return a structured 'paused' response so the UI
+            # can render a calm "service paused" state instead of a stack
+            # trace. Status 503 makes the failure semantically correct
+            # without losing the body.
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "error": "auth",
+                    "message": "Anthropic API key invalid or unset on server.",
+                    "service_state": "paused",
+                    "hint": "Frontend should fall back to cached cii-results.json output.",
+                },
+            )
+        except _anthropic_pkg.RateLimitError:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "error": "rate_limit",
+                    "message": "Anthropic API rate-limited. Try again shortly.",
+                    "service_state": "throttled",
+                },
+            )
+        except _anthropic_pkg.APIConnectionError as e:
+            return JSONResponse(
+                status_code=502,
+                content={
+                    "error": "upstream",
+                    "message": f"Anthropic API unreachable: {type(e).__name__}",
+                    "service_state": "upstream_down",
+                },
+            )
     finally:
         pathlib.Path(tmp.name).unlink(missing_ok=True)
 

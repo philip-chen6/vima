@@ -77,7 +77,7 @@ export default function DemoClient({
   const [frames, setFrames] = useState<Frame[] | null>(initialFrames);
   const [loading, setLoading] = useState(initialSummary === null);
   const [refreshing, setRefreshing] = useState(false);
-  const [filter, setFilter] = useState<"all" | "P" | "C" | "NC">("all");
+  const [filter, setFilter] = useState<"all" | "P" | "NC">("all");
   // Frame highlighted by clicking a camera frustum in the 3D viewer.
   // Undefined until first click. Drives the thumbnail panel below the cloud.
   const [pickedFrame, setPickedFrame] = useState<string | null>(null);
@@ -722,7 +722,11 @@ export default function DemoClient({
             </h2>
           </div>
           <div style={{ display: "flex", gap: "6px" }}>
-            {(["all", "P", "C", "NC"] as const).map((f) => {
+            {/* C filter dropped — current cii-results.json is 26P + 4NC + 0C
+                so the "C only" button would return zero rows and read as
+                broken. If josh re-runs the classifier and emits C frames,
+                add it back here. */}
+            {(["all", "P", "NC"] as const).map((f) => {
               const active = filter === f;
               return (
                 <button
@@ -962,11 +966,23 @@ export default function DemoClient({
 
         @media (max-width: 880px) {
           :global(.vima-stats-grid) {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
           }
           :global(.vima-stats-grid) > div {
             border-right: 0 !important;
             border-top: 1px solid rgba(242, 167, 184, 0.12);
+          }
+        }
+        /* Below 540px the 6 stat cells crush to ~50px each at 3-up. Drop
+           to 2-up so each cell can breathe and the value+label both fit. */
+        @media (max-width: 540px) {
+          :global(.vima-stats-grid) {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+        }
+        @media (max-width: 380px) {
+          :global(.vima-stats-grid) {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>

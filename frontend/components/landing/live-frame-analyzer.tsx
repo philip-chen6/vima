@@ -93,6 +93,18 @@ export function LiveFrameAnalyzer() {
           method: "POST",
           body: fd,
         });
+        // 503 = backend is up but Anthropic upstream is paused (auth /
+        // rate limit / connection). The body is structured JSON. Render
+        // a calm paused state instead of a generic error.
+        if (res.status === 503 || res.status === 502) {
+          const body = await res.json().catch(() => ({}));
+          const msg =
+            body.message ||
+            "Live analyzer is paused. Cached evidence below remains valid.";
+          setError(`PAUSED: ${msg}`);
+          setPhase("error");
+          return;
+        }
         if (!res.ok) {
           const text = await res.text().catch(() => "");
           throw new Error(
