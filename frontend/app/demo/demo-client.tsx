@@ -379,8 +379,9 @@ export default function DemoClient({
             }}
           >
             Same endpoint the production pipeline uses. Sub-5-second latency.
-            Returns confidence, episode type, OSHA flags, spatial claims with
-            distance estimates.
+            Returns the structured spatial claim — P/C/NC verdict, mean
+            confidence, and the object/location/distance_m tuples the model
+            grounded its answer in.
           </p>
         </div>
 
@@ -453,7 +454,7 @@ export default function DemoClient({
           >
             <li>· depth-anything-v2-small</li>
             <li>· sam-vit-base · 8×8 prompt grid</li>
-            <li>· ~50 masks per frame</li>
+            <li>· ~55 masks per frame</li>
             <li>· precomputed (apple mps)</li>
           </ul>
         </div>

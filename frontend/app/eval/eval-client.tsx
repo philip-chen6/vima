@@ -3,10 +3,13 @@
 // /eval — vima sees time
 // ---------------------------------------------------------------------------
 // Real data, not reference. Reads:
-//   /data/episodes.json         — 21 episodes from the masonry capture, each
-//                                  with summary + spatial_claims (object,
-//                                  location, distance_m) + ts range + confidence
-//   /masonry-frames/manifest    — 11 frames timestamped 0–90s
+//   /data/episodes.json         — 118 non-empty episodes from the masonry
+//                                  capture, each with summary + spatial_claims
+//                                  (object, location, distance_m) + ts range +
+//                                  confidence
+//   /masonry-frames-raw/manifest.json — 31 frames timestamped at 0,2,4...60s
+//   /data/eval-results.json     — pre-baked haiku-4-5 baseline-vs-vima A/B
+//                                  for 5 manifest frames; seeds analysisCache
 //
 // The page composes them: pick an episode, find the two manifest frames whose
 // timestamps bracket its ts_start, render those into the comparison slider.
