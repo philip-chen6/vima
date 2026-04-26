@@ -1186,7 +1186,7 @@ export default function VimaLandingPage() {
                   objectFit: "cover",
                   display: "block",
                   background: "#080503",
-                  transform: "translateX(-4%)",
+                  transform: "translateX(-5%)",
                 }}
               >
                 <source src="/mobile-screenshots/phone-flow-screen.mp4" type="video/mp4" />
