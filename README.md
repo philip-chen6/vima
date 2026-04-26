@@ -84,6 +84,25 @@ from cited evidence. Gemini uses direct REST by default so demos do not hang on
 the legacy SDK transport. For an open-model comparison, use the optional Qwen-VL
 probe in `backend/qwen_frame_qa.py` after installing the Qwen dependencies.
 
+Package a teammate/judge share bundle:
+
+```bash
+python3 backend/vima_cli.py export --name vima_share --limit 12
+```
+
+This writes `artifacts/vima_share.zip` with a subset of frames, YOLO labels,
+SAM masks, depth maps, preview videos, memory JSON, final answer JSON, and a
+manifest. Keep big artifacts out of git; upload the zip to Drive, Slack, or a
+GitHub Release.
+
+Run a full video from extraction through share bundle:
+
+```bash
+scripts/run_full_video.sh data/video01.mp4 vima-full \
+  "Was there masonry work happening near the wall?" \
+  0.1 gemini
+```
+
 ## API
 
 - `GET /health` — status check

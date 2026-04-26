@@ -129,6 +129,25 @@ def cmd_ask(args: argparse.Namespace) -> None:
     )
 
 
+def cmd_export(args: argparse.Namespace) -> None:
+    command = py(
+        "backend/export_artifacts.py",
+        "--run-dir",
+        args.run_dir,
+        "--out-dir",
+        args.out_dir,
+        "--name",
+        args.name,
+        "--query",
+        args.query,
+        "--limit",
+        str(args.limit),
+    )
+    if args.no_zip:
+        command.append("--no-zip")
+    run_step(command, args.dry_run)
+
+
 def add_common(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--dry-run", action="store_true", help="Print commands without running them.")
 
@@ -183,6 +202,16 @@ def build_parser() -> argparse.ArgumentParser:
     ask.add_argument("--out", default="demo/memory_answer_gemini.json")
     ask.add_argument("--top-k", type=int, default=4)
     ask.add_argument("--timeout-s", type=int, default=20)
+
+    export = sub.add_parser("export", help="Package shareable VIMA artifacts into a zip.")
+    export.set_defaults(func=cmd_export)
+    add_common(export)
+    export.add_argument("--run-dir", default=str(DEFAULT_RUN_DIR))
+    export.add_argument("--out-dir", default="artifacts")
+    export.add_argument("--name", default="vima_share")
+    export.add_argument("--query", default="Was there masonry work happening near the wall?")
+    export.add_argument("--limit", type=int, default=10)
+    export.add_argument("--no-zip", action="store_true")
 
     run = sub.add_parser("run", help="Build episodic memory, then answer one query.")
     run.set_defaults(func=lambda args: (cmd_memory(args), cmd_ask(args)))

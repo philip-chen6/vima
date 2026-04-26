@@ -196,3 +196,28 @@ Qwen + retrieved episodic memory
 vs
 Gemini + retrieved episodic memory
 ```
+
+## Share Bundle
+
+Use the export command when teammates need the individual artifacts without a
+huge run directory:
+
+```bash
+python3 backend/vima_cli.py export --name vima_share --limit 12
+```
+
+The zip includes:
+
+- sampled frames and YOLO label text files
+- label / mask / depth preview videos
+- a subset of SAM masks and raw depth maps
+- Robotics-ER boxes, mask/depth memory, episodic memory, final answer JSON
+- `manifest.json` and a short README
+
+For a fresh full-video run, use:
+
+```bash
+scripts/run_full_video.sh data/video01.mp4 vima-full \
+  "Was there masonry work happening near the wall?" \
+  0.1 gemini
+```

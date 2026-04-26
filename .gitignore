@@ -1,4 +1,5 @@
 .env
 data/
+artifacts/
 tools/yolodex/runs/
 tools/yolodex/output/
