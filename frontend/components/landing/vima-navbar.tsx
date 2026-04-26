@@ -10,6 +10,7 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import Logo from "@/components/phosphor/logo";
+import { usePageExit } from "@/components/landing/page-transition";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger, ScrollToPlugin);
 
@@ -126,6 +127,7 @@ function scrollToHash(href: string, onComplete?: () => void) {
 export default function VimaNavbar() {
   const [activeSection, setActiveSection] = useState("top");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const exitTo = usePageExit();
   const programmaticScrollRef = useRef(false);
   const programmaticScrollIdRef = useRef(0);
   const programmaticTimerRef = useRef<number | undefined>(undefined);
@@ -302,9 +304,11 @@ export default function VimaNavbar() {
                 paper
               </Link>
               <Link
-                href="/dashboard"
+                href="/demo"
+                prefetch
                 className="vima-nav-menu"
                 onMouseEnter={() => setActiveDropdown(null)}
+                onClick={exitTo("/demo")}
                 aria-label="open dashboard"
               >
                 <LayoutDashboard size={15} strokeWidth={1.7} />

@@ -107,6 +107,24 @@ const footerLinks = [
   { label: "paper", href: "/paper.pdf", icon: FileText, external: false },
 ] as const;
 
+const agentCommands = [
+  {
+    label: "install + health",
+    command:
+      'uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima doctor',
+  },
+  {
+    label: "sample frame",
+    command:
+      'uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima analyze --sample masonry-p --json',
+  },
+  {
+    label: "agent skill",
+    command:
+      'uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima skill print --agent codex',
+  },
+] as const;
+
 const builders = [
   { name: "joshua", handle: "qtzx06", href: "https://github.com/qtzx06", role: "cii classifier" },
   { name: "philip", handle: "philip-chen6", href: "https://github.com/philip-chen6", role: "settlement" },
@@ -668,7 +686,7 @@ export default function VimaLandingPage() {
             <span>inspect the proof chain</span>
           </a>
           <Link
-            href="/dashboard"
+            href="/demo"
             data-gsap="hero-cta"
             data-gsap-intro="intro-cta-secondary"
             data-gsap-magnetic
@@ -1230,7 +1248,7 @@ export default function VimaLandingPage() {
             </h2>
           </div>
           <Link
-            href="/dashboard"
+            href="/demo"
             data-gsap-magnetic
             style={{
               color: WASHI,
@@ -1247,6 +1265,51 @@ export default function VimaLandingPage() {
         </div>
 
         <PipelineStepper />
+
+        <div className="landing-agent-handoff" data-gsap="ledger-panel">
+          <div className="landing-agent-copy">
+            <p>agent handoff · hosted api + cli + skill</p>
+            <h3>paste vima into any agent shell.</h3>
+            <span>
+              the dashboard is not the only interface. vima now ships as a
+              thin cli around the hosted api, with stable json for automated qa,
+              frame analysis, cii receipts, temporal evals, and a skill prompt
+              that tells agents not to invent evidence.
+            </span>
+            <div className="landing-agent-links">
+              <a href="/api/health">
+                <Code2 size={15} strokeWidth={1.7} aria-hidden="true" />
+                api health
+              </a>
+              <a href="/api/cii/frames">
+                <Code2 size={15} strokeWidth={1.7} aria-hidden="true" />
+                frame rows
+              </a>
+              <a href="https://github.com/philip-chen6/vima/tree/main/packages/vima-agent" target="_blank" rel="noreferrer">
+                <Code2 size={15} strokeWidth={1.7} aria-hidden="true" />
+                cli source
+              </a>
+            </div>
+          </div>
+          <div className="landing-agent-terminal" aria-label="vima agent cli commands">
+            <div className="landing-agent-terminal-head">
+              <span>vima-agent</span>
+              <span>json evidence harness</span>
+            </div>
+            <div className="landing-agent-command-list">
+              {agentCommands.map((item) => (
+                <div key={item.label} className="landing-agent-command">
+                  <span>{item.label}</span>
+                  <code>{item.command}</code>
+                </div>
+              ))}
+            </div>
+            <div className="landing-agent-terminal-tail">
+              <span>verified against production</span>
+              <strong>health · cii · zones · eval · analyze</strong>
+            </div>
+          </div>
+        </div>
       </section>
 
       <SectionDivider id="cta" label="settlement" index="05" />
@@ -1322,7 +1385,7 @@ export default function VimaLandingPage() {
           </div>
           <div data-gsap="cta-action">
             <HexCta
-              href="/dashboard"
+              href="/demo"
               label="open dashboard"
               detail="inspect frames, confidence, depth-filter activity, and the COLMAP point cloud"
             />

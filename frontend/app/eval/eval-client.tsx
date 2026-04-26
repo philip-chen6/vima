@@ -26,7 +26,7 @@ import { ChevronRight } from "lucide-react";
 import VimaNavbar from "@/components/landing/vima-navbar";
 import { EpisodeConstellation } from "@/components/landing/episode-constellation";
 import { WorkspaceSidebar } from "@/components/landing/workspace-sidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 
 const ComparisonSlider = dynamic(
   () => import("@/components/react-bits/comparison-slider"),
@@ -465,7 +465,7 @@ export default function EvalClient() {
   const temporalRefusals = temporalEval?.vima?.refusals ?? [];
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={true}>
       <WorkspaceSidebar
         contextLabel="eval · vima sees time"
         sections={[
@@ -477,8 +477,8 @@ export default function EvalClient() {
         ]}
         pages={[
           { href: "/", label: "landing" },
-          { href: "/dashboard?view=demo", label: "demo", viewSwap: "demo" },
-          { href: "/dashboard?view=eval", label: "eval", viewSwap: "eval" },
+          { href: "/demo", label: "demo" },
+          { href: "/eval", label: "eval" },
         ]}
       />
       <SidebarInset>
@@ -492,6 +492,27 @@ export default function EvalClient() {
       }}
     >
       <VimaNavbar />
+      {/* Floating sidebar trigger — sits below the navbar so it's always
+          reachable. cmd/ctrl+B also toggles via the shadcn keyboard
+          shortcut wired in components/ui/sidebar.tsx. */}
+      <div
+        style={{
+          position: "fixed",
+          top: "84px",
+          left: "16px",
+          zIndex: 30,
+          background: "rgba(8,5,3,0.78)",
+          border: "1px solid rgba(242,167,184,0.18)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          padding: "4px",
+        }}
+      >
+        <SidebarTrigger
+          className="text-[#f7ecef]"
+          aria-label="toggle workspace sidebar"
+        />
+      </div>
 
       {/* ── HERO ──────────────────────────────────────────────────────── */}
       <section
@@ -1304,7 +1325,7 @@ export default function EvalClient() {
             ← landing
           </Link>
           <Link
-            href="/dashboard?view=demo"
+            href="/demo"
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "11px",
