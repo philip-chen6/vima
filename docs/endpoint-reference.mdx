@@ -17,6 +17,20 @@ GET /health
 
 Returns service status and the public endpoint list.
 
+The production health payload currently advertises:
+
+```text
+GET  /health
+POST /analyze/frame?prompt=vima|baseline
+POST /analyze/timestamp
+POST /analyze/batch
+GET  /demo
+GET  /cii/summary
+GET  /cii/frames
+GET  /spatial/zones
+GET  /eval
+```
+
 ## Analyze Frame
 
 ```http
@@ -38,6 +52,54 @@ Query params:
 | `timestamp` | float seconds | `15.0` |
 | `event_id` | string | `NC event candidate` |
 
+## Analyze Timestamp
+
+```http
+POST /analyze/timestamp?timestamp=30.0&event_id=NC%20event%20candidate
+```
+
+Extracts a frame from the configured source video and runs the same spatial
+analysis path as frame upload. The hosted VPS does not bundle the full source
+video, so this endpoint can return `404` or `503` in production. Use
+`/cii/frames` or `/eval` for hosted, cached evidence.
+
+Query params:
+
+| Param | Type | Notes |
+| --- | --- | --- |
+| `timestamp` | float seconds | required; must be finite and between `0` and `3600` |
+| `event_id` | string | optional label for the analyzed event |
+| `cloud_path` | string | optional local/reconstruction artifact path |
+
+## Analyze Batch
+
+```http
+POST /analyze/batch
+Content-Type: application/json
+```
+
+Body:
+
+```json
+[
+  { "event_id": "NC event candidate 30.0s", "timestamp_s": 30.0 }
+]
+```
+
+Runs timestamp analysis for up to 32 events. Each event must be an object with a
+numeric `timestamp_s` in the `0` to `3600` second range.
+
+## Demo
+
+```http
+GET /demo
+```
+
+Local convenience endpoint that runs five fixed timestamps against the configured
+video. On production, the full source video is intentionally not bundled; the
+endpoint returns `503 video_unavailable` with alternate endpoints:
+`/api/cii/frames`, `/api/cii/summary`, and `/api/eval`.
+
 ## CII summary
 
 ```http
@@ -45,7 +107,8 @@ GET /cii/summary
 ```
 
 Returns Productive, Contributory, and Non-Contributory counts and wrench-time
-percentage.
+percentage. Current production summary is 30 total frames, 26 productive, 0
+contributory, 4 non-contributory, 86.7% wrench time, and 11 raffle tickets.
 
 ## CII frames
 
@@ -70,6 +133,19 @@ GET /eval
 ```
 
 Returns temporal eval claims, proof-frame citations, and baseline comparison.
+The payload includes a `source` field: `reference` when served from the bundled
+fallback and `live` after a successful temporal run.
+
+## Temporal Frame
+
+```http
+GET /temporal/frame/{frame_index}
+```
+
+Serves extracted temporal frames referenced by `/eval` when the frame path is
+inside an allowed local artifact root. Most clients should follow the
+`vima.frame_urls` values in the `/eval` response instead of constructing these
+URLs manually.
 
 ## Temporal Run
 
@@ -79,3 +155,8 @@ POST /temporal/run?n=8
 
 Runs live temporal reasoning with cooldown protection. The frontend falls back
 to cached reference results if live inference is paused or unavailable.
+
+`n` must be between `1` and `12`. A successful run writes
+`temporal-results.json`, which means later `GET /eval` calls read the live run
+until that file is replaced or removed. The endpoint returns structured error
+payloads for cooldown, auth, timeout, and pipeline failures.

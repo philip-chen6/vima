@@ -24,4 +24,11 @@ task:
 
 do not invent endpoints, tools, metrics, or deployment facts. cite the source
 file for each docs fact you change.
+
+production probe discipline:
+- use GET probes for `/api/health`, `/api/cii/summary`, `/api/cii/frames`,
+  `/api/spatial/zones`, `/api/eval`, and `/mcp/health`.
+- do not call `POST /api/temporal/run` during a read-only docs audit unless a
+  human asks for a fresh live temporal run; successful runs persist and change
+  later `/api/eval` output.
 ```

@@ -16,6 +16,21 @@ the streamable http endpoint is served at:
 http://localhost:8766/mcp
 ```
 
+health check:
+
+```bash
+curl -sf http://localhost:8766/health
+```
+
+in production, caddy exposes that health check as:
+
+```bash
+curl -sf https://vimaspatial.tech/mcp/health
+```
+
+a plain GET to `/mcp` can return `406` unless the client negotiates MCP
+streamable HTTP/event-stream headers.
+
 ## tools
 
 - `vima_doctor` checks `/health`, `/cii/summary`, and `/spatial/zones`

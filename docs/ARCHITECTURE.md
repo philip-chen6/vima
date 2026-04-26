@@ -1,62 +1,78 @@
 # VIMA Architecture
 
-## Data Flow
+VIMA is a small hosted spatial-evidence stack for the HackTech Ironsite demo.
+The production path favors cached and precomputed evidence over live heavy
+perception so it can run on a 1 vCPU / 2 GB VPS.
 
+## Production Services
+
+| Service | Internal Port | Role |
+| --- | --- | --- |
+| Caddy | `80`, `443` | TLS and reverse proxy |
+| Frontend | `3000` | landing, dashboard, review, and eval pages |
+| Backend | `8765` | FastAPI evidence API |
+| MCP | `8766` | hosted agent tool endpoint |
+
+Routing:
+
+```text
+https://vimaspatial.tech/       -> frontend:3000
+https://vimaspatial.tech/api/*  -> backend:8765
+https://vimaspatial.tech/mcp*   -> mcp:8766
 ```
-Ironsite LiDAR + Bodycam
-        ↓
-  event_id + timestamp
-        ↓
-  ffmpeg frame extract
-        ↓
-  cloud_loader (ply/npy/bin)
-        ↓
-  judge.py (Claude Sonnet)
-        ↓
-  ViolationReport JSON
-        ↓
-  FastAPI :8765
-        ↓
-  Frontend (React Bits Pro)     Solana Raffle (Philip)
+
+## Hosted Evidence Flow
+
+```text
+sampled masonry frames
+  -> cached CII classifications
+  -> spatial zone rollups
+  -> temporal eval JSON
+  -> dashboard / API / CLI / MCP responses
 ```
 
-## Key Insight
+The hosted backend serves the bundled `backend/cii-results.json` snapshot when
+the developer-local CII path is absent. Production currently reports 30 frames,
+26 productive rows, 0 contributory rows, 4 non-contributory rows, and 86.7%
+wrench time.
 
-Ironsite already provides:
-- 3D point clouds (color-coded by depth)
-- Temporal event segmentation ("NC event candidate 015.0s")
-- Egocentric source frames (fisheye bodycam)
+## Live Reasoning
 
-We are NOT the sensing layer. We are the **interpretation layer**:
-- Given: cloud crop + source frame
-- Output: spatial claim + OSHA evidence + P/C/NC label
+`POST /analyze/frame` can run a live Anthropic-powered frame analysis when an
+API key is configured. `POST /temporal/run?n=8` can run live temporal reasoning
+and persists `temporal-results.json`, which later `GET /eval` calls read.
 
-## CII Classification
+Video-backed timestamp endpoints still exist for local development, but the
+production VPS does not bundle the full source video. Use cached `/cii/*`,
+`/spatial/zones`, and `/eval` endpoints for hosted verification.
 
-Construction Industry Institute definition:
+## Agent Surfaces
+
+- CLI source: `packages/vima-agent`
+- MCP source: `packages/vima-mcp`
+- MCP health: `https://vimaspatial.tech/mcp/health`
+- Streamable HTTP MCP endpoint: `https://vimaspatial.tech/mcp`
+
+The CLI and MCP server are thin clients around the hosted API. They should not
+import or run SAM, Depth Anything, local COLMAP, Torch, Transformers, or other
+heavy perception dependencies.
+
+## CII Categories
+
+Construction Industry Institute categories:
+
 - **P (Productive)**: direct hands-on work visible
-- **C (Contributory)**: support work (measuring, staging)
-- **NC (Non-Contributory)**: idle, waiting, no work visible
+- **C (Contributory)**: support work such as measuring or staging
+- **NC (Non-Contributory)**: idle, waiting, no work visible, or failed inference
 
-Wrench-time % = 100 × P_frames / total_frames
-
-## Reward System
-
-Worker wrench-time % → raffle tickets → Solana USDC payout
-
-Philip's Solana contract handles the on-chain draw.
-Backend API provides the productivity data.
-
-## Models Used
-
-- Judge: Claude Sonnet 4.6 (via Anthropic SDK, ANTHROPIC_API_KEY)
-- CII classification: gemini-2.5-flash (via GEMINI_API_KEY)
+The hosted summary uses `productive / total_frames * 100` for wrench time.
 
 ## Env Vars
 
-```
-ANTHROPIC_API_KEY  — for the judge layer
-GEMINI_API_KEY     — for CII classification
-IRONSITE_VIDEO     — path to demo video (default: ~/Downloads/01_production_masonry.mp4)
-JUDGE_MODEL        — model name (default: claude-sonnet-4-6)
+```text
+ANTHROPIC_API_KEY  # live frame and temporal reasoning
+IRONSITE_VIDEO     # local source video path, default ~/Downloads/01_production_masonry.mp4
+VIMA_API_URL       # CLI/MCP API override
+VIMA_MCP_HOST      # MCP bind host, default 0.0.0.0 in compose
+VIMA_MCP_PORT      # MCP bind port, default 8766
 ```

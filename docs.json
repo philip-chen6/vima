@@ -60,13 +60,13 @@
       },
       {
         "label": "GitHub",
-        "href": "https://github.com/stephenhungg/vima-docs"
+        "href": "https://github.com/philip-chen6/vima"
       }
     ]
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/stephenhungg/vima-docs"
+      "github": "https://github.com/philip-chen6/vima"
     }
   }
 }

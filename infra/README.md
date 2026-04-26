@@ -29,7 +29,7 @@ caddy routes `/api/*` → `backend:8765` (strips `/api`), `/mcp*` → `mcp:8766`
 ```bash
 ssh root@45.76.77.107
 mkdir -p /opt/vima
-git clone https://github.com/philip-chen6/vinna.git /opt/vima
+git clone https://github.com/philip-chen6/vima.git /opt/vima
 cd /opt/vima
 
 # create .env from example, fill in ANTHROPIC_API_KEY + VIMA_DOMAIN
@@ -57,9 +57,9 @@ required github secrets:
 
 ## domain + TLS
 
-1. register a `.tech` domain (e.g. `vima.tech`)
-2. add an `A` record: `vima.tech` → `45.76.77.107` (and `www.vima.tech` if you want)
-3. set `VIMA_DOMAIN=vima.tech` in `/opt/vima/.env` on the box
+1. register or use the primary domain, currently `vimaspatial.tech`
+2. add an `A` record: `vimaspatial.tech` → `45.76.77.107` and `www.vimaspatial.tech` → `45.76.77.107`
+3. set `VIMA_DOMAIN=vimaspatial.tech` in `/opt/vima/.env` on the box
 4. `docker compose --env-file ../.env up -d caddy` to reload — caddy pulls a letsencrypt cert automatically once DNS resolves
 
 before DNS propagates, the bare-IP fallback `:80` block in `Caddyfile` keeps the site reachable at `http://45.76.77.107`.
@@ -74,8 +74,8 @@ ssh root@45.76.77.107 'cd /opt/vima/infra && docker compose logs -f --tail=100'
 ssh root@45.76.77.107 'cd /opt/vima/infra && docker compose logs -f backend'
 
 # check mcp endpoint
-curl -sf https://vimaspatial.tech/mcp
 curl -sf https://vimaspatial.tech/mcp/health
+# /mcp itself is streamable HTTP and can return 406 without MCP headers
 
 # restart everything
 ssh root@45.76.77.107 'cd /opt/vima/infra && docker compose --env-file ../.env up -d --force-recreate'

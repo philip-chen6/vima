@@ -33,6 +33,10 @@ description: "Verify Vima from a fresh machine in a few commands."
     ```text
     https://vimaspatial.tech/mcp
     ```
+
+    For curl or browser checks, use `https://vimaspatial.tech/mcp/health`.
+    A plain GET to `/mcp` can return `406` because the route expects an MCP
+    streamable HTTP client.
   </Step>
 </Steps>
 

@@ -42,19 +42,20 @@ CLI, and MCP server.
 Hardhat frames
   -> precomputed spatial inference
   -> CII work labels
-  -> COLMAP zone attribution
+  -> hosted demo zone attribution
   -> cited dashboard / API / agent response
 ```
 
 ## Current Hosted Facts
 
-- 30 sampled masonry frames
-- 86.7% wrench time
-- Cached CII frame rows and spatial zones
-- Offline inference artifacts served through a small hosted API
+- `/api/cii/summary`: 30 masonry frames, 26 `P`, 0 `C`, 4 `NC`, 86.7% wrench time, and 11 raffle tickets.
+- `/api/spatial/zones`: three 10-frame zones, currently reporting 90.0%, 100.0%, and 70.0% productive time.
+- `/api/eval`: temporal evidence is served from cached or live JSON; the current hosted snapshot examines 8 frames and returns 5 accepted temporal claims.
+- `/mcp/health`: the hosted MCP service is deployed and healthy. The `/mcp` route itself is for streamable HTTP MCP clients, not plain browser GETs.
+- `/api/demo`: present for local video-backed demos, but returns `video_unavailable` on production because the full source video is not bundled on the VPS.
 
 <Note>
-  The hosted MCP route depends on the main Vima app deployment. If
-  `/mcp/health` returns `404`, the docs are deployed but the main app has not
-  shipped the MCP service yet.
+  Production serves cached evidence and small JSON tools. Heavy video,
+  reconstruction, SAM, Depth Anything, and COLMAP work stays offline or in
+  precomputed artifacts.
 </Note>

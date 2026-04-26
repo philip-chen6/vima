@@ -43,7 +43,14 @@ uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/v
   future publishing target.
 </Warning>
 
-- The MCP route requires the main app deployment to include the new MCP service.
+- The hosted MCP service is live; use `/mcp/health` for simple checks because
+  `/mcp` itself expects a streamable HTTP MCP client.
+- `GET /api/demo` is local-video-backed and returns `video_unavailable` on
+  production. Use `/api/cii/frames`, `/api/spatial/zones`, and `/api/eval` for
+  judge-safe hosted evidence.
+- `POST /api/temporal/run` runs live reasoning and persists the result read by
+  `/api/eval`, so prefer `GET /api/eval` unless you intentionally want a fresh
+  live run.
 - Generated demo artifacts are hackathon artifacts, not benchmark-grade eval data.
 - Mintlify deploys from `stephenhungg/vima-docs`; the main repo sync workflow
   requires `VIMA_DOCS_SYNC_TOKEN` before push-to-docs automation works.
