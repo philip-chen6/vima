@@ -1,10 +1,10 @@
-# VINNA — Full Agent Context
+# VIMA — Full Agent Context
 
 Last updated: 2026-04-25 01:20 PDT
 
 ## Project Summary
 
-**VINNA** = Ironsite spatial safety intelligence for HackTech Caltech.
+**VIMA** = Ironsite spatial safety intelligence for HackTech Caltech.
 Prize: $17,500 (Ironsite spatial reasoning) + YC interview track.
 Deadline: 9am PDT Sunday Apr 26.
 
@@ -17,7 +17,7 @@ Deadline: 9am PDT Sunday Apr 26.
 | Lucas He | Remote | Active |
 | Stephen | Remote | Active |
 
-## Repo: philip-chen6/vinna (private)
+## Repo: philip-chen6/vima (private)
 
 Collaborators: qtzx06, stephen, philip-chen6, lucas
 

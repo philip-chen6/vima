@@ -1,4 +1,4 @@
-# VINNA: Spatial Intelligence from Egocentric Construction Video
+# VIMA: Spatial Intelligence from Egocentric Construction Video
 
 **Hacktech Caltech -- Ironsite Challenge | April 2026**
 
@@ -107,7 +107,7 @@ Three capabilities, in order of difficulty:
 
 ## Relevant Research
 
-| Work | Insight for VINNA |
+| Work | Insight for VIMA |
 |---|---|
 | **SpatialVLM** (CVPR 2024) | Data gen pipeline: monocular depth -> spatial QA at scale. Our recipe for training data. |
 | **SpatialRGPT** (NeurIPS 2024) | Depth plugin for VLMs + spatial benchmarks. Proves depth-augmented VLMs outperform raw VLMs on spatial reasoning. |
@@ -140,4 +140,4 @@ Three capabilities, in order of difficulty:
 
 ## One-Liner for the Judges
 
-> "VINNA gives construction sites spatial memory -- it understands 3D space from a bodycam, estimates distances, and tracks what changed between visits. Not a violation checklist. Spatial intelligence."
+> "VIMA gives construction sites spatial memory -- it understands 3D space from a bodycam, estimates distances, and tracks what changed between visits. Not a violation checklist. Spatial intelligence."

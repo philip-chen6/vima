@@ -41,7 +41,7 @@ export default function Header({ connected, lastUpdated }: HeaderProps) {
         <div>
           <h1 className="text-sm font-bold tracking-[0.16em] text-white leading-none">
             <DecryptedText
-              text="VINNA"
+              text="VIMA"
               speed={40}
               maxIterations={12}
               sequential

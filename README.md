@@ -1,4 +1,4 @@
-# VINNA — Ironsite Spatial Safety Intelligence
+# VIMA — Ironsite Spatial Safety Intelligence
 
 **HackTech 2026 @ Caltech** | Ironsite Prize ($17,500)
 
@@ -48,19 +48,19 @@ hardhat video -> sampled frames -> bounding boxes -> object-event memory
 The next perception layer turns those boxes into mask tracks:
 
 ```bash
-python3 demo/mask_track_memory.py \
-  --run-dir tools/yolodex/runs/vinna-hardhat \
+python3 backend/mask_track_memory.py \
+  --run-dir tools/yolodex/runs/vima-hardhat \
   --out demo/mask_track_memory.json \
   --fps 0.1
 ```
 
 This writes persistent track IDs, prompt masks, relation events, and a local
-mask-track preview under `tools/yolodex/runs/vinna-hardhat/`.
+mask-track preview under `tools/yolodex/runs/vima-hardhat/`.
 
 Compile the final object-event episodic memory:
 
 ```bash
-python3 demo/episodic_memory.py \
+python3 backend/episodic_memory.py \
   --input demo/depth_track_memory.json \
   --out demo/episodic_memory.json \
   --query "worker laying blocks near wall"
@@ -72,7 +72,7 @@ depth facts, and retrieval text for downstream VLM synthesis.
 Answer a natural-language question from the retrieved memory:
 
 ```bash
-python3 demo/answer_from_memory.py \
+python3 backend/answer_from_memory.py \
   --query "Was there masonry work happening near the wall?" \
   --provider gemini \
   --timeout-s 12 \
@@ -82,7 +82,7 @@ python3 demo/answer_from_memory.py \
 The answer layer retrieves compact episodes first, then asks the VLM to synthesize
 from cited evidence. Gemini uses direct REST by default so demos do not hang on
 the legacy SDK transport. For an open-model comparison, use the optional Qwen-VL
-probe in `demo/qwen_frame_qa.py` after installing the Qwen dependencies.
+probe in `backend/qwen_frame_qa.py` after installing the Qwen dependencies.
 
 ## API
 

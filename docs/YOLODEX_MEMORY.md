@@ -1,6 +1,6 @@
 # Yolodex Object Memory Stage
 
-VINNA vendors the working Yolodex collect/label/preview stages under
+VIMA vendors the working Yolodex collect/label/preview stages under
 `tools/yolodex/`. Training and augmentation are intentionally omitted.
 
 ## Purpose
@@ -11,10 +11,10 @@ hardhat video
   -> Yolodex/Codex bounding boxes
   -> mask tracks
   -> preview overlays
-  -> VINNA object-event memory JSON
+  -> VIMA object-event memory JSON
 ```
 
-This gives VINNA a specialist perception layer before episodic retrieval and
+This gives VIMA a specialist perception layer before episodic retrieval and
 VLM synthesis. The VLM should answer from the memory artifact, not directly
 from raw frames.
 
@@ -32,30 +32,30 @@ Then:
 uv sync
 uv run .agents/skills/collect/scripts/run.py
 uv run .agents/skills/label/scripts/dispatch.sh 1
-uv run .agents/skills/eval/scripts/preview_labels.py runs/vinna-hardhat/frames --classes runs/vinna-hardhat/classes.txt --out-dir runs/vinna-hardhat/frames/preview --limit 0 --video-out runs/vinna-hardhat/frames/preview/preview.mp4
+uv run .agents/skills/eval/scripts/preview_labels.py runs/vima-hardhat/frames --classes runs/vima-hardhat/classes.txt --out-dir runs/vima-hardhat/frames/preview --limit 0 --video-out runs/vima-hardhat/frames/preview/preview.mp4
 ```
 
 Back at the repo root:
 
 ```bash
-python3 demo/yolodex_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/object_event_memory.json --fps 0.1
-python3 demo/mask_track_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/mask_track_memory.json --fps 0.1
-python3 demo/depth_memory.py --input demo/mask_track_memory.json --out demo/depth_track_memory.json --backend auto
-python3 demo/episodic_memory.py --input demo/depth_track_memory.json --out demo/episodic_memory.json --query "worker laying blocks near wall"
-python3 demo/answer_from_memory.py --query "Was there masonry work happening near the wall?" --provider gemini --out demo/memory_answer_gemini.json
+python3 backend/yolodex_memory.py --run-dir tools/yolodex/runs/vima-hardhat --out demo/object_event_memory.json --fps 0.1
+python3 backend/mask_track_memory.py --run-dir tools/yolodex/runs/vima-hardhat --out demo/mask_track_memory.json --fps 0.1
+python3 backend/depth_memory.py --input demo/mask_track_memory.json --out demo/depth_track_memory.json --backend auto
+python3 backend/episodic_memory.py --input demo/depth_track_memory.json --out demo/episodic_memory.json --query "worker laying blocks near wall"
+python3 backend/answer_from_memory.py --query "Was there masonry work happening near the wall?" --provider gemini --out demo/memory_answer_gemini.json
 ```
 
 ## Output
 
-- `tools/yolodex/runs/vinna-hardhat/frames/*.txt`: YOLO-format labels
-- `tools/yolodex/runs/vinna-hardhat/classes.txt`: class map
-- `tools/yolodex/runs/vinna-hardhat/frames/preview/preview.mp4`: visual QA
-- `demo/object_event_memory.json`: timestamped object/event rows for VINNA
-- `tools/yolodex/runs/vinna-hardhat/masks/*.png`: prompt masks
-- `tools/yolodex/runs/vinna-hardhat/mask_preview/mask_tracks.mp4`: mask-track QA
+- `tools/yolodex/runs/vima-hardhat/frames/*.txt`: YOLO-format labels
+- `tools/yolodex/runs/vima-hardhat/classes.txt`: class map
+- `tools/yolodex/runs/vima-hardhat/frames/preview/preview.mp4`: visual QA
+- `demo/object_event_memory.json`: timestamped object/event rows for VIMA
+- `tools/yolodex/runs/vima-hardhat/masks/*.png`: prompt masks
+- `tools/yolodex/runs/vima-hardhat/mask_preview/mask_tracks.mp4`: mask-track QA
 - `demo/mask_track_memory.json`: persistent mask tracks and relations
-- `tools/yolodex/runs/vinna-hardhat/depth/*.png`: per-frame relative depth maps
-- `tools/yolodex/runs/vinna-hardhat/depth_preview/depth_tracks.mp4`: depth QA
+- `tools/yolodex/runs/vima-hardhat/depth/*.png`: per-frame relative depth maps
+- `tools/yolodex/runs/vima-hardhat/depth_preview/depth_tracks.mp4`: depth QA
 - `demo/depth_track_memory.json`: mask-aware object depth bands and per-frame ordering
 - `demo/episodic_memory.json`: compact object-event episodes for retrieval / VLM context
 - `demo/memory_answer.json`: deterministic memory answer with cited evidence
@@ -95,15 +95,15 @@ model weights, but committed demo outputs should report
 Run the Robotics-ER probe on a selected evidence frame:
 
 ```bash
-.venv/bin/python demo/gemini_robotics_boxes.py \
-  --image tools/yolodex/runs/vinna-hardhat/frames/frame_000001.jpg \
+.venv/bin/python backend/gemini_robotics_boxes.py \
+  --image tools/yolodex/runs/vima-hardhat/frames/frame_000001.jpg \
   --out demo/gemini_robotics_boxes.json
 ```
 
 Dry-run the merge into the existing YOLO label file:
 
 ```bash
-.venv/bin/python demo/merge_robotics_boxes.py --dry-run
+.venv/bin/python backend/merge_robotics_boxes.py --dry-run
 ```
 
 The merge keeps YOLO/Codex boxes as the backbone, skips duplicates by class/IoU,
@@ -126,7 +126,7 @@ while `absolute_depth_band` preserves fixed-threshold scores for audit.
 
 ## Episodic Memory
 
-`demo/episodic_memory.py` compiles frame-level detections into event episodes:
+`backend/episodic_memory.py` compiles frame-level detections into event episodes:
 
 - `masonry_work_candidate`
 - `safety_edge_context`
@@ -141,10 +141,10 @@ the whole raw clip.
 
 ## Answer Layer
 
-`demo/answer_from_memory.py` is the final synthesis step:
+`backend/answer_from_memory.py` is the final synthesis step:
 
 ```bash
-python3 demo/answer_from_memory.py \
+python3 backend/answer_from_memory.py \
   --query "Was there masonry work happening near the wall?" \
   --provider heuristic \
   --out demo/memory_answer.json
@@ -155,7 +155,7 @@ For Gemini, the default transport is direct REST instead of the legacy
 the REST path completed quickly with the same API key:
 
 ```bash
-python3 demo/answer_from_memory.py \
+python3 backend/answer_from_memory.py \
   --query "Was there masonry work happening near the wall?" \
   --provider gemini \
   --timeout-s 12 \
@@ -169,12 +169,12 @@ deterministic heuristic answer instead of hanging.
 
 ## Qwen-VL Probe
 
-`demo/qwen_frame_qa.py` is an optional local/open-weights VLM harness. It
+`backend/qwen_frame_qa.py` is an optional local/open-weights VLM harness. It
 retrieves the same episodes, loads their evidence frames, and asks Qwen-VL to
 answer from both pixels and memory:
 
 ```bash
-python3 demo/qwen_frame_qa.py \
+python3 backend/qwen_frame_qa.py \
   --query "Was there masonry work happening near the wall?" \
   --model Qwen/Qwen2.5-VL-3B-Instruct \
   --out demo/qwen_answer.json

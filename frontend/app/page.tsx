@@ -62,7 +62,7 @@ const failureExamples = [
     body: "Correct description, wrong accounting. The model does not know whether the camera wearer performed the work.",
   },
   {
-    label: "VINNA",
+    label: "VIMA",
     title: "binds work to place and evidence",
     body: "Frames are labeled, spatially clustered, and stored as an auditable ledger before payout logic touches them.",
   },
@@ -373,7 +373,7 @@ function ContourPanel({
   );
 }
 
-export default function VinnaPage() {
+export default function VimaPage() {
   return (
     <main className="min-h-screen bg-[#080604] text-[#f4eadb]">
       <ClockworkLoader />
@@ -388,7 +388,7 @@ export default function VinnaPage() {
             </div>
             <TextScatter
               as="span"
-              text="VINNA"
+              text="VIMA"
               velocity={34}
               rotation={10}
               duration={0.45}

@@ -1,7 +1,7 @@
 [project]
-name = "vinna-yolodex"
+name = "vima-yolodex"
 version = "0.1.0"
-description = "Vendored Yolodex collect/label/preview stage for VINNA construction object memory"
+description = "Vendored Yolodex collect/label/preview stage for VIMA construction object memory"
 requires-python = ">=3.11"
 dependencies = [
     "openai>=1.0.0",

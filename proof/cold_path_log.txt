@@ -1,4 +1,4 @@
-=== VINNA CII Cold Path Proof Run ===
+=== VIMA CII Cold Path Proof Run ===
 Started: 2026-04-25T09:20:39Z
 
 [09:20:39] Health check...

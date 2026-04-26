@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VINNA — Construction Intelligence Index",
+  title: "VIMA — Construction Intelligence Index",
   description: "Field ops console for construction site safety monitoring. CII frame classifier + Solana raffle payout.",
 };
 

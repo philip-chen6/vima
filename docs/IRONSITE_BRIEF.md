@@ -99,25 +99,25 @@ The demo: VLM-only gets the answer wrong (hallucinates progress, misses a change
 
 ---
 
-## How VINNA Currently Aligns -- And Where It Needs To Pivot
+## How VIMA Currently Aligns -- And Where It Needs To Pivot
 
-### What VINNA Is Right Now
+### What VIMA Is Right Now
 - OSHA safety judge: frame + geometry -> Claude Sonnet -> structured violation JSON
 - CII classifier: Gemini Flash -> P/C/NC per frame
 - Solana raffle: wrench-time % -> raffle tickets -> USDC payout
 - Spatial reward prototype: frame-level signals for future model improvement
 
-### Where VINNA Aligns Well
+### Where VIMA Aligns Well
 - Safety violations ARE a spatial reasoning failure mode (model must understand "worker is X meters from unguarded edge")
 - CII classification IS a spatial task (distinguishing productive work from idle requires understanding spatial context)
 - The judge architecture (frame + geometry stats -> structured output) is the right shape
 - OSHA grounding is verifiable and commercially valuable
 
-### Where VINNA Misses The Challenge
+### Where VIMA Misses The Challenge
 
 **The challenge asks you to FIND where spatial reasoning fails and FIX it.**
 
-VINNA currently:
+VIMA currently:
 - Uses Claude as a judge but doesn't demonstrate WHERE Claude fails spatially
 - Doesn't show a before/after comparison (model-only vs model-augmented)
 - Doesn't address temporal/change detection (the #1 thing Ironsite cares about)
