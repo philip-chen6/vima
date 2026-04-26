@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { useMotionValue, type MotionValue } from "motion/react";
 import { useStore } from "@/lib/store";
 import { SwipeCard, type SwipeOutcome } from "./SwipeCard";
+import { YesNoMorph } from "./YesNoMorph";
 
 /**
  * The deck owns dragX/dragY/morphFreezeAtRef by default but accepts them
@@ -67,6 +68,11 @@ export function SwipeDeck({
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
       <div className="relative w-full h-full max-w-[420px]">
+        {/* SVG path-morph: "YES" ↔ "NO" via flubber goo interpolation,
+            driven by the card's dragX. Sits behind the card and uses
+            multiply blend so it reads as ink on the shader bg. */}
+        <YesNoMorph dragX={dragX} freezeAtRef={morphFreezeAtRef} />
+
         {activeClaim && (
           <SwipeCard
             key={`${activeClaim.id}-${deckIndex}`}
