@@ -25,6 +25,8 @@ import dynamic from "next/dynamic";
 import { ChevronRight } from "lucide-react";
 import VimaNavbar from "@/components/landing/vima-navbar";
 import { EpisodeConstellation } from "@/components/landing/episode-constellation";
+import { WorkspaceSidebar } from "@/components/landing/workspace-sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 const ComparisonSlider = dynamic(
   () => import("@/components/react-bits/comparison-slider"),
@@ -463,6 +465,23 @@ export default function EvalClient() {
   const temporalRefusals = temporalEval?.vima?.refusals ?? [];
 
   return (
+    <SidebarProvider defaultOpen={false}>
+      <WorkspaceSidebar
+        contextLabel="eval · vima sees time"
+        sections={[
+          { id: "overview", label: "overview", badge: "01" },
+          { id: "episode-detail", label: "episode detail", badge: "02" },
+          { id: "constellation", label: "constellation", badge: "03" },
+          { id: "baseline", label: "baseline a/b", badge: "04" },
+          { id: "footer-nav", label: "links", badge: "05" },
+        ]}
+        pages={[
+          { href: "/", label: "landing" },
+          { href: "/demo", label: "demo" },
+          { href: "/eval", label: "eval" },
+        ]}
+      />
+      <SidebarInset>
     <main
       style={{
         minHeight: "100dvh",
@@ -476,6 +495,7 @@ export default function EvalClient() {
 
       {/* ── HERO ──────────────────────────────────────────────────────── */}
       <section
+        id="overview"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -789,6 +809,7 @@ export default function EvalClient() {
       {/* ── EPISODE BROWSER + SLIDER + CLAIMS ─────────────────────────── */}
       {episodes && episodes.length > 0 && activeEpisode && (
         <section
+          id="episode-detail"
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
@@ -984,6 +1005,7 @@ export default function EvalClient() {
       {/* ── ALL EPISODES LIST ─────────────────────────────────────────── */}
       {episodes && episodes.length > 0 && (
         <section
+          id="constellation"
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
@@ -1136,6 +1158,7 @@ export default function EvalClient() {
 
       {/* ── BASELINE FAILURE PANEL ──────────────────────────────────── */}
       <section
+        id="baseline"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -1238,6 +1261,7 @@ export default function EvalClient() {
 
       {/* ── FOOTER NAV ──────────────────────────────────────────────── */}
       <section
+        id="footer-nav"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -1311,6 +1335,8 @@ export default function EvalClient() {
         }
       `}</style>
     </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
 
