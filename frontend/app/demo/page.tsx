@@ -13,6 +13,7 @@ import {
   Terminal,
 } from "lucide-react";
 import TextScatter from "@/components/react-bits/text-scatter";
+import { LiveFrameAnalyzer } from "@/components/landing/live-frame-analyzer";
 
 const metricCards = [
   { label: "productive", value: "86.7%", sub: "26 / 30 sampled frames" },
@@ -420,6 +421,8 @@ export default function VimaPage() {
           </div>
         </div>
       </section>
+
+      <LiveFrameAnalyzer />
 
       <section
         id="system"
