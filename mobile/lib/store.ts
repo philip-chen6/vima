@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { generateClaims, levelForXP, RAFFLE_THRESHOLD, rollSpin, type Claim, type Prize } from "./mock";
+import { generateClaims, levelForXP, rollSpin, type Claim, type Prize } from "./mock";
 
 export type Mode = "verify" | "levelup" | "raffle" | "spinning" | "claim";
 
@@ -66,13 +66,12 @@ export const useStore = create<State & Actions>()(
   persist(
     (set, get) => ({
       ...INITIAL,
-      claims: generateClaims(),
-      hydrated: true,
+      claims: [],
+      hydrated: false,
 
       hydrate: () => {
-        if (get().claims.length === 0) {
-          set({ claims: generateClaims(), hydrated: true });
-        }
+        const claims = generateClaims();
+        set({ claims, hydrated: true });
       },
 
       verify: (decision) => {
@@ -99,14 +98,19 @@ export const useStore = create<State & Actions>()(
 
         const newClaimsDone = decision === "skip" ? s.claims_done : s.claims_done + 1;
 
+        // Level-up = INSTANT raffle. No level-up screen, no button — boom.
+        // Each level-up grants exactly one spin. The old N-claims threshold
+        // is retained as a no-op fallback for parity but level-up is the
+        // primary unlock now.
         let newRaffleUnlocked = s.raffle_unlocked;
         let newSpins = s.spins_available;
         let rafflePopped = false;
-        if (newClaimsDone > 0 && newClaimsDone % RAFFLE_THRESHOLD === 0 && newClaimsDone !== s.claims_done) {
+        if (leveledUp) {
           newRaffleUnlocked = true;
           newSpins = s.spins_available + 1;
           rafflePopped = true;
         }
+        const nextMode = leveledUp ? "raffle" : s.mode;
 
         set({
           xp: newXP,
@@ -116,7 +120,7 @@ export const useStore = create<State & Actions>()(
           raffle_unlocked: newRaffleUnlocked,
           spins_available: newSpins,
           deckIndex: s.deckIndex + 1,
-          mode: leveledUp ? "levelup" : s.mode,
+          mode: nextMode,
         });
 
         return { gainedXP, leveledUp, rafflePopped };
@@ -186,7 +190,7 @@ export const useStore = create<State & Actions>()(
       },
     }),
     {
-      name: "vima-session",
+      name: "vima-session-v3",
       partialize: (state) => ({
         xp: state.xp,
         level: state.level,

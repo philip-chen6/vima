@@ -1,58 +1,74 @@
 "use client";
 
-import { AnimatePresence } from "motion/react";
+import { useEffect, useRef } from "react";
+import { AnimatePresence, useMotionValue } from "motion/react";
+import { RotateCcw } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { SakuraField } from "@/components/SakuraField";
-import { HUD } from "@/components/HUD";
+import { StarSwipeBG } from "@/components/StarSwipeBG";
+import { LevelShaderBG } from "@/components/LevelShaderBG";
 import { SwipeDeck } from "@/components/SwipeDeck";
-import { LevelUpOverlay } from "@/components/LevelUpOverlay";
 import { LotteryWheel } from "@/components/LotteryWheel";
 import { PayoutClaim } from "@/components/PayoutClaim";
 
 export default function Home() {
+  const hydrate = useStore((s) => s.hydrate);
+  const hydrated = useStore((s) => s.hydrated);
   const mode = useStore((s) => s.mode);
-  const openRaffle = useStore((s) => s.openRaffle);
   const reset = useStore((s) => s.reset);
 
-  return (
-    <>
+  // dragX/dragY/freeze ref hoisted here so both the bg shader (rotation
+  // reacts to dragX) and the swipe deck (drives the morph + card transform)
+  // share one source of truth.
+  const dragX = useMotionValue(0);
+  const dragY = useMotionValue(0);
+  const morphFreezeAtRef = useRef(0);
+
+  useEffect(() => {
+    hydrate();
+  }, [hydrate]);
+
+  if (!hydrated) {
+    return (
       <PhoneFrame>
-        <div className="absolute inset-0 overflow-hidden">
-          {/* ambient bg */}
-          <SakuraField count={10} />
-
-          {/* persistent HUD */}
-          <HUD onOpenRaffle={openRaffle} />
-
-          {/* default deck */}
-          <SwipeDeck />
-
-          {/* mode-driven overlays */}
-          <AnimatePresence>
-            {mode === "levelup" && <LevelUpOverlay key="levelup" />}
-            {(mode === "raffle" || mode === "spinning") && <LotteryWheel key="wheel" />}
-            {mode === "claim" && <PayoutClaim key="claim" />}
-          </AnimatePresence>
-
-          {/* dev: reset button (top-right corner of screen, very faint) */}
-          <button
-            onClick={reset}
-            className="absolute top-[18px] right-4 z-50 text-[8px] uppercase tracking-[0.2em] text-[var(--color-dim)] hover:text-[var(--color-pink-soft)] transition"
-            title="reset session"
-          >
-            reset
-          </button>
-        </div>
+        <div className="absolute inset-0 bg-[#050505]" />
       </PhoneFrame>
+    );
+  }
 
-      {/* desktop-only side caption */}
-      <div className="hidden md:block fixed bottom-6 left-6 text-[10px] uppercase tracking-[0.24em] text-[var(--color-dim)]">
-        vima · verify scene ledger claims · earn sol · v<span className="font-cash">0.1</span>
+  return (
+    <PhoneFrame>
+      <div className="absolute inset-0 overflow-hidden" style={{ background: "#000000" }}>
+        {/* base layer: dark vertical swipe-rotated star-swipe shader */}
+        <StarSwipeBG dragX={dragX} />
+
+        {/* overlay layer: pink cloud rising from bottom, tied to XP */}
+        <LevelShaderBG />
+
+        {/* the only foreground UI: the card */}
+        <SwipeDeck dragX={dragX} dragY={dragY} morphFreezeAtRef={morphFreezeAtRef} />
+
+        {/* mode-driven overlays */}
+        <AnimatePresence>
+          {(mode === "raffle" || mode === "spinning") && <LotteryWheel key="wheel" />}
+          {mode === "claim" && <PayoutClaim key="claim" />}
+        </AnimatePresence>
+
+        {/* reset — solid pink, top-right */}
+        <button
+          onClick={reset}
+          className="absolute top-4 right-4 z-[300] w-9 h-9 rounded-full flex items-center justify-center"
+          style={{
+            background: "#1a1a22",
+            color: "#ffd1de",
+            boxShadow: "inset 0 0 0 1px #2a2a36",
+          }}
+          aria-label="reset"
+          title="reset"
+        >
+          <RotateCcw size={15} strokeWidth={2.2} />
+        </button>
       </div>
-      <div className="hidden md:block fixed bottom-6 right-6 text-[10px] uppercase tracking-[0.2em] text-[var(--color-dim)]">
-        ← reject &nbsp;·&nbsp; ↑ skip &nbsp;·&nbsp; → confirm
-      </div>
-    </>
+    </PhoneFrame>
   );
 }
