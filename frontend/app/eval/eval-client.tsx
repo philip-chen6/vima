@@ -336,7 +336,7 @@ export default function EvalClient() {
               body: formData,
             });
 
-            if (response.status === 503 || response.status === 502) {
+            if (response.status === 503 || response.status === 502 || response.status === 500) {
               const body = await response.json().catch(() => ({}));
               return {
                 prompt,
