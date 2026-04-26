@@ -194,8 +194,13 @@ export default function EvalClient() {
       fetch("/data/episodes.json").then((r) => (r.ok ? r.json() : null)),
       fetch("/masonry-frames-raw/manifest.json").then((r) => (r.ok ? r.json() : null)),
       fetch("/api/eval", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)),
+      // Pre-baked baseline-vs-vima A/B for 5 manifest frames (haiku-4-5).
+      // Lives at /data/eval-results.json. Seeds analysisCache so the
+      // FailureCard shows real model output before the live API is hit;
+      // live /api/analyze/frame results overwrite when judges click run.
+      fetch("/data/eval-results.json").then((r) => (r.ok ? r.json() : null)),
     ])
-      .then(([eps, m, evalPayload]) => {
+      .then(([eps, m, evalPayload, abPayload]) => {
         if (cancelled) return;
         // Filter out empty / placeholder episodes
         const real = (eps as Episode[] | null)?.filter(
@@ -205,6 +210,51 @@ export default function EvalClient() {
         setManifest((m as FrameManifest[] | null) ?? null);
         setTemporalEval((evalPayload as TemporalEvalPayload | null) ?? null);
         setSource(evalPayload?.source === "live" ? "live" : "reference");
+
+        // Seed analysisCache from the pre-baked A/B JSON. Each row shape:
+        // { frame, baseline: { pnc, activity, confidence }, vima: { pnc,
+        // spatial_claims, confidence } }. Only seeds entries that aren't
+        // already populated, so live runs always win on collision.
+        const ab = abPayload as
+          | {
+              frames?: Array<{
+                frame: string;
+                baseline?: { pnc?: string; activity?: string; confidence?: number };
+                vima?: { pnc?: string; spatial_claims?: SpatialClaim[]; confidence?: number };
+              }>;
+            }
+          | null;
+        if (ab?.frames && Array.isArray(ab.frames)) {
+          setAnalysisCache((prev) => {
+            const next = { ...prev };
+            for (const row of ab.frames!) {
+              if (!row?.frame) continue;
+              const existing = next[row.frame] ?? {};
+              if (!existing.baseline && row.baseline) {
+                existing.baseline = {
+                  status: "success",
+                  result: {
+                    pnc: row.baseline.pnc as "P" | "C" | "NC" | undefined,
+                    activity: row.baseline.activity,
+                    confidence: row.baseline.confidence,
+                  },
+                };
+              }
+              if (!existing.vima && row.vima) {
+                existing.vima = {
+                  status: "success",
+                  result: {
+                    pnc: row.vima.pnc as "P" | "C" | "NC" | undefined,
+                    spatial_claims: row.vima.spatial_claims,
+                    confidence: row.vima.confidence,
+                  },
+                };
+              }
+              next[row.frame] = existing;
+            }
+            return next;
+          });
+        }
       })
       .catch((e) => !cancelled && setError(String(e)))
       .finally(() => !cancelled && setLoading(false));
