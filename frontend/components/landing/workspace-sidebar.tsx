@@ -195,10 +195,8 @@ export function WorkspaceSidebar({ sections, pages = [], contextLabel, run }: Pr
   return (
     <Sidebar
       collapsible="icon"
-      className="vima-workspace-sidebar border-r-0 mt-[72px]"
+      className="vima-workspace-sidebar border-r-0"
       style={{
-        // Top offset: navbar is sticky at top; rail starts under it.
-        // Height auto-fills via the Sidebar primitive.
         fontFamily: "var(--font-mono)",
         fontSize: "11.5px",
         letterSpacing: "0.04em",

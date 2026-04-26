@@ -8,7 +8,7 @@ interface HeaderProps {
   lastUpdated: Date | null;
 }
 
-export default function Header({ connected, lastUpdated }: HeaderProps) {
+export default function Header({ connected }: HeaderProps) {
   const [clock, setClock] = useState('');
 
   useEffect(() => {
@@ -41,15 +41,15 @@ export default function Header({ connected, lastUpdated }: HeaderProps) {
         <div>
           <h1 className="text-sm font-bold tracking-[0.16em] text-white leading-none">
             <DecryptedText
-              text="VIMA"
+              text="vima"
               speed={40}
               maxIterations={12}
               sequential
-              characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+              characters="abcdefghijklmnopqrstuvwxyz"
             />
           </h1>
-          <span className="text-[10px] tracking-[0.2em] text-neutral-500 uppercase">
-            Construction Intelligence Index
+          <span className="text-[10px] tracking-[0.08em] text-neutral-500">
+            construction intelligence index
           </span>
         </div>
       </div>
@@ -59,7 +59,7 @@ export default function Header({ connected, lastUpdated }: HeaderProps) {
           <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]' : 'bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.6)]'}`}
             style={{ animation: connected ? 'pulse 2s infinite' : 'none' }} />
           <span className="text-neutral-500 tracking-wider">
-            {connected ? 'CONNECTED' : 'OFFLINE'}
+            {connected ? 'connected' : 'offline'}
           </span>
         </div>
         <span className="text-neutral-600 font-mono tracking-wider">{clock}</span>

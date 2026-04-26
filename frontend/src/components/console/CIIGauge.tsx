@@ -52,7 +52,7 @@ function GaugeRing({ percent, size = 120 }: { percent: number; size?: number }) 
         <span className="text-2xl font-bold text-white tabular-nums">
           <CountUp to={percent} duration={1.5} decimals={1} suffix="%" />
         </span>
-        <span className="text-[9px] tracking-[0.2em] text-neutral-500 mt-0.5">WRENCH</span>
+        <span className="text-[9px] tracking-[0.08em] text-neutral-500 mt-0.5">wrench</span>
       </div>
     </div>
   );
@@ -63,12 +63,12 @@ export default function CIIGauge({ data, loading, error }: CIIGaugeProps) {
     <SpotlightCard className="h-full" spotlightColor="rgba(250, 204, 21, 0.05)">
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[10px] font-bold tracking-[0.18em] text-neutral-500 uppercase">
-            CII Wrench-Time
+          <h2 className="text-[10px] font-bold tracking-[0.08em] text-neutral-500">
+            cii wrench-time
           </h2>
           {data && (
             <span className="text-[9px] px-2 py-0.5 rounded bg-neutral-800 text-neutral-400 tracking-wider">
-              {data.model.toUpperCase()}
+              {data.model}
             </span>
           )}
         </div>
@@ -94,19 +94,19 @@ export default function CIIGauge({ data, loading, error }: CIIGaugeProps) {
                 <div className="text-lg font-bold text-emerald-400 tabular-nums">
                   <CountUp to={data.productive} duration={1} />
                 </div>
-                <div className="text-[9px] tracking-[0.16em] text-neutral-500">PRODUCTIVE</div>
+                <div className="text-[9px] tracking-[0.08em] text-neutral-500">productive</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-bold text-yellow-400 tabular-nums">
                   <CountUp to={data.contributory} duration={1} />
                 </div>
-                <div className="text-[9px] tracking-[0.16em] text-neutral-500">CONTRIB</div>
+                <div className="text-[9px] tracking-[0.08em] text-neutral-500">contrib</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-bold text-red-400 tabular-nums">
                   <CountUp to={data.non_contributory} duration={1} />
                 </div>
-                <div className="text-[9px] tracking-[0.16em] text-neutral-500">NON-CONTR</div>
+                <div className="text-[9px] tracking-[0.08em] text-neutral-500">non-contr</div>
               </div>
             </div>
 
@@ -117,7 +117,7 @@ export default function CIIGauge({ data, loading, error }: CIIGaugeProps) {
               <div className="flex-1" />
               {data.raffle_tickets > 0 && (
                 <div className="text-[10px] px-2 py-0.5 rounded bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 tracking-wider">
-                  {data.raffle_tickets} RAFFLE TICKETS
+                  {data.raffle_tickets} raffle tickets
                 </div>
               )}
             </div>

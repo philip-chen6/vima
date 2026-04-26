@@ -134,13 +134,13 @@ export default function VideoStream() {
     <SpotlightCard className="h-full flex flex-col" spotlightColor="rgba(250, 204, 21, 0.04)">
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[10px] font-bold tracking-[0.18em] text-neutral-500 uppercase">
-            Video Analysis
+          <h2 className="text-[10px] font-bold tracking-[0.08em] text-neutral-500">
+            video analysis
           </h2>
           {analyzing && (
             <div className="flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
-              <span className="text-[9px] text-yellow-400 tracking-wider">ANALYZING</span>
+              <span className="text-[9px] text-yellow-400 tracking-wider">analyzing</span>
             </div>
           )}
         </div>
@@ -160,7 +160,7 @@ export default function VideoStream() {
               disabled={analyzing}
               className="px-3 py-1.5 text-[10px] font-bold tracking-wider bg-neutral-800 hover:bg-neutral-700 border border-white/[0.08] rounded text-white disabled:opacity-40 transition-colors"
             >
-              ANALYZE
+              analyze
             </button>
           </div>
 
@@ -169,7 +169,7 @@ export default function VideoStream() {
             disabled={analyzing}
             className="px-3 py-1.5 text-[10px] font-bold tracking-wider bg-neutral-800 hover:bg-neutral-700 border border-white/[0.08] rounded text-white disabled:opacity-40 transition-colors"
           >
-            UPLOAD
+            upload
           </button>
           <input
             ref={fileInputRef}
@@ -187,7 +187,7 @@ export default function VideoStream() {
             disabled={analyzing}
             className="px-3 py-1.5 text-[10px] font-bold tracking-wider bg-yellow-400/10 hover:bg-yellow-400/20 border border-yellow-400/20 rounded text-yellow-400 disabled:opacity-40 transition-colors"
           >
-            DEMO
+            demo
           </button>
         </div>
 

@@ -122,10 +122,10 @@
      don't need a token sweep, but they now point at sakura values. */
   --color-ink:        #080503;
   --color-ink-2:      #0d0805;
-  --color-cream:      #f7ecef; /* washi (was warm cream #e8d5c0) */
+  --color-cream:      #f7ecef; /* washi */
   --color-cream-dim:  rgba(247, 236, 239, 0.55);
   --color-cream-mute: rgba(247, 236, 239, 0.25);
-  --color-amber:      #f2a7b8; /* sakura-hot (was amber #f59e0b) */
+  --color-amber:      #f2a7b8; /* sakura-hot */
   --color-amber-dim:  rgba(242, 167, 184, 0.55);
   --color-amber-line: rgba(242, 167, 184, 0.10);
   --color-amber-soft: rgba(242, 167, 184, 0.04);
@@ -205,6 +205,56 @@ body > main {
 
 code, pre, .mono {
   font-family: var(--font-mono);
+}
+
+.vima-workspace-sidebar {
+  top: 0 !important;
+  bottom: 0 !important;
+  height: 100svh !important;
+}
+
+.vima-recon-grid {
+  display: grid;
+  gap: clamp(20px, 3vw, 32px);
+}
+
+.vima-recon-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.48fr);
+  gap: clamp(16px, 3vw, 32px);
+  align-items: end;
+}
+
+.vima-recon-copy > * {
+  min-width: 0;
+}
+
+.vima-recon-viewers {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.85fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.vima-recon-stage,
+.vima-recon-frame {
+  position: relative;
+  min-width: 0;
+}
+
+.vima-recon-support {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.vima-recon-support--picked {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+}
+
+.vima-recon-support > * {
+  min-width: 0;
 }
 
 .vima-sidebar-tab-icon {
@@ -460,6 +510,24 @@ code, pre, .mono {
 
 [data-collapsible="icon"] .vima-sidebar-tab-icon {
   margin-right: 0 !important;
+}
+
+@media (max-width: 880px) {
+  .vima-recon-copy,
+  .vima-recon-viewers,
+  .vima-recon-support--picked {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vima-demo-stats-bento .vima-bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    grid-auto-rows: minmax(128px, auto);
+  }
+
+  .vima-demo-stats-bento .vima-bento-card {
+    grid-column: auto !important;
+  }
 }
 
 @media (max-width: 767px) {

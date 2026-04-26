@@ -18,7 +18,7 @@ export default function Footer7() {
             <div className="shrink-0 w-[72px] h-[72px] rounded-full bg-neutral-900 dark:bg-white flex items-center justify-center">
               <Aperture className="w-9 h-9 text-white dark:text-black" strokeWidth={1.5} />
             </div>
-            <h3 className="text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white leading-[1.05] tracking-tight uppercase">
+            <h3 className="text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white leading-[1.05] tracking-tight">
               Lantern
               <br />
               Field
@@ -28,7 +28,7 @@ export default function Footer7() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <h4 className="text-xs tracking-[0.2em] uppercase text-neutral-500 dark:text-white/60">
+            <h4 className="text-xs text-neutral-500 dark:text-white/60">
               Navigation
             </h4>
             <ul className="flex flex-col gap-2 text-xl sm:text-2xl text-neutral-900 dark:text-white">
@@ -46,7 +46,7 @@ export default function Footer7() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <h4 className="text-xs tracking-[0.2em] uppercase text-neutral-500 dark:text-white/60">
+            <h4 className="text-xs text-neutral-500 dark:text-white/60">
               Who We Are
             </h4>
             <p className="text-xl sm:text-2xl text-neutral-900 dark:text-white leading-tight">
@@ -57,7 +57,7 @@ export default function Footer7() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <h4 className="text-xs tracking-[0.2em] uppercase text-neutral-500 dark:text-white/60">
+            <h4 className="text-xs text-neutral-500 dark:text-white/60">
               Socials
             </h4>
             <div className="flex items-center gap-4">
@@ -89,18 +89,18 @@ export default function Footer7() {
           </div>
 
           <div>
-            <h4 className="text-xs tracking-[0.2em] uppercase text-neutral-500 dark:text-white/60 mb-3">
+            <h4 className="text-xs text-neutral-500 dark:text-white/60 mb-3">
               Get Updates
             </h4>
             <form className="flex items-center rounded-full border border-neutral-300 dark:border-white/20 bg-white dark:bg-black p-1.5">
               <input
                 type="email"
-                placeholder="E-MAIL"
-                className="flex-1 min-w-0 bg-transparent rounded-full px-5 py-2 text-neutral-900 dark:text-white text-sm tracking-[0.15em] uppercase placeholder:text-neutral-400 dark:placeholder:text-white/40 focus:outline-none"
+                placeholder="email"
+                className="flex-1 min-w-0 bg-transparent rounded-full px-5 py-2 text-neutral-900 dark:text-white text-sm placeholder:text-neutral-400 dark:placeholder:text-white/40 focus:outline-none"
               />
               <button
                 type="submit"
-                className="rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black px-5 py-2.5 text-xs tracking-[0.15em] uppercase font-medium hover:bg-neutral-700 dark:hover:bg-white/90 transition-colors cursor-pointer whitespace-nowrap"
+                className="rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black px-5 py-2.5 text-xs font-medium hover:bg-neutral-700 dark:hover:bg-white/90 transition-colors cursor-pointer whitespace-nowrap"
               >
                 Get Updates
               </button>

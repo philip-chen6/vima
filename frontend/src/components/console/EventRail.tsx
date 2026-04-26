@@ -11,9 +11,9 @@ interface EventRailProps {
 }
 
 const categoryConfig = {
-  P: { label: 'PRODUCTIVE', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20', dot: 'bg-emerald-400' },
-  C: { label: 'CONTRIBUTORY', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/20', dot: 'bg-yellow-400' },
-  NC: { label: 'NON-CONTR', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20', dot: 'bg-red-400' },
+  P: { label: 'productive', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20', dot: 'bg-emerald-400' },
+  C: { label: 'contributory', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/20', dot: 'bg-yellow-400' },
+  NC: { label: 'non-contr', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20', dot: 'bg-red-400' },
 } as const;
 
 function formatTimestamp(seconds: number): string {
@@ -30,12 +30,12 @@ export default function EventRail({ frames, loading, error }: EventRailProps) {
     <SpotlightCard className="h-full flex flex-col" spotlightColor="rgba(250, 204, 21, 0.04)">
       <div className="p-4 flex-1 flex flex-col min-h-0">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[10px] font-bold tracking-[0.18em] text-neutral-500 uppercase">
-            Event Rail
+          <h2 className="text-[10px] font-bold tracking-[0.08em] text-neutral-500">
+            event rail
           </h2>
           {frames && (
             <span className="text-[9px] px-2 py-0.5 rounded bg-neutral-800 text-neutral-400 tabular-nums tracking-wider">
-              {frames.length} FRAMES
+              {frames.length} frames
             </span>
           )}
         </div>

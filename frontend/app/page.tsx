@@ -1107,33 +1107,56 @@ export default function VimaLandingPage() {
                 letterSpacing: "0.005em",
               }}
             >
-              Centralized labeling pipelines move at a worker&apos;s reading speed.
-              vima reduces the unit of work to one tap on a phone. The model
-              proposes its episodic memory claims, humans confirm or reject.
-              Right to accept, left to reject, up to skip. The reviewed claims
-              become the audit trail every safety incident depends on.
+              the shipped ios verifier turns spatial claims into a swipe queue.
+              one gesture confirms, rejects, or skips; the session tracks xp,
+              streaks, raffle progress, and payout eligibility.
             </p>
-            <ul
+            <div
+              data-gsap="section-copy"
               style={{
-                listStyle: "none",
-                padding: 0,
                 margin: "28px 0 0",
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                gap: "12px 18px",
-                color: TEXT_MUTED,
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: "1px",
+                maxWidth: "560px",
+                border: `1px solid ${LINE}`,
+                background: LINE,
                 fontFamily: "var(--font-mono)",
-                fontSize: "10px",
-                letterSpacing: "0.04em",
               }}
             >
-              <li>· tinder-style swipe deck</li>
-              <li>· accept · reject · skip per claim</li>
-              <li>· episode types match the paper&apos;s five</li>
-              <li>· human review feeds the audit trail</li>
-              <li>· every reviewed frame stays inspectable</li>
-              <li>· reviewer decisions become ground truth</li>
-            </ul>
+              {[
+                ["swipe", "confirm / reject / skip"],
+                ["earn", "xp + raffle progress"],
+                ["settle", "sol payout path"],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  style={{
+                    padding: "16px",
+                    minHeight: "82px",
+                    background: "rgba(8,5,3,0.78)",
+                    display: "grid",
+                    alignContent: "space-between",
+                    gap: "10px",
+                  }}
+                >
+                  <span style={{ color: SAKURA_HOT, fontSize: "10px", letterSpacing: "0.05em" }}>
+                    {label}
+                  </span>
+                  <strong
+                    style={{
+                      color: WASHI,
+                      fontSize: "12px",
+                      lineHeight: 1.35,
+                      fontWeight: 500,
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    {value}
+                  </strong>
+                </div>
+              ))}
+            </div>
           </div>
           <div
             data-gsap="section-copy"
@@ -1145,84 +1168,13 @@ export default function VimaLandingPage() {
             }}
           >
             <Device
+              image="/mobile-screenshots/01-swipe-deck-initial.png"
               scale={0.85}
               enableParallax
               enableRotate
               parallaxStrength={12}
               rotateStrength={2.5}
-            >
-              {/* The iOS verify app exists and is shippable on josh's device
-                  (Capacitor + Next 16, app.vima.mobile). What's drawn inside
-                  the device frame below is a faithful mockup of one swipe-
-                  deck card — same fields as the real app emits — so the
-                  landing reads accurately even when the binary isn't on this
-                  laptop. Swap to a real screenshot import when the build
-                  exports a 390x844 PNG of the live deck. */}
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  background:
-                    "linear-gradient(180deg, #1a0d14 0%, #080503 60%), radial-gradient(ellipse at 50% 0%, rgba(242,167,184,0.18), transparent 60%)",
-                  color: WASHI,
-                  fontFamily: "var(--font-mono)",
-                  padding: "56px 18px 32px",
-                  gap: "12px",
-                  textAlign: "left",
-                }}
-              >
-                <div style={{ fontSize: "10px", letterSpacing: "0.06em", color: TEXT_MUTED }}>
-                  vima · claim 01 of 118
-                </div>
-                <div
-                  style={{
-                    flex: 1,
-                    border: `1px solid ${LINE}`,
-                    background: "rgba(247,236,239,0.04)",
-                    padding: "18px 16px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div>
-                    <div style={{ color: SAKURA_HOT, fontSize: "9px", letterSpacing: "0.08em", marginBottom: "10px" }}>
-                      masonry_at_open_edge
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: HEADING_FONT,
-                        fontSize: "20px",
-                        lineHeight: 1.18,
-                        color: WASHI,
-                      }}
-                    >
-                      worker leans over open CMU edge at t=0.5s
-                    </div>
-                    <div style={{ marginTop: "10px", fontSize: "10px", color: TEXT_MUTED }}>
-                      confidence 0.82 · open_edge · 1.8 m
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      borderTop: `1px solid ${LINE}`,
-                      paddingTop: "10px",
-                      fontSize: "9px",
-                      color: TEXT_FAINT,
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                    swipe → accept · review pending
-                  </div>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "9px", color: TEXT_MUTED }}>
-                  <span>frame · 01 / 118</span>
-                  <span>session · live</span>
-                </div>
-              </div>
-            </Device>
+            />
           </div>
         </div>
 

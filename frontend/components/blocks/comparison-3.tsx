@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 // Vima vs. manual / centralized labeling. Numbers below are illustrative —
 // vima score is the verifications-per-minute throughput target on the iOS app
 // (one-tap swipe), legacy is a typical scale-ai / mturk crowd-labeling pace.
-// TODO: replace placeholder numbers (94 / 38) with measured ones once benchmarks land.
+// Keep these as modeled throughput targets until the live benchmark runner lands.
 const VIMA_SCORE = 94;
 const LEGACY_SCORE = 38;
 
@@ -23,7 +23,7 @@ export default function Comparison3() {
             transition={{ duration: 0.6 }}
             className="flex flex-col"
           >
-            <p className="mb-4 text-xs uppercase tracking-[0.05em] text-neutral-400" style={{ textTransform: "none", fontFamily: "var(--font-mono)", letterSpacing: "0.05em" }}>
+            <p className="mb-4 text-xs tracking-[0.05em] text-neutral-400" style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.05em" }}>
               throughput · claims verified per minute
             </p>
             <h2

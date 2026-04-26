@@ -41,12 +41,12 @@ export default function EvidenceLedger({ frames, summary, loading, error }: Evid
     <SpotlightCard className="h-full flex flex-col" spotlightColor="rgba(250, 204, 21, 0.04)">
       <div className="p-4 flex-1 flex flex-col min-h-0">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[10px] font-bold tracking-[0.18em] text-neutral-500 uppercase">
-            Evidence Ledger
+          <h2 className="text-[10px] font-bold tracking-[0.08em] text-neutral-500">
+            evidence ledger
           </h2>
           {summary && (
             <span className="text-[9px] px-2 py-0.5 rounded bg-neutral-800 text-neutral-400 tracking-wider tabular-nums">
-              {summary.total_frames} CLASSIFIED
+              {summary.total_frames} classified
             </span>
           )}
         </div>
@@ -68,7 +68,7 @@ export default function EvidenceLedger({ frames, summary, loading, error }: Evid
             {/* Timeline bar */}
             {timeline && (
               <div className="mb-4">
-                <div className="text-[9px] text-neutral-600 mb-1.5 tracking-wider">TIMELINE</div>
+                <div className="text-[9px] text-neutral-600 mb-1.5 tracking-wider">timeline</div>
                 <div className="relative h-6 bg-neutral-800/50 rounded overflow-hidden border border-white/[0.04]">
                   {timeline.map((t, i) => {
                     const color =
@@ -106,7 +106,7 @@ export default function EvidenceLedger({ frames, summary, loading, error }: Evid
                       <span className="w-1.5 h-1.5 rounded-full bg-red-400/60" /> NC
                     </span>
                   </div>
-                  <span className="text-[8px] text-neutral-600">END</span>
+                  <span className="text-[8px] text-neutral-600">end</span>
                 </div>
               </div>
             )}
@@ -114,7 +114,7 @@ export default function EvidenceLedger({ frames, summary, loading, error }: Evid
             {/* NC Evidence list */}
             <div className="flex-1 min-h-0">
               <div className="text-[9px] text-neutral-600 mb-1.5 tracking-wider">
-                NON-CONTRIBUTORY EVIDENCE ({ncEvents.length})
+                non-contributory evidence ({ncEvents.length})
               </div>
               {ncEvents.length === 0 ? (
                 <div className="text-[10px] text-neutral-600 py-2">

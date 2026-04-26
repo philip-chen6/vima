@@ -30,24 +30,6 @@ const PointCloudViewer = dynamic(
   }
 );
 
-// Splat viewer is also heavy (three.js + gaussian-splats-3d). SSR-defer.
-const SplatViewer = dynamic(
-  () => import("@/components/landing/splat-viewer").then((m) => m.SplatViewer),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        style={{
-          width: "100%",
-          aspectRatio: "16 / 10",
-          background: "linear-gradient(180deg, #0c0508 0%, #050203 100%)",
-          border: "1px solid rgba(242,167,184,0.18)",
-        }}
-      />
-    ),
-  }
-);
-
 // ── Yozakura terminal palette — must match landing tokens exactly ────────
 const INK = "#080503";
 const WASHI = "#f7ecef";
@@ -103,47 +85,6 @@ export default function DemoClient({
   // Frame highlighted by clicking a camera frustum in the 3D viewer.
   // Undefined until first click. Drives the thumbnail panel below the cloud.
   const [pickedFrame, setPickedFrame] = useState<string | null>(null);
-
-  // Lazily-loaded COLMAP camera intrinsics + extrinsics. Used to warp the
-  // gaussian splat camera to a registered pose when the user clicks a
-  // frustum in the sibling COLMAP point cloud. Schema lives at
-  // frontend/public/data/cameras.json (Josh's reconstruction agent owns it).
-  type CamEntry = {
-    frame: string;
-    position: [number, number, number];
-    rotation_quat: [number, number, number, number];
-    intrinsics?: { fov_deg?: [number, number] };
-  };
-  const [cameras, setCameras] = useState<CamEntry[] | null>(null);
-  useEffect(() => {
-    fetch("/data/cameras.json", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (!data) return;
-        // Schema is { ..., cameras: [...] } as of josh's 740d89f push.
-        // Tolerate both that shape and a bare array (older format).
-        const arr = Array.isArray(data) ? data : data.cameras;
-        if (Array.isArray(arr)) setCameras(arr);
-      })
-      .catch(() => {
-        // non-fatal — splat just won't auto-position on frustum clicks
-      });
-  }, []);
-
-  // Derive a SplatCameraPose from the picked frame. Vertical FOV is
-  // intrinsics.fov_deg[1] (the second component is height-axis FOV per
-  // SIMPLE_RADIAL convention). Returns null if frame isn't registered.
-  const pickedPose = useMemo(() => {
-    if (!pickedFrame || !cameras) return null;
-    const cam = cameras.find((c) => c.frame === pickedFrame);
-    if (!cam) return null;
-    return {
-      position: cam.position,
-      rotation_quat: cam.rotation_quat,
-      fov_deg: cam.intrinsics?.fov_deg?.[1],
-      label: cam.frame,
-    };
-  }, [pickedFrame, cameras]);
 
   const reload = async () => {
     setRefreshing(true);
@@ -201,13 +142,12 @@ export default function DemoClient({
           stats: ["30 frames", "118 episodes", "86.7% wrench"],
         }}
         sections={[
-          { id: "overview", label: "overview", badge: "01" },
-          { id: "stats", label: "stats", badge: "02" },
-          { id: "analyzer", label: "analyzer", badge: "03" },
-          { id: "spatial-inference", label: "depth + seg", badge: "04" },
-          { id: "depth-filter", label: "depth filter", badge: "05" },
-          { id: "reconstruction", label: "3d cloud", badge: "06" },
-          { id: "ledger", label: "ledger", badge: "07" },
+          { id: "analyzer", label: "analyzer", badge: "01" },
+          { id: "stats", label: "run stats", badge: "02" },
+          { id: "spatial-inference", label: "depth + seg", badge: "03" },
+          { id: "depth-filter", label: "coverage gate", badge: "04" },
+          { id: "reconstruction", label: "3d cloud", badge: "05" },
+          { id: "ledger", label: "ledger", badge: "06" },
         ]}
         pages={[
           { href: "/", label: "landing" },
@@ -232,94 +172,81 @@ export default function DemoClient({
         />
       </div>
 
-      {/* ── HEADER STRIP ──────────────────────────────────────────────── */}
+      {/* ── LIVE FRAME ANALYZER (the real demo) ───────────────────────── */}
       <section
-        id="overview"
+        id="analyzer"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "clamp(96px, 10vw, 124px) clamp(20px, 5vw, 48px) clamp(20px, 2.4vw, 32px)",
+          padding: "clamp(76px, 8vw, 96px) clamp(20px, 5vw, 48px) clamp(28px, 3.5vw, 44px)",
         }}
       >
         <div
           style={{
             display: "flex",
-            flexWrap: "wrap",
-            alignItems: "baseline",
-            gap: "clamp(12px, 2vw, 28px)",
+            alignItems: "center",
             justifyContent: "space-between",
+            gap: "12px",
+            flexWrap: "wrap",
+            marginBottom: "14px",
           }}
         >
-          <div>
-            <p
-              style={{
-                margin: 0,
-                color: TEXT_MUTED,
-                fontSize: "10px",
-                letterSpacing: "0.05em",
-              }}
-            >
-              dashboard · live spatial-claim workspace
-            </p>
-            <h1
-              style={{
-                margin: "16px 0 0",
-                fontFamily: HEADING_FONT,
-                fontSize: "clamp(2.4rem, 5vw, 4.4rem)",
-                fontWeight: 400,
-                lineHeight: 0.96,
-                background: `linear-gradient(135deg, ${WASHI} 0%, ${SAKURA_HOT} 50%, ${WASHI} 100%)`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                letterSpacing: 0,
-              }}
-            >
-              vima · operating now.
-            </h1>
-            <p
-              style={{
-                margin: "18px 0 0",
-                maxWidth: "640px",
-                color: TEXT_SECONDARY,
-                fontFamily: "var(--font-sans)",
-                fontSize: "clamp(0.95rem, 1.1vw, 1.05rem)",
-                lineHeight: 1.55,
-                letterSpacing: "0.005em",
-              }}
-            >
-              Drop a construction frame and the model returns a structured
-              spatial claim. The ledger below is the same data the landing
-              cites, served live from the backend so you can pull the
-              receipts yourself.
-            </p>
-          </div>
-
-          <button
-            onClick={reload}
-            disabled={refreshing}
-            type="button"
+          <span
             style={{
-              all: "unset",
-              cursor: refreshing ? "wait" : "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "10px 14px",
-              border: `1px solid ${LINE}`,
-              background: refreshing ? "rgba(166,77,121,0.10)" : "rgba(247,236,239,0.04)",
-              color: WASHI,
+              color: SAKURA_HOT,
               fontFamily: "var(--font-mono)",
               fontSize: "11px",
-              letterSpacing: "0.04em",
-              transition: "background 160ms ease",
+              letterSpacing: "0.06em",
             }}
-            aria-label="reload data from backend"
           >
-            <RefreshCw size={12} strokeWidth={1.6} className={refreshing ? "spin" : ""} />
-            {refreshing ? "syncing" : "reload"}
-          </button>
+            01 · live frame analyzer
+          </span>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              flexWrap: "wrap",
+            }}
+          >
+            <span
+              style={{
+                color: TEXT_FAINT,
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.04em",
+              }}
+            >
+              /api/analyze/frame · sonnet-4-6
+            </span>
+            <button
+              onClick={reload}
+              disabled={refreshing}
+              type="button"
+              style={{
+                all: "unset",
+                cursor: refreshing ? "wait" : "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 12px",
+                border: `1px solid ${LINE}`,
+                background: refreshing ? "rgba(166,77,121,0.10)" : "rgba(247,236,239,0.04)",
+                color: WASHI,
+                fontFamily: "var(--font-mono)",
+                fontSize: "10.5px",
+                letterSpacing: "0.04em",
+                transition: "background 160ms ease",
+              }}
+              aria-label="reload data from backend"
+            >
+              <RefreshCw size={11} strokeWidth={1.6} className={refreshing ? "spin" : ""} />
+              {refreshing ? "syncing" : "reload"}
+            </button>
+          </div>
         </div>
+
+        <LiveFrameAnalyzer />
       </section>
 
       {/* ── STATS RIBBON ──────────────────────────────────────────────── */}
@@ -332,7 +259,7 @@ export default function DemoClient({
         }}
       >
         {summary ? (
-          <BentoSection enableSpotlight enableBorderGlow spotlightRadius={420}>
+          <BentoSection className="vima-demo-stats-bento" enableSpotlight enableBorderGlow spotlightRadius={420}>
             {cells.map(([label, value, sub]) => (
               <BentoCell
                 key={label}
@@ -417,73 +344,6 @@ export default function DemoClient({
         </p>
       </section>
 
-      {/* ── LIVE FRAME ANALYZER (the real demo) ─────────────────────────
-          Cold-path reel was removed in the bento pass — judges scroll into
-          the analyzer immediately so they can drop a frame and see the
-          structured claim flow. The 30s walkthrough video lives at
-          /demo/coldpath.mp4 if linked from elsewhere. */}
-      <section
-        id="analyzer"
-        style={{
-          maxWidth: "1400px",
-          margin: "0 auto",
-          padding: "0 clamp(20px, 5vw, 48px) clamp(28px, 3.5vw, 44px)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-            gap: "16px",
-            flexWrap: "wrap",
-            marginBottom: "24px",
-          }}
-        >
-          <div>
-            <p
-              style={{
-                margin: 0,
-                color: TEXT_MUTED,
-                fontSize: "10px",
-                letterSpacing: "0.05em",
-              }}
-            >
-              live · drop a frame, get a structured claim
-            </p>
-            <h2
-              style={{
-                margin: "12px 0 0",
-                fontFamily: HEADING_FONT,
-                fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-                fontWeight: 400,
-                lineHeight: 1,
-                letterSpacing: 0,
-              }}
-            >
-              the analyzer.
-            </h2>
-          </div>
-          <p
-            style={{
-              margin: 0,
-              maxWidth: "420px",
-              color: TEXT_MUTED,
-              fontFamily: "var(--font-sans)",
-              fontSize: "13px",
-              lineHeight: 1.5,
-            }}
-          >
-            Same endpoint the production pipeline uses. Sub-5-second latency.
-            Returns the structured spatial claim — P/C/NC verdict, mean
-            confidence, and the object/location/distance_m tuples the model
-            grounded its answer in.
-          </p>
-        </div>
-
-        <LiveFrameAnalyzer />
-      </section>
-
       {/* ── SPATIAL INFERENCE OVERLAY ──────────────────────────────────
           Depth-Anything-V2 monocular depth + SAM auto-mask segmentation
           precomputed offline on every masonry frame. The toggle exposes
@@ -504,55 +364,40 @@ export default function DemoClient({
         className="vima-recon-grid"
       >
         <div>
-          <p style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.05em" }}>
-            inference · depth + segmentation
-          </p>
-          <h2
+          <span
             style={{
-              margin: "12px 0 0",
-              fontFamily: HEADING_FONT,
-              fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-              fontWeight: 400,
-              lineHeight: 1.04,
+              color: SAKURA_HOT,
+              fontFamily: "var(--font-mono)",
+              fontSize: "11px",
+              letterSpacing: "0.06em",
             }}
           >
-            the geometry the judge sees.
-          </h2>
+            03 · depth + segmentation
+          </span>
           <p
             style={{
-              margin: "16px 0 0",
+              margin: "10px 0 0",
               maxWidth: "420px",
               color: TEXT_SECONDARY,
               fontFamily: "var(--font-sans)",
-              fontSize: "13.5px",
+              fontSize: "13px",
               lineHeight: 1.55,
             }}
           >
-            Every frame runs through Depth-Anything-V2 for monocular depth and
-            Segment Anything for object masks before the spatial judge ever
-            opens its mouth. Toggle the layers to see the same scene the
-            CII verdict was grounded in.
+            The geometry the spatial judge reads before the CII verdict.
+            Toggle RGB, depth, mask, stacked.
           </p>
-
-          <ul
+          <p
             style={{
-              listStyle: "none",
-              padding: 0,
-              margin: "24px 0 0",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-              gap: "10px 18px",
-              color: TEXT_MUTED,
+              margin: "12px 0 0",
+              color: TEXT_FAINT,
               fontFamily: "var(--font-mono)",
               fontSize: "10px",
               letterSpacing: "0.04em",
             }}
           >
-            <li>· depth-anything-v2-small</li>
-            <li>· sam-vit-base · 8×8 prompt grid</li>
-            <li>· ~55 masks per frame</li>
-            <li>· precomputed (apple mps)</li>
-          </ul>
+            depth-anything-v2-small · sam-vit-base · ~55 masks/frame
+          </p>
         </div>
 
         <SpatialInferenceOverlay />
@@ -579,53 +424,33 @@ export default function DemoClient({
           borderTop: `1px solid ${LINE}`,
         }}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr) minmax(280px, 360px)",
-            gap: "clamp(24px, 4vw, 56px)",
-            alignItems: "start",
-          }}
-          className="vima-recon-grid"
-        >
-          <div>
-            <p
+        <div className="vima-recon-grid">
+          <div className="vima-recon-copy">
+            <span
               style={{
-                margin: 0,
-                color: TEXT_MUTED,
-                fontSize: "10px",
-                letterSpacing: "0.05em",
+                color: SAKURA_HOT,
+                fontFamily: "var(--font-mono)",
+                fontSize: "11px",
+                letterSpacing: "0.06em",
               }}
             >
-              reconstruction · COLMAP sparse map
-            </p>
-            <h2
-              style={{
-                margin: "12px 0 0",
-                fontFamily: HEADING_FONT,
-                fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-                fontWeight: 400,
-                lineHeight: 1.04,
-                letterSpacing: 0,
-              }}
-            >
-              the cloud the claims live in.
-            </h2>
+              05 · 3d reconstruction
+            </span>
             <p
               style={{
-                margin: "16px 0 0",
-                maxWidth: "480px",
+                margin: "10px 0 0",
+                maxWidth: "760px",
                 color: TEXT_SECONDARY,
                 fontFamily: "var(--font-sans)",
-                fontSize: "13.5px",
+                fontSize: "13px",
                 lineHeight: 1.55,
               }}
             >
               19 of 31 frames register through COLMAP at 1.199 px mean
-              reprojection error, then a Brush-exported gaussian splat
-              densifies the geometry to 62,783 anisotropic primitives with
-              spherical harmonics. Drag to orbit, scroll to zoom. Every frame
-              in the ledger anchors somewhere in this volume.
+              reprojection error. Drag the cloud to inspect camera frustums,
+              then click a frustum to pull up the exact bodycam still that
+              generated that pose. Every ledger row anchors somewhere in this
+              volume.
             </p>
 
             <ul
@@ -642,32 +467,15 @@ export default function DemoClient({
                 letterSpacing: "0.04em",
               }}
             >
-              <li>· 62,783 splat primitives</li>
+              <li>· 1,770 sparse points</li>
               <li>· 19 / 31 frames registered</li>
               <li>· 1.199 px reprojection error</li>
-              <li>· spherical harmonics · sh deg 3</li>
+              <li>· clickable camera frustums</li>
             </ul>
           </div>
 
-          <div>
-            {/* PRIMARY: photoreal gaussian splat (Brush v0.3.0, 62,783 SH-3
-                primitives, 30k training steps on Apple Metal). Renders the
-                densified scene with proper anisotropic gaussians and spherical
-                harmonics — what the masonry site actually looks like in 3D. */}
-            <SplatViewer
-              src="/reconstruction/masonry-splat-10k.ply"
-              label={
-                pickedPose
-                  ? `splat · pose: ${pickedPose.label?.replace(".jpg", "")}`
-                  : "gaussian splat · 62,783 primitives · brush v0.3.0 · 30k steps"
-              }
-              cameraPose={pickedPose}
-            />
-
-            {/* SECONDARY: COLMAP sparse points + camera frustums for
-                inspecting which frame anchors where. Click a frustum to
-                see the registered bodycam still. */}
-            <div style={{ marginTop: 12 }}>
+          <div className="vima-recon-viewers">
+            <div className="vima-recon-stage">
               <PointCloudViewer
                 src="/reconstruction/sparse.ply"
                 camerasSrc="/data/cameras.json"
@@ -676,6 +484,44 @@ export default function DemoClient({
                 onSelectFrame={setPickedFrame}
               />
             </div>
+
+            <div className="vima-recon-frame">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/masonry-frames-raw/${pickedFrame ?? "frame_0013_00026000.jpg"}`}
+                alt={pickedFrame ? `registered bodycam frame ${pickedFrame}` : "registered bodycam frame"}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  minHeight: "clamp(280px, 24vw, 400px)",
+                  aspectRatio: "4 / 3",
+                  objectFit: "cover",
+                  border: `1px solid ${LINE}`,
+                  background: "rgba(8,5,3,0.72)",
+                  filter: "saturate(0.92) contrast(1.05)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  left: 8,
+                  top: 8,
+                  padding: "4px 8px",
+                  border: `1px solid ${LINE}`,
+                  background: "rgba(8,5,3,0.72)",
+                  color: WASHI,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  letterSpacing: "0.03em",
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                {pickedFrame ? `registered frame · ${pickedFrame.replace(".jpg", "")}` : "registered frame · click a frustum"}
+              </div>
+            </div>
+          </div>
+
+          <div className={pickedFrame ? "vima-recon-support vima-recon-support--picked" : "vima-recon-support"}>
 
             {/* Thumbnail panel — populated when a frustum is clicked.
                 The frustum-name is the COLMAP image filename like
@@ -778,7 +624,7 @@ export default function DemoClient({
                 letterSpacing: "0.05em",
               }}
             >
-              evidence ledger · live data
+              06 · evidence ledger
             </p>
             <h2
               style={{
@@ -1120,12 +966,39 @@ function DepthFilterPanel() {
     if (!rows || rows.length === 0) return null;
     const dropped = rows.filter((r) => r.dropped).length;
     const passed = rows.length - dropped;
+    const missing = rows.filter((r) => r.reason === "no_reconstruction").length;
+    const firstMissing = rows.find((r) => r.reason === "no_reconstruction");
+    const lastUsable = [...rows].reverse().find((r) => !r.dropped);
     return {
       total: rows.length,
       dropped,
       passed,
+      missing,
+      firstMissingAt: firstMissing?.ts_a ?? null,
+      lastUsableAt: lastUsable?.ts_b ?? null,
       pct: ((dropped / rows.length) * 100).toFixed(0),
     };
+  }, [rows]);
+
+  const runs = useMemo(() => {
+    if (!rows || rows.length === 0) return [];
+    const out: Array<{ reason: string; dropped: boolean; start: number; end: number; count: number }> = [];
+    for (const row of rows) {
+      const prev = out[out.length - 1];
+      if (prev && prev.reason === row.reason && prev.dropped === row.dropped) {
+        prev.end = row.ts_b;
+        prev.count += 1;
+      } else {
+        out.push({
+          reason: row.reason,
+          dropped: row.dropped,
+          start: row.ts_a,
+          end: row.ts_b,
+          count: 1,
+        });
+      }
+    }
+    return out;
   }, [rows]);
 
   return (
@@ -1157,7 +1030,7 @@ function DepthFilterPanel() {
               letterSpacing: "0.05em",
             }}
           >
-            depth-delta filter · pre-pass activity log
+            04 · reconstruction coverage
           </p>
           <h2
             style={{
@@ -1169,14 +1042,14 @@ function DepthFilterPanel() {
               letterSpacing: 0,
             }}
           >
-            half the frames never reach the model.
+            only reconstructed windows reach the model.
           </h2>
         </div>
         {aggregate && (
           <div style={{ display: "flex", gap: "clamp(18px, 3vw, 36px)" }}>
             <div>
               <p style={{ margin: 0, color: TEXT_FAINT, fontSize: "9px", letterSpacing: "0.06em" }}>
-                examined
+                pair windows
               </p>
               <p
                 style={{
@@ -1193,7 +1066,7 @@ function DepthFilterPanel() {
             </div>
             <div>
               <p style={{ margin: 0, color: TEXT_FAINT, fontSize: "9px", letterSpacing: "0.06em" }}>
-                dropped
+                missing recon
               </p>
               <p
                 style={{
@@ -1206,12 +1079,12 @@ function DepthFilterPanel() {
                   textShadow: `0 0 14px ${SAKURA_HOT}55`,
                 }}
               >
-                {aggregate.dropped} ({aggregate.pct}%)
+                {aggregate.missing} ({aggregate.pct}%)
               </p>
             </div>
             <div>
               <p style={{ margin: 0, color: TEXT_FAINT, fontSize: "9px", letterSpacing: "0.06em" }}>
-                passed
+                usable
               </p>
               <p
                 style={{
@@ -1234,6 +1107,92 @@ function DepthFilterPanel() {
         <p style={{ margin: 0, color: RED, fontSize: "11px", fontFamily: "var(--font-mono)" }}>
           could not load depth filter log: {error}
         </p>
+      )}
+
+      {aggregate && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
+            gap: "14px",
+            marginBottom: "14px",
+          }}
+        >
+          <div
+            style={{
+              border: `1px solid ${LINE}`,
+              background: "rgba(247,236,239,0.025)",
+              padding: "14px",
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                color: WASHI,
+                fontFamily: "var(--font-mono)",
+                fontSize: "11px",
+                lineHeight: 1.7,
+              }}
+            >
+              this is a coverage gate, not a random model verdict. `no_reconstruction`
+              means that pair had no usable point/depth export, so it should not
+              be sent into the expensive spatial model. the long tail is missing
+              reconstruction coverage after {aggregate.lastUsableAt?.toFixed(1) ?? "—"}s,
+              not 39 separate semantic refusals.
+            </p>
+            <p
+              style={{
+                margin: "10px 0 0",
+                color: TEXT_FAINT,
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                lineHeight: 1.6,
+              }}
+            >
+              `200 / 200` is the sampled-point cap for windows with coverage.
+              `— / —` means no reconstruction sample was available for either side.
+            </p>
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gap: "8px",
+              border: `1px solid ${LINE}`,
+              background: "rgba(8,5,3,0.42)",
+              padding: "12px",
+            }}
+          >
+            {runs.map((run, index) => (
+              <div
+                key={`${run.reason}-${run.start}-${index}`}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "86px minmax(0, 1fr) 48px",
+                  gap: "10px",
+                  alignItems: "center",
+                  color: run.dropped ? TEXT_MUTED : WASHI,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                <span>{run.start.toFixed(1)} → {run.end.toFixed(1)}s</span>
+                <span
+                  style={{
+                    height: "8px",
+                    border: `1px solid ${run.dropped ? "rgba(239,71,111,0.32)" : "rgba(242,167,184,0.36)"}`,
+                    background: run.dropped
+                      ? "rgba(239,71,111,0.16)"
+                      : "linear-gradient(90deg, rgba(166,77,121,0.32), rgba(242,167,184,0.34))",
+                  }}
+                />
+                <span style={{ textAlign: "right", color: run.dropped ? RED : SAKURA_HOT }}>
+                  {run.count}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {rows && (
@@ -1352,8 +1311,10 @@ function DepthFilterPanel() {
           fontFamily: "var(--font-mono)",
         }}
       >
-        source · /data/depth-filter-log.json · paper claims 57% drop rate, this run shows{" "}
-        {aggregate ? `${aggregate.pct}%` : "—"}
+        source · /data/depth-filter-log.json · first gap at{" "}
+        {aggregate?.firstMissingAt != null ? `${aggregate.firstMissingAt.toFixed(1)}s` : "—"} · long missing tail after{" "}
+        {aggregate?.lastUsableAt != null ? `${aggregate.lastUsableAt.toFixed(1)}s` : "—"} · this run gates{" "}
+        {aggregate ? `${aggregate.pct}%` : "—"} of pair windows
       </p>
     </section>
   );

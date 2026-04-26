@@ -1,6 +1,6 @@
 "use client";
 
-// /eval — vima sees time
+// /eval — temporal proof workspace
 // ---------------------------------------------------------------------------
 // Real data, not reference. Reads:
 //   /data/episodes.json         — 118 non-empty episodes from the masonry
@@ -179,6 +179,151 @@ function formatVimaCard(entry: CachedAnalysis | undefined, episode: Episode | nu
   return `${entry.result?.pnc ?? "—"} · episode=${episode?.episode ?? "—"} · ${entry.result?.spatial_claims?.length ?? 0} claims · conf ${formatConfidence(entry.result?.confidence)}`;
 }
 
+function overlayBoxForClaim(claim: SpatialClaim, index: number) {
+  const text = `${claim.object} ${claim.location}`.toLowerCase();
+  const presets = [
+    { left: 58, top: 16, width: 30, height: 42 },
+    { left: 18, top: 46, width: 28, height: 30 },
+    { left: 39, top: 25, width: 22, height: 38 },
+    { left: 62, top: 58, width: 24, height: 22 },
+  ];
+  let box = presets[index % presets.length];
+
+  if (/wall|masonry|brick|block/.test(text)) {
+    box = { left: 54, top: 14, width: 34, height: 48 };
+  } else if (/worker|person|foreground/.test(text)) {
+    box = { left: 38, top: 24, width: 24, height: 42 };
+  } else if (/material|staging|pallet|stack/.test(text)) {
+    box = { left: 17, top: 58, width: 34, height: 24 };
+  } else if (/scaffold|edge|guardrail/.test(text)) {
+    box = { left: 7, top: 18, width: 30, height: 52 };
+  }
+
+  const nudge = (index % 3) * 2.2;
+  return {
+    ...box,
+    left: Math.min(88, box.left + nudge),
+    top: Math.min(76, box.top + (index % 2) * 3),
+  };
+}
+
+function EvalAfterOverlay({
+  episode,
+  sliderPosition,
+}: {
+  episode: Episode;
+  sliderPosition: number;
+}) {
+  const claims = episode.spatial_claims.slice(0, 4);
+
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 5,
+        pointerEvents: "none",
+        clipPath: `inset(0 0 0 ${sliderPosition}%)`,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(90deg, rgba(8,5,3,0) 0%, rgba(166,77,121,0.12) 52%, rgba(242,167,184,0.10) 100%)",
+          mixBlendMode: "screen",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "repeating-linear-gradient(0deg, rgba(247,236,239,0.08) 0 1px, transparent 1px 8px)",
+          opacity: 0.28,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: "12px",
+          right: "12px",
+          padding: "7px 10px",
+          border: `1px solid ${LINE}`,
+          background: "rgba(8,5,3,0.72)",
+          color: SAKURA_HOT,
+          fontFamily: "var(--font-mono)",
+          fontSize: "9px",
+          letterSpacing: "0.05em",
+          fontVariantNumeric: "tabular-nums",
+          boxShadow: "0 0 18px rgba(166,77,121,0.22)",
+        }}
+      >
+        vima overlay · {episode.spatial_claims.length} claims
+      </div>
+      {claims.map((claim, index) => {
+        const box = overlayBoxForClaim(claim, index);
+        const accent = index % 2 === 0 ? SAKURA_HOT : LANTERN;
+        return (
+          <div
+            key={`${claim.object}-${claim.location}-${index}`}
+            style={{
+              position: "absolute",
+              left: `${box.left}%`,
+              top: `${box.top}%`,
+              width: `${box.width}%`,
+              height: `${box.height}%`,
+              border: `1px solid ${accent}`,
+              background:
+                index % 2 === 0
+                  ? "linear-gradient(135deg, rgba(166,77,121,0.24), rgba(242,167,184,0.07))"
+                  : "linear-gradient(135deg, rgba(255,211,166,0.16), rgba(166,77,121,0.09))",
+              boxShadow: `0 0 22px ${accent}44, inset 0 0 24px rgba(8,5,3,0.28)`,
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                left: "-1px",
+                top: "-24px",
+                maxWidth: "min(220px, 54vw)",
+                padding: "5px 7px",
+                border: `1px solid ${accent}`,
+                background: "rgba(8,5,3,0.86)",
+                color: WASHI,
+                fontFamily: "var(--font-mono)",
+                fontSize: "9px",
+                letterSpacing: "0.04em",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {claim.object}
+              {claim.distance_m !== null ? ` · ${claim.distance_m.toFixed(1)}m` : ""}
+            </span>
+            <span
+              style={{
+                position: "absolute",
+                right: "-5px",
+                bottom: "-5px",
+                width: "10px",
+                height: "10px",
+                border: `1px solid ${accent}`,
+                background: INK,
+                boxShadow: `0 0 12px ${accent}66`,
+              }}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function isLocalDevHost(hostname: string): boolean {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
 }
@@ -194,6 +339,7 @@ export default function EvalClient() {
   const [isRunningLive, setIsRunningLive] = useState(false);
   const [runLiveError, setRunLiveError] = useState<string | null>(null);
   const [analysisCache, setAnalysisCache] = useState<AnalysisCache>({});
+  const [sliderPosition, setSliderPosition] = useState(50);
   const [backendState, setBackendState] = useState<"unknown" | "available" | "offline">(() => {
     if (typeof window === "undefined") return "unknown";
     return isLocalDevHost(window.location.hostname) ? "unknown" : "available";
@@ -475,11 +621,10 @@ export default function EvalClient() {
           stats: ["118 episodes", "haiku-4-5", "proof pairs"],
         }}
         sections={[
-          { id: "overview", label: "overview", badge: "01" },
-          { id: "episode-detail", label: "episode detail", badge: "02" },
-          { id: "constellation", label: "constellation", badge: "03" },
-          { id: "baseline", label: "baseline a/b", badge: "04" },
-          { id: "footer-nav", label: "links", badge: "05" },
+          { id: "constellation", label: "constellation", badge: "01" },
+          { id: "baseline", label: "baseline a/b", badge: "02" },
+          { id: "episode-detail", label: "episode detail", badge: "03" },
+          { id: "footer-nav", label: "links", badge: "04" },
         ]}
         pages={[
           { href: "/", label: "landing" },
@@ -504,122 +649,88 @@ export default function EvalClient() {
         />
       </div>
 
-      {/* ── HERO ──────────────────────────────────────────────────────── */}
+      {/* ── CONSTELLATION FIRST ───────────────────────────────────────── */}
       <section
-        id="overview"
+        id="constellation"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "clamp(120px, 14vw, 180px) clamp(20px, 5vw, 48px) clamp(40px, 5vw, 64px)",
+          padding: "clamp(76px, 8vw, 96px) clamp(20px, 5vw, 48px) clamp(40px, 5vw, 64px)",
         }}
       >
-        <p
-          style={{
-            margin: 0,
-            color: TEXT_MUTED,
-            fontSize: "10px",
-            letterSpacing: "0.05em",
-          }}
-        >
-          eval · episodic memory · live data from the masonry capture
-        </p>
-        <h1
-          style={{
-            margin: "20px 0 0",
-            maxWidth: "920px",
-            fontFamily: HEADING_FONT,
-            fontSize: "clamp(2.4rem, 6vw, 5.5rem)",
-            fontWeight: 400,
-            lineHeight: 0.94,
-            letterSpacing: 0,
-            background: `linear-gradient(135deg, ${WASHI} 0%, ${SAKURA_HOT} 50%, ${WASHI} 100%)`,
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
-          vima sees time.
-        </h1>
-        <p
-          style={{
-            margin: "26px 0 0",
-            maxWidth: "680px",
-            color: TEXT_SECONDARY,
-            fontFamily: "var(--font-sans)",
-            fontSize: "clamp(0.98rem, 1.2vw, 1.18rem)",
-            lineHeight: 1.55,
-            letterSpacing: "0.005em",
-          }}
-        >
-          Single-frame VLMs classify what is in a frame. Vima&apos;s episodic
-          memory binds frames into structured episodes with spatial claims:
-          which object, where, how far, with what confidence. Every episode
-          below is real — generated by the pipeline on the masonry capture,
-          read from <code style={{ color: WASHI, fontFamily: "var(--font-mono)" }}>/data/episodes.json</code>.
-        </p>
         <div
           style={{
-            marginTop: "18px",
             display: "flex",
             flexWrap: "wrap",
             alignItems: "center",
+            justifyContent: "space-between",
             gap: "10px",
+            marginBottom: "18px",
           }}
         >
-          <span
+          <p
             style={{
-              padding: "8px 12px",
-              border: `1px solid ${LINE}`,
-              background: "rgba(247,236,239,0.04)",
-              color: TEXT_MUTED,
-              fontFamily: "var(--font-mono)",
-              fontSize: "10px",
-              letterSpacing: "0.05em",
+              margin: 0,
+              color: SAKURA_HOT,
+              fontSize: "11px",
+              letterSpacing: "0.06em",
             }}
           >
-            source · {source}
-          </span>
-          {source !== "live" && (
-            <button
-              type="button"
-              onClick={handleRunLive}
-              disabled={isRunningLive}
-              style={{
-                all: "unset",
-                cursor: isRunningLive ? "progress" : "pointer",
-                padding: "8px 12px",
-                border: `1px solid ${SAKURA}`,
-                background: "rgba(166,77,121,0.12)",
-                color: WASHI,
-                fontFamily: "var(--font-mono)",
-                fontSize: "10px",
-                letterSpacing: "0.05em",
-              }}
-            >
-              {isRunningLive ? "running..." : "run live"}
-            </button>
-          )}
-          {runLiveError && (
+            01 · episode constellation
+          </p>
+          <div style={{ display: "inline-flex", flexWrap: "wrap", alignItems: "center", gap: "10px" }}>
             <span
               style={{
-                color: RED,
+                padding: "8px 12px",
+                border: `1px solid ${LINE}`,
+                background: "rgba(247,236,239,0.04)",
+                color: TEXT_MUTED,
                 fontFamily: "var(--font-mono)",
                 fontSize: "10px",
                 letterSpacing: "0.05em",
               }}
             >
-              {runLiveError}
+              source · {source}
             </span>
-          )}
+            {source !== "live" && (
+              <button
+                type="button"
+                onClick={handleRunLive}
+                disabled={isRunningLive}
+                style={{
+                  all: "unset",
+                  cursor: isRunningLive ? "progress" : "pointer",
+                  padding: "8px 12px",
+                  border: `1px solid ${SAKURA}`,
+                  background: "rgba(166,77,121,0.12)",
+                  color: WASHI,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {isRunningLive ? "running..." : "run live"}
+              </button>
+            )}
+            {runLiveError && (
+              <span
+                style={{
+                  color: RED,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {runLiveError}
+              </span>
+            )}
+          </div>
         </div>
 
-        {/* live stats strip */}
         {episodes && (
           <div
             style={{
-              marginTop: "32px",
-              paddingTop: "22px",
-              borderTop: `1px solid ${LINE}`,
+              marginBottom: "22px",
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
               gap: "20px",
@@ -638,6 +749,116 @@ export default function EvalClient() {
               value={(manifest?.length ?? 0).toString()}
               accent={WASHI}
             />
+          </div>
+        )}
+
+        {episodes && episodes.length > 0 ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 0.9fr) minmax(0, 1.3fr)",
+              gap: "clamp(20px, 3vw, 40px)",
+              alignItems: "start",
+            }}
+            className="vima-eval-constellation-grid"
+          >
+            <EpisodeConstellation
+              episodes={episodes}
+              activeIdx={activeIdx}
+              onSelect={(i) => setActiveIdx(i)}
+              totalDuration={60}
+              inferSeverity={(ep) => inferSeverity(ep as Episode)}
+            />
+
+            <div
+              style={{
+                display: "grid",
+                gap: "1px",
+                background: LINE,
+                border: `1px solid ${LINE}`,
+                maxHeight: "560px",
+                overflowY: "auto",
+              }}
+            >
+              {episodes.map((ep, i) => {
+                const active = i === activeIdx;
+                const sev = inferSeverity(ep);
+                return (
+                  <button
+                    key={ep.episode}
+                    type="button"
+                    onClick={() => setActiveIdx(i)}
+                    style={{
+                      all: "unset",
+                      cursor: "pointer",
+                      display: "grid",
+                      gridTemplateColumns: "auto 80px minmax(0, 2fr) auto auto auto",
+                      gap: "clamp(12px, 2vw, 28px)",
+                      alignItems: "center",
+                      padding: "clamp(14px, 1.4vw, 18px) clamp(14px, 1.6vw, 22px)",
+                      background: active ? "rgba(166,77,121,0.10)" : "rgba(8,5,3,0.6)",
+                      transition: "background 160ms ease",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        background: SEVERITY_COLOR[sev],
+                        boxShadow: `0 0 10px ${SEVERITY_COLOR[sev]}66`,
+                      }}
+                      aria-hidden
+                    />
+                    <span
+                      style={{
+                        color: TEXT_MUTED,
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "10px",
+                        letterSpacing: "0.05em",
+                        fontVariantNumeric: "tabular-nums",
+                      }}
+                    >
+                      ep {ep.episode.toString().padStart(2, "0")}
+                    </span>
+                    <span
+                      style={{
+                        color: WASHI,
+                        fontFamily: "var(--font-sans)",
+                        fontSize: "14px",
+                        lineHeight: 1.4,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {ep.summary || "(no summary)"}
+                    </span>
+                    <span style={{ color: TEXT_MUTED, fontFamily: "var(--font-mono)", fontSize: "11px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>
+                      {ep.ts_start.toFixed(1)}s
+                    </span>
+                    <span style={{ color: TEXT_MUTED, fontFamily: "var(--font-mono)", fontSize: "11px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>
+                      {ep.spatial_claims.length} claims
+                    </span>
+                    <span style={{ color: SAKURA_HOT, fontFamily: "var(--font-mono)", fontSize: "11px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>
+                      {(ep.confidence * 100).toFixed(0)}%
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <div
+            style={{
+              padding: "40px 0",
+              borderTop: `1px solid ${LINE}`,
+              borderBottom: `1px solid ${LINE}`,
+              color: TEXT_MUTED,
+              fontSize: "11px",
+              letterSpacing: "0.04em",
+            }}
+          >
+            loading episodes...
           </div>
         )}
 
@@ -817,6 +1038,74 @@ export default function EvalClient() {
         )}
       </section>
 
+      {/* ── BASELINE FAILURE PANEL ──────────────────────────────────── */}
+      <section
+        id="baseline"
+        style={{
+          maxWidth: "1400px",
+          margin: "0 auto",
+          padding: "clamp(40px, 5vw, 80px) clamp(20px, 5vw, 48px)",
+          borderTop: `1px solid ${LINE}`,
+        }}
+      >
+        <p
+          style={{
+            margin: 0,
+            color: TEXT_MUTED,
+            fontSize: "10px",
+            letterSpacing: "0.05em",
+          }}
+        >
+          02 · baseline a/b
+        </p>
+        <h2
+          style={{
+            margin: "14px 0 14px",
+            fontFamily: HEADING_FONT,
+            fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
+            fontWeight: 400,
+            lineHeight: 1.1,
+            maxWidth: "780px",
+          }}
+        >
+          single-frame is a description. an episode is an argument.
+        </h2>
+        <p
+          style={{
+            margin: "0 0 28px",
+            maxWidth: "640px",
+            color: TEXT_SECONDARY,
+            fontFamily: "var(--font-sans)",
+            fontSize: "14.5px",
+            lineHeight: 1.6,
+          }}
+        >
+          Same frame, two prompts: raw VLM output versus vima&apos;s structured
+          episode evidence.
+        </p>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "1px",
+            background: LINE,
+            border: `1px solid ${LINE}`,
+          }}
+        >
+          <FailureCard
+            label="raw VLM output"
+            text={activeEvalFrame ? formatBaselineCard(activeFrameAnalysis?.baseline) : "select an episode with a manifest frame"}
+            tone="bad"
+          />
+          <FailureCard
+            label="vima episode"
+            text={activeEvalFrame ? formatVimaCard(activeFrameAnalysis?.vima, activeEpisode) : "select an episode with a manifest frame"}
+            tone="good"
+          />
+        </div>
+      </section>
+
       {/* ── EPISODE BROWSER + SLIDER + CLAIMS ─────────────────────────── */}
       {episodes && episodes.length > 0 && activeEpisode && (
         <section
@@ -854,8 +1143,8 @@ export default function EvalClient() {
                   beforeAlt={`frame at t=${bracket.before.timestamp_s}s`}
                   afterAlt={`frame at t=${bracket.after.timestamp_s}s`}
                   labelText={{
-                    before: `t=${bracket.before.timestamp_s}s`,
-                    after: `t=${bracket.after.timestamp_s}s`,
+                    before: `before · ${bracket.before.timestamp_s}s`,
+                    after: `after · ${bracket.after.timestamp_s}s`,
                   }}
                   labelClassName="vima-slider-label"
                   dividerColor={SAKURA_HOT}
@@ -863,7 +1152,39 @@ export default function EvalClient() {
                   showHandle
                   enableInertia
                   initialPosition={50}
+                  onPositionChange={setSliderPosition}
                 />
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                    zIndex: 8,
+                    pointerEvents: "none",
+                    display: "grid",
+                    justifyItems: "center",
+                    gap: "8px",
+                    color: WASHI,
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "10px",
+                    letterSpacing: "0.05em",
+                    textShadow: "0 0 14px rgba(8,5,3,0.9)",
+                  }}
+                >
+                  <span
+                    style={{
+                      padding: "7px 10px",
+                      border: `1px solid ${LINE}`,
+                      background: "rgba(8,5,3,0.72)",
+                      boxShadow: "0 0 24px rgba(242,167,184,0.14)",
+                    }}
+                  >
+                    drag to compare proof frames
+                  </span>
+                </div>
+                <EvalAfterOverlay episode={activeEpisode} sliderPosition={sliderPosition} />
               </div>
             ) : (
               <div
@@ -892,7 +1213,8 @@ export default function EvalClient() {
                 letterSpacing: "0.05em",
               }}
             >
-              drag the divider · episode {activeEpisode.episode} · ts={activeEpisode.ts_start.toFixed(1)}s
+              divider compares the frame before and after this episode timestamp · episode{" "}
+              {activeEpisode.episode} · ts={activeEpisode.ts_start.toFixed(1)}s
             </p>
           </div>
 
@@ -1012,230 +1334,6 @@ export default function EvalClient() {
           </div>
         </section>
       )}
-
-      {/* ── ALL EPISODES LIST ─────────────────────────────────────────── */}
-      {episodes && episodes.length > 0 && (
-        <section
-          id="constellation"
-          style={{
-            maxWidth: "1400px",
-            margin: "0 auto",
-            padding: "clamp(40px, 5vw, 80px) clamp(20px, 5vw, 48px)",
-            borderTop: `1px solid ${LINE}`,
-          }}
-        >
-          <p
-            style={{
-              margin: 0,
-              color: TEXT_MUTED,
-              fontSize: "10px",
-              letterSpacing: "0.05em",
-            }}
-          >
-            all episodes · {episodes.length} total · click to inspect
-          </p>
-          <h2
-            style={{
-              margin: "14px 0 24px",
-              fontFamily: HEADING_FONT,
-              fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-              fontWeight: 400,
-              lineHeight: 1.1,
-            }}
-          >
-            every episode is structured.
-          </h2>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 0.9fr) minmax(0, 1.3fr)",
-              gap: "clamp(20px, 3vw, 40px)",
-              alignItems: "start",
-            }}
-            className="vima-eval-constellation-grid"
-          >
-            <EpisodeConstellation
-              episodes={episodes}
-              activeIdx={activeIdx}
-              onSelect={(i) => setActiveIdx(i)}
-              totalDuration={60}
-              inferSeverity={(ep) => inferSeverity(ep as Episode)}
-            />
-
-            <div
-              style={{
-                display: "grid",
-                gap: "1px",
-                background: LINE,
-                border: `1px solid ${LINE}`,
-                maxHeight: "560px",
-                overflowY: "auto",
-              }}
-            >
-              {episodes.map((ep, i) => {
-              const active = i === activeIdx;
-              const sev = inferSeverity(ep);
-              return (
-                <button
-                  key={ep.episode}
-                  type="button"
-                  onClick={() => setActiveIdx(i)}
-                  style={{
-                    all: "unset",
-                    cursor: "pointer",
-                    display: "grid",
-                    gridTemplateColumns: "auto 80px minmax(0, 2fr) auto auto auto",
-                    gap: "clamp(12px, 2vw, 28px)",
-                    alignItems: "center",
-                    padding: "clamp(14px, 1.4vw, 18px) clamp(14px, 1.6vw, 22px)",
-                    background: active ? "rgba(166,77,121,0.10)" : "rgba(8,5,3,0.6)",
-                    transition: "background 160ms ease",
-                  }}
-                >
-                  <span
-                    style={{
-                      width: "8px",
-                      height: "8px",
-                      background: SEVERITY_COLOR[sev],
-                      boxShadow: `0 0 10px ${SEVERITY_COLOR[sev]}66`,
-                    }}
-                    aria-hidden
-                  />
-                  <span
-                    style={{
-                      color: TEXT_MUTED,
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "10px",
-                      letterSpacing: "0.05em",
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    ep {ep.episode.toString().padStart(2, "0")}
-                  </span>
-                  <span
-                    style={{
-                      color: WASHI,
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "14px",
-                      lineHeight: 1.4,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {ep.summary || "(no summary)"}
-                  </span>
-                  <span
-                    style={{
-                      color: TEXT_MUTED,
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "11px",
-                      fontVariantNumeric: "tabular-nums",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {ep.ts_start.toFixed(1)}s
-                  </span>
-                  <span
-                    style={{
-                      color: TEXT_MUTED,
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "11px",
-                      fontVariantNumeric: "tabular-nums",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {ep.spatial_claims.length} claims
-                  </span>
-                  <span
-                    style={{
-                      color: SAKURA_HOT,
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "11px",
-                      fontVariantNumeric: "tabular-nums",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {(ep.confidence * 100).toFixed(0)}%
-                  </span>
-                </button>
-              );
-            })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── BASELINE FAILURE PANEL ──────────────────────────────────── */}
-      <section
-        id="baseline"
-        style={{
-          maxWidth: "1400px",
-          margin: "0 auto",
-          padding: "clamp(40px, 5vw, 80px) clamp(20px, 5vw, 48px)",
-          borderTop: `1px solid ${LINE}`,
-        }}
-      >
-        <p
-          style={{
-            margin: 0,
-            color: TEXT_MUTED,
-            fontSize: "10px",
-            letterSpacing: "0.05em",
-          }}
-        >
-          why this is hard for raw VLMs
-        </p>
-        <h2
-          style={{
-            margin: "14px 0 14px",
-            fontFamily: HEADING_FONT,
-            fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-            fontWeight: 400,
-            lineHeight: 1.1,
-            maxWidth: "780px",
-          }}
-        >
-          single-frame is a description. an episode is an argument.
-        </h2>
-        <p
-          style={{
-            margin: "0 0 28px",
-            maxWidth: "640px",
-            color: TEXT_SECONDARY,
-            fontFamily: "var(--font-sans)",
-            fontSize: "14.5px",
-            lineHeight: 1.6,
-          }}
-        >
-          This panel runs the real A/B on one manifest frame nearest the active
-          episode start time. Baseline gets the one-line frame prompt; vima gets
-          the structured prompt on the exact same frame, so the difference is
-          evidence instead of presentation theater.
-        </p>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "1px",
-            background: LINE,
-            border: `1px solid ${LINE}`,
-          }}
-        >
-          <FailureCard
-            label="raw VLM output"
-            text={activeEvalFrame ? formatBaselineCard(activeFrameAnalysis?.baseline) : "select an episode with a manifest frame"}
-            tone="bad"
-          />
-          <FailureCard
-            label="vima episode"
-            text={activeEvalFrame ? formatVimaCard(activeFrameAnalysis?.vima, activeEpisode) : "select an episode with a manifest frame"}
-            tone="good"
-          />
-        </div>
-      </section>
 
       {/* ── EMPTY / LOADING / ERROR ─────────────────────────────────── */}
       {loading && !episodes && (

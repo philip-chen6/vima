@@ -56,8 +56,8 @@ function CameraFrustum({
   // Build a small frustum geometry: apex at origin, four corners 0.18 units
   // ahead. Edges only.
   const geometry = useMemo(() => {
-    const s = 0.12;
-    const d = 0.22;
+    const s = active ? 0.15 : 0.12;
+    const d = active ? 0.28 : 0.22;
     const points = [
       // apex to four corners
       new THREE.Vector3(0, 0, 0), new THREE.Vector3(s, s, d),
@@ -72,7 +72,7 @@ function CameraFrustum({
     ];
     const g = new THREE.BufferGeometry().setFromPoints(points);
     return g;
-  }, []);
+  }, [active]);
 
   return (
     <group
@@ -88,12 +88,16 @@ function CameraFrustum({
     >
       <lineSegments geometry={geometry}>
         <lineBasicMaterial
-          color={active ? "#f2a7b8" : "#A64D79"}
+          color={active ? SAKURA_HOT : SAKURA}
           transparent
-          opacity={active ? 1.0 : 0.55}
+          opacity={active ? 1.0 : 0.78}
           linewidth={1}
         />
       </lineSegments>
+      <mesh scale={active ? 0.05 : 0.035}>
+        <sphereGeometry args={[1, 10, 10]} />
+        <meshBasicMaterial color={active ? SAKURA_HOT : WASHI} transparent opacity={active ? 0.95 : 0.56} />
+      </mesh>
     </group>
   );
 }
@@ -110,9 +114,10 @@ function Controls({ autoRotate = true }: { autoRotate?: boolean }) {
     controls.rotateSpeed = 0.6;
     controls.zoomSpeed = 0.8;
     controls.autoRotate = autoRotate;
-    controls.autoRotateSpeed = 0.6;
-    controls.minDistance = 0.3;
-    controls.maxDistance = 12;
+    controls.autoRotateSpeed = 0.35;
+    controls.minDistance = 1.2;
+    controls.maxDistance = 8;
+    controls.target.set(0, 0, 0);
     ref.current = controls;
     return () => controls.dispose();
   }, [camera, gl, autoRotate]);
@@ -123,58 +128,124 @@ function Controls({ autoRotate = true }: { autoRotate?: boolean }) {
 
 // ── Point cloud mesh: positions buffer + per-vertex color ─────────────────
 function Cloud({ geometry }: { geometry: THREE.BufferGeometry }) {
-  // Points material: small, additive, washi-tinted with subtle sakura on Z.
-  // We don't use vertex colors from the PLY directly — COLMAP outputs
-  // uncalibrated RGB which often looks muddy. Instead we color by depth
-  // (z-axis distance from centroid) so the cloud reads as a clean
-  // wireframe-style object in the dark theme.
   const material = useMemo(() => {
-    return new THREE.PointsMaterial({
-      size: 0.085,
-      sizeAttenuation: true,
+    return new THREE.ShaderMaterial({
       vertexColors: true,
       transparent: true,
-      opacity: 0.92,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
+      uniforms: {
+        pointScale: { value: 18 },
+      },
+      vertexShader: `
+        varying vec3 vColor;
+        uniform float pointScale;
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = clamp(pointScale / max(0.38, -mvPosition.z), 2.8, 10.5);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        void main() {
+          vec2 p = gl_PointCoord - vec2(0.5);
+          float d = dot(p, p) * 4.0;
+          if (d > 1.0) discard;
+          float alpha = smoothstep(1.0, 0.08, d);
+          gl_FragColor = vec4(vColor, alpha * 0.88);
+        }
+      `,
     });
   }, []);
 
-  // Compute per-vertex colors based on Z position once.
-  useEffect(() => {
-    const positions = geometry.attributes.position;
-    if (!positions) return;
-
-    let zMin = Infinity;
-    let zMax = -Infinity;
-    for (let i = 0; i < positions.count; i++) {
-      const z = positions.getZ(i);
-      if (z < zMin) zMin = z;
-      if (z > zMax) zMax = z;
-    }
-    const zRange = zMax - zMin || 1;
-
-    const colors = new Float32Array(positions.count * 3);
-    const washi = new THREE.Color(WASHI);
-    const sakura = new THREE.Color(SAKURA_HOT);
-    for (let i = 0; i < positions.count; i++) {
-      const z = positions.getZ(i);
-      const t = (z - zMin) / zRange;
-      const c = washi.clone().lerp(sakura, t * 0.6);
-      colors[i * 3] = c.r;
-      colors[i * 3 + 1] = c.g;
-      colors[i * 3 + 2] = c.b;
-    }
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-  }, [geometry]);
-
   return <points geometry={geometry} material={material} />;
+}
+
+function VolumeFrame() {
+  const geometry = useMemo(() => {
+    const s = 1.36;
+    const y = -1.36;
+    const top = 1.22;
+    const points = [
+      [-s, y, -s], [s, y, -s], [s, y, -s], [s, y, s],
+      [s, y, s], [-s, y, s], [-s, y, s], [-s, y, -s],
+      [-s, top, -s], [s, top, -s], [s, top, -s], [s, top, s],
+      [s, top, s], [-s, top, s], [-s, top, s], [-s, top, -s],
+      [-s, y, -s], [-s, top, -s], [s, y, -s], [s, top, -s],
+      [s, y, s], [s, top, s], [-s, y, s], [-s, top, s],
+    ].map(([x, yy, z]) => new THREE.Vector3(x, yy, z));
+    return new THREE.BufferGeometry().setFromPoints(points);
+  }, []);
+
+  return (
+    <>
+      <gridHelper args={[2.72, 12, SAKURA, SAKURA]} position={[0, -1.36, 0]}>
+        <lineBasicMaterial attach="material" color={SAKURA} transparent opacity={0.18} />
+      </gridHelper>
+      <lineSegments geometry={geometry}>
+        <lineBasicMaterial color={SAKURA_HOT} transparent opacity={0.2} />
+      </lineSegments>
+    </>
+  );
+}
+
+function tintPointColors(geom: THREE.BufferGeometry) {
+  const positions = geom.attributes.position;
+  if (!positions) return;
+
+  const srcColors = geom.attributes.color;
+  let yMin = Infinity;
+  let yMax = -Infinity;
+  let zMin = Infinity;
+  let zMax = -Infinity;
+  for (let i = 0; i < positions.count; i++) {
+    const y = positions.getY(i);
+    const z = positions.getZ(i);
+    yMin = Math.min(yMin, y);
+    yMax = Math.max(yMax, y);
+    zMin = Math.min(zMin, z);
+    zMax = Math.max(zMax, z);
+  }
+
+  const yRange = yMax - yMin || 1;
+  const zRange = zMax - zMin || 1;
+  const colors = new Float32Array(positions.count * 3);
+  const washi = new THREE.Color(WASHI);
+  const sakura = new THREE.Color(SAKURA);
+  const hot = new THREE.Color(SAKURA_HOT);
+  const base = new THREE.Color();
+
+  for (let i = 0; i < positions.count; i++) {
+    const yT = (positions.getY(i) - yMin) / yRange;
+    const zT = (positions.getZ(i) - zMin) / zRange;
+    if (srcColors) {
+      base.setRGB(srcColors.getX(i), srcColors.getY(i), srcColors.getZ(i));
+      base.lerp(washi, 0.42);
+    } else {
+      base.copy(washi);
+    }
+    base.lerp(yT > 0.62 ? hot : sakura, 0.18 + zT * 0.28);
+    base.multiplyScalar(1.35);
+    colors[i * 3] = Math.min(1, base.r);
+    colors[i * 3 + 1] = Math.min(1, base.g);
+    colors[i * 3 + 2] = Math.min(1, base.b);
+  }
+
+  geom.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 }
 
 // ── Main viewer ──────────────────────────────────────────────────────────
 type Status =
   | { kind: "loading" }
-  | { kind: "ready"; geometry: THREE.BufferGeometry; pointCount: number }
+  | {
+      kind: "ready";
+      geometry: THREE.BufferGeometry;
+      pointCount: number;
+      center: [number, number, number];
+      scale: number;
+    }
   | { kind: "missing" }
   | { kind: "error"; message: string };
 
@@ -232,7 +303,6 @@ export function PointCloudViewer({
 
   useEffect(() => {
     let cancelled = false;
-    setStatus({ kind: "loading" });
 
     fetch(src, { method: "HEAD" })
       .then((r) => {
@@ -247,10 +317,13 @@ export function PointCloudViewer({
         // Recenter the cloud on its centroid + scale to fit the viewport.
         // COLMAP outputs in arbitrary world units; we don't care about
         // physical scale, just visual fit.
+        let centerTuple: [number, number, number] = [0, 0, 0];
+        let scale = 1;
         geom.computeBoundingBox();
         if (geom.boundingBox) {
           const center = new THREE.Vector3();
           geom.boundingBox.getCenter(center);
+          centerTuple = [center.x, center.y, center.z];
           geom.translate(-center.x, -center.y, -center.z);
           const size = new THREE.Vector3();
           geom.boundingBox.getSize(size);
@@ -258,15 +331,19 @@ export function PointCloudViewer({
           // Normalize the cloud to fill ~2.6 units (was 2.0). Combined with
           // the closer camera + wider fov, the sparse cloud now occupies
           // most of the viewport instead of looking lost in negative space.
-          if (maxDim > 0) geom.scale(2.6 / maxDim, 2.6 / maxDim, 2.6 / maxDim);
+          if (maxDim > 0) {
+            scale = 2.8 / maxDim;
+            geom.scale(scale, scale, scale);
+          }
         }
+        tintPointColors(geom);
         const positions = geom.attributes.position;
         const pointCount = positions ? positions.count : 0;
         if (pointCount === 0) {
           setStatus({ kind: "missing" });
           return;
         }
-        setStatus({ kind: "ready", geometry: geom, pointCount });
+        setStatus({ kind: "ready", geometry: geom, pointCount, center: centerTuple, scale });
       })
       .catch((err) => {
         if (cancelled) return;
@@ -290,7 +367,7 @@ export function PointCloudViewer({
         // crushed the cloud vertically inside /demo's right-column 320-360px
         // width. 4/3 gives the cloud breathing room.
         aspectRatio: "4 / 3",
-        minHeight: "320px",
+        minHeight: "clamp(280px, 24vw, 400px)",
         border: `1px solid ${LINE}`,
         background: "linear-gradient(180deg, #0c0508 0%, #050203 100%)",
         overflow: "hidden",
@@ -298,23 +375,34 @@ export function PointCloudViewer({
     >
       {status.kind === "ready" && (
         <Canvas
-          camera={{ position: [1.7, 1.3, 1.9], fov: 50, near: 0.05, far: 100 }}
+          camera={{ position: [2.15, 1.45, 2.25], fov: 42, near: 0.05, far: 100 }}
           gl={{ antialias: true, alpha: true }}
           style={{ width: "100%", height: "100%" }}
         >
-          <ambientLight intensity={0.6} />
+          <ambientLight intensity={0.75} />
+          <VolumeFrame />
           <Cloud geometry={status.geometry} />
-          {cameras.map((pose) => (
-            <CameraFrustum
-              key={pose.frame}
-              pose={pose}
-              active={activeCamera === pose.frame}
-              onSelect={(f) => {
-                setActiveCamera(f);
-                onSelectFrame?.(f);
-              }}
-            />
-          ))}
+          {cameras.map((pose) => {
+            const normalizedPose: CameraPose = {
+              ...pose,
+              position: [
+                (pose.position[0] - status.center[0]) * status.scale,
+                (pose.position[1] - status.center[1]) * status.scale,
+                (pose.position[2] - status.center[2]) * status.scale,
+              ],
+            };
+            return (
+              <CameraFrustum
+                key={pose.frame}
+                pose={normalizedPose}
+                active={activeCamera === pose.frame}
+                onSelect={(f) => {
+                  setActiveCamera(f);
+                  onSelectFrame?.(f);
+                }}
+              />
+            );
+          })}
           <Controls autoRotate={autoRotate} />
         </Canvas>
       )}
