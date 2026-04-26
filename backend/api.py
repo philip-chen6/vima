@@ -100,14 +100,24 @@ def demo():
 
 
 CII_RESULTS_PATH = pathlib.Path.home() / "Desktop/workspace/lifebase/.runtime/agents/ironsite-cii-fixed/cii-final.json"
+# Bundled fallback (backend/cii-results.json) — used when the dev-local
+# CII path doesn't exist (e.g. in production on the VPS).
+_BUNDLED_CII = pathlib.Path(__file__).parent / "cii-results.json"
+
+
+def _load_cii_results():
+    """Load CII results from the dev-local path or fall back to the bundled
+    snapshot. Returns the parsed list, raises 404 if neither path exists."""
+    for path in (CII_RESULTS_PATH, _BUNDLED_CII):
+        if path.exists():
+            return json.loads(path.read_text())
+    raise HTTPException(404, "CII results not found. Run the classifier or provide cii-results.json.")
 
 
 @app.get("/cii/summary")
 def cii_summary():
     """CII wrench-time summary for Solana raffle. Returns P/C/NC counts + raffle tickets."""
-    if not CII_RESULTS_PATH.exists():
-        raise HTTPException(404, "CII results not found. Run the classifier first.")
-    results = json.loads(CII_RESULTS_PATH.read_text())
+    results = _load_cii_results()
     cats = Counter(r["category"] for r in results)
     total = len(results)
     p_pct = 100 * cats.get("P", 0) / total if total else 0
@@ -128,13 +138,12 @@ def cii_summary():
 @app.get("/cii/frames")
 def cii_frames():
     """Full per-frame CII classifications."""
-    if not CII_RESULTS_PATH.exists():
-        raise HTTPException(404, "CII results not found.")
-    return JSONResponse(json.loads(CII_RESULTS_PATH.read_text()))
+    return JSONResponse(_load_cii_results())
 
 
 # ── Local CII fallback (bundled demo data) ───────────────────────────────────
-LOCAL_CII_PATH = pathlib.Path(__file__).parent / "cii-results.json"
+# Kept for compatibility with /spatial/zones below which references it.
+LOCAL_CII_PATH = _BUNDLED_CII
 
 
 @app.get("/spatial/zones")
