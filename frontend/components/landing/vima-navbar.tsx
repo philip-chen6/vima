@@ -10,6 +10,7 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import Logo from "@/components/phosphor/logo";
+import { useCurtainNavigate } from "@/components/landing/page-curtain";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger, ScrollToPlugin);
 
@@ -126,6 +127,7 @@ function scrollToHash(href: string, onComplete?: () => void) {
 export default function VimaNavbar() {
   const [activeSection, setActiveSection] = useState("top");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const navigateWithCurtain = useCurtainNavigate();
   const programmaticScrollRef = useRef(false);
   const programmaticScrollIdRef = useRef(0);
   const programmaticTimerRef = useRef<number | undefined>(undefined);
@@ -306,6 +308,7 @@ export default function VimaNavbar() {
                 prefetch
                 className="vima-nav-menu"
                 onMouseEnter={() => setActiveDropdown(null)}
+                onClick={navigateWithCurtain("/demo")}
                 aria-label="open dashboard"
               >
                 <LayoutDashboard size={15} strokeWidth={1.7} />

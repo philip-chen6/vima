@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { siteConfig, absoluteUrl } from "@/lib/seo";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { PageCurtain } from "@/components/landing/page-curtain";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -103,7 +104,10 @@ export default function RootLayout({
             }),
           }}
         />
-        <TooltipProvider delayDuration={120}>{children}</TooltipProvider>
+        <TooltipProvider delayDuration={120}>
+          {children}
+          <PageCurtain />
+        </TooltipProvider>
       </body>
     </html>
   );

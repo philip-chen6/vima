@@ -53,6 +53,8 @@ def install_skill(agent: str = "auto", force: bool = False) -> list[SkillTarget]
         return []
 
     installed: list[SkillTarget] = []
+    template_root = importlib.resources.files("vima_agent.skill_template")
+
     for target in targets:
         if target.path.exists():
             if not force:
@@ -60,6 +62,23 @@ def install_skill(agent: str = "auto", force: bool = False) -> list[SkillTarget]
             shutil.rmtree(target.path)
         target.path.mkdir(parents=True, exist_ok=True)
         os.chmod(target.path, 0o755)
+
+        # SKILL.md gets the {{AGENT}} substitution.
         target.path.joinpath("SKILL.md").write_text(skill_text(target.agent))
+
+        # Reference docs and golden samples ship as-is. Walk each directory
+        # and copy every file, preserving the subdir structure. Using
+        # importlib.resources keeps this working when the skill is installed
+        # from a wheel (where files live inside a zip).
+        for subdir in ("references", "golden_samples"):
+            src_dir = template_root.joinpath(subdir)
+            if not src_dir.is_dir():
+                continue
+            dst_dir = target.path / subdir
+            dst_dir.mkdir(parents=True, exist_ok=True)
+            for item in src_dir.iterdir():
+                if item.is_file():
+                    dst_dir.joinpath(item.name).write_bytes(item.read_bytes())
+
         installed.append(target)
     return installed

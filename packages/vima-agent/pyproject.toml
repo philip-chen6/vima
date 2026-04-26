@@ -24,6 +24,8 @@ packages = ["src/vima_agent"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "src/vima_agent/skill_template/SKILL.md" = "vima_agent/skill_template/SKILL.md"
+"src/vima_agent/skill_template/references" = "vima_agent/skill_template/references"
+"src/vima_agent/skill_template/golden_samples" = "vima_agent/skill_template/golden_samples"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
