@@ -76,18 +76,6 @@
   {
     "episode": 3,
     "frames": [
-      "frame_0003.jpg",
-      "frame_0004.jpg"
-    ],
-    "ts_start": 1.0,
-    "ts_end": 1.5,
-    "confidence": 0,
-    "summary": "",
-    "spatial_claims": []
-  },
-  {
-    "episode": 4,
-    "frames": [
       "frame_0005.jpg"
     ],
     "ts_start": 2.0,
@@ -123,7 +111,7 @@
     ]
   },
   {
-    "episode": 5,
+    "episode": 4,
     "frames": [
       "frame_0006.jpg"
     ],
@@ -160,7 +148,7 @@
     ]
   },
   {
-    "episode": 6,
+    "episode": 5,
     "frames": [
       "frame_0007.jpg"
     ],
@@ -202,7 +190,7 @@
     ]
   },
   {
-    "episode": 7,
+    "episode": 6,
     "frames": [
       "frame_0008.jpg"
     ],
@@ -239,7 +227,7 @@
     ]
   },
   {
-    "episode": 8,
+    "episode": 7,
     "frames": [
       "frame_0009.jpg"
     ],
@@ -276,7 +264,7 @@
     ]
   },
   {
-    "episode": 9,
+    "episode": 8,
     "frames": [
       "frame_0010.jpg"
     ],
@@ -313,7 +301,7 @@
     ]
   },
   {
-    "episode": 10,
+    "episode": 9,
     "frames": [
       "frame_0011.jpg"
     ],
@@ -350,7 +338,7 @@
     ]
   },
   {
-    "episode": 11,
+    "episode": 10,
     "frames": [
       "frame_0012.jpg"
     ],
@@ -387,7 +375,7 @@
     ]
   },
   {
-    "episode": 12,
+    "episode": 11,
     "frames": [
       "frame_0013.jpg"
     ],
@@ -424,7 +412,7 @@
     ]
   },
   {
-    "episode": 13,
+    "episode": 12,
     "frames": [
       "frame_0014.jpg",
       "frame_0015.jpg"
@@ -462,7 +450,7 @@
     ]
   },
   {
-    "episode": 14,
+    "episode": 13,
     "frames": [
       "frame_0016.jpg"
     ],
@@ -499,7 +487,7 @@
     ]
   },
   {
-    "episode": 15,
+    "episode": 14,
     "frames": [
       "frame_0017.jpg"
     ],
@@ -536,7 +524,7 @@
     ]
   },
   {
-    "episode": 16,
+    "episode": 15,
     "frames": [
       "frame_0018.jpg"
     ],
@@ -573,7 +561,7 @@
     ]
   },
   {
-    "episode": 17,
+    "episode": 16,
     "frames": [
       "frame_0019.jpg"
     ],
@@ -605,7 +593,7 @@
     ]
   },
   {
-    "episode": 18,
+    "episode": 17,
     "frames": [
       "frame_0020.jpg"
     ],
@@ -647,7 +635,7 @@
     ]
   },
   {
-    "episode": 19,
+    "episode": 18,
     "frames": [
       "frame_0021.jpg"
     ],
@@ -684,7 +672,7 @@
     ]
   },
   {
-    "episode": 20,
+    "episode": 19,
     "frames": [
       "frame_0022.jpg"
     ],
@@ -721,51 +709,3706 @@
     ]
   },
   {
-    "episode": 21,
+    "episode": 20,
     "frames": [
-      "frame_0023.jpg",
-      "frame_0024.jpg",
-      "frame_0025.jpg",
-      "frame_0026.jpg",
-      "frame_0027.jpg",
-      "frame_0028.jpg",
-      "frame_0029.jpg",
-      "frame_0030.jpg",
-      "frame_0031.jpg",
-      "frame_0032.jpg",
-      "frame_0033.jpg",
-      "frame_0034.jpg",
-      "frame_0035.jpg",
-      "frame_0036.jpg",
-      "frame_0037.jpg",
-      "frame_0038.jpg",
-      "frame_0039.jpg",
-      "frame_0040.jpg",
-      "frame_0041.jpg",
-      "frame_0042.jpg",
-      "frame_0043.jpg",
-      "frame_0044.jpg",
-      "frame_0045.jpg",
-      "frame_0046.jpg",
-      "frame_0047.jpg",
-      "frame_0048.jpg",
-      "frame_0049.jpg",
-      "frame_0050.jpg",
-      "frame_0051.jpg",
-      "frame_0052.jpg",
-      "frame_0053.jpg",
-      "frame_0054.jpg",
-      "frame_0055.jpg",
-      "frame_0056.jpg",
-      "frame_0057.jpg",
-      "frame_0058.jpg",
-      "frame_0059.jpg",
-      "frame_0060.jpg"
+      "frame_0023.jpg"
     ],
     "ts_start": 11.0,
+    "ts_end": 11.0,
+    "confidence": 0.74,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 21,
+    "frames": [
+      "frame_0024.jpg"
+    ],
+    "ts_start": 11.5,
+    "ts_end": 11.5,
+    "confidence": 0.74,
+    "summary": "Masonry work at wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 22,
+    "frames": [
+      "frame_0025.jpg"
+    ],
+    "ts_start": 12.0,
+    "ts_end": 12.0,
+    "confidence": 0.81,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 23,
+    "frames": [
+      "frame_0026.jpg"
+    ],
+    "ts_start": 12.5,
+    "ts_end": 12.5,
+    "confidence": 0.78,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 24,
+    "frames": [
+      "frame_0027.jpg"
+    ],
+    "ts_start": 13.0,
+    "ts_end": 13.0,
+    "confidence": 0.78,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 25,
+    "frames": [
+      "frame_0028.jpg"
+    ],
+    "ts_start": 13.5,
+    "ts_end": 13.5,
+    "confidence": 0.82,
+    "summary": "Masonry work at wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 26,
+    "frames": [
+      "frame_0029.jpg"
+    ],
+    "ts_start": 14.0,
+    "ts_end": 14.0,
+    "confidence": 0.81,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 27,
+    "frames": [
+      "frame_0030.jpg"
+    ],
+    "ts_start": 14.5,
+    "ts_end": 14.5,
+    "confidence": 0.78,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 28,
+    "frames": [
+      "frame_0031.jpg"
+    ],
+    "ts_start": 15.0,
+    "ts_end": 15.0,
+    "confidence": 0.81,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 29,
+    "frames": [
+      "frame_0032.jpg"
+    ],
+    "ts_start": 15.5,
+    "ts_end": 15.5,
+    "confidence": 0.83,
+    "summary": "Masonry work at wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 30,
+    "frames": [
+      "frame_0033.jpg"
+    ],
+    "ts_start": 16.0,
+    "ts_end": 16.0,
+    "confidence": 0.74,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 31,
+    "frames": [
+      "frame_0034.jpg"
+    ],
+    "ts_start": 16.5,
+    "ts_end": 16.5,
+    "confidence": 0.82,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 32,
+    "frames": [
+      "frame_0035.jpg"
+    ],
+    "ts_start": 17.0,
+    "ts_end": 17.0,
+    "confidence": 0.83,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 33,
+    "frames": [
+      "frame_0036.jpg"
+    ],
+    "ts_start": 17.5,
+    "ts_end": 17.5,
+    "confidence": 0.83,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 34,
+    "frames": [
+      "frame_0037.jpg"
+    ],
+    "ts_start": 18.0,
+    "ts_end": 18.0,
+    "confidence": 0.81,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 35,
+    "frames": [
+      "frame_0038.jpg"
+    ],
+    "ts_start": 18.5,
+    "ts_end": 18.5,
+    "confidence": 0.82,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 36,
+    "frames": [
+      "frame_0039.jpg"
+    ],
+    "ts_start": 19.0,
+    "ts_end": 19.0,
+    "confidence": 0.83,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 37,
+    "frames": [
+      "frame_0040.jpg"
+    ],
+    "ts_start": 19.5,
+    "ts_end": 19.5,
+    "confidence": 0.74,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 38,
+    "frames": [
+      "frame_0041.jpg"
+    ],
+    "ts_start": 20.0,
+    "ts_end": 20.0,
+    "confidence": 0.74,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 39,
+    "frames": [
+      "frame_0042.jpg"
+    ],
+    "ts_start": 20.5,
+    "ts_end": 20.5,
+    "confidence": 0.82,
+    "summary": "Worker at elevated edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 40,
+    "frames": [
+      "frame_0043.jpg"
+    ],
+    "ts_start": 21.0,
+    "ts_end": 21.0,
+    "confidence": 0.81,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 41,
+    "frames": [
+      "frame_0044.jpg"
+    ],
+    "ts_start": 21.5,
+    "ts_end": 21.5,
+    "confidence": 0.81,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 42,
+    "frames": [
+      "frame_0045.jpg"
+    ],
+    "ts_start": 22.0,
+    "ts_end": 22.0,
+    "confidence": 0.78,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 43,
+    "frames": [
+      "frame_0046.jpg"
+    ],
+    "ts_start": 22.5,
+    "ts_end": 22.5,
+    "confidence": 0.74,
+    "summary": "Masonry work at wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 44,
+    "frames": [
+      "frame_0047.jpg"
+    ],
+    "ts_start": 23.0,
+    "ts_end": 23.0,
+    "confidence": 0.78,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 45,
+    "frames": [
+      "frame_0048.jpg"
+    ],
+    "ts_start": 23.5,
+    "ts_end": 23.5,
+    "confidence": 0.82,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 46,
+    "frames": [
+      "frame_0049.jpg"
+    ],
+    "ts_start": 24.0,
+    "ts_end": 24.0,
+    "confidence": 0.74,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 47,
+    "frames": [
+      "frame_0050.jpg"
+    ],
+    "ts_start": 24.5,
+    "ts_end": 24.5,
+    "confidence": 0.83,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 48,
+    "frames": [
+      "frame_0051.jpg"
+    ],
+    "ts_start": 25.0,
+    "ts_end": 25.0,
+    "confidence": 0.74,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 49,
+    "frames": [
+      "frame_0052.jpg"
+    ],
+    "ts_start": 25.5,
+    "ts_end": 25.5,
+    "confidence": 0.78,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 50,
+    "frames": [
+      "frame_0053.jpg"
+    ],
+    "ts_start": 26.0,
+    "ts_end": 26.0,
+    "confidence": 0.74,
+    "summary": "Masonry work at wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 51,
+    "frames": [
+      "frame_0054.jpg"
+    ],
+    "ts_start": 26.5,
+    "ts_end": 26.5,
+    "confidence": 0.81,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 52,
+    "frames": [
+      "frame_0055.jpg"
+    ],
+    "ts_start": 27.0,
+    "ts_end": 27.0,
+    "confidence": 0.78,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 53,
+    "frames": [
+      "frame_0056.jpg"
+    ],
+    "ts_start": 27.5,
+    "ts_end": 27.5,
+    "confidence": 0.74,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 54,
+    "frames": [
+      "frame_0057.jpg"
+    ],
+    "ts_start": 28.0,
+    "ts_end": 28.0,
+    "confidence": 0.82,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 55,
+    "frames": [
+      "frame_0058.jpg"
+    ],
+    "ts_start": 28.5,
+    "ts_end": 28.5,
+    "confidence": 0.81,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 56,
+    "frames": [
+      "frame_0059.jpg"
+    ],
+    "ts_start": 29.0,
+    "ts_end": 29.0,
+    "confidence": 0.78,
+    "summary": "Worker at elevated edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 57,
+    "frames": [
+      "frame_0060.jpg"
+    ],
+    "ts_start": 29.5,
     "ts_end": 29.5,
-    "confidence": 0,
-    "summary": "",
-    "spatial_claims": []
+    "confidence": 0.78,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 58,
+    "frames": [
+      "frame_0061.jpg"
+    ],
+    "ts_start": 30.0,
+    "ts_end": 30.0,
+    "confidence": 0.74,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 59,
+    "frames": [
+      "frame_0062.jpg"
+    ],
+    "ts_start": 30.5,
+    "ts_end": 30.5,
+    "confidence": 0.83,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 60,
+    "frames": [
+      "frame_0063.jpg"
+    ],
+    "ts_start": 31.0,
+    "ts_end": 31.0,
+    "confidence": 0.81,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 61,
+    "frames": [
+      "frame_0064.jpg"
+    ],
+    "ts_start": 31.5,
+    "ts_end": 31.5,
+    "confidence": 0.81,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 62,
+    "frames": [
+      "frame_0065.jpg"
+    ],
+    "ts_start": 32.0,
+    "ts_end": 32.0,
+    "confidence": 0.83,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 63,
+    "frames": [
+      "frame_0066.jpg"
+    ],
+    "ts_start": 32.5,
+    "ts_end": 32.5,
+    "confidence": 0.81,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 64,
+    "frames": [
+      "frame_0067.jpg"
+    ],
+    "ts_start": 33.0,
+    "ts_end": 33.0,
+    "confidence": 0.81,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 65,
+    "frames": [
+      "frame_0068.jpg"
+    ],
+    "ts_start": 33.5,
+    "ts_end": 33.5,
+    "confidence": 0.78,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 66,
+    "frames": [
+      "frame_0069.jpg"
+    ],
+    "ts_start": 34.0,
+    "ts_end": 34.0,
+    "confidence": 0.82,
+    "summary": "Worker at elevated edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 67,
+    "frames": [
+      "frame_0070.jpg"
+    ],
+    "ts_start": 34.5,
+    "ts_end": 34.5,
+    "confidence": 0.74,
+    "summary": "Masonry work at wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 68,
+    "frames": [
+      "frame_0071.jpg"
+    ],
+    "ts_start": 35.0,
+    "ts_end": 35.0,
+    "confidence": 0.82,
+    "summary": "Worker at elevated edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 69,
+    "frames": [
+      "frame_0072.jpg"
+    ],
+    "ts_start": 35.5,
+    "ts_end": 35.5,
+    "confidence": 0.81,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 70,
+    "frames": [
+      "frame_0073.jpg"
+    ],
+    "ts_start": 36.0,
+    "ts_end": 36.0,
+    "confidence": 0.78,
+    "summary": "Multiple workers elevated no PPE",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU wall, left side of frame",
+        "distance_m": 2.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      },
+      {
+        "object": "ladder",
+        "location": "extension ladder leaned against wall, right side",
+        "distance_m": 2.8
+      }
+    ]
+  },
+  {
+    "episode": 71,
+    "frames": [
+      "frame_0074.jpg"
+    ],
+    "ts_start": 36.5,
+    "ts_end": 36.5,
+    "confidence": 0.81,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 72,
+    "frames": [
+      "frame_0075.jpg"
+    ],
+    "ts_start": 37.0,
+    "ts_end": 37.0,
+    "confidence": 0.74,
+    "summary": "Worker at elevated edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 73,
+    "frames": [
+      "frame_0076.jpg"
+    ],
+    "ts_start": 37.5,
+    "ts_end": 37.5,
+    "confidence": 0.78,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 74,
+    "frames": [
+      "frame_0077.jpg"
+    ],
+    "ts_start": 38.0,
+    "ts_end": 38.0,
+    "confidence": 0.82,
+    "summary": "Masonry work at wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 75,
+    "frames": [
+      "frame_0078.jpg"
+    ],
+    "ts_start": 38.5,
+    "ts_end": 38.5,
+    "confidence": 0.82,
+    "summary": "Worker atop CMU wall, second worker visible",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU wall, left side of frame",
+        "distance_m": 2.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 76,
+    "frames": [
+      "frame_0079.jpg"
+    ],
+    "ts_start": 39.0,
+    "ts_end": 39.0,
+    "confidence": 0.81,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 77,
+    "frames": [
+      "frame_0080.jpg"
+    ],
+    "ts_start": 39.5,
+    "ts_end": 39.5,
+    "confidence": 0.78,
+    "summary": "Masonry work at wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      },
+      {
+        "object": "ladder",
+        "location": "extension ladder leaned against wall, right side",
+        "distance_m": 2.8
+      }
+    ]
+  },
+  {
+    "episode": 78,
+    "frames": [
+      "frame_0081.jpg"
+    ],
+    "ts_start": 40.0,
+    "ts_end": 40.0,
+    "confidence": 0.83,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 79,
+    "frames": [
+      "frame_0082.jpg"
+    ],
+    "ts_start": 40.5,
+    "ts_end": 40.5,
+    "confidence": 0.82,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 80,
+    "frames": [
+      "frame_0083.jpg"
+    ],
+    "ts_start": 41.0,
+    "ts_end": 41.0,
+    "confidence": 0.82,
+    "summary": "Worker material handling at elevation",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU wall, left side of frame",
+        "distance_m": 2.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 81,
+    "frames": [
+      "frame_0084.jpg"
+    ],
+    "ts_start": 41.5,
+    "ts_end": 41.5,
+    "confidence": 0.81,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 82,
+    "frames": [
+      "frame_0085.jpg"
+    ],
+    "ts_start": 42.0,
+    "ts_end": 42.0,
+    "confidence": 0.78,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 83,
+    "frames": [
+      "frame_0086.jpg"
+    ],
+    "ts_start": 42.5,
+    "ts_end": 42.5,
+    "confidence": 0.83,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 84,
+    "frames": [
+      "frame_0087.jpg"
+    ],
+    "ts_start": 43.0,
+    "ts_end": 43.0,
+    "confidence": 0.82,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      },
+      {
+        "object": "ladder",
+        "location": "extension ladder leaned against wall, right side",
+        "distance_m": 2.8
+      }
+    ]
+  },
+  {
+    "episode": 85,
+    "frames": [
+      "frame_0088.jpg"
+    ],
+    "ts_start": 43.5,
+    "ts_end": 43.5,
+    "confidence": 0.78,
+    "summary": "Two workers at elevation no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU wall, left side of frame",
+        "distance_m": 2.5
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 86,
+    "frames": [
+      "frame_0089.jpg"
+    ],
+    "ts_start": 44.0,
+    "ts_end": 44.0,
+    "confidence": 0.78,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 87,
+    "frames": [
+      "frame_0090.jpg"
+    ],
+    "ts_start": 44.5,
+    "ts_end": 44.5,
+    "confidence": 0.82,
+    "summary": "Worker at elevated edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 88,
+    "frames": [
+      "frame_0091.jpg"
+    ],
+    "ts_start": 45.0,
+    "ts_end": 45.0,
+    "confidence": 0.74,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 89,
+    "frames": [
+      "frame_0092.jpg"
+    ],
+    "ts_start": 45.5,
+    "ts_end": 45.5,
+    "confidence": 0.81,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 90,
+    "frames": [
+      "frame_0093.jpg"
+    ],
+    "ts_start": 46.0,
+    "ts_end": 46.0,
+    "confidence": 0.78,
+    "summary": "Two workers at elevation no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU wall, left side of frame",
+        "distance_m": 2.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 91,
+    "frames": [
+      "frame_0094.jpg"
+    ],
+    "ts_start": 46.5,
+    "ts_end": 46.5,
+    "confidence": 0.78,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      },
+      {
+        "object": "ladder",
+        "location": "extension ladder leaned against wall, right side",
+        "distance_m": 2.8
+      }
+    ]
+  },
+  {
+    "episode": 92,
+    "frames": [
+      "frame_0095.jpg"
+    ],
+    "ts_start": 47.0,
+    "ts_end": 47.0,
+    "confidence": 0.81,
+    "summary": "Masonry work at wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 93,
+    "frames": [
+      "frame_0096.jpg"
+    ],
+    "ts_start": 47.5,
+    "ts_end": 47.5,
+    "confidence": 0.82,
+    "summary": "Worker repositioning on wall top",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 94,
+    "frames": [
+      "frame_0097.jpg"
+    ],
+    "ts_start": 48.0,
+    "ts_end": 48.0,
+    "confidence": 0.74,
+    "summary": "Worker near open wall edge",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 95,
+    "frames": [
+      "frame_0098.jpg"
+    ],
+    "ts_start": 48.5,
+    "ts_end": 48.5,
+    "confidence": 0.78,
+    "summary": "Multiple workers elevated no PPE",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU wall, left side of frame",
+        "distance_m": 2.5
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 96,
+    "frames": [
+      "frame_0099.jpg"
+    ],
+    "ts_start": 49.0,
+    "ts_end": 49.0,
+    "confidence": 0.78,
+    "summary": "Working at elevation no guardrail",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 97,
+    "frames": [
+      "frame_0100.jpg"
+    ],
+    "ts_start": 49.5,
+    "ts_end": 49.5,
+    "confidence": 0.74,
+    "summary": "Worker on elevated masonry",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 98,
+    "frames": [
+      "frame_0101.jpg"
+    ],
+    "ts_start": 50.0,
+    "ts_end": 50.0,
+    "confidence": 0.83,
+    "summary": "Elevated masonry work no fall prot",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      },
+      {
+        "object": "ladder",
+        "location": "extension ladder leaned against wall, right side",
+        "distance_m": 2.8
+      }
+    ]
+  },
+  {
+    "episode": 99,
+    "frames": [
+      "frame_0102.jpg"
+    ],
+    "ts_start": 50.5,
+    "ts_end": 50.5,
+    "confidence": 0.82,
+    "summary": "Worker atop wall structure late session",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 100,
+    "frames": [
+      "frame_0103.jpg"
+    ],
+    "ts_start": 51.0,
+    "ts_end": 51.0,
+    "confidence": 0.81,
+    "summary": "Worker atop wall structure late session",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 101,
+    "frames": [
+      "frame_0104.jpg"
+    ],
+    "ts_start": 51.5,
+    "ts_end": 51.5,
+    "confidence": 0.82,
+    "summary": "Working at elevation CMU wall final phase",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 102,
+    "frames": [
+      "frame_0105.jpg"
+    ],
+    "ts_start": 52.0,
+    "ts_end": 52.0,
+    "confidence": 0.74,
+    "summary": "Crane activity near elevated workers",
+    "spatial_claims": [
+      {
+        "object": "crane_line",
+        "location": "overhead lifting line visible upper-right frame",
+        "distance_m": 4.0
+      },
+      {
+        "object": "material_lift",
+        "location": "CMU blocks being lifted via crane, right side",
+        "distance_m": 3.5
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 103,
+    "frames": [
+      "frame_0106.jpg"
+    ],
+    "ts_start": 52.5,
+    "ts_end": 52.5,
+    "confidence": 0.82,
+    "summary": "Working at elevation CMU wall final phase",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 104,
+    "frames": [
+      "frame_0107.jpg"
+    ],
+    "ts_start": 53.0,
+    "ts_end": 53.0,
+    "confidence": 0.82,
+    "summary": "Worker atop wall structure late session",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "top of CMU wall, immediate perimeter, no guardrail",
+        "distance_m": 1.5
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 105,
+    "frames": [
+      "frame_0108.jpg"
+    ],
+    "ts_start": 53.5,
+    "ts_end": 53.5,
+    "confidence": 0.81,
+    "summary": "Working at elevation CMU wall final phase",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 106,
+    "frames": [
+      "frame_0109.jpg"
+    ],
+    "ts_start": 54.0,
+    "ts_end": 54.0,
+    "confidence": 0.82,
+    "summary": "Worker atop wall structure late session",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "left-side scaffold frame with integral ladder",
+        "distance_m": 1.8
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 107,
+    "frames": [
+      "frame_0110.jpg"
+    ],
+    "ts_start": 54.5,
+    "ts_end": 54.5,
+    "confidence": 0.78,
+    "summary": "Worker atop wall structure late session",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "leaning over top of masonry wall edge, center frame",
+        "distance_m": 1.8
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 108,
+    "frames": [
+      "frame_0111.jpg"
+    ],
+    "ts_start": 55.0,
+    "ts_end": 55.0,
+    "confidence": 0.74,
+    "summary": "Crane activity near elevated workers",
+    "spatial_claims": [
+      {
+        "object": "crane_line",
+        "location": "overhead lifting line visible upper-right frame",
+        "distance_m": 4.0
+      },
+      {
+        "object": "material_lift",
+        "location": "CMU blocks being lifted via crane, right side",
+        "distance_m": 3.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 109,
+    "frames": [
+      "frame_0112.jpg"
+    ],
+    "ts_start": 55.5,
+    "ts_end": 55.5,
+    "confidence": 0.83,
+    "summary": "Working at elevation CMU wall final phase",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 110,
+    "frames": [
+      "frame_0113.jpg"
+    ],
+    "ts_start": 56.0,
+    "ts_end": 56.0,
+    "confidence": 0.83,
+    "summary": "Working at elevation CMU wall final phase",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 111,
+    "frames": [
+      "frame_0114.jpg"
+    ],
+    "ts_start": 56.5,
+    "ts_end": 56.5,
+    "confidence": 0.78,
+    "summary": "Worker atop wall structure late session",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "front and right of worker, unguarded wall top",
+        "distance_m": 0.8
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 112,
+    "frames": [
+      "frame_0115.jpg"
+    ],
+    "ts_start": 57.0,
+    "ts_end": 57.0,
+    "confidence": 0.74,
+    "summary": "Working at elevation CMU wall final phase",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 113,
+    "frames": [
+      "frame_0116.jpg"
+    ],
+    "ts_start": 57.5,
+    "ts_end": 57.5,
+    "confidence": 0.74,
+    "summary": "Working at elevation CMU wall final phase",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 114,
+    "frames": [
+      "frame_0117.jpg"
+    ],
+    "ts_start": 58.0,
+    "ts_end": 58.0,
+    "confidence": 0.74,
+    "summary": "Crane activity near elevated workers",
+    "spatial_claims": [
+      {
+        "object": "crane_line",
+        "location": "overhead lifting line visible upper-right frame",
+        "distance_m": 4.0
+      },
+      {
+        "object": "material_lift",
+        "location": "CMU blocks being lifted via crane, right side",
+        "distance_m": 3.5
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "scaffold platform visible left-center, overhead truss",
+        "distance_m": 2.5
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at open wall edge where worker is positioned",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "masonry block stack, foreground ~1.5m high",
+        "distance_m": 1.5
+      }
+    ]
+  },
+  {
+    "episode": 115,
+    "frames": [
+      "frame_0118.jpg"
+    ],
+    "ts_start": 58.5,
+    "ts_end": 58.5,
+    "confidence": 0.74,
+    "summary": "Working at elevation CMU wall final phase",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 116,
+    "frames": [
+      "frame_0119.jpg"
+    ],
+    "ts_start": 59.0,
+    "ts_end": 59.0,
+    "confidence": 0.74,
+    "summary": "Worker atop wall structure late session",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "elevated work surface, right-of-center frame",
+        "distance_m": 2.3
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "absent at perimeter of elevated work surface",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
+  },
+  {
+    "episode": 117,
+    "frames": [
+      "frame_0120.jpg"
+    ],
+    "ts_start": 59.5,
+    "ts_end": 59.5,
+    "confidence": 0.74,
+    "summary": "Worker atop wall structure late session",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop CMU block wall at elevation ~2.5m",
+        "distance_m": 2.1
+      },
+      {
+        "object": "open_edge",
+        "location": "lateral and forward edges of elevated work surface",
+        "distance_m": 1.8
+      },
+      {
+        "object": "scaffold",
+        "location": "yellow tubular scaffold structure, left side",
+        "distance_m": 1.2
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "concrete masonry units at worker level, center-right",
+        "distance_m": 2.0
+      }
+    ]
+  },
+  {
+    "episode": 118,
+    "frames": [
+      "frame_0121.jpg"
+    ],
+    "ts_start": 60.0,
+    "ts_end": 60.0,
+    "confidence": 0.78,
+    "summary": "Working at elevation CMU wall final phase",
+    "spatial_claims": [
+      {
+        "object": "worker",
+        "location": "atop masonry wall structure, forward lean position",
+        "distance_m": 1.5
+      },
+      {
+        "object": "open_edge",
+        "location": "perimeter of elevated masonry wall, multiple sides exposed",
+        "distance_m": 2.0
+      },
+      {
+        "object": "scaffold",
+        "location": "steel truss scaffold adjacent to wall, background",
+        "distance_m": 1.5
+      },
+      {
+        "object": "guardrail",
+        "location": "no compliant guardrail system on open elevated edges",
+        "distance_m": null
+      },
+      {
+        "object": "material_stack",
+        "location": "CMU blocks stacked on wall surface at elevation",
+        "distance_m": 1.8
+      }
+    ]
   }
 ]
