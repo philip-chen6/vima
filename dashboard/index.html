@@ -4,15 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>VIMA Dashboard</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=mobile-theme-2" />
   </head>
   <body>
     <main class="shell">
       <header class="topbar">
         <div>
           <p class="brand">VIMA</p>
-          <h1>Proof console</h1>
-          <p class="subtitle">Hardhat video becomes spatial evidence.</p>
+          <h1>Verify to earn</h1>
+          <p class="subtitle">Review spatial evidence, confirm real work, and turn verified frames into rewards.</p>
         </div>
         <div class="top-actions">
           <div class="reward-pill">
@@ -35,8 +35,9 @@
           <div class="panel-head">
             <div>
               <p class="eyebrow">Evidence frame</p>
-              <h2>Raw, mask, depth</h2>
+              <h2>Downtown Grid 7B</h2>
             </div>
+            <div class="confidence-pill">84% confidence</div>
             <div class="tabs" aria-label="Evidence layer picker">
               <button class="tab active" data-layer="raw">raw</button>
               <button class="tab" data-layer="mask">mask</button>
@@ -44,8 +45,15 @@
             </div>
           </div>
           <figure class="frame-wrap">
-            <img id="evidence-frame" src="./assets/frame_000001.jpg" alt="Construction evidence frame" />
-            <figcaption id="frame-caption">Raw sampled hardhat frame.</figcaption>
+            <div class="image-card">
+              <img id="evidence-frame" src="./assets/frame_000001.jpg" alt="Construction evidence frame" />
+              <div class="xp-badge">+25 XP</div>
+              <div class="frame-meta">
+                <span>Warehouse site</span>
+                <strong>masonry wall</strong>
+              </div>
+            </div>
+            <figcaption id="frame-caption">Sampled hardhat frame.</figcaption>
           </figure>
         </section>
 
@@ -55,6 +63,11 @@
               <p class="eyebrow">Memory</p>
               <h2>Ask the memory</h2>
             </div>
+          </div>
+          <div class="verdict-card">
+            <span>Current verdict</span>
+            <strong>candidate work found</strong>
+            <p>2 masonry episodes linked to evidence frames.</p>
           </div>
           <div class="chat-log" id="chat-log"></div>
           <form id="query-form" class="query-form">
@@ -73,18 +86,22 @@
         <div>
           <strong id="frame-count">--</strong>
           <span>frames</span>
+          <i></i>
         </div>
         <div>
           <strong id="episode-count">--</strong>
           <span>episodes</span>
+          <i></i>
         </div>
         <div>
           <strong id="event-count">--</strong>
           <span>object events</span>
+          <i></i>
         </div>
         <div>
           <strong id="top-confidence">--</strong>
           <span>top confidence</span>
+          <i></i>
         </div>
       </section>
 
