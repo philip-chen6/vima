@@ -477,8 +477,8 @@ export default function EvalClient() {
         ]}
         pages={[
           { href: "/", label: "landing" },
-          { href: "/demo", label: "demo" },
-          { href: "/eval", label: "eval" },
+          { href: "/dashboard?view=demo", label: "demo", viewSwap: "demo" },
+          { href: "/dashboard?view=eval", label: "eval", viewSwap: "eval" },
         ]}
       />
       <SidebarInset>
@@ -1304,7 +1304,7 @@ export default function EvalClient() {
             ← landing
           </Link>
           <Link
-            href="/demo"
+            href="/dashboard?view=demo"
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "11px",

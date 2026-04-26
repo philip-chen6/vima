@@ -6,7 +6,7 @@
 - [x] add standalone public cli package without backend/runtime dependencies
 - [x] add portable skill template plus print/install commands
 - [x] document one-command agent usage
-- [ ] run package tests and entrypoint smoke checks
+- [x] run package tests and entrypoint smoke checks
 
 ### result
 
@@ -15,7 +15,9 @@
 - implemented `doctor`, `analyze`, `compare`, `cii summary`, `cii frames`,
   `zones`, `eval`, `skill print`, and `skill install`.
 - documented `uvx vima-agent@latest ...` in the package README and root README.
-- verification pending final rerun after installer-detection cleanup.
+- verification passed: 7 package tests, clean temp-venv install, console script
+  version check, skill resource readback, live production `doctor`, live cii
+  filter, live eval json, and live `analyze --sample masonry-p`.
 
 ## hero intro gap tighten
 

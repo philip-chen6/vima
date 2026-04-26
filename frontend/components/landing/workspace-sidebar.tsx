@@ -38,6 +38,11 @@ export interface WorkspacePage {
   href: string;
   label: string;
   badge?: string;
+  /** If set AND the user is currently on /dashboard, clicking dispatches a
+   *  `vima-dashboard-view` event instead of route-navigating, so the view
+   *  swap is instant. Outside /dashboard the regular href click still
+   *  navigates (covers the link-from-anywhere case). */
+  viewSwap?: "demo" | "eval";
 }
 
 interface Props {
@@ -191,7 +196,22 @@ export function WorkspaceSidebar({ sections, pages = [], contextLabel }: Props) 
             <SidebarGroupContent>
               <SidebarMenu>
                 {pages.map((p) => {
-                  const isActive = pathname === p.href;
+                  const onDashboard = pathname === "/dashboard";
+                  // Active matches: same path, or if we're on /dashboard
+                  // and this entry has a viewSwap that matches the
+                  // current ?view= search param.
+                  const isActive = onDashboard && p.viewSwap
+                    ? typeof window !== "undefined" &&
+                      (new URL(window.location.href).searchParams.get("view") || "demo") === p.viewSwap
+                    : pathname === p.href;
+                  const handleClick = (e: React.MouseEvent) => {
+                    if (p.viewSwap && onDashboard) {
+                      e.preventDefault();
+                      window.dispatchEvent(
+                        new CustomEvent("vima-dashboard-view", { detail: { view: p.viewSwap } }),
+                      );
+                    }
+                  };
                   return (
                     <SidebarMenuItem key={p.href}>
                       <SidebarMenuButton
@@ -203,7 +223,12 @@ export function WorkspaceSidebar({ sections, pages = [], contextLabel }: Props) 
                           letterSpacing: "0.04em",
                         }}
                       >
-                        <Link href={p.href} prefetch aria-current={isActive ? "page" : undefined}>
+                        <Link
+                          href={p.href}
+                          prefetch
+                          aria-current={isActive ? "page" : undefined}
+                          onClick={handleClick}
+                        >
                           {p.badge && (
                             <span
                               style={{

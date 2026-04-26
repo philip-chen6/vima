@@ -668,7 +668,7 @@ export default function VimaLandingPage() {
             <span>inspect the proof chain</span>
           </a>
           <Link
-            href="/demo"
+            href="/dashboard"
             data-gsap="hero-cta"
             data-gsap-intro="intro-cta-secondary"
             data-gsap-magnetic
@@ -1230,7 +1230,7 @@ export default function VimaLandingPage() {
             </h2>
           </div>
           <Link
-            href="/demo"
+            href="/dashboard"
             data-gsap-magnetic
             style={{
               color: WASHI,
@@ -1322,7 +1322,7 @@ export default function VimaLandingPage() {
           </div>
           <div data-gsap="cta-action">
             <HexCta
-              href="/demo"
+              href="/dashboard"
               label="open dashboard"
               detail="inspect frames, confidence, depth-filter activity, and the COLMAP point cloud"
             />

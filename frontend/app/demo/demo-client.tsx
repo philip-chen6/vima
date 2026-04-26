@@ -202,8 +202,8 @@ export default function DemoClient({
         ]}
         pages={[
           { href: "/", label: "landing" },
-          { href: "/demo", label: "demo" },
-          { href: "/eval", label: "eval" },
+          { href: "/dashboard?view=demo", label: "demo", viewSwap: "demo" },
+          { href: "/dashboard?view=eval", label: "eval", viewSwap: "eval" },
         ]}
       />
       <SidebarInset>
@@ -1012,7 +1012,7 @@ export default function DemoClient({
             ← landing
           </Link>
           <Link
-            href="/eval"
+            href="/dashboard?view=eval"
             style={{
               display: "inline-flex",
               alignItems: "center",

@@ -302,7 +302,7 @@ export default function VimaNavbar() {
                 paper
               </Link>
               <Link
-                href="/demo"
+                href="/dashboard"
                 className="vima-nav-menu"
                 onMouseEnter={() => setActiveDropdown(null)}
                 aria-label="open dashboard"
