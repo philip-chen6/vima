@@ -319,6 +319,9 @@ export default function EvidenceImageTabs() {
                 {tab.num} · {tab.title}
               </div>
               <h3 data-evidence-tab-fade>{tab.body}</h3>
+              <p data-evidence-tab-fade className="evidence-tab-caption-copy">
+                {tab.caption}
+              </p>
               <div data-evidence-tab-fade className="evidence-tab-rows">
                 {tab.rows.map(([label, value]) => (
                   <div key={`${tab.key}-${label}`}>

@@ -1831,6 +1831,16 @@ html[data-vima-loader-reveal="true"] [data-landing-backdrop-stage] {
   letter-spacing: 0;
 }
 
+.evidence-tab-caption-copy {
+  margin: -4px 0 0;
+  max-width: 720px;
+  color: rgba(247, 236, 239, 0.58);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  letter-spacing: 0.005em;
+}
+
 .evidence-tab-rows {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
