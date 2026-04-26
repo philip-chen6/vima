@@ -16,7 +16,7 @@
 // tabular-nums on every number, hairline borders, no bubble radius, no
 // purple. See DESIGN.md.
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ChevronRight } from "lucide-react";
@@ -135,6 +135,86 @@ export default function EvalClient() {
     () => (activeEpisode && manifest ? bracketFrames(activeEpisode.ts_start, manifest) : null),
     [activeEpisode, manifest],
   );
+  const [abResult, setAbResult] = useState<{ baseline: any; vima: any; loading: boolean; error: string | null } | null>(null);
+  const abCacheRef = useRef(new Map<number, any>());
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+      setAbResult({ baseline: null, vima: null, loading: false, error: "live A/B disabled in dev" });
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const cached = abCacheRef.current.get(activeIdx);
+    if (cached) {
+      setAbResult(cached);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    if (!activeEpisode || !bracket?.before?.filename) {
+      setAbResult(null);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    setAbResult({ baseline: null, vima: null, loading: true, error: null });
+
+    const filename = bracket.before.filename;
+    const analyzeVariant = async (prompt: "baseline" | "vima", blob: Blob) => {
+      const formData = new FormData();
+      formData.append("file", blob, filename);
+      const response = await fetch(`/api/analyze/frame?prompt=${prompt}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const body = await response.json().catch(() => null);
+      if (response.status === 503) {
+        throw new Error(`API paused: ${body?.message ?? "service unavailable"}`);
+      }
+      if (!response.ok) {
+        throw new Error(body?.message ?? `request failed (${response.status})`);
+      }
+      return body;
+    };
+
+    fetch(`/masonry-frames-raw/${filename}`)
+      .then(async (frameResponse) => {
+        if (!frameResponse.ok) {
+          throw new Error(`could not fetch frame ${filename} (${frameResponse.status})`);
+        }
+        const blob = await frameResponse.blob();
+        const [baseline, vima] = await Promise.all([
+          analyzeVariant("baseline", blob),
+          analyzeVariant("vima", blob),
+        ]);
+        return { baseline, vima, loading: false, error: null };
+      })
+      .then((result) => {
+        if (cancelled) return;
+        abCacheRef.current.set(activeIdx, result);
+        setAbResult(result);
+      })
+      .catch((fetchError) => {
+        if (cancelled) return;
+        setAbResult({
+          baseline: null,
+          vima: null,
+          loading: false,
+          error: fetchError instanceof Error ? fetchError.message : String(fetchError),
+        });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeEpisode, activeIdx, bracket]);
 
   // Aggregate metric: spatial claims per episode
   const totalClaims = useMemo(
@@ -629,18 +709,26 @@ export default function EvalClient() {
           <FailureCard
             label="raw VLM output"
             text={
-              activeEpisode
-                ? `"${activeEpisode.summary || "worker on a wall"}." Caption only — no objects, no distances, no episode binding.`
-                : "Worker on a masonry wall."
+              abResult?.loading && bracket?.before?.filename
+                ? `running on frame ${bracket.before.filename}...`
+                : abResult?.error
+                  ? abResult.error
+                  : abResult?.baseline
+                    ? `${abResult.baseline.pnc ?? "—"} · ${abResult.baseline.activity ?? "—"} · conf ${(((abResult.baseline.confidence ?? 0) as number) * 100).toFixed(0)}%`
+                    : "select an episode with a bracketed frame"
             }
             tone="bad"
           />
           <FailureCard
             label="vima episode"
             text={
-              activeEpisode
-                ? `"${activeEpisode.summary}" · ${activeEpisode.spatial_claims.length} spatial claims · ${activeEpisode.spatial_claims[0]?.object || "—"} at ${activeEpisode.spatial_claims[0]?.distance_m?.toFixed(1) ?? "?"}m · confidence ${(activeEpisode.confidence * 100).toFixed(0)}% · ts ${activeEpisode.ts_start.toFixed(1)}s → ${activeEpisode.ts_end.toFixed(1)}s`
-                : '"Worker at elevation no guardrail" · 5 spatial claims · open_edge at 1.5m · confidence 0.78 · ts 9.0s → 9.0s'
+              abResult?.loading && bracket?.before?.filename
+                ? `running on frame ${bracket.before.filename}...`
+                : abResult?.error
+                  ? abResult.error
+                  : abResult?.vima
+                    ? `${abResult.vima.pnc ?? "—"} · ${abResult.vima.episode ?? "—"} · ${abResult.vima.spatial_claims?.length ?? 0} claims · conf ${(((abResult.vima.confidence ?? 0) as number) * 100).toFixed(0)}%`
+                    : "select an episode with a bracketed frame"
             }
             tone="good"
           />
