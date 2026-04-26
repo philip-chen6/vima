@@ -1,606 +1,1136 @@
-"use client";
+import Link from "next/link";
+import { ArrowDown, Code2, FileText, Trophy } from "lucide-react";
+import HeroShader from "@/components/HeroShader";
+import YozakuraBackground from "@/components/YozakuraBackground";
+import HexCta from "@/components/landing/hex-cta";
+import EvidenceImageTabs from "@/components/landing/evidence-image-tabs";
+import FooterBounce from "@/components/landing/footer-bounce";
+import VimaNavbar from "@/components/landing/vima-navbar";
+import ScrollMotion from "@/components/landing/scroll-motion";
+import VimaLoader from "@/components/landing/vima-loader";
+import PipelineStepper from "@/components/landing/pipeline-stepper";
+import GradientText from "@/components/react-bits/gradient-text";
+import SimpleGraph from "@/components/react-bits/simple-graph";
+import Logo from "@/components/phosphor/logo";
+import { absoluteUrl, siteConfig } from "@/lib/seo";
 
-import React, { useEffect, useRef, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
-import {
-  Activity,
-  Coins,
-  HardHat,
-  Map,
-  ScanLine,
-  ShieldCheck,
-  Terminal,
-} from "lucide-react";
-import TextScatter from "@/components/react-bits/text-scatter";
+const INK = "#080503";
+const WASHI = "#f7ecef";
+const TEXT_SECONDARY = "rgba(247,236,239,0.68)";
+const TEXT_MUTED = "rgba(247,236,239,0.46)";
+const TEXT_FAINT = "rgba(247,236,239,0.34)";
+const LINE = "rgba(242,167,184,0.18)";
+const SAKURA_HOT = "#f2a7b8";
+const LANTERN = "#ffd3a6";
+const RED = "#ef476f";
+const HEADING_FONT = '"Times New Roman", Times, serif';
+const HEADING_GRADIENT = ["#f7ecef", "#f2a7b8", "#f7ecef"];
 
-const metricCards = [
-  { label: "productive", value: "86.7%", sub: "26 / 30 sampled frames" },
-  { label: "mean P-confidence", value: "0.939", sub: "Claude Sonnet judge" },
-  { label: "COLMAP points", value: "1,770", sub: "registered site anchors" },
-  { label: "reprojection", value: "1.199px", sub: "spatial fit error" },
-];
-
-const evidenceRows = [
-  ["00.0s", "P", "laying concrete blocks", "Zone A", "0.95"],
-  ["425.3s", "P", "scaffold work at elevation", "Zone B", "0.94"],
-  ["808.1s", "NC", "idle / walking interval", "Zone B", "0.82"],
-  ["1234.0s", "P", "material staging", "Zone C", "0.91"],
-];
-
-const systemSteps = [
+const ledgerReceipts = [
   {
-    icon: ScanLine,
-    eyebrow: "01 / capture",
-    title: "hardhat video becomes evidence",
-    body: "Frames are sampled from real masonry footage and treated as a spatial record, not a flat slideshow.",
+    id: "f-000",
+    time: "00.0s",
+    label: "P",
+    claim: "block alignment",
+    zone: "zone a",
+    confidence: "0.95",
+    status: "settles",
+    weight: "1.00x",
   },
   {
-    icon: Map,
-    eyebrow: "02 / anchor",
-    title: "COLMAP zones bind claims to place",
-    body: "Camera pose clustering assigns work to site regions: equipment, scaffold, material staging.",
+    id: "f-183",
+    time: "183.2s",
+    label: "C",
+    claim: "material staging",
+    zone: "zone b",
+    confidence: "0.88",
+    status: "context",
+    weight: "0.34x",
   },
   {
-    icon: Activity,
-    eyebrow: "03 / classify",
-    title: "CII wrench-time labels",
-    body: "Every frame becomes P, C, or NC with confidence and reasoning for downstream audit.",
+    id: "f-808",
+    time: "808.1s",
+    label: "NC",
+    claim: "idle walking",
+    zone: "zone b",
+    confidence: "0.82",
+    status: "blocked",
+    weight: "0.00x",
   },
   {
-    icon: Coins,
-    eyebrow: "04 / settle",
-    title: "verified work turns into raffle weight",
-    body: "Wrench time drives transparent Solana SPL payout logic with a replayable evidence chain.",
-  },
-];
-
-const failureExamples = [
-  {
-    label: "raw VLM",
-    title: "sees a worker laying block",
-    body: "Correct description, wrong accounting. The model does not know whether the camera wearer performed the work.",
-  },
-  {
-    label: "VIMA",
-    title: "binds work to place and evidence",
-    body: "Frames are labeled, spatially clustered, and stored as an auditable ledger before payout logic touches them.",
-  },
-];
-
-const proofCards = [
-  {
-    number: "01 / failure",
-    title: "presence is not productivity",
-    body: "A hardhat camera can pass by active work without the wearer doing that work. The system has to separate visual activity from credit.",
-  },
-  {
-    number: "02 / fix",
-    title: "frames become claims",
-    body: "Each sampled frame gets a wrench-time label, confidence, timestamp, and zone assignment instead of a loose caption.",
-  },
-  {
-    number: "03 / evidence",
-    title: "claims stay replayable",
-    body: "Every metric can point back to the frame ledger, so judges can inspect the exact footage behind the payout.",
+    id: "f-1234",
+    time: "1234.0s",
+    label: "P",
+    claim: "site setup",
+    zone: "zone c",
+    confidence: "0.91",
+    status: "settles",
+    weight: "1.00x",
   },
 ];
 
-function gearPath(teeth: number, rootRadius: number, outerRadius: number) {
-  const points: string[] = [];
-  const steps = teeth * 4;
+const ledgerMath = [
+  ["eligible frames", "26 / 30"],
+  ["wrench time", "86.7%"],
+  ["reward weight", "0.867"],
+  ["audit hash", "9f2c...81a"],
+];
 
-  for (let index = 0; index <= steps; index += 1) {
-    const angle = (index / steps) * Math.PI * 2 - Math.PI / 2;
-    const phase = index % 4;
-    const radius = phase === 1 || phase === 2 ? outerRadius : rootRadius;
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
-    points.push(`${index === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`);
-  }
+const stats = [
+  ["sampled frames", "30"],
+  ["wrench time", "86.7%"],
+  ["mean P-confidence", "0.939"],
+  ["zones", "3"],
+];
 
-  return `${points.join(" ")} Z`;
+const confidenceSeries = ledgerReceipts.map((frame) => ({
+  label: `${frame.id} · ${frame.label}`,
+  value: Number(frame.confidence),
+}));
+
+const footerLinks = [
+  { label: "devpost", href: "https://hacktech-by-caltech-2026.devpost.com/", icon: Trophy, external: true },
+  { label: "source", href: "https://github.com/philip-chen6/vinna", icon: Code2, external: true },
+  { label: "paper", href: "/paper.pdf", icon: FileText, external: false },
+] as const;
+
+const builders = [
+  { name: "joshua", handle: "qtzx06", href: "https://github.com/qtzx06", role: "cii classifier" },
+  { name: "philip", handle: "philip-chen6", href: "https://github.com/philip-chen6", role: "settlement" },
+  { name: "lucas", handle: "lucas-309", href: "https://github.com/lucas-309", role: "remote build" },
+  { name: "stephen", handle: "stephenhungg", href: "https://github.com/stephenhungg", role: "frontend" },
+] as const;
+
+function labelColor(label: string) {
+  if (label === "P") return SAKURA_HOT;
+  if (label === "C") return LANTERN;
+  return RED;
 }
 
-function Gear({
-  id,
-  size,
-  teeth,
-  duration,
-  reverse = false,
-  className,
-}: {
-  id: string;
-  size: number;
-  teeth: number;
-  duration: number;
-  reverse?: boolean;
-  className: string;
-}) {
-  const path = gearPath(teeth, 42, 54);
-  const spokeCount = Math.max(4, Math.round(teeth / 5));
-
+function GithubMark({ size = 14, strokeWidth = 1.7 }: { size?: number; strokeWidth?: number }) {
   return (
-    <div
-      className={`absolute ${reverse ? "[animation-direction:reverse]" : ""} animate-spin ${className}`}
-      style={{ width: size, height: size, animationDuration: `${duration}s` }}
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <svg
-        viewBox="-64 -64 128 128"
-        className="h-full w-full drop-shadow-[0_0_18px_rgba(255,255,255,0.18)]"
-        aria-hidden="true"
-      >
-        <defs>
-          <radialGradient id={`${id}-face`} cx="38%" cy="34%" r="72%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-            <stop offset="38%" stopColor="#d8d5cc" stopOpacity="0.84" />
-            <stop offset="100%" stopColor="#777066" stopOpacity="0.72" />
-          </radialGradient>
-          <radialGradient id={`${id}-shade`} cx="44%" cy="42%" r="68%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
-            <stop offset="64%" stopColor="#000000" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#000000" stopOpacity="0.42" />
-          </radialGradient>
-        </defs>
-        <path d={path} fill={`url(#${id}-face)`} stroke="#ffffff" strokeOpacity="0.22" strokeWidth="1.4" />
-        <circle r="35" fill="#17130f" fillOpacity="0.54" />
-        <circle r="33" fill={`url(#${id}-face)`} opacity="0.42" />
-        {Array.from({ length: spokeCount }).map((_, index) => {
-          const angle = (index / spokeCount) * Math.PI * 2;
-          const x = Math.cos(angle) * 26;
-          const y = Math.sin(angle) * 26;
-          return (
-            <line
-              key={index}
-              x1="0"
-              y1="0"
-              x2={x}
-              y2={y}
-              stroke="#ffffff"
-              strokeOpacity="0.55"
-              strokeWidth="5"
-              strokeLinecap="round"
-            />
-          );
-        })}
-        <circle r="14" fill="#100d0a" fillOpacity="0.72" />
-        <circle r="7" fill="#f8f6ef" fillOpacity="0.88" />
-        <circle r="3" fill="#080604" />
-        <circle r="48" fill={`url(#${id}-shade)`} />
-      </svg>
-    </div>
+      <path d="M9 19c-4 1.2-4-2-5.6-2.4" />
+      <path d="M15 22v-3.5c0-1 .1-1.4-.5-2 2.7-.3 5.5-1.3 5.5-6a4.7 4.7 0 0 0-1.3-3.3 4.4 4.4 0 0 0-.1-3.3s-1-.3-3.4 1.3a11.7 11.7 0 0 0-6.2 0c-2.4-1.6-3.4-1.3-3.4-1.3a4.4 4.4 0 0 0-.1 3.3 4.7 4.7 0 0 0-1.3 3.3c0 4.7 2.8 5.7 5.5 6-.6.6-.6 1.2-.5 2V22" />
+    </svg>
   );
 }
 
-function ClockworkLoader() {
-  const [visible, setVisible] = useState(true);
-  const [leaving, setLeaving] = useState(false);
+const sectionStyle = {
+  position: "relative" as const,
+  zIndex: 3,
+  isolation: "isolate" as const,
+  overflow: "hidden",
+  maxWidth: "1400px",
+  margin: "0 auto",
+  minHeight: "100dvh",
+  padding: "clamp(72px, 9vw, 124px) clamp(20px, 5vw, 48px)",
+  scrollMarginTop: "0",
+  display: "flex",
+  flexDirection: "column" as const,
+  justifyContent: "center",
+};
 
-  useEffect(() => {
-    const fadeTimer = window.setTimeout(() => setLeaving(true), 1050);
-    const removeTimer = window.setTimeout(() => setVisible(false), 1450);
-    return () => {
-      window.clearTimeout(fadeTimer);
-      window.clearTimeout(removeTimer);
-    };
-  }, []);
-
-  if (!visible) return null;
-
+function SectionDivider({ id, label, index }: { id: string; label: string; index: string }) {
   return (
     <div
-      className={`pointer-events-none fixed inset-0 z-[80] grid place-items-center bg-[#080604] transition duration-500 ${
-        leaving ? "opacity-0" : "opacity-100"
-      }`}
+      data-gsap="section-divider"
+      style={{
+        position: "relative",
+        zIndex: 3,
+        maxWidth: "1400px",
+        margin: "0 auto",
+        padding: "0 clamp(20px, 5vw, 48px)",
+      }}
     >
-      <div className="relative h-56 w-56">
-        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.10),transparent_58%)]" />
-        <Gear id="gear-main" size={112} teeth={24} duration={7.2} className="left-[72px] top-[70px]" />
-        <Gear id="gear-upper" size={76} teeth={18} duration={4.7} reverse className="left-[133px] top-[33px]" />
-        <Gear id="gear-left" size={66} teeth={16} duration={4.9} reverse className="left-[32px] top-[62px]" />
-        <Gear id="gear-lower" size={78} teeth={18} duration={5.3} reverse className="left-[43px] top-[133px]" />
-      </div>
-    </div>
-  );
-}
-
-function SurveyCursor() {
-  const [position, setPosition] = useState({ x: -120, y: -120 });
-
-  useEffect(() => {
-    const onMove = (event: MouseEvent) => {
-      setPosition({ x: event.clientX, y: event.clientY });
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
-  return (
-    <div
-      className="pointer-events-none fixed z-50 hidden h-12 w-12 -translate-x-1/2 -translate-y-1/2 mix-blend-screen md:block"
-      style={{ left: position.x, top: position.y }}
-    >
-      <div className="absolute left-1/2 top-0 h-full w-px bg-[#d69256]/35" />
-      <div className="absolute left-0 top-1/2 h-px w-full bg-[#d69256]/35" />
-      <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f1c27d]/70" />
-    </div>
-  );
-}
-
-function TopographicField() {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const { viewport } = useThree();
-
-  useFrame(({ clock }) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value = clock.elapsedTime;
-    }
-  });
-
-  return (
-    <mesh scale={[viewport.width, viewport.height, 1]}>
-      <planeGeometry args={[1, 1]} />
-      <shaderMaterial
-        ref={materialRef}
-        transparent={false}
-        depthWrite={false}
-        uniforms={{
-          uTime: { value: 0 },
-          uAmber: { value: new THREE.Color("#b9a07f") },
-          uGold: { value: new THREE.Color("#efe3cf") },
-          uCoral: { value: new THREE.Color("#8f7b68") },
-          uBg: { value: new THREE.Color("#080604") },
+      <a
+        href={`#${id}`}
+        aria-label={`jump to ${label} section ${index}`}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          minHeight: "38px",
+          textDecoration: "none",
         }}
-        vertexShader={`
-          varying vec2 vUv;
-          void main() {
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `}
-        fragmentShader={`
-          uniform float uTime;
-          uniform vec3 uAmber;
-          uniform vec3 uGold;
-          uniform vec3 uCoral;
-          uniform vec3 uBg;
-          varying vec2 vUv;
-
-          vec2 hash(vec2 p) {
-            p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
-            return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
-          }
-
-          float noise(vec2 p) {
-            const float K1 = 0.366025404;
-            const float K2 = 0.211324865;
-            vec2 i = floor(p + (p.x + p.y) * K1);
-            vec2 a = p - i + (i.x + i.y) * K2;
-            vec2 o = (a.x > a.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-            vec2 b = a - o + K2;
-            vec2 c = a - 1.0 + 2.0 * K2;
-            vec3 h = max(0.5 - vec3(dot(a,a), dot(b,b), dot(c,c)), 0.0);
-            vec3 n = h * h * h * h * vec3(
-              dot(a, hash(i)),
-              dot(b, hash(i + o)),
-              dot(c, hash(i + 1.0))
-            );
-            return dot(n, vec3(70.0));
-          }
-
-          float fbm(vec2 p) {
-            float v = 0.0;
-            float a = 0.52;
-            mat2 r = mat2(0.82, -0.58, 0.58, 0.82);
-            for (int i = 0; i < 5; i++) {
-              v += a * noise(p);
-              p = r * p * 2.03 + 7.1;
-              a *= 0.48;
-            }
-            return v;
-          }
-
-          void main() {
-            vec2 uv = vUv;
-            vec2 p = uv * vec2(2.25, 1.22);
-            p.x += 0.17 * sin(p.y * 3.2 + uTime * 0.08);
-            p.y += 0.08 * cos(p.x * 4.0 - uTime * 0.06);
-
-            float elevation = fbm(p * 2.9 + vec2(uTime * 0.026, -uTime * 0.018));
-            elevation = elevation * 0.5 + 0.5;
-
-            float minor = abs(fract(elevation * 18.0) - 0.5);
-            float major = abs(fract(elevation * 6.0) - 0.5);
-            float minorLine = 1.0 - smoothstep(0.022, 0.064, minor);
-            float majorLine = 1.0 - smoothstep(0.028, 0.092, major);
-
-            vec3 contourColor = mix(uCoral, uGold, smoothstep(0.18, 0.88, elevation));
-            float glow = minorLine * 0.46 + majorLine * 1.08;
-            vec3 color = uBg + contourColor * glow * 1.12;
-
-            float vignette = smoothstep(0.92, 0.2, distance(uv, vec2(0.5)));
-            float lowGrid = (sin((uv.x + uv.y) * 680.0) * 0.5 + 0.5) * 0.015;
-            color += uAmber * lowGrid;
-            color = mix(uBg * 0.42, color, vignette);
-
-            gl_FragColor = vec4(color, 1.0);
-          }
-        `}
-      />
-    </mesh>
-  );
-}
-
-function TopographicBackdrop() {
-  return (
-    <div className="absolute inset-0 z-0 overflow-hidden bg-[#080604]">
-      <Canvas
-        orthographic
-        camera={{ position: [0, 0, 3], zoom: 1 }}
-        className="opacity-95"
-        dpr={[1, 1.75]}
-        gl={{ antialias: false, alpha: false }}
       >
-        <TopographicField />
-      </Canvas>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_24%,rgba(98,142,127,0.10),transparent_24%),radial-gradient(circle_at_48%_72%,rgba(199,123,66,0.10),transparent_32%),linear-gradient(180deg,rgba(8,6,4,0.08),rgba(8,6,4,0.72)_94%)]" />
-      <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(241,194,125,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(241,194,125,.7)_1px,transparent_1px)] [background-size:78px_78px]" />
+        <span
+          aria-hidden
+          style={{
+            height: "2px",
+            width: "100%",
+            background:
+              "linear-gradient(90deg, rgba(242,167,184,0.08), rgba(242,167,184,0.62) 18%, rgba(166,77,121,0.34) 52%, rgba(242,167,184,0.18) 78%, transparent)",
+            boxShadow: "0 0 18px rgba(242,167,184,0.16)",
+          }}
+        />
+      </a>
     </div>
   );
 }
 
-function ContourPanel({
-  number,
-  title,
-  body,
+function SectionAtmosphere({
+  src,
+  position = "center",
+  opacity = 0.34,
 }: {
-  number: string;
-  title: string;
-  body: string;
+  src: string;
+  position?: string;
+  opacity?: number;
 }) {
   return (
-    <div className="group relative min-h-[260px] overflow-hidden rounded-[22px] border border-[#6f4a2f]/40 bg-[#0e0a07]">
-      <div className="absolute inset-0 opacity-65 [background-image:repeating-radial-gradient(ellipse_at_42%_46%,transparent_0_14px,rgba(198,126,73,.52)_15px_16px,transparent_17px_30px)] transition duration-500 group-hover:scale-105 group-hover:opacity-90" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0e0a07]/45 to-[#0e0a07]" />
-      <div className="relative flex h-full flex-col justify-end p-7">
-        <span className="mono mb-3 text-xs uppercase tracking-[0.32em] text-[#c77b42]">
-          {number}
-        </span>
-        <h3 className="text-2xl font-semibold text-[#f4eadb]">{title}</h3>
-        <p className="mt-3 max-w-sm text-sm leading-6 text-[#a99a86]">{body}</p>
+    <div
+      aria-hidden
+      style={{
+        position: "absolute",
+        inset: "clamp(20px, 4vw, 52px) calc(clamp(20px, 5vw, 48px) * -1)",
+        zIndex: -1,
+        pointerEvents: "none",
+        backgroundImage: `linear-gradient(90deg, rgba(8,5,3,0.96), rgba(8,5,3,0.44) 44%, rgba(8,5,3,0.92)), linear-gradient(180deg, rgba(8,5,3,0.82), rgba(8,5,3,0.12) 44%, rgba(8,5,3,0.9)), url('${src}')`,
+        backgroundSize: "auto, auto, cover",
+        backgroundPosition: `center, center, ${position}`,
+        backgroundRepeat: "no-repeat",
+        opacity,
+        filter: "saturate(0.94) contrast(1.06)",
+        WebkitMaskImage:
+          "radial-gradient(ellipse at 58% 42%, #000 0%, rgba(0,0,0,0.82) 28%, rgba(0,0,0,0.36) 58%, transparent 78%)",
+        maskImage:
+          "radial-gradient(ellipse at 58% 42%, #000 0%, rgba(0,0,0,0.82) 28%, rgba(0,0,0,0.36) 58%, transparent 78%)",
+      }}
+    />
+  );
+}
+
+function VimaFooter() {
+  return (
+    <footer
+      id="footer"
+      data-scroll-section
+      style={{
+        position: "relative",
+        zIndex: 3,
+        overflow: "hidden",
+        minHeight: "clamp(520px, 66dvh, 720px)",
+        color: WASHI,
+        background: INK,
+      }}
+    >
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: "0 0 auto",
+          height: "clamp(190px, 26vw, 340px)",
+          overflow: "hidden",
+          filter: "saturate(0.9)",
+        }}
+      >
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/footer-yozakura-construction.png"
+          preload="metadata"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center 42%",
+          }}
+        >
+          <source src="/footer-yozakura-construction.mp4" type="video/mp4" />
+        </video>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(180deg, rgba(8,5,3,0.1), rgba(8,5,3,0.8))",
+          }}
+        />
+      </div>
+      <FooterBounce />
+
+      <div
+        style={{
+          position: "relative",
+          minHeight: "clamp(520px, 66dvh, 720px)",
+          display: "grid",
+          alignItems: "end",
+          paddingTop: "clamp(152px, 22vw, 286px)",
+        }}
+      >
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: "clamp(140px, 21vw, 268px)",
+            height: "64px",
+            background:
+              "linear-gradient(180deg, transparent, rgba(8,5,3,0.98) 62%), radial-gradient(ellipse at 50% 0%, rgba(242,167,184,0.16), transparent 60%)",
+          }}
+        />
+
+        <div
+          data-gsap="footer-panel"
+          style={{
+            position: "relative",
+            zIndex: 1,
+            background: "rgba(8,5,3,0.98)",
+            padding: "clamp(34px, 4.6vw, 60px) clamp(20px, 5vw, 48px) clamp(28px, 3.6vw, 44px)",
+          }}
+        >
+          <div
+            style={{
+              width: "min(1400px, 100%)",
+              margin: "0 auto",
+              display: "grid",
+              gridTemplateColumns: "minmax(280px, 0.88fr) minmax(520px, 1.42fr)",
+              alignItems: "start",
+              gap: "clamp(30px, 5vw, 76px)",
+              textAlign: "left",
+            }}
+            className="landing-footer-shell"
+          >
+            <div>
+              <h2
+                className="landing-footer-wordmark"
+                style={{
+                  margin: 0,
+                  fontFamily: '"Times New Roman", Times, serif',
+                  fontSize: "clamp(3.2rem, 7vw, 6.4rem)",
+                  fontWeight: 400,
+                  lineHeight: 0.86,
+                  letterSpacing: "0.03em",
+                  color: "rgba(247,236,239,0.92)",
+                }}
+              >
+                <Logo
+                  size={54}
+                  variant="static"
+                  color={WASHI}
+                  strokeWidth={1.45}
+                />
+                <span>v i m a.</span>
+              </h2>
+              <p
+                style={{
+                  margin: "14px 0 0",
+                  maxWidth: "360px",
+                  color: TEXT_SECONDARY,
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "14px",
+                  lineHeight: 1.56,
+                  letterSpacing: "0.005em",
+                }}
+              >
+                spatial safety intelligence for construction sites, built from
+                bodycam video and kept inspectable down to the frame.
+              </p>
+            </div>
+
+            <div className="landing-footer-main">
+              <nav
+                aria-label="hackathon resources"
+                style={{
+                  display: "grid",
+                  gap: "8px",
+                }}
+                className="landing-footer-links"
+              >
+                {footerLinks.map((link) => {
+                  const { label, href, icon: Icon } = link;
+                  const content = (
+                    <>
+                      <Icon aria-hidden="true" size={16} strokeWidth={1.6} />
+                      <span>{label}</span>
+                    </>
+                  );
+
+                  if ("external" in link && link.external) {
+                    return (
+                      <a
+                        key={label}
+                        href={href}
+                        className="landing-footer-link"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {content}
+                      </a>
+                    );
+                  }
+
+                  return (
+                    <Link
+                      key={label}
+                      href={href}
+                      className="landing-footer-link"
+                    >
+                      {content}
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <section
+                aria-label="builders"
+                className="landing-footer-builders"
+              >
+                <div className="landing-footer-builders-head">
+                  <span>built by</span>
+                  <GithubMark size={14} strokeWidth={1.7} />
+                </div>
+                <div className="landing-footer-builder-grid">
+                  {builders.map((builder) => (
+                    <a
+                      key={builder.handle}
+                      className="landing-footer-builder"
+                      href={builder.href}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <span>
+                        <GithubMark size={14} strokeWidth={1.65} />
+                        {builder.name}
+                      </span>
+                      <span>@{builder.handle}</span>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridColumn: "1 / -1",
+                gridTemplateColumns: "minmax(0, 1fr) auto auto",
+                alignItems: "center",
+                gap: "clamp(14px, 2.4vw, 32px)",
+                alignContent: "start",
+                marginTop: "clamp(4px, 1vw, 12px)",
+                paddingTop: "clamp(18px, 2.4vw, 28px)",
+                color: TEXT_FAINT,
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.04em",
+              }}
+              className="landing-footer-meta"
+            >
+              <span>HackTech 2026 · Ironsite track</span>
+              <span style={{ fontVariantNumeric: "tabular-nums" }}>30 frames · 3 zones · 86.7% wrench time</span>
+              <span>video intelligence · no lidar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function LandingJsonLd() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        name: siteConfig.name,
+        url: absoluteUrl("/"),
+        description: siteConfig.description,
+        inLanguage: "en-US",
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: siteConfig.name,
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        url: absoluteUrl("/"),
+        image: absoluteUrl(siteConfig.ogImage),
+        description: siteConfig.description,
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+        },
+      },
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
+function LandingBackdrop() {
+  return (
+    <div
+      aria-hidden
+      data-landing-backdrop
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 0,
+        overflow: "hidden",
+        pointerEvents: "none",
+        background: INK,
+      }}
+    >
+      <div
+        data-landing-backdrop-stage
+        style={{
+          position: "absolute",
+          inset: 0,
+        }}
+      >
+        <YozakuraBackground />
       </div>
     </div>
   );
 }
 
-export default function VimaPage() {
+export default function VimaLandingPage() {
   return (
-    <main className="min-h-screen bg-[#080604] text-[#f4eadb]">
-      <ClockworkLoader />
-      <SurveyCursor />
-      <section className="relative min-h-screen overflow-hidden px-5 py-6 sm:px-8 lg:px-12">
-        <TopographicBackdrop />
+    <>
+      <LandingJsonLd />
+      <LandingBackdrop />
+      <VimaLoader />
+      <VimaNavbar />
+      <ScrollMotion
+        style={{
+          minHeight: "100dvh",
+          background: "transparent",
+          color: WASHI,
+          fontFamily: "var(--font-mono)",
+          position: "relative",
+          zIndex: 1,
+          overflowX: "hidden",
+        }}
+      >
 
-        <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between border-b border-[#6f4a2f]/35 pb-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#c77b42]/45 bg-[#1a120c]/80">
-              <HardHat className="h-4 w-4 text-[#f1c27d]" />
-            </div>
-            <TextScatter
-              as="span"
-              text="VIMA"
-              velocity={34}
-              rotation={10}
-              duration={0.45}
-              returnAfter={0.18}
-              className="mono text-sm tracking-[0.32em] text-[#f1c27d]"
-            />
-          </div>
-          <div className="hidden items-center gap-8 mono text-xs uppercase tracking-[0.22em] text-[#8f806d] md:flex">
-            <a href="#system" className="transition hover:text-[#f1c27d]">
-              System
-            </a>
-            <a href="#evidence" className="transition hover:text-[#f1c27d]">
-              Evidence
-            </a>
-            <a href="#settlement" className="transition hover:text-[#f1c27d]">
-              Settlement
-            </a>
-          </div>
-        </nav>
+      <section
+        id="top"
+        data-scroll-section
+        style={{
+          position: "relative",
+          zIndex: 3,
+          isolation: "isolate",
+          overflow: "hidden",
+          minHeight: "100dvh",
+          padding: "clamp(48px, 8vw, 96px) clamp(20px, 5vw, 48px)",
+          maxWidth: "1400px",
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          aria-hidden
+          data-gsap="hero-bg"
+          data-gsap-intro="intro-bg"
+          style={{
+            position: "absolute",
+            inset: "0 calc(clamp(20px, 5vw, 48px) * -1)",
+            zIndex: -1,
+            pointerEvents: "none",
+            WebkitMaskImage: "linear-gradient(180deg, #000 0%, #000 58%, transparent 100%)",
+            maskImage: "linear-gradient(180deg, #000 0%, #000 58%, transparent 100%)",
+          }}
+        >
+          <div
+            data-gsap-intro="intro-grid"
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(180deg, rgba(8,5,3,0.12), rgba(8,5,3,0.72) 48%, rgba(8,5,3,0.96)), linear-gradient(90deg, rgba(242,167,184,0.045) 1px, transparent 1px), linear-gradient(0deg, rgba(242,167,184,0.035) 1px, transparent 1px)",
+              backgroundSize: "auto, 84px 84px, 84px 84px",
+            }}
+          />
+        </div>
 
-        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-96px)] max-w-7xl items-center">
-          <div className="max-w-5xl">
-            <h1 className="text-6xl font-light leading-[0.88] tracking-normal text-[#f8efe0] sm:text-8xl lg:text-[9.5rem]">
-              map the work before you pay it.
-            </h1>
-            <p className="mt-8 max-w-xl text-lg leading-8 text-[#cdbda4]">
-              Hardhat footage becomes a spatial ledger for proof of work.
-            </p>
-          </div>
+        <div
+          data-gsap="hero-eyebrow"
+          data-gsap-intro="intro-eyebrow"
+          style={{
+            fontSize: "11px",
+            fontWeight: 500,
+            letterSpacing: "0.04em",
+            color: TEXT_MUTED,
+            marginBottom: "28px",
+          }}
+        >
+          spatial intelligence · CII ledger · no lidar
+        </div>
+
+        <h1 className="landing-hero-logo" data-gsap="hero-logo" style={{ margin: 0, lineHeight: 1 }}>
+          <Logo size={200} variant="metallic" wordmark />
+        </h1>
+
+        <p
+          data-gsap="hero-copy"
+          data-gsap-intro="intro-copy-primary"
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "clamp(1.125rem, 1.6vw, 1.375rem)",
+            fontWeight: 400,
+            lineHeight: 1.45,
+            color: TEXT_SECONDARY,
+            maxWidth: "620px",
+            marginTop: "24px",
+            letterSpacing: "0.005em",
+          }}
+        >
+          Video intelligence for construction sites. No lidar.
+        </p>
+
+        <p
+          data-gsap="hero-copy"
+          data-gsap-intro="intro-copy-secondary"
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "clamp(0.95rem, 1.2vw, 1.08rem)",
+            fontWeight: 400,
+            lineHeight: 1.58,
+            color: "rgba(247,236,239,0.56)",
+            maxWidth: "640px",
+            marginTop: "18px",
+            letterSpacing: "0.005em",
+          }}
+        >
+          Hardhat video becomes a spatial proof chain: CII classification,
+          COLMAP zone attribution, and payout logic tied to verified work.
+        </p>
+
+        <div
+          data-gsap="hero-copy"
+          data-gsap-intro="intro-pipeline"
+          style={{
+            fontSize: "11px",
+            letterSpacing: "0.04em",
+            color: "rgba(247,236,239,0.44)",
+            marginTop: "28px",
+            maxWidth: "780px",
+            lineHeight: 1.9,
+          }}
+        >
+          video → frame ledger → CII label → zone attribution → SPL payout
+        </div>
+
+        <div
+          style={{
+            marginTop: "48px",
+            display: "flex",
+            gap: "12px",
+            flexWrap: "wrap",
+          }}
+        >
+          <a
+            href="#evidence"
+            data-gsap="hero-cta"
+            data-gsap-intro="intro-cta-primary"
+            data-gsap-magnetic
+            className="hero-cta-button hero-cta-button--primary"
+          >
+            <span>inspect the proof chain</span>
+          </a>
+          <Link
+            href="/demo"
+            data-gsap="hero-cta"
+            data-gsap-intro="intro-cta-secondary"
+            data-gsap-magnetic
+            className="hero-cta-button hero-cta-button--secondary"
+          >
+            <span>open dashboard</span>
+          </Link>
+        </div>
+
+        <div
+          data-gsap="hero-meta"
+          data-gsap-intro="intro-meta"
+          style={{
+            marginTop: "auto",
+            paddingTop: "32px",
+            display: "grid",
+            justifyItems: "center",
+            alignItems: "center",
+          }}
+        >
+          <a
+            href="#evidence"
+            aria-label="scroll to evidence"
+            style={{
+              display: "inline-grid",
+              justifyItems: "center",
+              gap: "9px",
+              color: TEXT_MUTED,
+              fontSize: "11px",
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+              textDecoration: "none",
+            }}
+          >
+            <span>scroll</span>
+            <ArrowDown size={18} strokeWidth={1.5} aria-hidden="true" />
+          </a>
         </div>
       </section>
 
-      <section
-        id="system"
-        className="border-y border-[#2a1d14] bg-[#0b0806] px-5 py-20 sm:px-8 lg:px-12"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <div>
-              <p className="mono text-xs uppercase tracking-[0.32em] text-[#c77b42]">
-                problem
-              </p>
-              <h2 className="mt-3 max-w-3xl text-4xl font-light tracking-normal text-[#f4eadb] md:text-6xl">
-                cameras see activity. payouts need proof.
-              </h2>
-            </div>
-            <p className="max-w-md text-sm leading-6 text-[#9c8d78]">
-              The hard part is not making another video dashboard. It is
-              turning messy egocentric footage into claims that survive audit.
+      <SectionDivider id="evidence" label="evidence" index="01" />
+      <section id="evidence" data-gsap="section" data-scroll-section style={sectionStyle}>
+        <SectionAtmosphere src="/vima-loader-signal.png" position="center" opacity={0.4} />
+        <div className="landing-pink-streak landing-pink-streak--evidence" aria-hidden="true" />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 0.72fr) minmax(320px, 1.28fr)",
+            gap: "18px",
+            alignItems: "end",
+          }}
+          className="landing-split"
+        >
+          <div>
+            <p
+              data-gsap="section-kicker"
+              style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.05em" }}
+            >
+              evidence chain · one scroll, one proof path
             </p>
+            <h2
+              data-gsap="section-title"
+              style={{
+                margin: "18px 0 0",
+                maxWidth: "760px",
+                fontFamily: HEADING_FONT,
+                fontSize: "clamp(2.1rem, 5.4vw, 5.25rem)",
+                fontWeight: 400,
+                lineHeight: 0.94,
+                letterSpacing: 0,
+              }}
+            >
+              <GradientText colors={HEADING_GRADIENT} animationSpeed={6} direction="diagonal">
+                every payout starts as a frame you can inspect.
+              </GradientText>
+            </h2>
           </div>
+          <p
+            data-gsap="section-copy"
+            style={{
+              margin: 0,
+              color: TEXT_SECONDARY,
+              fontFamily: "var(--font-sans)",
+              fontSize: "clamp(0.95rem, 1.2vw, 1.08rem)",
+              lineHeight: 1.62,
+              letterSpacing: "0.005em",
+              maxWidth: "560px",
+            }}
+          >
+            vima turns egocentric video into timestamped work claims, then binds
+            those claims to spatial zones before settlement logic sees them.
+          </p>
+        </div>
 
-          <div className="mb-16 grid gap-4 lg:grid-cols-2">
-            {failureExamples.map((example) => (
+        <div
+          className="landing-stats"
+          style={{
+            marginTop: "34px",
+            display: "grid",
+            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+            borderTop: `1px solid ${LINE}`,
+            borderBottom: `1px solid ${LINE}`,
+          }}
+        >
+          {stats.map(([label, value]) => (
+            <div
+              key={label}
+              data-gsap="stat-cell"
+              data-gsap-active={label === "wrench time" ? "true" : undefined}
+              style={{
+                minHeight: "100px",
+                padding: "14px 12px",
+                borderRight: label === "zones" ? "0" : `1px solid rgba(242,167,184,0.12)`,
+              }}
+            >
+              <div style={{ color: TEXT_MUTED, fontSize: "9px", letterSpacing: "0.04em" }}>{label}</div>
               <div
-                key={example.label}
-                className="border border-[#6f4a2f]/35 bg-[#100b07] p-7"
+                style={{
+                  marginTop: "20px",
+                  color: label === "wrench time" ? SAKURA_HOT : WASHI,
+                  fontSize: "clamp(1.18rem, 2vw, 1.75rem)",
+                  fontWeight: 700,
+                  fontVariantNumeric: "tabular-nums",
+                  textShadow: label === "wrench time" ? "0 0 18px rgba(242,167,184,0.18)" : "none",
+                }}
               >
-                <p className="mono text-xs uppercase tracking-[0.28em] text-[#c77b42]">
-                  {example.label}
-                </p>
-                <h3 className="mt-8 text-3xl font-light tracking-normal text-[#f4eadb]">
-                  {example.title}
-                </h3>
-                <p className="mt-4 max-w-xl text-sm leading-7 text-[#a99a86]">
-                  {example.body}
-                </p>
+                {value}
               </div>
-            ))}
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="landing-evidence-graph"
+          data-gsap="evidence-graph"
+          style={{
+            marginTop: "18px",
+            display: "grid",
+            gridTemplateColumns: "minmax(190px, 0.34fr) minmax(0, 1fr)",
+            alignItems: "center",
+            gap: "clamp(18px, 3vw, 34px)",
+            borderTop: `1px solid ${LINE}`,
+            borderBottom: `1px solid ${LINE}`,
+            background:
+              "linear-gradient(180deg, rgba(247,236,239,0.025), rgba(8,5,3,0.32))",
+            padding: "clamp(14px, 2vw, 22px)",
+          }}
+        >
+          <div
+            className="landing-evidence-graph-meta"
+            style={{
+              minWidth: 0,
+              paddingRight: "clamp(4px, 1vw, 14px)",
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                color: TEXT_MUTED,
+                fontSize: "10px",
+                letterSpacing: "0.04em",
+              }}
+            >
+              confidence stream
+            </p>
+            <strong
+              style={{
+                display: "block",
+                marginTop: "12px",
+                color: WASHI,
+                fontFamily: "var(--font-semimono)",
+                fontSize: "13px",
+                fontWeight: 600,
+                letterSpacing: "0.04em",
+              }}
+            >
+              CII frame certainty
+            </strong>
+            <span
+              style={{
+                display: "block",
+                marginTop: "8px",
+                color: TEXT_FAINT,
+                fontFamily: "var(--font-sans)",
+                fontSize: "12px",
+                lineHeight: 1.5,
+                letterSpacing: "0.005em",
+              }}
+            >
+              sampled receipt confidence before settlement logic sees the claim.
+            </span>
+          </div>
+          <SimpleGraph
+            data={confidenceSeries}
+            height={150}
+            lineColor={SAKURA_HOT}
+            dotColor={SAKURA_HOT}
+            animationDuration={1.2}
+            showGrid
+            gridStyle="dotted"
+            gridLines="both"
+            gridLineThickness={1}
+            showDots
+            dotSize={5}
+            dotHoverGlow
+            curved
+            gradientFade
+            graphLineThickness={2}
+            animateOnScroll
+            animateOnce
+            className="landing-confidence-graph-plot"
+          />
+        </div>
+
+        <EvidenceImageTabs />
+      </section>
+
+      <SectionDivider id="ledger" label="ledger" index="02" />
+      <section
+        id="ledger"
+        data-gsap="section"
+        data-scroll-section
+        style={{ ...sectionStyle, paddingTop: "clamp(72px, 9vw, 124px)" }}
+      >
+        <SectionAtmosphere src="/vima-loader-rebar.png" position="center" opacity={0.36} />
+        <div className="landing-pink-streak landing-pink-streak--ledger" aria-hidden="true" />
+        <div
+          className="landing-ledger"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 0.82fr) minmax(360px, 1.18fr)",
+            gap: "clamp(24px, 4vw, 54px)",
+            alignItems: "stretch",
+          }}
+        >
+          <div
+            style={{
+              minWidth: 0,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: "32px",
+            }}
+          >
+            <div>
+              <p data-gsap="section-kicker" style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.05em" }}>
+                ledger · settlement receipt
+              </p>
+              <h2
+                data-gsap="section-title"
+                style={{
+                  margin: "14px 0 0",
+                  maxWidth: "680px",
+                  color: WASHI,
+                  fontFamily: HEADING_FONT,
+                  fontSize: "clamp(2rem, 4.9vw, 4.9rem)",
+                  fontWeight: 400,
+                  lineHeight: 0.97,
+                  letterSpacing: 0,
+                }}
+              >
+                this is where the claim becomes payable.
+              </h2>
+              <p
+                data-gsap="section-copy"
+                style={{
+                  margin: "22px 0 0",
+                  maxWidth: "520px",
+                  color: TEXT_SECONDARY,
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "clamp(0.95rem, 1.12vw, 1.05rem)",
+                  lineHeight: 1.62,
+                  letterSpacing: "0.005em",
+                }}
+              >
+                the ledger is the audit handoff: frame labels stay visible while the payout gate scores
+                productive time, blocks idle work, and preserves the receipt.
+              </p>
+            </div>
+
+            <div className="ledger-math-strip" data-gsap="ledger-panel">
+              {ledgerMath.map(([label, value]) => (
+                <div key={label}>
+                  <span>{label}</span>
+                  <strong>{value}</strong>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="mb-16 grid gap-5 lg:grid-cols-[1fr_430px]">
-            <div className="grid self-start grid-cols-2 gap-3 sm:grid-cols-4">
-              {metricCards.map((metric) => (
+          <div className="ledger-receipt" data-gsap="ledger-panel">
+            <div className="ledger-receipt-head">
+              <span>frame receipt</span>
+              <span>reward gate · SPL pending</span>
+            </div>
+
+            <div className="ledger-receipt-body">
+              {ledgerReceipts.map((frame) => (
                 <div
-                  key={metric.label}
-                  className="min-h-[142px] border border-[#6f4a2f]/45 bg-[#100b07]/70 px-4 py-4 backdrop-blur"
+                  key={frame.id}
+                  data-gsap="ledger-row"
+                  className="ledger-receipt-row"
+                  data-state={frame.status}
                 >
-                  <div className="text-3xl font-semibold text-[#f1c27d]">
-                    {metric.value}
+                  <div className="ledger-row-time">
+                    <span>{frame.id}</span>
+                    <strong>{frame.time}</strong>
                   </div>
-                  <div className="mono mt-3 text-[10px] uppercase tracking-[0.18em] text-[#c77b42]">
-                    {metric.label}
+                  <div className="ledger-row-claim">
+                    <span style={{ color: labelColor(frame.label) }}>{frame.label}</span>
+                    <strong>{frame.claim}</strong>
+                    <small>{frame.zone}</small>
                   </div>
-                  <div className="mt-2 text-xs text-[#8f806d]">{metric.sub}</div>
+                  <div className="ledger-row-proof">
+                    <span>confidence</span>
+                    <strong>{frame.confidence}</strong>
+                  </div>
+                  <div className="ledger-row-proof">
+                    <span>weight</span>
+                    <strong>{frame.weight}</strong>
+                  </div>
+                  <div className="ledger-row-status">
+                    <span>{frame.status}</span>
+                  </div>
                 </div>
               ))}
             </div>
 
-            <div className="relative border border-[#6f4a2f]/45 bg-[#0b0806]/80 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
-              <div className="mb-4 flex items-center justify-between border-b border-[#6f4a2f]/30 pb-3">
-                <span className="mono text-xs uppercase tracking-[0.24em] text-[#c77b42]">
-                  frame ledger
-                </span>
-                <span className="flex items-center gap-2 mono text-xs text-[#76c7ae]">
-                  <span className="h-2 w-2 rounded-full bg-[#76c7ae]" />
-                  verified
-                </span>
+            <div className="ledger-audit-tail">
+              <div>
+                <span>receipt hash</span>
+                <strong>cii:30 · colmap:3 · spl:ready</strong>
               </div>
-              <div className="space-y-3">
-                {evidenceRows.map((row) => (
-                  <div
-                    key={row[0]}
-                    className="grid grid-cols-[58px_42px_1fr_74px_48px] items-center gap-2 border border-[#2a1d14] bg-[#110c08] px-3 py-3 mono text-[11px] text-[#b9aa94]"
-                  >
-                    <span className="text-[#8f806d]">{row[0]}</span>
-                    <span
-                      className={
-                        row[1] === "NC" ? "text-[#d9694f]" : "text-[#76c7ae]"
-                      }
-                    >
-                      {row[1]}
-                    </span>
-                    <span className="truncate text-[#f4eadb]">{row[2]}</span>
-                    <span className="text-[#c77b42]">{row[3]}</span>
-                    <span>{row[4]}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-5 border border-[#6f4a2f]/30 bg-[#0c0907] p-4">
-                <div className="mono text-[11px] uppercase tracking-[0.2em] text-[#8f806d]">
-                  current verdict
-                </div>
-                <div className="mt-3 text-2xl font-semibold text-[#f4eadb]">
-                  11 raffle tickets unlocked
-                </div>
-                <p className="mt-2 text-sm leading-6 text-[#a99a86]">
-                  Wrench time exceeds the 30% baseline. Evidence chain is ready
-                  for Solana devnet settlement.
-                </p>
+              <div>
+                <span>review path</span>
+                <strong>open frame trail before settlement</strong>
               </div>
             </div>
           </div>
-
-          <div className="grid gap-4 md:grid-cols-4">
-            {systemSteps.map((step) => (
-              <div
-                key={step.title}
-                className="border border-[#6f4a2f]/35 bg-[#100b07] p-5"
-              >
-                <step.icon className="h-5 w-5 text-[#f1c27d]" />
-                <p className="mono mt-10 text-[11px] uppercase tracking-[0.24em] text-[#c77b42]">
-                  {step.eyebrow}
-                </p>
-                <h3 className="mt-3 text-xl font-semibold text-[#f4eadb]">
-                  {step.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-[#9c8d78]">
-                  {step.body}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      <section
-        id="evidence"
-        className="bg-[#080604] px-5 py-20 sm:px-8 lg:px-12"
-      >
-        <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-3">
-          {proofCards.map((card) => (
-            <ContourPanel
-              key={card.number}
-              number={card.number}
-              title={card.title}
-              body={card.body}
-            />
-          ))}
-        </div>
-      </section>
-
-      <section
-        id="settlement"
-        className="px-5 pb-24 sm:px-8 lg:px-12"
-      >
-        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="border border-[#6f4a2f]/35 bg-[#0f0a07] p-7">
-            <ShieldCheck className="h-6 w-6 text-[#76c7ae]" />
-            <p className="mono mt-8 text-xs uppercase tracking-[0.28em] text-[#c77b42]">
-              demo claim
+      <SectionDivider id="pipeline" label="pipeline" index="03" />
+      <section id="pipeline" data-gsap="section" data-scroll-section style={sectionStyle}>
+        <SectionAtmosphere src="/vima-loader-site.png" position="center" opacity={0.32} />
+        <div className="landing-pink-streak landing-pink-streak--pipeline" aria-hidden="true" />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "24px",
+            alignItems: "end",
+            flexWrap: "wrap",
+          }}
+        >
+          <div>
+            <p data-gsap="section-kicker" style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.05em" }}>
+              pipeline
             </p>
-            <h2 className="mt-3 text-4xl font-light tracking-normal">
-              show the clip, then show the ledger.
+            <h2
+              data-gsap="section-title"
+              style={{
+                margin: "14px 0 0",
+                maxWidth: "700px",
+                fontFamily: HEADING_FONT,
+                fontSize: "clamp(2rem, 4.6vw, 4.6rem)",
+                fontWeight: 400,
+                lineHeight: 0.96,
+                letterSpacing: 0,
+              }}
+            >
+              <GradientText colors={HEADING_GRADIENT} animationSpeed={6.5} direction="diagonal">
+                video in. auditable work claims out.
+              </GradientText>
             </h2>
-            <p className="mt-5 text-sm leading-7 text-[#a99a86]">
-              The judging story should be concrete: raw footage goes in, a
-              spatial evidence table comes out, and the payout can be traced
-              back to frame-level claims.
-            </p>
           </div>
+          <Link
+            href="/demo"
+            data-gsap-magnetic
+            style={{
+              color: WASHI,
+              textDecoration: "none",
+              border: "1px solid rgba(242,167,184,0.36)",
+              padding: "11px 14px",
+              fontSize: "12px",
+              fontWeight: 600,
+              background: "rgba(247,236,239,0.055)",
+            }}
+          >
+            open dashboard
+          </Link>
+        </div>
 
-          <div className="border border-[#6f4a2f]/35 bg-[#0f0a07] p-7">
-            <div className="mb-5 flex items-center gap-3">
-              <Terminal className="h-5 w-5 text-[#f1c27d]" />
-              <span className="mono text-xs uppercase tracking-[0.26em] text-[#c77b42]">
-                raffle.py
-              </span>
-            </div>
-            <pre className="overflow-hidden whitespace-pre-wrap mono text-sm leading-7 text-[#d8c6aa]">
-{`=== IRONSITE PRODUCTIVITY RAFFLE ===
-W002: 90.0% productive (900 tickets)
-W003: 90.0% productive (900 tickets)
-W001: 80.0% productive (800 tickets)
+        <PipelineStepper />
+      </section>
 
-WINNER: W003
-PAYOUT: $100 USDC
-MODE: devnet / mock fallback`}
-            </pre>
+      <SectionDivider id="cta" label="settlement" index="04" />
+      <section
+        id="cta"
+        data-gsap="section"
+        data-scroll-section
+        style={{ ...sectionStyle, paddingBottom: "clamp(72px, 9vw, 124px)" }}
+      >
+        <SectionAtmosphere src="/vima-loader-site.png" position="center" opacity={0.28} />
+        <div
+          data-gsap="cta-panel"
+          style={{
+            position: "relative",
+            isolation: "isolate",
+            overflow: "hidden",
+            minHeight: "clamp(260px, 28vw, 380px)",
+            border: `1px solid ${LINE}`,
+            padding: "clamp(20px, 4vw, 36px)",
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) auto",
+            gap: "24px",
+            alignItems: "center",
+            background: "rgba(8,5,3,0.42)",
+          }}
+          className="landing-final"
+        >
+          <div className="landing-pink-streak landing-pink-streak--cta" aria-hidden="true" />
+          <HeroShader
+            speed={1.05}
+            style={{
+              position: "absolute",
+              inset: "-18%",
+              zIndex: -3,
+              opacity: 0.96,
+              filter: "saturate(1.08) hue-rotate(318deg) brightness(1.2) contrast(1.08)",
+            }}
+          />
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: -2,
+              background:
+                "radial-gradient(circle at 70% 48%, rgba(242,167,184,0.22), transparent 38%), linear-gradient(90deg, rgba(8,5,3,0.64), rgba(8,5,3,0.22) 48%, rgba(8,5,3,0.48)), linear-gradient(0deg, rgba(242,167,184,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(242,167,184,0.08) 1px, transparent 1px)",
+              backgroundSize: "auto, auto, 42px 42px, 42px 42px",
+            }}
+          />
+          <div style={{ position: "relative", zIndex: 1 }}>
+            <p
+              data-gsap="section-kicker"
+              style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.04em" }}
+            >
+              ready for the field
+            </p>
+            <h2
+              data-gsap="section-title"
+              style={{
+                margin: "10px 0 0",
+                color: WASHI,
+                fontFamily: HEADING_FONT,
+                fontSize: "clamp(1.55rem, 3.2vw, 3rem)",
+                fontWeight: 400,
+                lineHeight: 1.04,
+                letterSpacing: 0,
+              }}
+            >
+              <GradientText colors={HEADING_GRADIENT} animationSpeed={7} direction="diagonal">
+                turn the demo stream into an auditable payout trail.
+              </GradientText>
+            </h2>
+          </div>
+          <div data-gsap="cta-action">
+            <HexCta
+              href="/demo"
+              label="open dashboard"
+              detail="inspect frames, zones, confidence, and settlement weight"
+            />
           </div>
         </div>
       </section>
-    </main>
+
+      <VimaFooter />
+      </ScrollMotion>
+    </>
   );
 }

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">vima hex mark source</title>
+  <desc id="desc">source svg for the vima metallic hex mark</desc>
+  <path
+    d="M 80 10 L 140.62177826491072 45 L 140.62177826491072 115 L 80 150 L 19.37822173508929 115 L 19.37822173508929 45 Z M 96 52.28718707889796 L 112 80 L 96 107.71281292110203 L 64 107.71281292110204 L 48 80 L 64 52.287187078897965 Z"
+    fill="#f7ecef"
+    fill-rule="evenodd"
+  />
+</svg>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo, useCallback, useState } from "react";
+import React, { useRef, useMemo, useCallback, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { cn } from "@/lib/utils";
 import * as THREE from "three";
@@ -297,6 +297,15 @@ const SquareMatrix: React.FC<SquareMatrixProps> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [pointer, setPointer] = useState<[number, number]>([0.5, 0.5]);
+  const [webglAvailable, setWebglAvailable] = useState(false);
+
+  useEffect(() => {
+    const testCanvas = document.createElement("canvas");
+    const gl =
+      testCanvas.getContext("webgl2") || testCanvas.getContext("webgl");
+
+    setWebglAvailable(Boolean(gl));
+  }, []);
 
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
@@ -317,39 +326,53 @@ const SquareMatrix: React.FC<SquareMatrixProps> = ({
       style={{ width, height, backgroundColor }}
       onPointerMove={handlePointerMove}
     >
-      <Canvas
-        className="absolute inset-0 h-full w-full"
-        orthographic
-        camera={{
-          position: [0, 0, 1],
-          zoom: 1,
-          left: -1,
-          right: 1,
-          top: 1,
-          bottom: -1,
-        }}
-        gl={{ antialias: true, alpha: true }}
-      >
-        <MatrixScene
-          speed={speed}
-          gridSize={gridSize}
-          waveFrequency={waveFrequency}
-          waveAmplitude={waveAmplitude}
-          cornerRadius={cornerRadius}
-          edgeSoftness={edgeSoftness}
-          cellGap={cellGap}
-          peakBrightness={peakBrightness}
-          baseBrightness={baseBrightness}
-          centerDrift={centerDrift}
-          preset={preset}
-          colorRgb={colorRgb}
-          bgRgb={bgRgb}
-          opacity={opacity}
-          pointer={pointer}
-          cursorInteraction={cursorInteraction}
-          cursorIntensity={cursorIntensity}
+      {webglAvailable ? (
+        <Canvas
+          className="absolute inset-0 h-full w-full"
+          orthographic
+          camera={{
+            position: [0, 0, 1],
+            zoom: 1,
+            left: -1,
+            right: 1,
+            top: 1,
+            bottom: -1,
+          }}
+          gl={{ antialias: true, alpha: true }}
+        >
+          <MatrixScene
+            speed={speed}
+            gridSize={gridSize}
+            waveFrequency={waveFrequency}
+            waveAmplitude={waveAmplitude}
+            cornerRadius={cornerRadius}
+            edgeSoftness={edgeSoftness}
+            cellGap={cellGap}
+            peakBrightness={peakBrightness}
+            baseBrightness={baseBrightness}
+            centerDrift={centerDrift}
+            preset={preset}
+            colorRgb={colorRgb}
+            bgRgb={bgRgb}
+            opacity={opacity}
+            pointer={pointer}
+            cursorInteraction={cursorInteraction}
+            cursorIntensity={cursorIntensity}
+          />
+        </Canvas>
+      ) : (
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            opacity: Math.min(opacity * 1.8, 0.34),
+            backgroundImage: `linear-gradient(90deg, ${color} 1px, transparent 1px), linear-gradient(0deg, ${color} 1px, transparent 1px)`,
+            backgroundSize: `${Math.max(16, 280 / gridSize)}px ${Math.max(16, 280 / gridSize)}px`,
+            maskImage:
+              "radial-gradient(circle at 32% 26%, black, transparent 72%)",
+          }}
         />
-      </Canvas>
+      )}
       {children && (
         <div className="pointer-events-none relative z-10">{children}</div>
       )}

@@ -1,0 +1,240 @@
+[
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 0.0,
+    "frame": "frame_000.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "worker on lift platform",
+    "finish_reason": "STOP",
+    "timestamp_s": 42.5,
+    "frame": "frame_001.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.9,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 85.1,
+    "frame": "frame_002.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "workers installing scaffolding",
+    "finish_reason": "STOP",
+    "timestamp_s": 127.6,
+    "frame": "frame_003.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.91,
+    "activity": "installing safety equipment",
+    "finish_reason": "STOP",
+    "timestamp_s": 170.1,
+    "frame": "frame_004.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 212.7,
+    "frame": "frame_005.jpg"
+  },
+  {
+    "category": "NC",
+    "confidence": 0.2,
+    "activity": "error/unclassified",
+    "timestamp_s": 255.2,
+    "frame": "frame_006.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "worker laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 297.7,
+    "frame": "frame_007.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 340.3,
+    "frame": "frame_008.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 382.8,
+    "frame": "frame_009.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete on site",
+    "finish_reason": "STOP",
+    "timestamp_s": 425.3,
+    "frame": "frame_010.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "worker laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 467.9,
+    "frame": "frame_011.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 510.4,
+    "frame": "frame_012.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 552.9,
+    "frame": "frame_013.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 595.5,
+    "frame": "frame_014.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 638.0,
+    "frame": "frame_015.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 680.5,
+    "frame": "frame_016.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "installing metal beams",
+    "finish_reason": "STOP",
+    "timestamp_s": 723.1,
+    "frame": "frame_017.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 765.6,
+    "frame": "frame_018.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.85,
+    "activity": "worker operating crane",
+    "finish_reason": "STOP",
+    "timestamp_s": 808.1,
+    "frame": "frame_019.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 850.7,
+    "frame": "frame_020.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "worker laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 893.2,
+    "frame": "frame_021.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "wheelbarrow with cement",
+    "finish_reason": "STOP",
+    "timestamp_s": 935.7,
+    "frame": "frame_022.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying bricks on construction site",
+    "finish_reason": "STOP",
+    "timestamp_s": 978.3,
+    "frame": "frame_023.jpg"
+  },
+  {
+    "category": "NC",
+    "confidence": 0.99,
+    "activity": "no workers visible",
+    "finish_reason": "STOP",
+    "timestamp_s": 1020.8,
+    "frame": "frame_024.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.85,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 1063.3,
+    "frame": "frame_025.jpg"
+  },
+  {
+    "category": "NC",
+    "confidence": 0.2,
+    "activity": "error/unclassified",
+    "timestamp_s": 1105.9,
+    "frame": "frame_026.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 1148.4,
+    "frame": "frame_027.jpg"
+  },
+  {
+    "category": "NC",
+    "confidence": 0.99,
+    "activity": "no workers visible",
+    "finish_reason": "STOP",
+    "timestamp_s": 1190.9,
+    "frame": "frame_028.jpg"
+  },
+  {
+    "category": "P",
+    "confidence": 0.95,
+    "activity": "laying concrete blocks",
+    "finish_reason": "STOP",
+    "timestamp_s": 1233.5,
+    "frame": "frame_029.jpg"
+  }
+]
