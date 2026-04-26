@@ -1,9 +1,9 @@
 # uv run api.py
-import os, json, pathlib, base64, tempfile, shutil
+import os, json, pathlib, base64, tempfile, shutil, time, math
 from collections import Counter
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 import uvicorn
 
 from pipeline import run_event, run_batch
@@ -47,6 +47,52 @@ def health():
 # ── Temporal-reasoning results: multi-frame state-change detection ─────────
 TEMPORAL_PATH = pathlib.Path(__file__).parent / "temporal-results.json"
 TEMPORAL_FALLBACK_PATH = pathlib.Path(__file__).parent / "temporal-reference.json"
+TEMPORAL_RUN_COOLDOWN_S = 60
+_LAST_TEMPORAL_RUN_STARTED_AT = 0.0
+
+
+def _load_temporal_payload(path: pathlib.Path) -> dict:
+    return json.loads(path.read_text())
+
+
+def _resolve_temporal_frame_path(raw_path: str) -> pathlib.Path | None:
+    if not raw_path:
+        return None
+    path = pathlib.Path(raw_path)
+    if path.is_absolute():
+        return path if path.exists() else None
+
+    repo_root = pathlib.Path(__file__).parent.parent
+    candidate = repo_root / path
+    return candidate if candidate.exists() else None
+
+
+def _temporal_frame_url(raw_path: str, frame_index: int) -> str | None:
+    if not raw_path:
+        return None
+    normalized = raw_path.replace("\\", "/")
+    public_prefix = "frontend/public/"
+    if public_prefix in normalized:
+        return "/" + normalized.split(public_prefix, 1)[1]
+    resolved = _resolve_temporal_frame_path(raw_path)
+    if resolved and resolved.exists():
+        return f"/api/temporal/frame/{frame_index}"
+    return None
+
+
+def _augment_temporal_payload(payload: dict, source: str) -> dict:
+    vima = dict(payload.get("vima") or {})
+    frame_paths = vima.get("frame_paths") or []
+    vima["frame_urls"] = [
+        _temporal_frame_url(frame_path, i) for i, frame_path in enumerate(frame_paths)
+    ]
+
+    if "baseline" not in payload and TEMPORAL_FALLBACK_PATH.exists():
+        fallback = _load_temporal_payload(TEMPORAL_FALLBACK_PATH)
+        if "baseline" in fallback:
+            payload = {**payload, "baseline": fallback["baseline"]}
+
+    return {**payload, "vima": vima, "source": source}
 
 
 @app.get("/eval")
@@ -59,14 +105,78 @@ def eval_results():
     frame sequences. Falls back to hand-curated reference claims grounded
     in the paper if no live results exist yet."""
     if TEMPORAL_PATH.exists():
-        payload = json.loads(TEMPORAL_PATH.read_text())
-        payload["source"] = "live"
-        return JSONResponse(payload)
+        return JSONResponse(_augment_temporal_payload(_load_temporal_payload(TEMPORAL_PATH), "live"))
     if TEMPORAL_FALLBACK_PATH.exists():
-        payload = json.loads(TEMPORAL_FALLBACK_PATH.read_text())
-        payload["source"] = "reference"
-        return JSONResponse(payload)
+        return JSONResponse(_augment_temporal_payload(_load_temporal_payload(TEMPORAL_FALLBACK_PATH), "reference"))
     raise HTTPException(404, "no temporal results. run `python temporal_v1.py` first.")
+
+
+@app.get("/temporal/frame/{frame_index}")
+def temporal_frame(frame_index: int):
+    """Serve extracted temporal demo frames referenced by /eval payloads."""
+    source_path = TEMPORAL_PATH if TEMPORAL_PATH.exists() else TEMPORAL_FALLBACK_PATH
+    if not source_path.exists():
+        raise HTTPException(404, "no temporal payload available")
+
+    payload = _load_temporal_payload(source_path)
+    frame_paths = payload.get("vima", {}).get("frame_paths") or []
+    if frame_index < 0 or frame_index >= len(frame_paths):
+        raise HTTPException(404, f"frame index out of range: {frame_index}")
+
+    frame_path = _resolve_temporal_frame_path(frame_paths[frame_index])
+    if frame_path is None:
+        raise HTTPException(404, "temporal frame file missing")
+    if frame_path.suffix.lower() not in {".jpg", ".jpeg", ".png"}:
+        raise HTTPException(404, "unsupported temporal frame type")
+
+    return FileResponse(frame_path)
+
+
+@app.post("/temporal/run")
+def temporal_run(n: int = Query(8, ge=1, le=12)):
+    """Run live multi-frame temporal reasoning over the bundled coldpath demo."""
+    import anthropic as _anthropic_pkg
+
+    global _LAST_TEMPORAL_RUN_STARTED_AT
+
+    now = time.monotonic()
+    remaining = TEMPORAL_RUN_COOLDOWN_S - (now - _LAST_TEMPORAL_RUN_STARTED_AT)
+    if remaining > 0:
+        return JSONResponse(
+            status_code=429,
+            content={
+                "error": "cooldown",
+                "message": "Temporal live run cooldown active. Try again shortly.",
+                "service_state": "cooldown",
+                "retry_after_s": int(math.ceil(remaining)),
+            },
+        )
+
+    _LAST_TEMPORAL_RUN_STARTED_AT = now
+    try:
+        payload = run_live_demo_video(n_frames=n, persist=True)
+        payload = _augment_temporal_payload(payload, "live")
+        TEMPORAL_PATH.write_text(json.dumps(payload, indent=2))
+        return JSONResponse(payload)
+    except _anthropic_pkg.AuthenticationError:
+        return JSONResponse(
+            status_code=503,
+            content={
+                "error": "auth",
+                "message": "Anthropic API key invalid or unset on server.",
+                "service_state": "paused",
+                "hint": "Frontend should keep showing the reference temporal snapshot.",
+            },
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=503,
+            content={
+                "error": "pipeline_failed",
+                "message": f"Temporal pipeline failed: {type(e).__name__}",
+                "service_state": "pipeline_failed",
+            },
+        )
 
 
 @app.post("/analyze/frame")
