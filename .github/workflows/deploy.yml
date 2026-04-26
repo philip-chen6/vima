@@ -68,7 +68,10 @@ jobs:
               fi
             done
 
-            docker compose --env-file ../.env build --parallel
+            # The 1 vCPU VPS can wedge Docker Compose after parallel builds
+            # finish, leaving GitHub Actions stuck even though images exist.
+            # Build sequentially so deploy completion is boring and reliable.
+            docker compose --env-file ../.env build
             docker compose --env-file ../.env up -d --remove-orphans
 
             echo "waiting for backend..."
