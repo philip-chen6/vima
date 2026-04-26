@@ -1,7 +1,7 @@
 const layers = {
   raw: {
     src: "./assets/frame_000001.jpg",
-    caption: "Raw sampled hardhat frame.",
+    caption: "Sampled hardhat frame.",
   },
   mask: {
     src: "./assets/mask_frame_000001.jpg",
@@ -9,7 +9,7 @@ const layers = {
   },
   depth: {
     src: "./assets/depth_frame_000001.jpg",
-    caption: "Depth-conditioned object labels from the memory pass.",
+    caption: "Depth-conditioned labels from the memory pass.",
   },
 };
 
