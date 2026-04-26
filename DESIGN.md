@@ -2,15 +2,17 @@
 
 > Yozakura Terminal direction. Dark construction intelligence with night-sakura pink, sumi ink depth, and a thin spaced Times New Roman wordmark.
 
-## House rule — no all caps
+## Casing rules
 
 The brand wordmark is spaced lowercase Times New Roman: **`v i m a.`**. In prose, metadata, routes, and ordinary UI labels, use **`vima`**. Never use `VIMA` as a visual styling choice.
 
-All UI text uses sentence case or lowercase. **No `text-transform: uppercase` anywhere.** This includes section headers, panel titles, button text, eyebrow labels, footer copy.
+**Headers, navigation, buttons, eyebrows, panel titles, section labels, footer copy, table column heads** — lowercase, sentence-fragment style. No periods at the end of fragments. No `text-transform: uppercase` anywhere in the codebase.
 
-Acronyms keep their canonical casing because that's their grammatically-correct form, not stylistic uppercase: **CII**, **OSHA**, **COLMAP**, **SPL**, **API**, **JSON**, **HTTP**, **WebGL**.
+**Body copy (full sentences, paragraphs, hero subtext, section descriptions)** — standard professional case. Capitalize the first word of each sentence. Capitalize proper nouns. End sentences with a period. Use proper grammar. Example: `Vima turns egocentric video into timestamped work claims.` (not `vima turns egocentric video...`)
 
-Letter-spacing for sentence-case mono runs at `0.02-0.06em`, NOT the `0.20-0.45em` heavy tracking from the original signal-lab prototype. Heavy tracking was paired with all-caps; with caps gone, tighten the tracking too.
+**Acronyms** keep canonical casing because that's their grammatical form, not stylistic uppercase: **CII**, **OSHA**, **COLMAP**, **SPL**, **API**, **JSON**, **HTTP**, **WebGL**.
+
+**Letter-spacing** for sentence-case mono runs at `0.02-0.06em`, NOT the `0.20-0.45em` heavy tracking from the original signal-lab prototype. Heavy tracking was paired with all-caps; with caps gone, tighten the tracking too.
 
 This rule overrides any conflicting earlier specification in this file.
 
@@ -43,7 +45,9 @@ This rule overrides any conflicting earlier specification in this file.
 - system-ui / -apple-system fonts
 - Anything that looks like Linear / Vercel / Cursor / generic-AI-startup
 - Literal cherry blossom clip art, emoji petals, anime styling, torii gates, faux brush fonts, or decorative japanese characters used as props
-- Times New Roman anywhere except the `v i m a.` wordmark
+- Times New Roman on body copy, metadata, buttons, nav, tables, panel labels, eyebrows, or footer (allowed only on the wordmark and section H2 headlines — see Typography)
+- `min-height: 100dvh` on non-hero sections (creates phantom empty space when content is shorter than the viewport)
+- `justify-content: center` on full-width section containers (same problem)
 
 ## Typography
 
@@ -52,6 +56,7 @@ Saans family by [Displaay Type Foundry](https://displaay.net/typeface/saans), TR
 | Role | Family | Weight | Notes |
 |---|---|---|---|
 | Hero wordmark (`v i m a.`) | **Times New Roman** | 400 | Lowercase, thin roman, literal spaces between letters, metallic or pale sakura treatment |
+| Section H2 headlines | **Times New Roman** | 400 | `clamp(2rem, 4.6vw, 4.6rem)`, lowercase sentence-fragments, often inside `<GradientText>` (washi → sakura-hot → washi). The brand voice continues into section openers. |
 | Logo mark | shader-masked SVG/canvas | n/a | Hex nut mark, dark metal bevel, paired with spaced roman wordmark |
 | Section labels (`spatial zones`, `CII timeline`) | **Saans Mono** | 700 | Sentence case, 9-10px, letter-spacing `0.04em` |
 | Tiny metadata labels (`wrench time`, `live`) | **Saans Mono** | 500 | Sentence case, 8px, letter-spacing `0.04em` |
@@ -75,14 +80,14 @@ font-family: "Times New Roman";    /* wordmark only */
 
 ### Saans + roman rule
 
-The type system is Saans everywhere except the `v i m a.` wordmark:
+The type system splits between brand voice (Times New Roman) and instrument/product voice (Saans):
 
-- **Times New Roman** = brand wordmark only. Use for `v i m a.` and nowhere else unless explicitly approved.
+- **Times New Roman** = brand voice. Use for `v i m a.` wordmark + section H2 headlines. Nothing else.
 - **Saans Mono / Saans SemiMono** = instrument voice. Use for labels, telemetry, pipeline text, stats, navigation, timestamps, confidence values, and any copy that should feel measured.
 - **Saans** = product voice. Use for hero subtext, factual body copy, technical explanation, panel descriptions, and longer paragraphs.
 
 Rules:
-- Do not use Times New Roman for subtext, section claims, buttons, nav, tables, data labels, panel headers, or metrics.
+- Do not use Times New Roman for subtext, body copy, buttons, nav, tables, data labels, panel headers, eyebrows, or metrics.
 - Wordmark spacing is literal: render as `v i m a.` rather than relying only on CSS tracking.
 - Keep wordmark weight thin. Do not bold it.
 - Saans remains the default for all prose and UI text.
@@ -107,7 +112,7 @@ clamp(3rem, 9vw, 7rem)  hero `v i m a.` wordmark
 
 | Token | Hex | Role |
 |---|---|---|
-| `--color-ink` | `#1A1A1D` | Background — charcoal night sky |
+| `--color-ink` | `#080503` | Background — near-black sumi ink (the actual rendered base color) |
 | `--color-ink-2` | `#3B1C32` | Slightly elevated plum surface |
 | `--color-sumi` | `#1b1418` | Ink wash panels / deep dividers |
 | `--color-washi` | `#f7ecef` | Primary body text — warm paper-pink white |
@@ -121,6 +126,7 @@ clamp(3rem, 9vw, 7rem)  hero `v i m a.` wordmark
 | `--color-lantern` | `#ffd3a6` | Rare warm lantern highlight |
 | `--color-red` | `#ef476f` | Non-contributory / alert |
 | `--color-green` | `#78d7a3` | Live status only |
+| `--gradient-heading` | `linear-gradient(diagonal, #f7ecef, #f2a7b8, #f7ecef)` | Animated gradient applied to TNR section H2s via `<GradientText>`, ~6-7s loop |
 
 ### Sakura glow
 Accent numbers and active states can get a sakura glow. Do not use amber glow in the new direction.
@@ -169,6 +175,31 @@ xl   24px section vertical padding (mobile)
   4. **Live evidence panel grid** — 3 columns: CII timeline waveform, active frame detail, spatial zones list.
   5. **Pipeline section** — SquareMatrix sakura grid backdrop. 6 numbered steps (01-06) in a 3×2 grid, each with status pulse + active label.
   6. **Footer** — `vima spatial intelligence · HackTech 2026 · Ironsite track` left, `uptime 0h 12m 47s` right.
+
+### Section sizing rules
+
+- **Hero only** gets `min-height: 100dvh`. The hero is the viewport-locked first impression.
+- **All other sections** size to their content + section padding. Never `min-height: 100dvh` on proof, ledger, pipeline, demo, footer, or any section past the hero. Forcing viewport height creates phantom empty space when the content is shorter than the viewport.
+- **Section padding (vertical):** `clamp(96px, 12vw, 160px)` top/bottom. This is enough rhythm to read sections as discrete bands, without forcing dead space.
+- **Section padding (horizontal):** `clamp(20px, 5vw, 48px)` left/right.
+- **Max content width:** 1400px, centered via `margin: 0 auto`.
+- **No `justify-content: center`** on full-width section containers — content flows top-down naturally. Vertical centering inside a viewport-tall box is what was creating the void.
+- **Section dividers** between sections use a thin sakura-line hairline + small mono index label (`<SectionDivider>` in `frontend/app/page.tsx`). The divider + section padding together do the work of separating sections; no additional margin needed.
+
+## Numbers
+
+Every number-bearing UI element gets `font-variant-numeric: tabular-nums`. Non-negotiable.
+
+Applies to:
+- Stats ribbons (`30 / 86.7% / 0.939 / 3`)
+- Ledger receipt tables (frame ids, timestamps, confidence, weight, status)
+- Audit hashes
+- Timestamps, durations, percentages, ratios, anything that changes value
+
+In CSS: `font-variant-numeric: tabular-nums;`
+In React inline style: `fontVariantNumeric: "tabular-nums"`
+
+Without tabular-nums, columns of numbers jitter horizontally as values change. With it, they snap into a clean grid. Bloomberg snaps. Vima snaps.
 
 ## Motion
 
@@ -244,6 +275,10 @@ For Pro blocks (in `components/blocks/`):
 | 2026-04-25 | Use Times New Roman for `v i m a.` only | User explicitly wants a thin Times New Roman wordmark with literal spacing. Saans remains everywhere else. |
 | 2026-04-25 | Keep lorem ipsum during visual tuning | User wants placeholder copy available while exploring the visual system. Product copy should not replace it unless requested. |
 | 2026-04-25 | Direction shift: Yozakura Terminal | User wants a dark japanese-style direction with pink cherry blossom energy. Research supports nighttime sakura contrast: pale petals against black sky, lantern warmth, and sumi-e restraint. |
+| 2026-04-26 | Times New Roman scope expanded to section H2s | The wordmark-only rule was stale. Section H2 headlines (proof / ledger / pipeline / demo) intentionally use TNR + GradientText to carry the brand voice into each section opener. Body and instrumentation stay in Saans. |
+| 2026-04-26 | Section sizing fix: kill `min-height: 100dvh` on non-hero sections | Sections were forcing viewport height + vertical centering, creating thousands of pixels of phantom void below short content. New rule: only the hero is viewport-locked; other sections size to content + `clamp(96px, 12vw, 160px)` padding. |
+| 2026-04-26 | Casing split formalized: lowercase headers, sentence-case body | Headers / nav / buttons / eyebrows stay lowercase fragments. Body copy and prose use standard professional case (capitalized sentence starts, periods, proper grammar). Acronyms keep canonical casing. |
+| 2026-04-26 | `--color-ink` corrected to `#080503` | Spec said `#1A1A1D` but code shipped `#080503`. The deeper near-black is the real Yozakura sky and matches the rendered page. |
 
 ## Open Questions
 

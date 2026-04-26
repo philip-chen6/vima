@@ -48,7 +48,6 @@ export function EyebrowLabel({
         fontSize: `${size}px`,
         letterSpacing: spacing,
         color,
-        textTransform: "uppercase",
       }}
     >
       {arrow ? "▸ " : ""}
@@ -198,9 +197,8 @@ export function StatCell({
         style={{
           fontFamily: "var(--font-mono)",
           fontSize: "8px",
-          letterSpacing: "0.20em",
+          letterSpacing: "0.04em",
           color: PHOSPHOR.creamMute,
-          textTransform: "uppercase",
         }}
       >
         {label}

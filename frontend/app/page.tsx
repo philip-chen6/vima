@@ -133,12 +133,14 @@ const sectionStyle = {
   overflow: "hidden",
   maxWidth: "1400px",
   margin: "0 auto",
-  minHeight: "100dvh",
-  padding: "clamp(72px, 9vw, 124px) clamp(20px, 5vw, 48px)",
+  // No min-height: 100dvh on non-hero sections — sections size to content +
+  // padding. Hero is the only viewport-locked section (handled separately).
+  padding: "clamp(96px, 12vw, 160px) clamp(20px, 5vw, 48px)",
   scrollMarginTop: "0",
   display: "flex",
   flexDirection: "column" as const,
-  justifyContent: "center",
+  // No justify-content: center — content flows top-down so each section reads
+  // as a discrete band with breathing room set by padding, not phantom void.
 };
 
 function SectionDivider({ id, label, index }: { id: string; label: string; index: string }) {
@@ -874,7 +876,7 @@ export default function VimaLandingPage() {
         id="ledger"
         data-gsap="section"
         data-scroll-section
-        style={{ ...sectionStyle, paddingTop: "clamp(72px, 9vw, 124px)" }}
+        style={sectionStyle}
       >
         <SectionAtmosphere src="/vima-loader-rebar.png" position="center" opacity={0.36} />
         <div className="landing-pink-streak landing-pink-streak--ledger" aria-hidden="true" />

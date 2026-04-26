@@ -1767,6 +1767,7 @@ html[data-vima-loader-reveal="true"] [data-landing-backdrop-stage] {
   color: #f7ecef;
   font-size: 12px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .ledger-row-claim {
