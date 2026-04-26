@@ -208,7 +208,10 @@ export default function YozakuraBackground() {
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(90deg, rgba(8,5,3,0.62), rgba(8,5,3,0.30) 36%, rgba(8,5,3,0.36) 68%, rgba(8,5,3,0.66)), radial-gradient(circle at 24% 48%, rgba(8,5,3,0.30), transparent 36%), radial-gradient(circle at 68% 28%, rgba(242,167,184,0.10), transparent 24%)",
+            // monotonic vignette: slightly darker on the far edges, lighter
+            // through the middle. no re-darkening at 68% so there's no
+            // vertical shadow band cutting through the right side.
+            "linear-gradient(90deg, rgba(8,5,3,0.42) 0%, rgba(8,5,3,0.10) 40%, rgba(8,5,3,0.10) 60%, rgba(8,5,3,0.42) 100%), radial-gradient(circle at 68% 28%, rgba(242,167,184,0.08), transparent 28%)",
         }}
       />
     </div>

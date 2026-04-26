@@ -80,6 +80,8 @@ export default function VimaLoader() {
   const startRef = useRef<HTMLDivElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
+  const subtextRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
   const [hidden, setHidden] = useState(false);
 
   useLayoutEffect(() => {
@@ -94,6 +96,8 @@ export default function VimaLoader() {
     const start = startRef.current;
     const end = endRef.current;
     const status = statusRef.current;
+    const subtext = subtextRef.current;
+    const progress = progressRef.current;
     if (!root || !stage || !videoLayer || !mark || !markShape || !aperture || !apertureInner || !start || !end || !status) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -282,6 +286,10 @@ export default function VimaLoader() {
         autoAlpha: 1,
         backgroundColor: "#080503",
         boxShadow: "0 0 0 120vmax #000000",
+        // hint to the compositor: aperture mutates layout + paint heavily,
+        // contain isolates its work from the rest of the doc tree.
+        contain: "layout paint",
+        willChange: "width, height",
       });
       gsap.set(apertureInner, {
         width: "0%",
@@ -292,6 +300,8 @@ export default function VimaLoader() {
         transformOrigin: "50% 50%",
       });
       gsap.set(status, { autoAlpha: 0, y: 10, clipPath: "inset(0 100% 0 0)" });
+      if (subtext) gsap.set(subtext, { autoAlpha: 0, y: 8 });
+      if (progress) gsap.set(progress, { scaleX: 0, transformOrigin: "0% 50%" });
       gsap.set([start, end], { x: "0em" });
 
       loaderTimeline = gsap
@@ -302,6 +312,10 @@ export default function VimaLoader() {
         .addLabel("type", 0)
         .to(stage, { scale: 1, duration: 1.2 }, "type")
         .to(letters, { yPercent: 0, duration: 1.15, stagger: 0.04, ease: "expo.out" }, "type+=0.08")
+        // subtext + progress bar appear shortly after the wordmark settles.
+        // progress fills from 0 to ~100% across the loader's lifespan.
+        .to(subtext, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" }, "type+=0.85")
+        .to(progress, { scaleX: 1, duration: 5.4, ease: "power1.inOut" }, "type+=0.4")
         .to(aperture, { width: "1.05em", duration: 1.18 }, "type+=0.66")
         .to(apertureInner, { width: "100%", duration: 1.18 }, "type+=0.66")
         .to(start, { x: "-0.055em", duration: 1.18 }, "type+=0.66")
@@ -369,6 +383,17 @@ export default function VimaLoader() {
         .addLabel("field", 4.84)
         .call(fitVideoToAperture, undefined, "field-=0.02")
         .call(() => document.documentElement.setAttribute("data-vima-loader-reveal", "true"), undefined, "field")
+        // perf: snap-kill the giant 120vmax box-shadow at the start of field
+        // instead of animating it. animating a viewport-sized blur shadow
+        // forces a full-viewport repaint every frame.
+        .set(aperture, { boxShadow: "0 0 0 0 rgba(0,0,0,0)" }, "field")
+        // perf: kill the scan/grain animation immediately. it uses
+        // mix-blend-mode: screen which is paint-heavy and contributes
+        // nothing once the loader is dissolving.
+        .set(".vima-loader-scan", { display: "none" }, "field")
+        // perf: drop the 3 stacked drop-shadows on the mark during the fly.
+        // gaussian blur filters re-rasterize every frame as the mark moves.
+        .set(mark, { filter: "none" }, "field")
         .to(videoLayer, { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 2.04, ease: "power2.inOut" }, "field")
         .to(apertureOverlays, { autoAlpha: 0, duration: 0.12, ease: "none" }, "field-=0.08")
         .to(
@@ -377,7 +402,6 @@ export default function VimaLoader() {
             width: "112vw",
             height: "112dvh",
             borderColor: "rgba(242,167,184,0)",
-            boxShadow: "0 0 0 0 rgba(0,0,0,0)",
             duration: 2.04,
           },
           "field",
@@ -388,6 +412,7 @@ export default function VimaLoader() {
         .call(flyMarkToHero, undefined, "field+=0.24")
         .to(letters, { yPercent: -112, duration: 0.98, stagger: 0.03 }, "field+=0.16")
         .to(status, { autoAlpha: 0, y: -8, duration: 0.48, ease: "power3.out" }, "field+=1.12")
+        .to([subtext, progress], { autoAlpha: 0, duration: 0.4, ease: "power3.out" }, "field+=0.2")
         .call(revealHeroMark, undefined, "field+=1.52")
         .call(releaseHero, undefined, "field+=1.7");
 
@@ -503,7 +528,8 @@ export default function VimaLoader() {
             overflow: "hidden",
             border: 0,
             background: "#080503",
-            willChange: "width, height, box-shadow",
+            willChange: "width, height",
+            contain: "layout paint",
           }}
         >
           <div
@@ -558,30 +584,22 @@ export default function VimaLoader() {
               <div className="vima-loader-scan" data-loader-overlay aria-hidden />
             </div>
           </div>
+          {/* old aperture-anchored status: kept as a hidden anchor so the
+              gsap timeline (statusRef) doesn't break, but content moved out
+              to the page-level subtext + progress bar below the loader root */}
           <div
             ref={statusRef}
             aria-hidden
             style={{
               position: "absolute",
-              left: "50%",
-              top: "calc(100% + clamp(14px, 1.8vw, 24px))",
-              zIndex: 5,
-              width: "max-content",
-              maxWidth: "min(74vw, 520px)",
-              transform: "translateX(-50%)",
-              fontFamily: "var(--font-mono)",
-              fontSize: "clamp(8px, 0.8vw, 10px)",
-              lineHeight: 1.35,
-              letterSpacing: "0.05em",
-              color: "rgba(247,236,239,0.58)",
-              textAlign: "center",
-              textShadow: "0 0 16px rgba(166,77,121,0.2)",
-              fontVariantNumeric: "tabular-nums",
-              whiteSpace: "normal",
+              width: 0,
+              height: 0,
+              overflow: "hidden",
+              opacity: 0,
+              pointerEvents: "none",
             }}
-          >
-            loading spatial field · CII stream · COLMAP zones
-          </div>
+          />
+          {/* explicit empty span — keeps the original component tree shape */}
         </div>
         <div
           ref={endRef}
@@ -700,9 +718,63 @@ export default function VimaLoader() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(90deg, rgba(8,5,3,0.62), rgba(8,5,3,0.30) 36%, rgba(8,5,3,0.36) 68%, rgba(8,5,3,0.66)), radial-gradient(circle at 24% 48%, rgba(8,5,3,0.30), transparent 36%), radial-gradient(circle at 68% 28%, rgba(242,167,184,0.10), transparent 24%)",
+              // monotonic vignette, no middle re-darkening
+              "linear-gradient(90deg, rgba(8,5,3,0.42) 0%, rgba(8,5,3,0.10) 40%, rgba(8,5,3,0.10) 60%, rgba(8,5,3,0.42) 100%), radial-gradient(circle at 68% 28%, rgba(242,167,184,0.08), transparent 28%)",
           }}
         />
+      </div>
+
+      <div
+        ref={subtextRef}
+        aria-hidden
+        style={{
+          position: "fixed",
+          left: "50%",
+          bottom: "calc(28% - 40px)",
+          transform: "translateX(-50%)",
+          zIndex: 6,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "14px",
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "clamp(9px, 0.85vw, 11px)",
+            letterSpacing: "0.06em",
+            color: "rgba(247,236,239,0.62)",
+            textShadow: "0 0 14px rgba(166,77,121,0.18)",
+            fontVariantNumeric: "tabular-nums",
+            whiteSpace: "nowrap",
+          }}
+        >
+          loading spatial field · CII stream · COLMAP zones
+        </div>
+        <div
+          aria-hidden
+          style={{
+            position: "relative",
+            width: "clamp(180px, 22vw, 260px)",
+            height: "1px",
+            background: "rgba(166,77,121,0.18)",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            ref={progressRef}
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "#f2a7b8",
+              transform: "scaleX(0)",
+              transformOrigin: "0% 50%",
+              boxShadow: "0 0 8px rgba(242,167,184,0.42)",
+            }}
+          />
+        </div>
       </div>
 
     </div>

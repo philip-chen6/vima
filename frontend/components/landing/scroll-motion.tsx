@@ -287,9 +287,10 @@ export default function ScrollMotion({ children, className, style }: ScrollMotio
             yPercent: 100,
             willChange: "transform,opacity",
           });
-          gsap.set(introCtaPrimary, { autoAlpha: 0, x: -30, y: 18, scale: 0.96 });
-          gsap.set(introCtaSecondary, { autoAlpha: 0, x: 30, y: 18, scale: 0.96 });
-          gsap.set(introMeta, { autoAlpha: 0, y: 18, scaleX: 0.94, transformOrigin: "0% 50%" });
+          gsap.set(introCtaPrimary, { autoAlpha: 0, x: -30, y: 18, scale: 0.96, willChange: "transform,opacity" });
+          gsap.set(introCtaSecondary, { autoAlpha: 0, x: 30, y: 18, scale: 0.96, willChange: "transform,opacity" });
+          gsap.set(introLogoMark, { willChange: "transform,filter,opacity" });
+          gsap.set(introMeta, { autoAlpha: 0, y: 18, scaleX: 0.94, transformOrigin: "0% 50%", willChange: "transform,opacity" });
           gsap.set(introMetaChildren, { autoAlpha: 0, y: 10 });
           gsap.set(introScrollTrace, { autoAlpha: 0, y: -6 });
 
