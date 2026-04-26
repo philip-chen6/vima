@@ -1,0 +1,46 @@
+[
+  {
+    "filename": "frame_000.jpg",
+    "timestamp_s": 0
+  },
+  {
+    "filename": "frame_001.jpg",
+    "timestamp_s": 9
+  },
+  {
+    "filename": "frame_002.jpg",
+    "timestamp_s": 18
+  },
+  {
+    "filename": "frame_003.jpg",
+    "timestamp_s": 27
+  },
+  {
+    "filename": "frame_004.jpg",
+    "timestamp_s": 36
+  },
+  {
+    "filename": "frame_005.jpg",
+    "timestamp_s": 45
+  },
+  {
+    "filename": "frame_006.jpg",
+    "timestamp_s": 54
+  },
+  {
+    "filename": "frame_007.jpg",
+    "timestamp_s": 63
+  },
+  {
+    "filename": "frame_008.jpg",
+    "timestamp_s": 72
+  },
+  {
+    "filename": "frame_009.jpg",
+    "timestamp_s": 81
+  },
+  {
+    "filename": "frame_010.jpg",
+    "timestamp_s": 90
+  }
+]
