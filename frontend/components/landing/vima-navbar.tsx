@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import gsap from "gsap";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -36,13 +36,6 @@ type SectionNavLink = {
   }>;
 };
 
-type ExternalNavLink = {
-  label: string;
-  href: string;
-  detail: string;
-  external: true;
-};
-
 const sectionLinks: SectionNavLink[] = [
   {
     label: "proof",
@@ -53,7 +46,7 @@ const sectionLinks: SectionNavLink[] = [
     items: [
       { title: "evidence chain", description: "scene to timestamped spatial claim", href: "#evidence" },
       { title: "confidence stream", description: "mean confidence 0.939 across 30 frames", href: "#evidence" },
-      { title: "claim taxonomy", description: "object · action · state · progress", href: "#evidence" },
+      { title: "claim taxonomy", description: "object · action · state · progress", href: "#claims" },
     ],
   },
   {
@@ -94,11 +87,6 @@ const sectionLinks: SectionNavLink[] = [
   },
 ];
 
-const navLinks: Array<SectionNavLink | ExternalNavLink> = [
-  ...sectionLinks,
-  { label: "paper", href: "/paper.pdf", detail: "technical method", external: true },
-];
-
 function scrollToHash(href: string, onComplete?: () => void) {
   if (!href.startsWith("#")) return false;
 
@@ -136,7 +124,6 @@ function scrollToHash(href: string, onComplete?: () => void) {
 }
 
 export default function VimaNavbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("top");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const programmaticScrollRef = useRef(false);
@@ -157,22 +144,6 @@ export default function VimaNavbar() {
 
     setActiveSection(sectionId);
   }, []);
-
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsMenuOpen(false);
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isMenuOpen]);
 
   useEffect(() => {
     return () => {
@@ -311,20 +282,27 @@ export default function VimaNavbar() {
             </div>
 
             <div className="vima-nav-actions" data-gsap-intro="intro-nav-actions">
-              <Link href="/demo" className="vima-nav-demo" onMouseEnter={() => setActiveDropdown(null)}>
-                demo
-              </Link>
-              <button
-                type="button"
-                className="vima-nav-menu"
-                onClick={() => setIsMenuOpen(true)}
+              {/* paper link replaces the "demo" button to give judges a
+                  one-click route to the technical method. dashboard is the
+                  primary CTA, so it gets the heavier styling. */}
+              <Link
+                href="/paper.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="vima-nav-demo"
                 onMouseEnter={() => setActiveDropdown(null)}
-                aria-expanded={isMenuOpen}
-                aria-label="open navigation menu"
               >
-                <Menu size={15} strokeWidth={1.7} />
-                <span>menu</span>
-              </button>
+                paper
+              </Link>
+              <Link
+                href="/demo"
+                className="vima-nav-menu"
+                onMouseEnter={() => setActiveDropdown(null)}
+                aria-label="open dashboard"
+              >
+                <LayoutDashboard size={15} strokeWidth={1.7} />
+                <span>dashboard</span>
+              </Link>
             </div>
           </div>
 
@@ -373,106 +351,6 @@ export default function VimaNavbar() {
         </nav>
       </header>
 
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            className="vima-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="navigation menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.24 }}
-          >
-            <div className="vima-menu-top">
-              <Link
-                href="#top"
-                className="vima-nav-brand"
-                onClick={(event) => {
-                  if (goToHash("#top")) event.preventDefault();
-                  setIsMenuOpen(false);
-                }}
-              >
-                <span className="vima-nav-logo" aria-hidden="true">
-                  <Logo size={22} variant="static" color="#f7ecef" strokeWidth={1.6} />
-                </span>
-                <span className="vima-nav-wordmark">v i m a.</span>
-                <span className="vima-nav-subtitle">spatial intelligence</span>
-              </Link>
-              <button
-                type="button"
-                className="vima-nav-menu"
-                onClick={() => setIsMenuOpen(false)}
-                aria-label="close navigation menu"
-              >
-                <X size={15} strokeWidth={1.7} />
-                <span>close</span>
-              </button>
-            </div>
-
-            <div className="vima-menu-body">
-              <motion.div
-                className="vima-menu-list"
-                initial="hidden"
-                animate="show"
-                exit="hidden"
-                variants={{
-                  hidden: { opacity: 0 },
-                  show: {
-                    opacity: 1,
-                    transition: { staggerChildren: 0.055, delayChildren: 0.08 },
-                  },
-                }}
-              >
-                {navLinks.map((link, index) => (
-                  <motion.div
-                    key={link.label}
-                    variants={{
-                      hidden: { opacity: 0, y: 18 },
-                      show: { opacity: 1, y: 0 },
-                    }}
-                    transition={{ duration: 0.36, ease: [0.2, 0.8, 0.2, 1] }}
-                  >
-                    <Link
-                      href={link.href}
-                      target={"external" in link ? "_blank" : undefined}
-                      rel={"external" in link ? "noreferrer" : undefined}
-                      className="vima-menu-link"
-                      data-active={"sectionId" in link && activeSection === link.sectionId ? "true" : "false"}
-                      onClick={(event) => {
-                        if (goToHash(link.href)) event.preventDefault();
-                        setIsMenuOpen(false);
-                      }}
-                    >
-                      <span className="vima-menu-index">{String(index + 1).padStart(2, "0")}</span>
-                      <span className="vima-menu-label">{link.label}</span>
-                      <span className="vima-menu-detail">{link.detail}</span>
-                    </Link>
-                  </motion.div>
-                ))}
-              </motion.div>
-
-              <motion.div
-                className="vima-menu-panel"
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 18 }}
-                transition={{ duration: 0.38, delay: 0.18, ease: [0.2, 0.8, 0.2, 1] }}
-              >
-                <div>
-                  <span className="vima-menu-panel-label">live sample</span>
-                  <strong>86.7%</strong>
-                </div>
-                <p>captured scenes become structured spatial claims, then settle through human verification.</p>
-                <Link href="/demo" onClick={() => setIsMenuOpen(false)}>
-                  open demo
-                </Link>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

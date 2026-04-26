@@ -6,7 +6,7 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://vimaspatial.tech",
   ogImage: "/og-image.png",
   repository: "https://github.com/philip-chen6/vinna",
-  devpost: "https://hacktech-by-caltech-2026.devpost.com/",
+  devpost: "https://devpost.com/software/vima",
   keywords: [
     "vima",
     "construction safety intelligence",

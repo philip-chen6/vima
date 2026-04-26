@@ -5,6 +5,16 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Concurrency lock — only one deploy at a time. If a new push lands while
+# a deploy is running, queue the new one (don't cancel the running one,
+# since killing a deploy mid-rsync or mid-build can leave the box in a
+# half-applied state). With cancel-in-progress: false the queue depth is
+# capped at the in-progress run + the latest queued; intermediate pushes
+# get superseded automatically by GitHub.
+concurrency:
+  group: deploy-vultr
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -41,6 +51,23 @@ jobs:
           ssh -i ~/.ssh/deploy_key root@${{ secrets.DEPLOY_HOST }} 'bash -s' <<'EOF'
             set -e
             cd /opt/vima/infra
+
+            # Stale-state cleanup: if a previous deploy crashed mid-recreate,
+            # docker leaves containers "marked for removal" which blocks the
+            # next compose up with: "container is marked for removal and
+            # cannot be started". Force-remove any leftover containers from
+            # the compose project before bringing things back up. This is
+            # safe because compose recreates them anyway.
+            for c in infra-frontend-1 infra-backend-1 infra-caddy-1; do
+              if docker inspect "$c" >/dev/null 2>&1; then
+                state=$(docker inspect -f '{{.State.Status}}' "$c" 2>/dev/null || echo "unknown")
+                if [ "$state" = "removing" ] || [ "$state" = "dead" ] || [ "$state" = "created" ]; then
+                  echo "[cleanup] removing stuck container: $c (state=$state)"
+                  docker rm -f "$c" 2>/dev/null || true
+                fi
+              fi
+            done
+
             docker compose --env-file ../.env build --parallel
             docker compose --env-file ../.env up -d --remove-orphans
 
@@ -51,6 +78,25 @@ jobs:
                 break
               fi
               sleep 2
+            done
+
+            # Health gate: prod must serve 200. Try 5x with backoff before
+            # giving up. Logs failures loudly so the workflow run shows red.
+            echo "verifying public health..."
+            for i in $(seq 1 5); do
+              code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80/ || echo 000)
+              if [ "$code" = "200" ]; then
+                echo "public health ok (HTTP 200)"
+                break
+              fi
+              echo "[$i/5] public returned $code, retrying..."
+              sleep 4
+              if [ "$i" = "5" ]; then
+                echo "ERROR: public health failed after 5 tries (last code: $code)"
+                docker compose --env-file ../.env ps
+                docker compose --env-file ../.env logs --tail 50 frontend
+                exit 1
+              fi
             done
 
             docker system prune -af 2>/dev/null || true

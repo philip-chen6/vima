@@ -92,7 +92,7 @@ const confidenceSeries = ledgerReceipts.map((frame) => ({
 }));
 
 const footerLinks = [
-  { label: "devpost", href: "https://hacktech-by-caltech-2026.devpost.com/", icon: Trophy, external: true },
+  { label: "devpost", href: "https://devpost.com/software/vima", icon: Trophy, external: true },
   { label: "source", href: "https://github.com/philip-chen6/vinna", icon: Code2, external: true },
   { label: "paper", href: "/paper.pdf", icon: FileText, external: false },
 ] as const;
@@ -882,8 +882,10 @@ export default function VimaLandingPage() {
 
         {/* 4-shapes-of-spatial-truth: the claim taxonomy + frame marquees.
             this is what "evidence" looks like in practice, not a separate
-            concept — keep it in the evidence section. */}
-        <div style={{ marginTop: "clamp(48px, 6vw, 96px)" }}>
+            section — keep it in evidence, but anchor it as #claims so the
+            navbar dropdown's "claim taxonomy" item scrolls precisely here
+            instead of dumping the user at the section top. */}
+        <div id="claims" style={{ marginTop: "clamp(48px, 6vw, 96px)", scrollMarginTop: "92px" }}>
           <Features3 />
         </div>
       </section>
