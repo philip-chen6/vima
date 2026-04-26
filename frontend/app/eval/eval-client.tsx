@@ -100,12 +100,47 @@ function bracketFrames(ts: number, manifest: FrameManifest[]): { before: FrameMa
   return { before: manifest[manifest.length - 2], after: manifest[manifest.length - 1] };
 }
 
+function closestFrame(ts: number, manifest: FrameManifest[]): FrameManifest | null {
+  if (manifest.length === 0) return null;
+  return manifest.reduce((closest, frame) => {
+    if (Math.abs(frame.timestamp_s - ts) < Math.abs(closest.timestamp_s - ts)) {
+      return frame;
+    }
+    return closest;
+  }, manifest[0]);
+}
+
+function formatConfidence(confidence?: number): string {
+  return typeof confidence === "number" ? confidence.toFixed(2) : "—";
+}
+
+function formatBaselineCard(entry?: CachedAnalysis): string {
+  if (!entry || entry.status === "idle" || entry.status === "loading") return "running…";
+  if (entry.status === "paused") return entry.message || "API paused";
+  if (entry.status === "error") return entry.message || "request failed";
+  return `${entry.result?.pnc ?? "—"} · ${entry.result?.activity ?? "no activity"} · conf ${formatConfidence(entry.result?.confidence)}`;
+}
+
+function formatVimaCard(entry: CachedAnalysis | undefined, episode: Episode | null): string {
+  if (!entry || entry.status === "idle" || entry.status === "loading") return "running…";
+  if (entry.status === "paused") return entry.message || "API paused";
+  if (entry.status === "error") return entry.message || "request failed";
+  return `${entry.result?.pnc ?? "—"} · episode=${episode?.episode ?? "—"} · ${entry.result?.spatial_claims?.length ?? 0} claims · conf ${formatConfidence(entry.result?.confidence)}`;
+}
+
+function isLocalDevHost(hostname: string): boolean {
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+}
+
 export default function EvalClient() {
   const [episodes, setEpisodes] = useState<Episode[] | null>(null);
   const [manifest, setManifest] = useState<FrameManifest[] | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [source, setSource] = useState<"live" | "reference" | "unknown">("unknown");
+  const [isRunningLive, setIsRunningLive] = useState(false);
+  const [runLiveError, setRunLiveError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -113,8 +148,9 @@ export default function EvalClient() {
     Promise.all([
       fetch("/data/episodes.json").then((r) => (r.ok ? r.json() : null)),
       fetch("/masonry-frames-raw/manifest.json").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/eval", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)),
     ])
-      .then(([eps, m]) => {
+      .then(([eps, m, evalPayload]) => {
         if (cancelled) return;
         // Filter out empty / placeholder episodes
         const real = (eps as Episode[] | null)?.filter(
@@ -122,6 +158,7 @@ export default function EvalClient() {
         );
         setEpisodes(real ?? null);
         setManifest((m as FrameManifest[] | null) ?? null);
+        setSource(evalPayload?.source === "live" ? "live" : "reference");
       })
       .catch((e) => !cancelled && setError(String(e)))
       .finally(() => !cancelled && setLoading(false));
@@ -130,91 +167,192 @@ export default function EvalClient() {
     };
   }, []);
 
+  async function reloadEvalSource() {
+    const response = await fetch("/api/eval", { cache: "no-store" });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      throw new Error(payload?.detail ?? `request failed (${response.status})`);
+    }
+    setSource(payload?.source === "live" ? "live" : "reference");
+  }
+
+  async function handleRunLive() {
+    setRunLiveError(null);
+    setIsRunningLive(true);
+    try {
+      const response = await fetch("/api/temporal/run?n=6", { method: "POST" });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(payload?.detail ?? payload?.error ?? `request failed (${response.status})`);
+      }
+      await reloadEvalSource();
+    } catch (e) {
+      setRunLiveError(e instanceof Error ? e.message : "failed to run live eval");
+    } finally {
+      setIsRunningLive(false);
+    }
+  }
+
   const activeEpisode = useMemo(() => episodes?.[activeIdx] ?? null, [episodes, activeIdx]);
   const bracket = useMemo(
     () => (activeEpisode && manifest ? bracketFrames(activeEpisode.ts_start, manifest) : null),
     [activeEpisode, manifest],
   );
-  const [abResult, setAbResult] = useState<{ baseline: any; vima: any; loading: boolean; error: string | null } | null>(null);
-  const abCacheRef = useRef(new Map<number, any>());
+  const activeEvalFrame = useMemo(
+    () => (activeEpisode && manifest ? closestFrame(activeEpisode.ts_start, manifest) : null),
+    [activeEpisode, manifest],
+  );
+  const [analysisCache, setAnalysisCache] = useState<AnalysisCache>({});
+  const [backendState, setBackendState] = useState<"unknown" | "available" | "offline">("unknown");
+  const activeFrameAnalysis = activeEvalFrame ? analysisCache[activeEvalFrame.filename] : undefined;
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!isLocalDevHost(window.location.hostname)) {
+      setBackendState("available");
+      return;
+    }
+
+    let cancelled = false;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 1200);
+
+    fetch("/api/health", { signal: controller.signal })
+      .then((res) => {
+        if (cancelled) return;
+        setBackendState(res.ok ? "available" : "offline");
+      })
+      .catch(() => {
+        if (!cancelled) setBackendState("offline");
+      })
+      .finally(() => window.clearTimeout(timeout));
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+      window.clearTimeout(timeout);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!activeEpisode || !activeEvalFrame) return;
+
+    const frameKey = activeEvalFrame.filename;
+    const cached = analysisCache[frameKey] ?? {};
+    const missingPrompts = (["baseline", "vima"] as AnalyzerPrompt[]).filter(
+      (prompt) => !cached[prompt],
+    );
+    if (missingPrompts.length === 0) return;
+
+    if (typeof window !== "undefined" && isLocalDevHost(window.location.hostname) && backendState === "unknown") {
+      return;
+    }
+
+    if (typeof window !== "undefined" && isLocalDevHost(window.location.hostname) && backendState === "offline") {
+      const pausedMessage = "API paused · localhost backend is not running, showing cached offline state.";
+      setAnalysisCache((prev) => {
+        const existing = prev[frameKey] ?? {};
+        const next = { ...existing };
+        for (const prompt of missingPrompts) {
+          next[prompt] = { status: "paused", message: pausedMessage };
+        }
+        return { ...prev, [frameKey]: next };
+      });
+      return;
+    }
+
     let cancelled = false;
 
-    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-      setAbResult({ baseline: null, vima: null, loading: false, error: "live A/B disabled in dev" });
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    const cached = abCacheRef.current.get(activeIdx);
-    if (cached) {
-      setAbResult(cached);
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    if (!activeEpisode || !bracket?.before?.filename) {
-      setAbResult(null);
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    setAbResult({ baseline: null, vima: null, loading: true, error: null });
-
-    const filename = bracket.before.filename;
-    const analyzeVariant = async (prompt: "baseline" | "vima", blob: Blob) => {
-      const formData = new FormData();
-      formData.append("file", blob, filename);
-      const response = await fetch(`/api/analyze/frame?prompt=${prompt}`, {
-        method: "POST",
-        body: formData,
-      });
-
-      const body = await response.json().catch(() => null);
-      if (response.status === 503) {
-        throw new Error(`API paused: ${body?.message ?? "service unavailable"}`);
+    setAnalysisCache((prev) => {
+      const existing = prev[frameKey] ?? {};
+      const next = { ...existing };
+      for (const prompt of missingPrompts) {
+        next[prompt] = { status: "loading" };
       }
-      if (!response.ok) {
-        throw new Error(body?.message ?? `request failed (${response.status})`);
+      return { ...prev, [frameKey]: next };
+    });
+
+    const fetchAnalyses = async () => {
+      try {
+        const frameResponse = await fetch(`/masonry-frames-raw/${activeEvalFrame.filename}`);
+        if (!frameResponse.ok) {
+          throw new Error(`could not fetch frame ${activeEvalFrame.filename}`);
+        }
+        const frameBlob = await frameResponse.blob();
+
+        const responses = await Promise.all(
+          missingPrompts.map(async (prompt) => {
+            const params = new URLSearchParams({
+              prompt,
+              timestamp: String(activeEvalFrame.timestamp_s),
+              event_id: `episode ${activeEpisode.episode}`,
+            });
+            const formData = new FormData();
+            formData.append("file", frameBlob, activeEvalFrame.filename);
+            const response = await fetch(`/api/analyze/frame?${params.toString()}`, {
+              method: "POST",
+              body: formData,
+            });
+
+            if (response.status === 503 || response.status === 502) {
+              const body = await response.json().catch(() => ({}));
+              return {
+                prompt,
+                entry: {
+                  status: "paused" as const,
+                  message:
+                    body.message || "API paused · cached evidence below remains valid.",
+                },
+              };
+            }
+
+            if (!response.ok) {
+              const text = await response.text().catch(() => "");
+              throw new Error(
+                `${prompt}: ${response.status} ${response.statusText}${text ? ` — ${text.slice(0, 240)}` : ""}`,
+              );
+            }
+
+            return {
+              prompt,
+              entry: {
+                status: "success" as const,
+                result: (await response.json()) as FrameAnalysis,
+              },
+            };
+          }),
+        );
+
+        if (cancelled) return;
+
+        setAnalysisCache((prev) => {
+          const existing = prev[frameKey] ?? {};
+          const next = { ...existing };
+          for (const { prompt, entry } of responses) {
+            next[prompt] = entry;
+          }
+          return { ...prev, [frameKey]: next };
+        });
+      } catch (fetchError) {
+        if (cancelled) return;
+        const message = fetchError instanceof Error ? fetchError.message : String(fetchError);
+        setAnalysisCache((prev) => {
+          const existing = prev[frameKey] ?? {};
+          const next = { ...existing };
+          for (const prompt of missingPrompts) {
+            next[prompt] = { status: "error", message };
+          }
+          return { ...prev, [frameKey]: next };
+        });
       }
-      return body;
     };
 
-    fetch(`/masonry-frames-raw/${filename}`)
-      .then(async (frameResponse) => {
-        if (!frameResponse.ok) {
-          throw new Error(`could not fetch frame ${filename} (${frameResponse.status})`);
-        }
-        const blob = await frameResponse.blob();
-        const [baseline, vima] = await Promise.all([
-          analyzeVariant("baseline", blob),
-          analyzeVariant("vima", blob),
-        ]);
-        return { baseline, vima, loading: false, error: null };
-      })
-      .then((result) => {
-        if (cancelled) return;
-        abCacheRef.current.set(activeIdx, result);
-        setAbResult(result);
-      })
-      .catch((fetchError) => {
-        if (cancelled) return;
-        setAbResult({
-          baseline: null,
-          vima: null,
-          loading: false,
-          error: fetchError instanceof Error ? fetchError.message : String(fetchError),
-        });
-      });
+    void fetchAnalyses();
 
     return () => {
       cancelled = true;
     };
-  }, [activeEpisode, activeIdx, bracket]);
+  }, [activeEpisode, activeEvalFrame, analysisCache, backendState]);
 
   // Aggregate metric: spatial claims per episode
   const totalClaims = useMemo(
@@ -290,6 +428,61 @@ export default function EvalClient() {
           below is real — generated by the pipeline on the masonry capture,
           read from <code style={{ color: WASHI, fontFamily: "var(--font-mono)" }}>/data/episodes.json</code>.
         </p>
+        <div
+          style={{
+            marginTop: "18px",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          <span
+            style={{
+              padding: "8px 12px",
+              border: `1px solid ${LINE}`,
+              background: "rgba(247,236,239,0.04)",
+              color: TEXT_MUTED,
+              fontFamily: "var(--font-mono)",
+              fontSize: "10px",
+              letterSpacing: "0.05em",
+            }}
+          >
+            source · {source}
+          </span>
+          {source !== "live" && (
+            <button
+              type="button"
+              onClick={handleRunLive}
+              disabled={isRunningLive}
+              style={{
+                all: "unset",
+                cursor: isRunningLive ? "progress" : "pointer",
+                padding: "8px 12px",
+                border: `1px solid ${SAKURA}`,
+                background: "rgba(166,77,121,0.12)",
+                color: WASHI,
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.05em",
+              }}
+            >
+              {isRunningLive ? "running..." : "run live"}
+            </button>
+          )}
+          {runLiveError && (
+            <span
+              style={{
+                color: RED,
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.05em",
+              }}
+            >
+              {runLiveError}
+            </span>
+          )}
+        </div>
 
         {/* live stats strip */}
         {episodes && (
@@ -689,12 +882,10 @@ export default function EvalClient() {
             lineHeight: 1.6,
           }}
         >
-          A baseline VLM call returns a caption per frame — &quot;worker on
-          masonry wall.&quot; True, useless. Vima groups frames into episodes
-          with structured spatial claims (object, location, distance) and
-          confidence, so a downstream auditor can ask: <em>which worker, on
-          which wall, at what height, near what hazard.</em> The 21 episodes
-          above are evidence the pipeline emits that shape.
+          This panel runs the real A/B on one manifest frame nearest the active
+          episode start time. Baseline gets the one-line frame prompt; vima gets
+          the structured prompt on the exact same frame, so the difference is
+          evidence instead of presentation theater.
         </p>
 
         <div
@@ -708,28 +899,12 @@ export default function EvalClient() {
         >
           <FailureCard
             label="raw VLM output"
-            text={
-              abResult?.loading && bracket?.before?.filename
-                ? `running on frame ${bracket.before.filename}...`
-                : abResult?.error
-                  ? abResult.error
-                  : abResult?.baseline
-                    ? `${abResult.baseline.pnc ?? "—"} · ${abResult.baseline.activity ?? "—"} · conf ${(((abResult.baseline.confidence ?? 0) as number) * 100).toFixed(0)}%`
-                    : "select an episode with a bracketed frame"
-            }
+            text={activeEvalFrame ? formatBaselineCard(activeFrameAnalysis?.baseline) : "select an episode with a manifest frame"}
             tone="bad"
           />
           <FailureCard
             label="vima episode"
-            text={
-              abResult?.loading && bracket?.before?.filename
-                ? `running on frame ${bracket.before.filename}...`
-                : abResult?.error
-                  ? abResult.error
-                  : abResult?.vima
-                    ? `${abResult.vima.pnc ?? "—"} · ${abResult.vima.episode ?? "—"} · ${abResult.vima.spatial_claims?.length ?? 0} claims · conf ${(((abResult.vima.confidence ?? 0) as number) * 100).toFixed(0)}%`
-                    : "select an episode with a bracketed frame"
-            }
+            text={activeEvalFrame ? formatVimaCard(activeFrameAnalysis?.vima, activeEpisode) : "select an episode with a manifest frame"}
             tone="good"
           />
         </div>

@@ -1,14 +1,13 @@
 # uv run api.py
-import os, json, pathlib, base64, tempfile, shutil, time, math
+import os, json, pathlib, base64, tempfile, shutil, math
 from collections import Counter
-from fastapi import FastAPI, UploadFile, File, HTTPException, Query
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
 import uvicorn
 
 from pipeline import run_event, run_batch
 from prompt_v1 import vima_classify, baseline_classify
-from temporal_v1 import run_live_demo_video
 
 app = FastAPI(title="Ironsite Spatial API", version="1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -47,8 +46,9 @@ def health():
 # ── Temporal-reasoning results: multi-frame state-change detection ─────────
 TEMPORAL_PATH = pathlib.Path(__file__).parent / "temporal-results.json"
 TEMPORAL_FALLBACK_PATH = pathlib.Path(__file__).parent / "temporal-reference.json"
-TEMPORAL_RUN_COOLDOWN_S = 60
-_LAST_TEMPORAL_RUN_STARTED_AT = 0.0
+import time as _time
+_TEMPORAL_LAST_RUN = 0.0
+_TEMPORAL_COOLDOWN_S = 60.0
 
 
 def _load_temporal_payload(path: pathlib.Path) -> dict:
@@ -133,50 +133,30 @@ def temporal_frame(frame_index: int):
 
 
 @app.post("/temporal/run")
-def temporal_run(n: int = Query(8, ge=1, le=12)):
-    """Run live multi-frame temporal reasoning over the bundled coldpath demo."""
+def temporal_run(n: int = 8):
+    """Live multi-frame state-change reasoning on the bundled coldpath video.
+    Persists to temporal-results.json which /api/eval reads. Cooldown=60s
+    to keep judges-spamming-the-button cheap on the anthropic budget."""
+    global _TEMPORAL_LAST_RUN
     import anthropic as _anthropic_pkg
+    from temporal_v1 import run_live_demo_video
 
-    global _LAST_TEMPORAL_RUN_STARTED_AT
-
-    now = time.monotonic()
-    remaining = TEMPORAL_RUN_COOLDOWN_S - (now - _LAST_TEMPORAL_RUN_STARTED_AT)
-    if remaining > 0:
-        return JSONResponse(
-            status_code=429,
-            content={
-                "error": "cooldown",
-                "message": "Temporal live run cooldown active. Try again shortly.",
-                "service_state": "cooldown",
-                "retry_after_s": int(math.ceil(remaining)),
-            },
-        )
-
-    _LAST_TEMPORAL_RUN_STARTED_AT = now
+    n = max(2, min(int(n), 12))
+    now = _time.time()
+    if now - _TEMPORAL_LAST_RUN < _TEMPORAL_COOLDOWN_S:
+        wait = int(_TEMPORAL_COOLDOWN_S - (now - _TEMPORAL_LAST_RUN))
+        raise HTTPException(429, f"cooldown active, retry in {wait}s")
+    _TEMPORAL_LAST_RUN = now
     try:
         payload = run_live_demo_video(n_frames=n, persist=True)
-        payload = _augment_temporal_payload(payload, "live")
-        TEMPORAL_PATH.write_text(json.dumps(payload, indent=2))
+        payload["source"] = "live"
         return JSONResponse(payload)
     except _anthropic_pkg.AuthenticationError:
-        return JSONResponse(
-            status_code=503,
-            content={
-                "error": "auth",
-                "message": "Anthropic API key invalid or unset on server.",
-                "service_state": "paused",
-                "hint": "Frontend should keep showing the reference temporal snapshot.",
-            },
-        )
+        return JSONResponse(status_code=503, content={"error": "auth", "service_state": "paused"})
+    except FileNotFoundError as e:
+        raise HTTPException(404, f"missing artifact: {e}")
     except Exception as e:
-        return JSONResponse(
-            status_code=503,
-            content={
-                "error": "pipeline_failed",
-                "message": f"Temporal pipeline failed: {type(e).__name__}",
-                "service_state": "pipeline_failed",
-            },
-        )
+        raise HTTPException(503, f"pipeline failed: {type(e).__name__}")
 
 
 @app.post("/analyze/frame")
