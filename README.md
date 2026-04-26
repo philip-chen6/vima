@@ -22,17 +22,6 @@ The demo question this repo is built around is:
 Was there masonry work happening near the wall?
 ```
 
-## Team
-
-Commit history shows four active project contributors:
-
-| Person | Main lanes in this repo |
-| --- | --- |
-| Lucas He | Docs, agent context, paper assets, PR/release coordination |
-| Stephen Hung | Product flow, frontend polish, proof/eval/demo fixes |
-| Philip Chen | Spatial-memory backend, Robotics fusion, dashboard, paper/artifact packaging |
-| Joshua Lin | Mobile app, swipe deck, screenshots, brand and app polish |
-
 ## For Judges
 
 Live verification:
