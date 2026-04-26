@@ -24,6 +24,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ChevronRight } from "lucide-react";
 import VimaNavbar from "@/components/landing/vima-navbar";
+import { EpisodeConstellation } from "@/components/landing/episode-constellation";
 
 const ComparisonSlider = dynamic(
   () => import("@/components/react-bits/comparison-slider"),
@@ -1002,7 +1003,7 @@ export default function EvalClient() {
           </p>
           <h2
             style={{
-              margin: "14px 0 32px",
+              margin: "14px 0 24px",
               fontFamily: HEADING_FONT,
               fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
               fontWeight: 400,
@@ -1015,12 +1016,31 @@ export default function EvalClient() {
           <div
             style={{
               display: "grid",
-              gap: "1px",
-              background: LINE,
-              border: `1px solid ${LINE}`,
+              gridTemplateColumns: "minmax(0, 0.9fr) minmax(0, 1.3fr)",
+              gap: "clamp(20px, 3vw, 40px)",
+              alignItems: "start",
             }}
+            className="vima-eval-constellation-grid"
           >
-            {episodes.map((ep, i) => {
+            <EpisodeConstellation
+              episodes={episodes}
+              activeIdx={activeIdx}
+              onSelect={(i) => setActiveIdx(i)}
+              totalDuration={60}
+              inferSeverity={(ep) => inferSeverity(ep as Episode)}
+            />
+
+            <div
+              style={{
+                display: "grid",
+                gap: "1px",
+                background: LINE,
+                border: `1px solid ${LINE}`,
+                maxHeight: "560px",
+                overflowY: "auto",
+              }}
+            >
+              {episodes.map((ep, i) => {
               const active = i === activeIdx;
               const sev = inferSeverity(ep);
               return (
@@ -1109,6 +1129,7 @@ export default function EvalClient() {
                 </button>
               );
             })}
+            </div>
           </div>
         </section>
       )}
@@ -1278,6 +1299,17 @@ export default function EvalClient() {
           </Link>
         </div>
       </section>
+
+      {/* Constellation grid drops to single-col on narrow viewports so the
+          radial chart doesn't shrink below readable + the ledger stays
+          tappable. 880 matches the demo dashboard's stat-grid breakpoint. */}
+      <style jsx>{`
+        @media (max-width: 880px) {
+          :global(.vima-eval-constellation-grid) {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </main>
   );
 }
