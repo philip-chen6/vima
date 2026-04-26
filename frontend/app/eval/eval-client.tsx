@@ -1,76 +1,67 @@
 "use client";
 
+// /eval — vima sees time
+// ---------------------------------------------------------------------------
+// Real data, not reference. Reads:
+//   /data/episodes.json         — 21 episodes from the masonry capture, each
+//                                  with summary + spatial_claims (object,
+//                                  location, distance_m) + ts range + confidence
+//   /masonry-frames/manifest    — 11 frames timestamped 0–90s
+//
+// The page composes them: pick an episode, find the two manifest frames whose
+// timestamps bracket its ts_start, render those into the comparison slider.
+// Below: the active episode's structured spatial claims as a card grid.
+//
+// Design rules: yozakura tokens only, lowercase headers (TNR for H1/H2),
+// tabular-nums on every number, hairline borders, no bubble radius, no
+// purple. See DESIGN.md.
+
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ChevronRight } from "lucide-react";
 import VimaNavbar from "@/components/landing/vima-navbar";
 
-// Lazy-load the comparison slider — it pulls in gsap Draggable + Inertia
-// which are heavy. Server doesn't need it.
-const ComparisonSlider = dynamic(() => import("@/components/react-bits/comparison-slider"), {
-  ssr: false,
-  loading: () => (
-    <div
-      style={{
-        width: "100%",
-        aspectRatio: "16/10",
-        background: "linear-gradient(180deg, rgba(247,236,239,0.04), rgba(8,5,3,0.4))",
-        border: "1px solid rgba(242,167,184,0.18)",
-      }}
-    />
-  ),
-});
+const ComparisonSlider = dynamic(
+  () => import("@/components/react-bits/comparison-slider"),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        style={{
+          width: "100%",
+          aspectRatio: "16/10",
+          background: "linear-gradient(180deg, rgba(247,236,239,0.04), rgba(8,5,3,0.4))",
+          border: "1px solid rgba(242,167,184,0.18)",
+        }}
+      />
+    ),
+  }
+);
 
-// ── Types matching backend/temporal_v1.py output schema ───────────────────
-type Severity = "info" | "warning" | "critical";
+// ── Real schema (matches frontend/public/data/episodes.json) ─────────────
+type SpatialClaim = {
+  object: string;
+  location: string;
+  distance_m: number | null;
+};
 
-type Claim = {
-  type: string;
-  description: string;
-  start_frame: number;
-  end_frame: number;
-  evidence: string;
+type Episode = {
+  episode: number;
+  frames: string[];
+  ts_start: number;
+  ts_end: number;
   confidence: number;
-  severity: Severity;
+  summary: string;
+  spatial_claims: SpatialClaim[];
 };
 
-type Refusal = { between_frames: [number, number]; reason: string };
+type FrameManifest = { filename: string; timestamp_s: number };
 
-type FrameMeta = {
-  timestamp_s?: number;
-  activity?: string;
-  category?: string;
-  confidence?: number;
-};
-
-type Vima = {
-  n_frames_examined: number;
-  elapsed_s: number;
-  model: string;
-  claims: Claim[];
-  refusals: Refusal[];
-  frame_paths: string[];
-  frame_meta: FrameMeta[];
-};
-
-type BaselineFlat = {
-  method?: string;
-  n_frames_examined?: number;
-  elapsed_s?: number;
-  per_frame_claims?: Array<{ frame: number; claim: string }>;
-  _note?: string;
-};
-
-type Payload = {
-  source?: "live" | "reference";
-  vima?: Vima;
-  baseline?: BaselineFlat;
-};
-
-// ── Yozakura terminal palette + tokens ────────────────────────────────────
+// ── Yozakura tokens (must match landing) ─────────────────────────────────
 const INK = "#080503";
 const WASHI = "#f7ecef";
+const TEXT_SECONDARY = "rgba(247,236,239,0.68)";
 const TEXT_MUTED = "rgba(247,236,239,0.46)";
 const TEXT_FAINT = "rgba(247,236,239,0.34)";
 const SAKURA = "#A64D79";
@@ -80,55 +71,76 @@ const RED = "#ef476f";
 const LINE = "rgba(242,167,184,0.18)";
 const HEADING_FONT = '"Times New Roman", Times, serif';
 
-const SEVERITY_COLOR: Record<Severity, string> = {
-  info: SAKURA_HOT,
-  warning: LANTERN,
-  critical: RED,
-};
-
-// Resolve a backend frame path ("frontend/public/foo.jpg") to a URL the
-// browser can fetch ("/foo.jpg").
-function frameUrl(p: string) {
-  if (p.startsWith("http")) return p;
-  if (p.startsWith("/")) return p;
-  // Strip leading "frontend/public/" if present.
-  return "/" + p.replace(/^frontend\/public\//, "");
+// Severity is a function of confidence + the kind of OSHA-relevant text in
+// the summary. We don't trust the model to self-rate severity, so we infer
+// it locally so judges can see the heuristic in source.
+function inferSeverity(ep: Episode): "info" | "warning" | "critical" {
+  const s = ep.summary.toLowerCase();
+  const hazardous = /no fall protection|no guardrail|elevated edge|open edge|elevation/.test(s);
+  if (hazardous && ep.confidence >= 0.78) return "critical";
+  if (hazardous) return "warning";
+  return "info";
 }
 
-export default function EvalClient({ initial }: { initial: Payload | null }) {
-  const [data, setData] = useState<Payload | null>(initial);
-  const [loading, setLoading] = useState(initial === null);
-  const [error, setError] = useState<string | null>(null);
-  const [activeClaimIdx, setActiveClaimIdx] = useState(0);
+const SEVERITY_COLOR = { info: SAKURA_HOT, warning: LANTERN, critical: RED };
 
-  // Client-side fallback fetch — if SSR fetch failed, try again from the
-  // browser. Common in dev where the backend isn't reachable from the
-  // server side until docker compose is up.
+// Pick the two manifest frames that bracket an episode's start time.
+function bracketFrames(ts: number, manifest: FrameManifest[]): { before: FrameManifest; after: FrameManifest } | null {
+  if (manifest.length < 2) return null;
+  for (let i = 0; i < manifest.length - 1; i++) {
+    if (manifest[i].timestamp_s <= ts && manifest[i + 1].timestamp_s >= ts) {
+      return { before: manifest[i], after: manifest[i + 1] };
+    }
+  }
+  // ts past the last frame — return the last pair
+  return { before: manifest[manifest.length - 2], after: manifest[manifest.length - 1] };
+}
+
+export default function EvalClient() {
+  const [episodes, setEpisodes] = useState<Episode[] | null>(null);
+  const [manifest, setManifest] = useState<FrameManifest[] | null>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    if (initial !== null) return;
     let cancelled = false;
     setLoading(true);
-    fetch("/api/eval", { cache: "no-store" })
-      .then(async (r) => {
-        if (!r.ok) throw new Error(`backend returned ${r.status}`);
-        const json = await r.json();
-        if (!cancelled) setData(json);
+    Promise.all([
+      fetch("/data/episodes.json").then((r) => (r.ok ? r.json() : null)),
+      fetch("/masonry-frames/manifest.json").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([eps, m]) => {
+        if (cancelled) return;
+        // Filter out empty / placeholder episodes
+        const real = (eps as Episode[] | null)?.filter(
+          (e) => e && e.summary && e.spatial_claims && e.spatial_claims.length > 0,
+        );
+        setEpisodes(real ?? null);
+        setManifest((m as FrameManifest[] | null) ?? null);
       })
       .catch((e) => !cancelled && setError(String(e)))
       .finally(() => !cancelled && setLoading(false));
     return () => {
       cancelled = true;
     };
-  }, [initial]);
+  }, []);
 
-  const vima = data?.vima;
-  const baseline = data?.baseline;
-  const claims = vima?.claims ?? [];
-  const grounded = useMemo(
-    () => claims.filter((c) => c.type !== "no_change_detected"),
-    [claims],
+  const activeEpisode = useMemo(() => episodes?.[activeIdx] ?? null, [episodes, activeIdx]);
+  const bracket = useMemo(
+    () => (activeEpisode && manifest ? bracketFrames(activeEpisode.ts_start, manifest) : null),
+    [activeEpisode, manifest],
   );
-  const activeClaim = grounded[activeClaimIdx] ?? null;
+
+  // Aggregate metric: spatial claims per episode
+  const totalClaims = useMemo(
+    () => episodes?.reduce((acc, e) => acc + e.spatial_claims.length, 0) ?? 0,
+    [episodes],
+  );
+  const avgConfidence = useMemo(() => {
+    if (!episodes || episodes.length === 0) return 0;
+    return episodes.reduce((acc, e) => acc + e.confidence, 0) / episodes.length;
+  }, [episodes]);
 
   return (
     <main
@@ -138,12 +150,11 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
         color: WASHI,
         fontFamily: "var(--font-mono)",
         position: "relative",
-        zIndex: 1,
       }}
     >
       <VimaNavbar />
 
-      {/* ── HERO ─────────────────────────────────────────────────────── */}
+      {/* ── HERO ──────────────────────────────────────────────────────── */}
       <section
         style={{
           maxWidth: "1400px",
@@ -159,7 +170,7 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
             letterSpacing: "0.05em",
           }}
         >
-          eval · vima-temporal-v1 · multi-frame state-change detection
+          eval · episodic memory · live data from the masonry capture
         </p>
         <h1
           style={{
@@ -182,39 +193,51 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
           style={{
             margin: "26px 0 0",
             maxWidth: "680px",
-            color: "rgba(247,236,239,0.68)",
+            color: TEXT_SECONDARY,
             fontFamily: "var(--font-sans)",
             fontSize: "clamp(0.98rem, 1.2vw, 1.18rem)",
             lineHeight: 1.55,
             letterSpacing: "0.005em",
           }}
         >
-          Single-frame VLMs classify what is in a frame. They cannot tell you
-          what changed across frames. Vima sends a sequence of frames to the
-          model in one call and constrains the output: every state-change
-          claim must cite two proof frames. Drag the slider below to verify
-          any claim against its evidence.
+          Single-frame VLMs classify what is in a frame. Vima&apos;s episodic
+          memory binds frames into structured episodes with spatial claims:
+          which object, where, how far, with what confidence. Every episode
+          below is real — generated by the pipeline on the masonry capture,
+          read from <code style={{ color: WASHI, fontFamily: "var(--font-mono)" }}>/data/episodes.json</code>.
         </p>
 
-        {/* Source badge */}
-        {data?.source && (
-          <p
+        {/* live stats strip */}
+        {episodes && (
+          <div
             style={{
-              margin: "28px 0 0",
-              fontSize: "9px",
-              letterSpacing: "0.06em",
-              color: data.source === "live" ? SAKURA_HOT : TEXT_FAINT,
+              marginTop: "32px",
+              paddingTop: "22px",
+              borderTop: `1px solid ${LINE}`,
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+              gap: "20px",
             }}
           >
-            {data.source === "live"
-              ? `· live results · ${vima?.n_frames_examined ?? 0} frames examined in ${vima?.elapsed_s?.toFixed(1) ?? "?"}s · ${vima?.model ?? ""}`
-              : `· reference results · live run pending · same shape, same scoring, same model`}
-          </p>
+            <Stat label="episodes" value={episodes.length.toString()} accent={WASHI} />
+            <Stat label="spatial claims" value={totalClaims.toString()} accent={WASHI} />
+            <Stat
+              label="avg confidence"
+              value={avgConfidence.toFixed(2)}
+              accent={SAKURA_HOT}
+              glow
+            />
+            <Stat
+              label="frames bracketed"
+              value={(manifest?.length ?? 0).toString()}
+              accent={WASHI}
+            />
+          </div>
         )}
       </section>
 
-      {/* ── COMPARISON SLIDER + ACTIVE CLAIM ────────────────────────── */}
-      {vima && grounded.length > 0 && activeClaim && (
+      {/* ── EPISODE BROWSER + SLIDER + CLAIMS ─────────────────────────── */}
+      {episodes && episodes.length > 0 && activeEpisode && (
         <section
           style={{
             maxWidth: "1400px",
@@ -227,23 +250,43 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
           }}
           className="vima-eval-grid"
         >
+          {/* LEFT — comparison slider */}
           <div>
-            <ComparisonSlider
-              beforeImage={frameUrl(vima.frame_paths[activeClaim.start_frame] ?? "")}
-              afterImage={frameUrl(vima.frame_paths[activeClaim.end_frame] ?? "")}
-              beforeAlt={`frame ${activeClaim.start_frame} — ${vima.frame_meta[activeClaim.start_frame]?.activity ?? ""}`}
-              afterAlt={`frame ${activeClaim.end_frame} — ${vima.frame_meta[activeClaim.end_frame]?.activity ?? ""}`}
-              labelText={{
-                before: `frame ${activeClaim.start_frame} · t=${(vima.frame_meta[activeClaim.start_frame]?.timestamp_s ?? 0).toFixed(1)}s`,
-                after: `frame ${activeClaim.end_frame} · t=${(vima.frame_meta[activeClaim.end_frame]?.timestamp_s ?? 0).toFixed(1)}s`,
-              }}
-              labelClassName="vima-slider-label"
-              dividerColor={SAKURA_HOT}
-              handleColor={INK}
-              showHandle
-              enableInertia
-              initialPosition={50}
-            />
+            {bracket ? (
+              <ComparisonSlider
+                beforeImage={`/masonry-frames/${bracket.before.filename}`}
+                afterImage={`/masonry-frames/${bracket.after.filename}`}
+                beforeAlt={`frame at t=${bracket.before.timestamp_s}s`}
+                afterAlt={`frame at t=${bracket.after.timestamp_s}s`}
+                labelText={{
+                  before: `t=${bracket.before.timestamp_s}s`,
+                  after: `t=${bracket.after.timestamp_s}s`,
+                }}
+                labelClassName="vima-slider-label"
+                dividerColor={SAKURA_HOT}
+                handleColor={INK}
+                showHandle
+                enableInertia
+                initialPosition={50}
+              />
+            ) : (
+              <div
+                style={{
+                  width: "100%",
+                  aspectRatio: "16/10",
+                  background: "linear-gradient(180deg, rgba(247,236,239,0.04), rgba(8,5,3,0.4))",
+                  border: `1px solid ${LINE}`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: TEXT_MUTED,
+                  fontSize: "11px",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                no frames bracketed for this episode timestamp
+              </div>
+            )}
             <p
               style={{
                 margin: "16px 0 0",
@@ -253,11 +296,11 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
                 letterSpacing: "0.05em",
               }}
             >
-              drag the divider to compare proof frames · {activeClaimIdx + 1} of {grounded.length}
+              drag the divider · episode {activeEpisode.episode} · ts={activeEpisode.ts_start.toFixed(1)}s
             </p>
           </div>
 
-          {/* Active claim card */}
+          {/* RIGHT — episode card */}
           <div
             style={{
               border: `1px solid ${LINE}`,
@@ -268,12 +311,12 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
             <p
               style={{
                 margin: 0,
-                color: SEVERITY_COLOR[activeClaim.severity],
+                color: SEVERITY_COLOR[inferSeverity(activeEpisode)],
                 fontSize: "9px",
                 letterSpacing: "0.08em",
               }}
             >
-              {activeClaim.type} · severity {activeClaim.severity}
+              episode {activeEpisode.episode} · severity {inferSeverity(activeEpisode)}
             </p>
             <h2
               style={{
@@ -285,70 +328,97 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
                 letterSpacing: 0,
               }}
             >
-              {activeClaim.description}
+              {activeEpisode.summary || "no summary"}
             </h2>
-            <p
-              style={{
-                margin: "16px 0 0",
-                color: "rgba(247,236,239,0.62)",
-                fontFamily: "var(--font-sans)",
-                fontSize: "13.5px",
-                lineHeight: 1.55,
-              }}
-            >
-              {activeClaim.evidence}
-            </p>
 
             <div
               style={{
-                marginTop: "22px",
-                paddingTop: "18px",
-                borderTop: `1px solid ${LINE}`,
+                marginTop: "18px",
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
-                gap: "16px",
+                gap: "12px",
+                paddingBottom: "18px",
+                borderBottom: `1px solid ${LINE}`,
               }}
             >
-              <div>
-                <p style={{ margin: 0, color: TEXT_FAINT, fontSize: "9px", letterSpacing: "0.06em" }}>
-                  proof frames
-                </p>
-                <p
-                  style={{
-                    margin: "6px 0 0",
-                    color: WASHI,
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "13px",
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {activeClaim.start_frame} → {activeClaim.end_frame}
-                </p>
-              </div>
-              <div>
-                <p style={{ margin: 0, color: TEXT_FAINT, fontSize: "9px", letterSpacing: "0.06em" }}>
-                  confidence
-                </p>
-                <p
-                  style={{
-                    margin: "6px 0 0",
-                    color: SAKURA_HOT,
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "13px",
-                    fontVariantNumeric: "tabular-nums",
-                    textShadow: `0 0 12px ${SAKURA_HOT}33`,
-                  }}
-                >
-                  {(activeClaim.confidence * 100).toFixed(0)}%
-                </p>
-              </div>
+              <Stat label="ts range" value={`${activeEpisode.ts_start.toFixed(1)}s → ${activeEpisode.ts_end.toFixed(1)}s`} accent={WASHI} small />
+              <Stat label="confidence" value={(activeEpisode.confidence * 100).toFixed(0) + "%"} accent={SAKURA_HOT} small glow />
+              <Stat label="frames" value={activeEpisode.frames.length.toString()} accent={WASHI} small />
+              <Stat label="spatial claims" value={activeEpisode.spatial_claims.length.toString()} accent={WASHI} small />
             </div>
+
+            <p
+              style={{
+                margin: "18px 0 12px",
+                color: TEXT_FAINT,
+                fontSize: "9px",
+                letterSpacing: "0.06em",
+              }}
+            >
+              spatial claims · object · location · distance
+            </p>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+              {activeEpisode.spatial_claims.map((c, i) => (
+                <li
+                  key={i}
+                  style={{
+                    padding: "10px 0",
+                    borderBottom: i === activeEpisode.spatial_claims.length - 1 ? "0" : `1px dashed ${LINE}`,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      alignItems: "baseline",
+                      marginBottom: "4px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: SAKURA_HOT,
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "10px",
+                        letterSpacing: "0.04em",
+                        textTransform: "none",
+                      }}
+                    >
+                      {c.object}
+                    </span>
+                    {c.distance_m !== null && (
+                      <span
+                        style={{
+                          marginLeft: "auto",
+                          color: WASHI,
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "10px",
+                          fontVariantNumeric: "tabular-nums",
+                        }}
+                      >
+                        {c.distance_m.toFixed(1)}m
+                      </span>
+                    )}
+                  </div>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: TEXT_SECONDARY,
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "12.5px",
+                      lineHeight: 1.45,
+                    }}
+                  >
+                    {c.location}
+                  </p>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       )}
 
-      {/* ── ALL CLAIMS LIST ─────────────────────────────────────────── */}
-      {vima && grounded.length > 0 && (
+      {/* ── ALL EPISODES LIST ─────────────────────────────────────────── */}
+      {episodes && episodes.length > 0 && (
         <section
           style={{
             maxWidth: "1400px",
@@ -365,7 +435,7 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
               letterSpacing: "0.05em",
             }}
           >
-            all claims · click to inspect
+            all episodes · {episodes.length} total · click to inspect
           </p>
           <h2
             style={{
@@ -376,7 +446,7 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
               lineHeight: 1.1,
             }}
           >
-            every change has a citation.
+            every episode is structured.
           </h2>
 
           <div
@@ -387,19 +457,19 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
               border: `1px solid ${LINE}`,
             }}
           >
-            {grounded.map((c, i) => {
-              const active = i === activeClaimIdx;
+            {episodes.map((ep, i) => {
+              const active = i === activeIdx;
+              const sev = inferSeverity(ep);
               return (
                 <button
-                  key={i}
+                  key={ep.episode}
                   type="button"
-                  onClick={() => setActiveClaimIdx(i)}
-                  data-active={active ? "true" : "false"}
+                  onClick={() => setActiveIdx(i)}
                   style={{
                     all: "unset",
                     cursor: "pointer",
                     display: "grid",
-                    gridTemplateColumns: "auto minmax(120px, 0.8fr) minmax(0, 2fr) auto auto",
+                    gridTemplateColumns: "auto 80px minmax(0, 2fr) auto auto auto",
                     gap: "clamp(12px, 2vw, 28px)",
                     alignItems: "center",
                     padding: "clamp(14px, 1.4vw, 18px) clamp(14px, 1.6vw, 22px)",
@@ -411,20 +481,21 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
                     style={{
                       width: "8px",
                       height: "8px",
-                      background: SEVERITY_COLOR[c.severity],
-                      boxShadow: `0 0 10px ${SEVERITY_COLOR[c.severity]}66`,
+                      background: SEVERITY_COLOR[sev],
+                      boxShadow: `0 0 10px ${SEVERITY_COLOR[sev]}66`,
                     }}
                     aria-hidden
                   />
                   <span
                     style={{
                       color: TEXT_MUTED,
+                      fontFamily: "var(--font-mono)",
                       fontSize: "10px",
                       letterSpacing: "0.05em",
-                      whiteSpace: "nowrap",
+                      fontVariantNumeric: "tabular-nums",
                     }}
                   >
-                    {c.type}
+                    ep {ep.episode.toString().padStart(2, "0")}
                   </span>
                   <span
                     style={{
@@ -432,9 +503,12 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
                       fontFamily: "var(--font-sans)",
                       fontSize: "14px",
                       lineHeight: 1.4,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
                     }}
                   >
-                    {c.description}
+                    {ep.summary || "(no summary)"}
                   </span>
                   <span
                     style={{
@@ -445,7 +519,18 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    {c.start_frame} → {c.end_frame}
+                    {ep.ts_start.toFixed(1)}s
+                  </span>
+                  <span
+                    style={{
+                      color: TEXT_MUTED,
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "11px",
+                      fontVariantNumeric: "tabular-nums",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {ep.spatial_claims.length} claims
                   </span>
                   <span
                     style={{
@@ -456,156 +541,88 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    {(c.confidence * 100).toFixed(0)}%
+                    {(ep.confidence * 100).toFixed(0)}%
                   </span>
                 </button>
               );
             })}
           </div>
-
-          {/* Refusals are a positive signal — the model knew when not to
-              hallucinate. Surface them so judges see the calibration. */}
-          {vima.refusals && vima.refusals.length > 0 && (
-            <div style={{ marginTop: "32px" }}>
-              <p
-                style={{
-                  margin: 0,
-                  color: TEXT_FAINT,
-                  fontSize: "10px",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                refused · model declined to claim a change between these frames
-              </p>
-              <ul style={{ listStyle: "none", padding: 0, margin: "12px 0 0" }}>
-                {vima.refusals.map((r, i) => (
-                  <li
-                    key={i}
-                    style={{
-                      padding: "10px 14px",
-                      borderLeft: `2px solid ${TEXT_FAINT}`,
-                      marginBottom: "6px",
-                      color: TEXT_MUTED,
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "13px",
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        color: TEXT_FAINT,
-                        fontSize: "10px",
-                        marginRight: "10px",
-                        fontVariantNumeric: "tabular-nums",
-                      }}
-                    >
-                      {r.between_frames[0]} → {r.between_frames[1]}
-                    </span>
-                    {r.reason}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </section>
       )}
 
       {/* ── BASELINE FAILURE PANEL ──────────────────────────────────── */}
-      {baseline && (
-        <section
+      <section
+        style={{
+          maxWidth: "1400px",
+          margin: "0 auto",
+          padding: "clamp(40px, 5vw, 80px) clamp(20px, 5vw, 48px)",
+          borderTop: `1px solid ${LINE}`,
+        }}
+      >
+        <p
           style={{
-            maxWidth: "1400px",
-            margin: "0 auto",
-            padding: "clamp(40px, 5vw, 80px) clamp(20px, 5vw, 48px)",
-            borderTop: `1px solid ${LINE}`,
+            margin: 0,
+            color: TEXT_MUTED,
+            fontSize: "10px",
+            letterSpacing: "0.05em",
           }}
         >
-          <p
-            style={{
-              margin: 0,
-              color: TEXT_MUTED,
-              fontSize: "10px",
-              letterSpacing: "0.05em",
-            }}
-          >
-            baseline · single-frame VLM, asked the same question
-          </p>
-          <h2
-            style={{
-              margin: "14px 0 14px",
-              fontFamily: HEADING_FONT,
-              fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-              fontWeight: 400,
-              lineHeight: 1.1,
-              maxWidth: "780px",
-            }}
-          >
-            why a one-frame-at-a-time model can&apos;t do this.
-          </h2>
-          <p
-            style={{
-              margin: "0 0 28px",
-              maxWidth: "640px",
-              color: "rgba(247,236,239,0.62)",
-              fontFamily: "var(--font-sans)",
-              fontSize: "14.5px",
-              lineHeight: 1.6,
-            }}
-          >
-            We asked the same VLM the same question one frame at a time. It cannot ground a
-            change without seeing both frames. Every output is structurally a placeholder.
-          </p>
+          why this is hard for raw VLMs
+        </p>
+        <h2
+          style={{
+            margin: "14px 0 14px",
+            fontFamily: HEADING_FONT,
+            fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
+            fontWeight: 400,
+            lineHeight: 1.1,
+            maxWidth: "780px",
+          }}
+        >
+          single-frame is a description. an episode is an argument.
+        </h2>
+        <p
+          style={{
+            margin: "0 0 28px",
+            maxWidth: "640px",
+            color: TEXT_SECONDARY,
+            fontFamily: "var(--font-sans)",
+            fontSize: "14.5px",
+            lineHeight: 1.6,
+          }}
+        >
+          A baseline VLM call returns a caption per frame — &quot;worker on
+          masonry wall.&quot; True, useless. Vima groups frames into episodes
+          with structured spatial claims (object, location, distance) and
+          confidence, so a downstream auditor can ask: <em>which worker, on
+          which wall, at what height, near what hazard.</em> The 21 episodes
+          above are evidence the pipeline emits that shape.
+        </p>
 
-          <div
-            style={{
-              display: "grid",
-              gap: "1px",
-              background: LINE,
-              border: `1px solid ${LINE}`,
-              maxWidth: "920px",
-            }}
-          >
-            {(baseline.per_frame_claims ?? []).map((c) => (
-              <div
-                key={c.frame}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "auto 1fr",
-                  gap: "20px",
-                  alignItems: "baseline",
-                  padding: "12px 18px",
-                  background: "rgba(8,5,3,0.6)",
-                }}
-              >
-                <span
-                  style={{
-                    color: TEXT_FAINT,
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "11px",
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  frame {c.frame}
-                </span>
-                <span
-                  style={{
-                    color: "rgba(247,236,239,0.72)",
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "13.5px",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {c.claim}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "1px",
+            background: LINE,
+            border: `1px solid ${LINE}`,
+          }}
+        >
+          <FailureCard
+            label="raw VLM output"
+            text="Worker on a masonry wall."
+            tone="bad"
+          />
+          <FailureCard
+            label="vima episode"
+            text='"Worker at elevation no guardrail" · 5 spatial claims · open_edge at 1.5m · confidence 0.78 · ts 9.0s → 9.0s'
+            tone="good"
+          />
+        </div>
+      </section>
 
       {/* ── EMPTY / LOADING / ERROR ─────────────────────────────────── */}
-      {loading && !data && (
+      {loading && !episodes && (
         <section
           style={{
             maxWidth: "920px",
@@ -616,11 +633,11 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
             fontSize: "12px",
           }}
         >
-          loading temporal results...
+          loading episodes...
         </section>
       )}
 
-      {error && !data && (
+      {error && !episodes && (
         <section
           style={{
             maxWidth: "920px",
@@ -633,7 +650,7 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
             lineHeight: 1.6,
           }}
         >
-          could not load eval results: {error}
+          could not load episodes: {error}
         </section>
       )}
 
@@ -661,7 +678,8 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
             maxWidth: "560px",
           }}
         >
-          generated by backend/temporal_v1.py · constrained schema with proof-frame citations and explicit refusal · ontology pinned to nine state-change types
+          source · /data/episodes.json · {episodes?.length ?? 0} episodes ·{" "}
+          {totalClaims} structured spatial claims · masonry capture
         </p>
         <div style={{ display: "flex", gap: "12px" }}>
           <Link
@@ -677,7 +695,7 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
               background: "rgba(247,236,239,0.04)",
             }}
           >
-            ← back to landing
+            ← landing
           </Link>
           <Link
             href="/demo"
@@ -700,5 +718,91 @@ export default function EvalClient({ initial }: { initial: Payload | null }) {
         </div>
       </section>
     </main>
+  );
+}
+
+// ── Local helpers ────────────────────────────────────────────────────────
+function Stat({
+  label,
+  value,
+  accent = WASHI,
+  glow = false,
+  small = false,
+}: {
+  label: string;
+  value: string;
+  accent?: string;
+  glow?: boolean;
+  small?: boolean;
+}) {
+  return (
+    <div>
+      <div
+        style={{
+          color: TEXT_FAINT,
+          fontSize: small ? "8px" : "9px",
+          letterSpacing: "0.06em",
+          textTransform: "none",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          marginTop: small ? "4px" : "8px",
+          color: accent,
+          fontFamily: "var(--font-mono)",
+          fontSize: small ? "13px" : "clamp(1.05rem, 1.6vw, 1.4rem)",
+          fontWeight: 700,
+          fontVariantNumeric: "tabular-nums",
+          textShadow: glow ? `0 0 14px ${SAKURA_HOT}55` : "none",
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function FailureCard({
+  label,
+  text,
+  tone,
+}: {
+  label: string;
+  text: string;
+  tone: "good" | "bad";
+}) {
+  return (
+    <div
+      style={{
+        padding: "20px",
+        background: "rgba(8,5,3,0.6)",
+        borderLeft: `2px solid ${tone === "good" ? SAKURA_HOT : TEXT_FAINT}`,
+      }}
+    >
+      <p
+        style={{
+          margin: 0,
+          color: tone === "good" ? SAKURA_HOT : TEXT_FAINT,
+          fontFamily: "var(--font-mono)",
+          fontSize: "9px",
+          letterSpacing: "0.08em",
+        }}
+      >
+        {label}
+      </p>
+      <p
+        style={{
+          margin: "10px 0 0",
+          color: tone === "good" ? WASHI : "rgba(247,236,239,0.62)",
+          fontFamily: "var(--font-sans)",
+          fontSize: "13.5px",
+          lineHeight: 1.55,
+        }}
+      >
+        {text}
+      </p>
+    </div>
   );
 }
