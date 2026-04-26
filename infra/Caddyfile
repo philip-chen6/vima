@@ -1,0 +1,55 @@
+# vima production reverse proxy
+# caddy auto-provisions TLS via letsencrypt for any domain whose A record points here.
+
+{
+    email vimahacktech@gmail.com
+}
+
+# meme domain → 301 to primary (keeps the joke, focuses brand)
+thisisthebestdottechdomainnameathack.tech {
+    redir https://vimaspatial.tech{uri} permanent
+}
+
+# www → apex
+www.vimaspatial.tech {
+    redir https://vimaspatial.tech{uri} permanent
+}
+
+# main site
+vimaspatial.tech {
+    encode zstd gzip
+
+    handle /api/* {
+        uri strip_prefix /api
+        reverse_proxy backend:8765
+    }
+
+    handle {
+        reverse_proxy frontend:3000
+    }
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        -Server
+    }
+
+    log {
+        output stdout
+        format console
+    }
+}
+
+# bare-IP / pre-DNS fallback
+:80 {
+    handle /api/* {
+        uri strip_prefix /api
+        reverse_proxy backend:8765
+    }
+    handle {
+        reverse_proxy frontend:3000
+    }
+}

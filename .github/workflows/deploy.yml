@@ -1,0 +1,58 @@
+name: Deploy to Vultr
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Rsync to box
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            --exclude node_modules \
+            --exclude .next \
+            --exclude .venv \
+            --exclude __pycache__ \
+            --exclude .git \
+            --exclude .gstack \
+            --exclude paper \
+            --exclude proof \
+            --exclude demo \
+            --exclude '*.pyc' \
+            --exclude '.DS_Store' \
+            --exclude '.env' \
+            ./ root@${{ secrets.DEPLOY_HOST }}:/opt/vima/
+
+      - name: Build and restart on box
+        run: |
+          ssh -i ~/.ssh/deploy_key root@${{ secrets.DEPLOY_HOST }} 'bash -s' <<'EOF'
+            set -e
+            cd /opt/vima/infra
+            docker compose --env-file ../.env build --parallel
+            docker compose --env-file ../.env up -d --remove-orphans
+
+            echo "waiting for backend..."
+            for i in $(seq 1 30); do
+              if curl -sf http://localhost:8765/health > /dev/null 2>&1; then
+                echo "backend healthy"
+                break
+              fi
+              sleep 2
+            done
+
+            docker system prune -af 2>/dev/null || true
+            docker builder prune -af 2>/dev/null || true
+          EOF

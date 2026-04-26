@@ -1,0 +1,47 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.frontend
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-}
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      NODE_ENV: production
+      BACKEND_URL: http://backend:8765
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.backend
+    restart: unless-stopped
+    expose:
+      - "8765"
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - backend_storage:/app/backend/storage
+
+volumes:
+  caddy_data:
+  caddy_config:
+  backend_storage:
