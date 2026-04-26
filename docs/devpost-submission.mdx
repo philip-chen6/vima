@@ -1,0 +1,147 @@
+---
+title: "Devpost Submission"
+description: "The concise hackathon submission story for Vima."
+---
+
+## Tagline
+
+Spatial memory for egocentric construction video.
+
+## Inspiration
+
+Frontier VLMs can look at construction footage and label objects, but they still
+struggle to understand what happened in space over time.
+
+In real hardhat-style masonry footage, a raw model can usually identify a
+worker, scaffold, or concrete block wall. It gets shakier when the question
+requires temporal memory:
+
+- Was masonry work happening near the wall?
+- What changed between these walkthrough moments?
+- Was the worker productive, contributory, or non-contributory?
+- Where did activity happen on the site?
+
+The failure is not just perception. It is spatial reasoning with memory. Vima
+fixes that by building an auditable evidence layer before asking the VLM to
+answer.
+
+## What It Does
+
+Vima turns egocentric construction footage into structured spatial memory:
+
+- frame-level CII productivity labels: productive, contributory, non-contributory
+- construction object detections
+- optional semantic boxes from Gemini Robotics-ER
+- merged object boxes
+- SAM-style masks
+- depth estimates
+- spatial zones from COLMAP-style pose clustering
+- event episodes with timestamps, frames, tracks, depth facts, and retrieval text
+- cited answers from retrieved memory
+
+In the hosted demo, Vima analyzes real masonry footage and exposes the evidence
+through a dashboard, API, CLI, and MCP server.
+
+## Demo Results
+
+| Metric | Result |
+| --- | ---: |
+| sampled masonry frames | 30 |
+| productive frames | 26 |
+| non-contributory frames | 4 |
+| wrench time | 86.7% |
+| productive-frame mean confidence | 0.939 |
+| frontend temporal episodes | 118 |
+| VLM-only spatial score | 0.600 |
+| VLM + memory spatial score | 0.792 |
+| spatial reasoning lift | +33.2% |
+
+## Why This Fits Ironsite
+
+Ironsite asked for a spatial task where current models fail, a technique that
+improves the model, and a demo on real construction footage.
+
+Vima targets that exact gap. Raw VLMs can recognize construction objects, but
+they hallucinate progress, confuse activity across frames, make weak proximity
+claims, and provide no evidence trail. Vima builds spatial memory first, then
+retrieves supporting episodes before asking the VLM to synthesize a final
+answer.
+
+This is an inference-time augmentation technique. It does not require training a
+new foundation model, and it can sit on top of existing frontier VLMs.
+
+## How We Built It
+
+```text
+hardhat footage
+  -> sampled frames
+  -> object boxes
+  -> optional Gemini Robotics-ER boxes
+  -> box merge
+  -> masks
+  -> depth
+  -> object-event episodic memory
+  -> retrieved evidence
+  -> cited VLM answer
+```
+
+The production-facing system includes:
+
+- a FastAPI evidence API
+- a Next.js dashboard and temporal eval workspace
+- CII productivity classification
+- spatial zone summaries
+- temporal reasoning evals
+- a portable `vima-agent` CLI
+- a hosted streamable HTTP MCP server
+
+## What Makes It Different
+
+Most construction vision demos stop at detection or classification. Vima is
+focused on auditable spatial memory.
+
+Instead of only saying "the worker is doing masonry," Vima can point to the
+supporting episodes, frames, tracks, and spatial facts behind the claim. That
+matters because construction teams do not just need a confident answer. They
+need a checkable one.
+
+## Built With
+
+`Python` `FastAPI` `Next.js` `Gemini` `Gemini Robotics-ER` `Claude Sonnet 4.6`
+`SAM-style segmentation` `Depth Anything` `COLMAP-style spatial zones` `FFmpeg`
+`MCP` `uv` `Solana devnet`
+
+## Try It
+
+Dashboard:
+
+```text
+https://vimaspatial.tech/demo
+```
+
+Temporal eval:
+
+```text
+https://vimaspatial.tech/eval
+```
+
+API checks:
+
+```bash
+curl -s https://vimaspatial.tech/api/cii/summary | jq
+curl -s https://vimaspatial.tech/api/cii/frames | jq 'length'
+curl -s https://vimaspatial.tech/api/spatial/zones | jq
+```
+
+Agent CLI:
+
+```bash
+uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima doctor
+uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima analyze --sample masonry-p --json
+```
+
+MCP:
+
+```text
+https://vimaspatial.tech/mcp
+```

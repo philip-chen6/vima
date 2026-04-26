@@ -32,6 +32,7 @@
         "pages": [
           "docs/overview",
           "docs/quickstart",
+          "docs/devpost-submission",
           "docs/onboarding"
         ]
       },

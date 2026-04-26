@@ -90,6 +90,7 @@ service next to the frontend and backend.
 
 Mintlify docs live in `docs.json` and `docs/*.mdx`. Start with:
 
+- `docs/devpost-submission.mdx`
 - `docs/quickstart.mdx`
 - `docs/onboarding.mdx`
 - `docs/mcp.mdx`
