@@ -1,15 +1,37 @@
-# VIMA — Ironsite Spatial Safety Intelligence
+# VIMA
 
-**HackTech 2026 @ Caltech** | Ironsite Prize ($17,500)
+VIMA is a spatial-intelligence prototype for egocentric construction video.
 
-## What
+The current local demo path is a spatial-memory pipeline: raw hardhat footage is
+too ambiguous for a vision-language model to answer reliably on its own, so VIMA
+first turns frames into auditable memory:
 
-Spatially-anchored worker intelligence and incentive system for egocentric construction video:
-- **P/C/NC classification** (Productive / Contributory / Non-Contributory) per worker via CII standard
-- **COLMAP camera pose clustering** — zone attribution (Near Equipment / Scaffold / Material Staging)
-- **Solana devnet raffle payout** weighted by wrench-time productivity (real SPL transfer, env-gated)
+```text
+Yolodex/Codex labels
+  -> optional Gemini Robotics-ER semantic boxes
+  -> merge boxes by class + IoU
+  -> SAM-style box-prompt masks
+  -> Depth Anything or proxy depth
+  -> object-event episodic memory
+  -> cited Gemini answer from retrieved evidence
+```
 
-Results on 30 frames of real Ironsite masonry footage: **86.7% productive**, mean confidence 0.893.
+The demo question this repo is built around is:
+
+```text
+Was there masonry work happening near the wall?
+```
+
+## Team
+
+Commit history shows four active project contributors:
+
+| Person | Main lanes in this repo |
+| --- | --- |
+| Lucas He | Docs, agent context, paper assets, PR/release coordination |
+| Stephen Hung | Product flow, frontend polish, proof/eval/demo fixes |
+| Philip Chen | Spatial-memory backend, Robotics fusion, dashboard, paper/artifact packaging |
+| Joshua Lin | Mobile app, swipe deck, screenshots, brand and app polish |
 
 ## For Judges
 
@@ -18,7 +40,7 @@ Live verification:
 - Dashboard: https://vimaspatial.tech/demo
 - Temporal eval: https://vimaspatial.tech/eval
 
-Check the numbers directly from the deployed API:
+Check deployed API numbers directly:
 
 ```bash
 curl -s https://vimaspatial.tech/api/cii/summary | jq
@@ -26,32 +48,56 @@ curl -s https://vimaspatial.tech/api/cii/frames | jq 'length'
 curl -s https://vimaspatial.tech/api/spatial/zones | jq
 ```
 
-Expected headline values: 30 frames, 86.7% wrench time, 0.893 mean confidence,
-and 118 temporal episodes in the eval workspace.
+Expected hosted-demo values: 30 frames, 86.7% wrench time, 0.893 mean
+confidence, and 118 temporal episodes in the eval workspace.
 
-## Team
+## Quickstart
 
-- **Joshua** — CII classifier, backend, COLMAP spatial layer
-- **Philip** — Solana raffle, frontend
+From the repo root, print the complete wrapped spatial-memory pipeline without
+writing files:
 
-## Stack
+```bash
+python3 backend/vima_cli.py run \
+  "Was there masonry work happening near the wall?" \
+  --use-robotics \
+  --merge-dry-run \
+  --dry-run
+```
 
-| Layer | Tech |
-|-------|------|
-| Backend API | FastAPI + uvicorn (port 8765) |
-| Agent MCP | FastMCP streamable HTTP (port 8766) |
-| AI judge | Claude Sonnet 4.6 (Anthropic SDK) |
-| Frame extraction | ffmpeg |
-| Spatial reconstruction | COLMAP (K=3 zone simulation; production: registered camera poses) |
-| Payout | Solana devnet SPL (real transfer with SOLANA_PAYER_KEYPAIR set) |
+Answer from the bundled episodic-memory artifact:
 
-## Running
+```bash
+python3 backend/vima_cli.py ask \
+  "Was there masonry work happening near the wall?"
+```
+
+`ask` uses Gemini by default and falls back to the local heuristic answer if a
+Gemini key is not available. For live Gemini calls, copy `.env.example` to
+`.env` and set either `GEMINI_API_KEY` or `GOOGLE_API_KEY`.
+
+## Hosted API
+
+Run the FastAPI backend locally:
 
 ```bash
 cd backend
 uv run api.py
-# → http://localhost:8765
+# -> http://localhost:8765
 ```
+
+Important deployed endpoints:
+
+- `GET /health` - status check
+- `POST /analyze/frame` - upload JPG, get CII classification and spatial JSON
+- `POST /analyze/timestamp?timestamp=30.0` - analyze from video at timestamp
+- `POST /analyze/batch` - batch events
+- `GET /demo` - masonry-footage events when the source video is present
+- `GET /cii/summary` - wrench-time summary
+- `GET /cii/frames` - per-frame classifications
+- `GET /spatial/zones` - zone attribution with spatial narrative
+- `GET /eval` - cached or live temporal evidence with proof-frame citations
+- `POST /temporal/run?n=8` - live temporal reasoning, cooldown protected
+- `GET /temporal/frame/{frame_index}` - frame files referenced by `/eval`
 
 ## Agent CLI
 
@@ -70,7 +116,7 @@ VIMA_API_URL=http://localhost:8765 uvx --from "git+https://github.com/philip-che
 ```
 
 The package source lives in `packages/vima-agent/`. It is intentionally a thin
-HTTP client around the deployed API, not a wrapper around the local SAM/depth/
+HTTP client around the deployed API, not a wrapper around the local SAM/depth
 memory pipeline.
 
 ## Agent MCP
@@ -96,72 +142,72 @@ Mintlify docs live in `docs.json` and `docs/*.mdx`. Start with:
 - `docs/mcp.mdx`
 - `docs/cicd.mdx`
 
-CI runs a docs-drift check whenever the public api, cli, mcp server, or routing
+CI runs a docs-drift check whenever the public API, CLI, MCP server, or routing
 changes. The report-only agent prompt for docs updates lives at
 `docs/AGENT_DOCS_AUDIT.md`.
 
-## Object Memory Stage
+## Important Paths
 
-The repo vendors Yolodex collect/label/preview scripts under `tools/yolodex/`
-for the detector stage only. No YOLO training is required.
+Most code that matters for the spatial-memory pipeline lives in `backend/`.
+Important demo artifacts still live in `demo/`:
 
-See `docs/YOLODEX_MEMORY.md` for:
+- `demo/gemini_robotics_boxes.json`
+- `demo/mask_track_memory.json`
+- `demo/depth_track_memory.json`
+- `demo/episodic_memory.json`
+- `demo/memory_answer_gemini.json`
+
+The default hardhat run directory is:
 
 ```text
-hardhat video -> sampled frames -> bounding boxes -> object-event memory
+tools/yolodex/runs/vima-hardhat
 ```
 
-The next perception layer turns those boxes into mask tracks:
+Some checkouts only include derived `demo/` artifacts and dashboard sample
+assets, not the full Yolodex run directory. Commands that rebuild masks, depth,
+or exports need that run directory to exist.
+
+## Core Commands
+
+Run only Gemini Robotics-ER boxes for one frame:
 
 ```bash
-python3 backend/mask_track_memory.py \
+python3 backend/vima_cli.py robotics-boxes \
+  --image tools/yolodex/runs/vima-hardhat/frames/frame_000001.jpg
+```
+
+Dry-run a Robotics-ER merge into YOLO labels:
+
+```bash
+python3 backend/vima_cli.py merge-boxes --merge-dry-run
+```
+
+Build mask tracks, depth memory, and episodic memory from an existing labeled
+Yolodex run:
+
+```bash
+python3 backend/vima_cli.py memory \
   --run-dir tools/yolodex/runs/vima-hardhat \
-  --out demo/mask_track_memory.json \
-  --fps 0.1
-```
-
-This writes persistent track IDs, prompt masks, relation events, and a local
-mask-track preview under `tools/yolodex/runs/vima-hardhat/`.
-
-Compile the final object-event episodic memory:
-
-```bash
-python3 backend/episodic_memory.py \
-  --input demo/depth_track_memory.json \
-  --out demo/episodic_memory.json \
+  --depth-backend auto \
   --query "worker laying blocks near wall"
 ```
 
-This emits compact episodes with time ranges, evidence frames, object tracks,
-depth facts, and retrieval text for downstream VLM synthesis.
-
-Answer a natural-language question from the retrieved memory:
+Use the deterministic proxy-depth backend when model weights are unavailable:
 
 ```bash
-python3 backend/answer_from_memory.py \
-  --query "Was there masonry work happening near the wall?" \
-  --provider gemini \
-  --timeout-s 12 \
-  --out demo/memory_answer_gemini.json
+python3 backend/vima_cli.py memory \
+  --run-dir tools/yolodex/runs/vima-hardhat \
+  --depth-backend proxy
 ```
 
-The answer layer retrieves compact episodes first, then asks the VLM to synthesize
-from cited evidence. Gemini uses direct REST by default so demos do not hang on
-the legacy SDK transport. For an open-model comparison, use the optional Qwen-VL
-probe in `backend/qwen_frame_qa.py` after installing the Qwen dependencies.
-
-Package a teammate/judge share bundle:
+Package a shareable artifact bundle:
 
 ```bash
 python3 backend/vima_cli.py export --name vima_share --limit 12
 ```
 
-This writes `artifacts/vima_share.zip` with a subset of frames, YOLO labels,
-SAM masks, depth maps, preview videos, memory JSON, final answer JSON, and a
-manifest. Keep big artifacts out of git; upload the zip to Drive, Slack, or a
-GitHub Release.
-
-Run a full video from extraction through share bundle:
+Run a full video through Yolodex collection, labeling, memory, answer, and
+export:
 
 ```bash
 scripts/run_full_video.sh data/video01.mp4 vima-full \
@@ -169,40 +215,83 @@ scripts/run_full_video.sh data/video01.mp4 vima-full \
   0.1 gemini
 ```
 
-## API
+## Dashboard
 
-- `GET /health` — status check
-- `POST /analyze/frame` — upload JPG, get CII classification + spatial JSON
-- `POST /analyze/timestamp?timestamp=30.0` — analyze from video at timestamp
-- `POST /analyze/batch` — batch events
-- `GET /demo` — 5 events from masonry footage when the source video is present
-- `GET /cii/summary` — wrench-time summary (P/C/NC counts + raffle tickets)
-- `GET /cii/frames` — full per-frame classifications
-- `GET /spatial/zones` — zone attribution with spatial narrative
-- `GET /eval` — cached or live temporal evidence with proof-frame citations
-- `POST /temporal/run?n=8` — live temporal reasoning, cooldown protected
-- `GET /temporal/frame/{frame_index}` — frame files referenced by `/eval`
+The standalone dashboard is the quickest way to inspect the current sample run:
 
-## Demo Output Shape
-
-```json
-{
-  "pnc": "NC",
-  "activity": "Masonry work at elevation",
-  "spatial_claims": [{"object": "worker", "location": "...", "distance_m": 1.8}],
-  "violation_flags": [{"rule": "OSHA 1926.502(b)", "severity": "high", "evidence": "..."}],
-  "confidence": 0.82,
-  "reasoning": "...",
-  "event_id": "NC event candidate 15.0s",
-  "timestamp_s": 15.0
-}
+```bash
+python3 -m http.server 8787 --directory dashboard
 ```
+
+Open `http://localhost:8787`. It shows the sample frame, mask/depth previews,
+retrieved episodes, and answer artifact without touching the Next.js frontend.
+
+## Evaluation
+
+The tiny eval compares raw Gemini frame answers against memory-augmented answers
+for the questions in `configs/eval_questions.json`:
+
+```bash
+python3 backend/eval_memory.py --limit 5
+```
+
+Outputs:
+
+- `demo/eval_results.json`
+- `docs/eval_results.md`
+
+This is a lightweight sanity check for demo and paper examples, not a benchmark.
+
+## Repo Map
+
+| Path | Purpose |
+| --- | --- |
+| `backend/vima_cli.py` | Main wrapper for the VIMA memory pipeline |
+| `backend/gemini_robotics_boxes.py` | Gemini Robotics-ER semantic boxes |
+| `backend/merge_robotics_boxes.py` | Class + IoU merge into YOLO labels |
+| `backend/mask_track_memory.py` | Box-prompt masks and persistent tracks |
+| `backend/depth_memory.py` | Depth Anything or proxy depth over tracks |
+| `backend/episodic_memory.py` | Object-event episodes for retrieval |
+| `backend/answer_from_memory.py` | Cited answer from retrieved episodes |
+| `backend/eval_memory.py` | Tiny raw-frame vs memory eval |
+| `dashboard/` | Static sample dashboard |
+| `frontend/` | Next.js product/marketing frontend |
+| `packages/vima-agent/` | Hosted API CLI package |
+| `packages/vima-mcp/` | Hosted API MCP server |
+| `paper/` | Mini-paper source and figures |
+| `tools/yolodex/` | Vendored frame collection and labeling tools |
+
+## Python Setup
+
+The scripts are plain Python entry points. A fresh machine should have Python
+3.11+ and the lightweight image/data dependencies available:
+
+```bash
+python3 -m pip install pillow numpy
+```
+
+Optional model-backed stages need additional packages and downloaded weights:
+
+- SAM mask backend: `torch`, `transformers`, `facebook/sam-vit-base`
+- Depth Anything backend: `torch`, `transformers`,
+  `depth-anything/Depth-Anything-V2-Small-hf`
+- Gemini legacy SDK path: `google-generativeai`
+
+The REST Gemini path only needs an API key.
+
+## Current Caveats
+
+- The local Qwen-VL harness is in `backend/qwen_frame_qa.py`, but model
+  downloads stalled on this machine. Do not depend on Qwen for demo-critical
+  flow.
+- Generated JSON artifacts may reference historical timestamps and sample
+  labels. Treat them as demo artifacts, not final benchmark results.
+- Older FastAPI, CII, raffle, and Solana files still exist in the repo from a
+  previous product direction. The active local demo path is the spatial-memory
+  pipeline above.
+- The project name is VIMA. Do not add new VINNA references.
 
 ## Credits
 
-VIMA is a Hacktech 2026 Spatial Intelligence Track submission by:
-
-- Philip Chen
-- Joshua Lin
-- Stephen Hung
-- Lucas He
+VIMA is a Hacktech 2026 Spatial Intelligence Track submission by Lucas He,
+Stephen Hung, Philip Chen, and Joshua Lin.
