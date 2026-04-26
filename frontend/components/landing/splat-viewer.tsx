@@ -56,8 +56,37 @@ export function SplatViewer({
   const [status, setStatus] = useState<"loading" | "ready" | "error" | "missing">("loading");
   const [error, setError] = useState<string | null>(null);
   const [splatCount, setSplatCount] = useState<number | null>(null);
+  // Intersection gate — defer init() until the viewer is in (or near) the
+  // viewport. The 5MB splat download + three.js parse otherwise hits the
+  // critical path even though the section sits two scroll-pages down.
+  const [shouldInit, setShouldInit] = useState(false);
 
   useEffect(() => {
+    if (!containerRef.current || shouldInit) return;
+    const el = containerRef.current;
+    if (typeof IntersectionObserver === "undefined") {
+      // SSR or ancient browser — skip the gate, init immediately.
+      setShouldInit(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setShouldInit(true);
+            obs.disconnect();
+            return;
+          }
+        }
+      },
+      { rootMargin: "400px 0px" }, // start ~half a viewport early
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [shouldInit]);
+
+  useEffect(() => {
+    if (!shouldInit) return;
     let cancelled = false;
     let viewer: any = null;
 
@@ -140,7 +169,7 @@ export function SplatViewer({
         // ignore — disposal during unmount is best-effort
       }
     };
-  }, [src]);
+  }, [src, shouldInit]);
 
   // Imperative camera pose snap. Whenever cameraPose changes (e.g. user
   // clicks a frustum in the COLMAP viewer), warp the splat's camera to
