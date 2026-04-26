@@ -35,6 +35,32 @@ type FrameManifest = {
   timestamp_s: number;
 };
 
+type InferenceSegment = {
+  id: number;
+  score: number;
+  area_frac: number;
+  bbox_px: [number, number, number, number];
+};
+
+type InferenceEntry = {
+  frame_id: string;
+  filename: string;
+  timestamp_s: number;
+  depth: {
+    url: string;
+    depth_min: number;
+    depth_max: number;
+    depth_mean: number;
+    shape: [number, number];
+  };
+  mask: {
+    url: string;
+    n_masks: number;
+    shape: [number, number];
+    segments?: InferenceSegment[];
+  };
+};
+
 type ReviewStatus = "pending" | "accepted" | "rejected" | "skipped";
 
 const INK = "#080503";
@@ -96,58 +122,76 @@ function summarizeObject(claims: SpatialClaim[]) {
   return names.join(" · ");
 }
 
-function claimBox(claim: SpatialClaim, index: number) {
-  const text = `${claim.object} ${claim.location}`.toLowerCase();
-  const presets = [
-    { x: 56, y: 18, w: 24, h: 30 },
-    { x: 23, y: 22, w: 27, h: 24 },
-    { x: 42, y: 34, w: 30, h: 16 },
-    { x: 12, y: 31, w: 22, h: 18 },
-  ];
-  const base = presets[index % presets.length];
-
-  if (text.includes("wall")) return { ...base, x: 52, y: 12, w: 30, h: 34 };
-  if (text.includes("ground") || text.includes("floor")) return { ...base, x: 18, y: 42, w: 58, h: 11 };
-  if (text.includes("worker") || text.includes("person")) return { ...base, x: 31, y: 16, w: 18, h: 32 };
-  if (text.includes("wrench") || text.includes("tool")) return { ...base, x: 57, y: 36, w: 18, h: 10 };
-  if (text.includes("guardrail") || text.includes("edge")) return { ...base, x: 8, y: 28, w: 82, h: 10 };
-
-  return base;
-}
-
 function ProcessedEvidenceOverlay({
   episode,
   status,
+  inference,
 }: {
   episode: Episode;
   status: ReviewStatus;
+  inference: InferenceEntry | null;
 }) {
   const severity = inferSeverity(episode);
   const accent = severityColor(severity);
-  const visibleClaims = episode.spatial_claims.slice(0, 4);
+  const segments = (inference?.mask.segments ?? [])
+    .slice()
+    .sort((a, b) => b.score * b.area_frac - a.score * a.area_frac)
+    .slice(0, 5);
+  const [shapeH = 480, shapeW = 640] = inference?.mask.shape ?? [480, 640];
   const statusText = status === "pending" ? "needs review" : status;
 
   return (
     <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-      <svg viewBox="0 0 100 56.25" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
+      {inference && (
+        <>
+          <img
+            src={inference.depth.url}
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.42,
+              mixBlendMode: "screen",
+            }}
+          />
+          <img
+            src={inference.mask.url}
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.78,
+            }}
+          />
+        </>
+      )}
+
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
         <defs>
           <pattern id="review-grid" width="6" height="6" patternUnits="userSpaceOnUse">
             <path d="M 6 0 L 0 0 0 6" fill="none" stroke="rgba(247,236,239,0.14)" strokeWidth="0.15" />
           </pattern>
-          <linearGradient id="review-mask" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={SAKURA_HOT} stopOpacity="0.28" />
-            <stop offset="100%" stopColor={SAKURA} stopOpacity="0.08" />
-          </linearGradient>
         </defs>
-        <rect x="0" y="0" width="100" height="56.25" fill="url(#review-grid)" opacity="0.7" />
-        <path d="M0 43 C18 38 25 49 41 43 S70 35 100 40 L100 56.25 L0 56.25Z" fill="url(#review-mask)" opacity="0.46" />
-        <path d="M5 10 H95 M5 28.1 H95 M5 46 H95" stroke="rgba(242,167,184,0.22)" strokeWidth="0.2" strokeDasharray="1.2 1.8" />
-        {visibleClaims.map((claim, index) => {
-          const box = claimBox(claim, index);
+        <rect x="0" y="0" width="100" height="100" fill="url(#review-grid)" opacity="0.55" />
+        <path d="M5 18 H95 M5 50 H95 M5 82 H95" stroke="rgba(242,167,184,0.20)" strokeWidth="0.22" strokeDasharray="1.2 1.8" />
+        {segments.map((segment, index) => {
+          const [x0, y0, x1, y1] = segment.bbox_px;
+          const box = {
+            x: (x0 / shapeW) * 100,
+            y: (y0 / shapeH) * 100,
+            w: ((x1 - x0) / shapeW) * 100,
+            h: ((y1 - y0) / shapeH) * 100,
+          };
           const stroke = index === 0 ? accent : SAKURA_HOT;
           const labelY = box.y > 8 ? box.y - 1.8 : box.y + box.h + 3.2;
           return (
-            <g key={`${claim.object}-${claim.location}-${index}`}>
+            <g key={`${segment.id}-${index}`}>
               <rect
                 x={box.x}
                 y={box.y}
@@ -176,7 +220,7 @@ function ProcessedEvidenceOverlay({
                 letterSpacing="0.04"
                 style={{ paintOrder: "stroke", stroke: INK, strokeWidth: 0.7 }}
               >
-                {claim.object.slice(0, 18)}
+                {`sam segment ${segment.id}`}
               </text>
             </g>
           );
@@ -214,7 +258,9 @@ function ProcessedEvidenceOverlay({
         }}
       >
         <span style={{ color: accent }}>{statusText}</span>
-        <span style={{ color: TEXT_MUTED }}>{visibleClaims.length} overlays · {(episode.confidence * 100).toFixed(0)}%</span>
+        <span style={{ color: TEXT_MUTED }}>
+          {inference ? `${inference.mask.n_masks} sam masks · depth μ ${inference.depth.depth_mean.toFixed(1)}` : "processing assets unavailable"}
+        </span>
       </div>
 
       <div
@@ -228,7 +274,7 @@ function ProcessedEvidenceOverlay({
           flexWrap: "wrap",
         }}
       >
-        {["source frame", "depth pass", "mask pass", "claim eval"].map((label, index) => (
+        {["source frame", inference ? "real depth" : "no depth", inference ? "real sam mask" : "no sam mask", "human eval"].map((label, index) => (
           <span
             key={label}
             style={{
@@ -322,6 +368,7 @@ export default function ReviewClient({
 }) {
   const [episodes, setEpisodes] = useState<Episode[]>(initialEpisodes);
   const [manifest, setManifest] = useState<FrameManifest[]>(initialManifest);
+  const [inferenceManifest, setInferenceManifest] = useState<InferenceEntry[]>([]);
   const [activeEpisodeId, setActiveEpisodeId] = useState<number | null>(initialEpisodes[0]?.episode ?? null);
   const [reviewState, setReviewState] = useState<Record<number, ReviewStatus>>({});
   const [loaded, setLoaded] = useState(initialEpisodes.length > 0);
@@ -350,6 +397,21 @@ export default function ReviewClient({
   }, [initialEpisodes.length, initialManifest.length]);
 
   useEffect(() => {
+    let cancelled = false;
+    fetch("/inference/manifest.json", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((rows: InferenceEntry[]) => {
+        if (!cancelled) setInferenceManifest(rows);
+      })
+      .catch(() => {
+        if (!cancelled) setInferenceManifest([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
     const raw = window.localStorage.getItem("vima-review-state");
     if (!raw) return;
     try {
@@ -368,6 +430,10 @@ export default function ReviewClient({
     [activeEpisodeId, episodes],
   );
   const activeFrame = activeEpisode ? closestFrame(activeEpisode.ts_start, manifest) : null;
+  const activeInference = useMemo(
+    () => inferenceManifest.find((entry) => entry.filename === activeFrame?.filename) ?? null,
+    [activeFrame?.filename, inferenceManifest],
+  );
   const bracket = activeEpisode ? bracketFrames(activeEpisode.ts_start, manifest) : null;
 
   const counts = useMemo(() => {
@@ -644,7 +710,9 @@ export default function ReviewClient({
             <div
               style={{
                 position: "relative",
-                aspectRatio: "16 / 9",
+                aspectRatio: activeInference
+                  ? `${activeInference.mask.shape[1]} / ${activeInference.mask.shape[0]}`
+                  : "16 / 9",
                 border: `1px solid ${LINE}`,
                 overflow: "hidden",
                 background: "#000",
@@ -665,6 +733,7 @@ export default function ReviewClient({
                 <ProcessedEvidenceOverlay
                   episode={activeEpisode}
                   status={reviewState[activeEpisode.episode] ?? "pending"}
+                  inference={activeInference}
                 />
               )}
               <div

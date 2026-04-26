@@ -1,6 +1,6 @@
 # lessons
 
-- review/eval surfaces need visible processing artifacts on the evidence itself. if a frame is being judged, put bbox/mask/depth/claim state directly over the image, not only in adjacent prose or side panels.
+- review/eval surfaces need visible processing artifacts on the evidence itself, but never fake them. use real depth/mask/bbox artifacts when they exist, and explicitly say unavailable when they do not.
 - for mintlify docs, do not apply the vima lowercase-fragment rule to page titles, card titles, table headers, or body prose. keep the `v i m a.` wordmark and tiny nav labels lowercase if intentional, but docs should read professionally with normal title/sentence case.
 - when the user asks for svg/tab treatment in a sidebar, treat "tabs" literally: enhance the navigation items with per-tab svg icons and labels, not the destination section headers.
 - when the user asks for a useful shippable artifact and the scope is within reach, ship the artifact instead of stopping at a strategic plan. research should feed implementation, not replace it.
