@@ -512,6 +512,12 @@ export default function DemoClient({
         <LiveFrameAnalyzer />
       </section>
 
+      {/* ── DEPTH-DELTA FILTER ACTIVITY ─────────────────────────────
+          The pre-pass that drops frame pairs whose depth-delta RMSE
+          exceeds threshold. Paper claims 57% drop rate; current run is
+          39/59 = 66%. Reads /data/depth-filter-log.json directly. */}
+      <DepthFilterPanel />
+
       {/* ── 3D RECONSTRUCTION ─────────────────────────────────────────
           The COLMAP sparse cloud from the masonry video — the same 1770
           vertices the paper benchmarks at 1.199px reprojection error.
@@ -987,5 +993,278 @@ export default function DemoClient({
         }
       `}</style>
     </main>
+  );
+}
+
+// ── DepthFilterPanel ─────────────────────────────────────────────────────
+// Renders the depth-delta filter log as a live activity feed. Each row is
+// one frame pair the filter examined, with RMSE-style decision (passed /
+// dropped) + reason. Aggregate metrics float at top.
+
+type DepthRow = {
+  frame_a: string;
+  frame_b: string;
+  ts_a: number;
+  ts_b: number;
+  n_points_a: number | null;
+  n_points_b: number | null;
+  dropped: boolean;
+  reason: string;
+};
+
+function DepthFilterPanel() {
+  const [rows, setRows] = useState<DepthRow[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/data/depth-filter-log.json", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.statusText))))
+      .then((d) => !cancelled && setRows(d))
+      .catch((e) => !cancelled && setError(String(e)));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const aggregate = useMemo(() => {
+    if (!rows || rows.length === 0) return null;
+    const dropped = rows.filter((r) => r.dropped).length;
+    const passed = rows.length - dropped;
+    return {
+      total: rows.length,
+      dropped,
+      passed,
+      pct: ((dropped / rows.length) * 100).toFixed(0),
+    };
+  }, [rows]);
+
+  return (
+    <section
+      style={{
+        maxWidth: "1400px",
+        margin: "0 auto",
+        padding: "clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px)",
+        borderTop: `1px solid ${LINE}`,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          justifyContent: "space-between",
+          gap: "16px",
+          flexWrap: "wrap",
+          marginBottom: "20px",
+        }}
+      >
+        <div>
+          <p
+            style={{
+              margin: 0,
+              color: TEXT_MUTED,
+              fontSize: "10px",
+              letterSpacing: "0.05em",
+            }}
+          >
+            depth-delta filter · pre-pass activity log
+          </p>
+          <h2
+            style={{
+              margin: "12px 0 0",
+              fontFamily: HEADING_FONT,
+              fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
+              fontWeight: 400,
+              lineHeight: 1,
+              letterSpacing: 0,
+            }}
+          >
+            half the frames never reach the model.
+          </h2>
+        </div>
+        {aggregate && (
+          <div style={{ display: "flex", gap: "clamp(18px, 3vw, 36px)" }}>
+            <div>
+              <p style={{ margin: 0, color: TEXT_FAINT, fontSize: "9px", letterSpacing: "0.06em" }}>
+                examined
+              </p>
+              <p
+                style={{
+                  margin: "4px 0 0",
+                  color: WASHI,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "clamp(1.05rem, 1.4vw, 1.35rem)",
+                  fontVariantNumeric: "tabular-nums",
+                  fontWeight: 700,
+                }}
+              >
+                {aggregate.total}
+              </p>
+            </div>
+            <div>
+              <p style={{ margin: 0, color: TEXT_FAINT, fontSize: "9px", letterSpacing: "0.06em" }}>
+                dropped
+              </p>
+              <p
+                style={{
+                  margin: "4px 0 0",
+                  color: SAKURA_HOT,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "clamp(1.05rem, 1.4vw, 1.35rem)",
+                  fontVariantNumeric: "tabular-nums",
+                  fontWeight: 700,
+                  textShadow: `0 0 14px ${SAKURA_HOT}55`,
+                }}
+              >
+                {aggregate.dropped} ({aggregate.pct}%)
+              </p>
+            </div>
+            <div>
+              <p style={{ margin: 0, color: TEXT_FAINT, fontSize: "9px", letterSpacing: "0.06em" }}>
+                passed
+              </p>
+              <p
+                style={{
+                  margin: "4px 0 0",
+                  color: WASHI,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "clamp(1.05rem, 1.4vw, 1.35rem)",
+                  fontVariantNumeric: "tabular-nums",
+                  fontWeight: 700,
+                }}
+              >
+                {aggregate.passed}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {error && (
+        <p style={{ margin: 0, color: RED, fontSize: "11px", fontFamily: "var(--font-mono)" }}>
+          could not load depth filter log: {error}
+        </p>
+      )}
+
+      {rows && (
+        <div
+          style={{
+            border: `1px solid ${LINE}`,
+            background: "linear-gradient(180deg, rgba(247,236,239,0.025), rgba(8,5,3,0.40))",
+            maxHeight: "360px",
+            overflowY: "auto",
+          }}
+        >
+          {/* header */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "70px 90px minmax(0, 1fr) 90px 80px",
+              gap: "clamp(10px, 1.4vw, 18px)",
+              padding: "12px clamp(14px, 1.6vw, 22px)",
+              borderBottom: `1px solid ${LINE}`,
+              color: TEXT_FAINT,
+              fontSize: "9px",
+              letterSpacing: "0.06em",
+              position: "sticky",
+              top: 0,
+              background: "rgba(8,5,3,0.92)",
+              backdropFilter: "blur(8px)",
+              zIndex: 1,
+            }}
+          >
+            <span>pair</span>
+            <span>ts a → ts b</span>
+            <span>reason</span>
+            <span style={{ textAlign: "right" }}>points</span>
+            <span style={{ textAlign: "right" }}>state</span>
+          </div>
+          {rows.map((r, i) => (
+            <div
+              key={`${r.frame_a}-${r.frame_b}`}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "70px 90px minmax(0, 1fr) 90px 80px",
+                gap: "clamp(10px, 1.4vw, 18px)",
+                alignItems: "center",
+                padding: "8px clamp(14px, 1.6vw, 22px)",
+                borderTop: i === 0 ? "0" : `1px solid rgba(242,167,184,0.08)`,
+                background: i % 2 === 1 ? "rgba(247,236,239,0.013)" : "transparent",
+                opacity: r.dropped ? 0.62 : 1,
+              }}
+            >
+              <span
+                style={{
+                  color: TEXT_FAINT,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                #{(i + 1).toString().padStart(2, "0")}
+              </span>
+              <span
+                style={{
+                  color: WASHI,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                {r.ts_a.toFixed(1)} → {r.ts_b.toFixed(1)}s
+              </span>
+              <span
+                style={{
+                  color: r.dropped ? TEXT_MUTED : TEXT_SECONDARY,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "11px",
+                  letterSpacing: "0.04em",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {r.reason}
+              </span>
+              <span
+                style={{
+                  color: TEXT_MUTED,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  fontVariantNumeric: "tabular-nums",
+                  textAlign: "right",
+                }}
+              >
+                {r.n_points_a ?? "—"} / {r.n_points_b ?? "—"}
+              </span>
+              <span
+                style={{
+                  color: r.dropped ? RED : SAKURA_HOT,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  letterSpacing: "0.06em",
+                  textAlign: "right",
+                }}
+              >
+                {r.dropped ? "DROP" : "PASS"}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+      <p
+        style={{
+          margin: "10px 0 0",
+          color: TEXT_FAINT,
+          fontSize: "9px",
+          letterSpacing: "0.05em",
+          fontFamily: "var(--font-mono)",
+        }}
+      >
+        source · /data/depth-filter-log.json · paper claims 57% drop rate, this run shows{" "}
+        {aggregate ? `${aggregate.pct}%` : "—"}
+      </p>
+    </section>
   );
 }

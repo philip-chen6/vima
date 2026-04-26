@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Upload, ImagePlus, AlertTriangle } from "lucide-react";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -58,6 +58,28 @@ export function LiveFrameAnalyzer() {
   const [elapsed, setElapsed] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const elapsedTimer = useRef<number | null>(null);
+  // Track every blob: URL we mint so we can revoke them. Without this we
+  // leak one ObjectURL per upload, and iOS Safari caps these per-tab.
+  const blobUrlsRef = useRef<Set<string>>(new Set());
+
+  // Revoke a blob URL we created earlier. No-op for sample frames (which
+  // are static /vima-yozakura-frames/ paths, not blob: URLs).
+  const revokeBlob = useCallback((url: string | null) => {
+    if (!url) return;
+    if (!url.startsWith("blob:")) return;
+    if (!blobUrlsRef.current.has(url)) return;
+    URL.revokeObjectURL(url);
+    blobUrlsRef.current.delete(url);
+  }, []);
+
+  // On unmount, revoke every leftover blob URL.
+  useEffect(() => {
+    const created = blobUrlsRef.current;
+    return () => {
+      for (const u of created) URL.revokeObjectURL(u);
+      created.clear();
+    };
+  }, []);
 
   const startTimer = useCallback(() => {
     setElapsed(0);

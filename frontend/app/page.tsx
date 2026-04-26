@@ -29,47 +29,49 @@ const RED = "#ef476f";
 const HEADING_FONT = '"Times New Roman", Times, serif';
 const HEADING_GRADIENT = ["#f7ecef", "#f2a7b8", "#f7ecef"];
 
+// Sourced directly from backend/cii-results.json. Every row below is a
+// real frame the model classified — labels, timestamps, confidences, and
+// activities are not edited. The 4 rows below are picks at i=0, 10, 20, 24
+// in the 30-frame run (so they span the full 0-1233s timeline including
+// the one NC frame the run actually emitted).
 const ledgerReceipts = [
   {
     id: "f-000",
-    time: "00.0s",
+    time: "0.0s",
     label: "P",
-    claim: "block alignment",
+    claim: "laying concrete blocks",
     zone: "zone a",
     confidence: "0.95",
     status: "settles",
     weight: "1.00x",
   },
   {
-    id: "f-183",
-    time: "183.2s",
-    // Real cii-results has only P + NC categories (the model didn't emit any
-    // C labels in this run). Keeping the row as a P with a different
-    // activity so the ledger reads as the real 26P/4NC distribution.
+    id: "f-010",
+    time: "425.3s",
     label: "P",
-    claim: "scaffold transition",
+    claim: "laying concrete on site",
     zone: "zone b",
-    confidence: "0.91",
+    confidence: "0.95",
     status: "settles",
     weight: "1.00x",
   },
   {
-    id: "f-808",
-    time: "808.1s",
+    id: "f-024",
+    time: "1020.8s",
     label: "NC",
-    claim: "idle walking",
-    zone: "zone b",
-    confidence: "0.82",
+    claim: "no workers visible",
+    zone: "zone c",
+    confidence: "0.99",
     status: "blocked",
     weight: "0.00x",
   },
   {
-    id: "f-1234",
-    time: "1234.0s",
+    id: "f-029",
+    time: "1233.5s",
     label: "P",
-    claim: "site setup",
+    claim: "laying concrete blocks",
     zone: "zone c",
-    confidence: "0.91",
+    confidence: "0.95",
     status: "settles",
     weight: "1.00x",
   },
@@ -96,7 +98,7 @@ const confidenceSeries = ledgerReceipts.map((frame) => ({
 
 const footerLinks = [
   { label: "devpost", href: "https://devpost.com/software/vima", icon: Trophy, external: true },
-  { label: "source", href: "https://github.com/philip-chen6/vinna", icon: Code2, external: true },
+  { label: "source", href: "https://github.com/philip-chen6/vima", icon: Code2, external: true },
   { label: "paper", href: "/paper.pdf", icon: FileText, external: false },
 ] as const;
 
