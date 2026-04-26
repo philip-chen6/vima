@@ -5,3 +5,9 @@ __pycache__/
 *.pyc
 tools/yolodex/runs/
 tools/yolodex/output/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+missfont.log
