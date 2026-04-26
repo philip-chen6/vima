@@ -12,7 +12,9 @@ generator. Three layers, each measurably moves the needle on the eval harness:
 3) Self-consistency check — the model first emits a draft claim, then is
    asked to challenge its own confidence in a single follow-up turn. Final
    confidence is the mean of draft + challenge confidences. Damps overconfidence
-   on edge cases without doubling latency.
+   on edge cases. Costs one extra Anthropic round-trip (~+1s on Sonnet),
+   so the live `/api/analyze/frame` endpoint disables it by default and
+   only the offline eval harness opts in.
 
 This is what /api/analyze/frame uses by default. The "raw" baseline used by
 the eval harness is exposed via baseline_prompt() for direct comparison.

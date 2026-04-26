@@ -151,33 +151,87 @@ def analyze_timestamp(
     event_id: str = "NC event candidate",
     cloud_path: str | None = None,
 ):
-    """Extract frame from the configured video at timestamp, run analysis."""
+    """Extract frame from the configured video at timestamp, run analysis.
+
+    Adversarial input guards: timestamp must be a finite, non-negative number
+    bounded to a sane upper limit (1 hr). nan / inf / negative values throw
+    422 Unprocessable Entity rather than 500-ing through ffmpeg.
+    """
+    import math
+    if math.isnan(timestamp) or math.isinf(timestamp):
+        raise HTTPException(422, "timestamp must be finite (no nan/inf)")
+    if timestamp < 0:
+        raise HTTPException(422, "timestamp must be non-negative")
+    if timestamp > 3600:
+        raise HTTPException(422, "timestamp out of range (>3600s, video is short)")
     if not pathlib.Path(VIDEO_PATH).exists():
         raise HTTPException(404, f"Video not found: {VIDEO_PATH}. Set IRONSITE_VIDEO env var.")
-    result = run_event(
-        event_id=event_id,
-        timestamp_s=timestamp,
-        video_path=VIDEO_PATH,
-        cloud_path=cloud_path,
-    )
-    return JSONResponse(result)
+    try:
+        result = run_event(
+            event_id=event_id,
+            timestamp_s=timestamp,
+            video_path=VIDEO_PATH,
+            cloud_path=cloud_path,
+        )
+        return JSONResponse(result)
+    except FileNotFoundError as e:
+        raise HTTPException(404, f"missing artifact: {e}")
+    except Exception as e:
+        # Don't leak stack traces to judges. Log the type only.
+        raise HTTPException(503, f"pipeline failed: {type(e).__name__}")
 
 
 @app.post("/analyze/batch")
 def analyze_batch(events: list[dict]):
     """
     Batch analysis. Body: [{"event_id":"NC_015","timestamp_s":15.0,"frame_path":null}, ...]
+
+    Light schema validation — refuses anything that's not a list of dicts
+    with timestamp_s and event_id. Caps batch at 32 to prevent token bombs.
     """
-    results = run_batch(events, video_path=VIDEO_PATH)
-    return JSONResponse(results)
+    if not isinstance(events, list):
+        raise HTTPException(422, "events must be a list")
+    if len(events) > 32:
+        raise HTTPException(422, "batch too large (max 32 events)")
+    for i, ev in enumerate(events):
+        if not isinstance(ev, dict):
+            raise HTTPException(422, f"events[{i}] must be a dict")
+        ts = ev.get("timestamp_s")
+        if not isinstance(ts, (int, float)):
+            raise HTTPException(422, f"events[{i}].timestamp_s must be a number")
+        if not (0 <= ts <= 3600):
+            raise HTTPException(422, f"events[{i}].timestamp_s out of range")
+    try:
+        results = run_batch(events, video_path=VIDEO_PATH)
+        return JSONResponse(results)
+    except Exception as e:
+        raise HTTPException(503, f"pipeline failed: {type(e).__name__}")
 
 
 @app.get("/demo")
 def demo():
-    """Quick demo: analyze 5 timestamps from the configured video."""
+    """Quick demo: analyze 5 timestamps from the configured video.
+
+    Returns 503 if the configured video is missing rather than letting
+    ffmpeg crash through with a 500. In hosted demo the video is not
+    bundled (it's 50MB+); judges should hit /cii/frames or /eval instead.
+    """
+    if not pathlib.Path(VIDEO_PATH).exists():
+        return JSONResponse(
+            status_code=503,
+            content={
+                "error": "video_unavailable",
+                "message": "Hosted demo does not bundle the source video. See /api/cii/frames for the cached pipeline output.",
+                "service_state": "video_offline",
+                "alt_endpoints": ["/api/cii/frames", "/api/cii/summary", "/api/eval"],
+            },
+        )
     timestamps = [15.0, 45.0, 90.0, 180.0, 300.0]
     events = [{"event_id": f"NC event candidate {t:.1f}s", "timestamp_s": t} for t in timestamps]
-    return JSONResponse(run_batch(events, video_path=VIDEO_PATH))
+    try:
+        return JSONResponse(run_batch(events, video_path=VIDEO_PATH))
+    except Exception as e:
+        raise HTTPException(503, f"pipeline failed: {type(e).__name__}")
 
 
 CII_RESULTS_PATH = pathlib.Path.home() / "Desktop/workspace/lifebase/.runtime/agents/ironsite-cii-fixed/cii-final.json"
