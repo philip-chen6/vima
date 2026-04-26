@@ -6,10 +6,17 @@ samples sit alongside this file in `golden_samples/`.
 ## `GET /health`
 
 ```json
-{ "status": "ok" }
+{
+  "status": "ok",
+  "video": "/root/Downloads/01_production_masonry.mp4",
+  "video_exists": false,
+  "endpoints": ["GET  /health", "POST /analyze/frame  ?prompt=vima|baseline"]
+}
 ```
 
 Always returns 200 when the FastAPI process is up. Use as a liveness probe.
+Production does not bundle the full source video, so `video_exists` is normally
+`false` on the hosted VPS.
 
 ## `GET /cii/summary`
 
@@ -100,6 +107,27 @@ prompt and the single-frame baseline. Has rich nested structure:
 The whole point of this endpoint is to expose the difference. Cite both
 when comparing. See `golden_samples/eval.json` for the full shape.
 
+## `GET /demo`
+
+Video-backed local convenience endpoint. On production, expect:
+
+```json
+{
+  "error": "video_unavailable",
+  "service_state": "video_offline",
+  "alt_endpoints": ["/api/cii/frames", "/api/cii/summary", "/api/eval"]
+}
+```
+
+Use cached CII, zones, and eval endpoints for hosted verification.
+
+## `POST /temporal/run?n=8`
+
+Live temporal reasoning for `1` to `12` frames. Successful runs persist
+`temporal-results.json`, so later `GET /eval` calls read the live result.
+Do not call this during read-only audits unless the user explicitly wants a
+fresh live temporal run.
+
 ## `POST /analyze/frame`
 
 Live judge call. Multipart form with a `file` field containing the JPG.
@@ -143,10 +171,22 @@ Response:
 
 ## errors
 
-All endpoints return JSON errors in this shape on failure:
+Errors are JSON, but shape varies by source. FastAPI validation errors use
+`detail`:
 
 ```json
 { "detail": "human readable message" }
+```
+
+Service-state failures use fields such as:
+
+```json
+{
+  "error": "cooldown",
+  "message": "Temporal live run cooldown active. Try again shortly.",
+  "service_state": "cooldown",
+  "retry_after_s": 42
+}
 ```
 
 The CLI maps HTTP status to exit code:

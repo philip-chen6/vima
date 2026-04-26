@@ -2,16 +2,20 @@
 
 portable cli and agent skill for the hosted vima spatial intelligence api.
 
+until the package is published to pypi, run it from the repository subdirectory:
+
 ```bash
-uvx vima-agent@latest doctor
-uvx vima-agent@latest analyze --sample masonry-p --json
-uvx vima-agent@latest skill install --agent auto
+uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima doctor
+uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima analyze --sample masonry-p --json
+uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima skill install --agent auto
 ```
 
-fallback when `uv` is not installed:
+for a local checkout, install editable:
 
 ```bash
-pipx run vima-agent doctor
+cd packages/vima-agent
+python3 -m pip install -e .
+vima doctor
 ```
 
 the cli is intentionally thin. it talks to `https://vimaspatial.tech/api` by

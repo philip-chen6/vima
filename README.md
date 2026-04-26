@@ -9,7 +9,7 @@ Spatially-anchored worker intelligence and incentive system for egocentric const
 - **COLMAP camera pose clustering** — zone attribution (Near Equipment / Scaffold / Material Staging)
 - **Solana devnet raffle payout** weighted by wrench-time productivity (real SPL transfer, env-gated)
 
-Results on 30 frames of real Ironsite masonry footage: **86.7% productive**, mean confidence 0.939.
+Results on 30 frames of real Ironsite masonry footage: **86.7% productive**, mean confidence 0.893.
 
 ## For Judges
 
@@ -26,7 +26,7 @@ curl -s https://vimaspatial.tech/api/cii/frames | jq 'length'
 curl -s https://vimaspatial.tech/api/spatial/zones | jq
 ```
 
-Expected headline values: 30 frames, 86.7% wrench time, 0.939 mean confidence,
+Expected headline values: 30 frames, 86.7% wrench time, 0.893 mean confidence,
 and 118 temporal episodes in the eval workspace.
 
 ## Team
@@ -58,15 +58,15 @@ uv run api.py
 Use the hosted VIMA API from any agent shell without cloning the full backend:
 
 ```bash
-uvx vima-agent@latest doctor
-uvx vima-agent@latest analyze --sample masonry-p --json
-uvx vima-agent@latest skill install --agent auto
+uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima doctor
+uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima analyze --sample masonry-p --json
+uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima skill install --agent auto
 ```
 
 For local backend development:
 
 ```bash
-VIMA_API_URL=http://localhost:8765 uvx vima-agent@latest doctor
+VIMA_API_URL=http://localhost:8765 uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima doctor
 ```
 
 The package source lives in `packages/vima-agent/`. It is intentionally a thin
@@ -174,10 +174,13 @@ scripts/run_full_video.sh data/video01.mp4 vima-full \
 - `POST /analyze/frame` — upload JPG, get CII classification + spatial JSON
 - `POST /analyze/timestamp?timestamp=30.0` — analyze from video at timestamp
 - `POST /analyze/batch` — batch events
-- `GET /demo` — 5 events from masonry footage (demo mode)
+- `GET /demo` — 5 events from masonry footage when the source video is present
 - `GET /cii/summary` — wrench-time summary (P/C/NC counts + raffle tickets)
 - `GET /cii/frames` — full per-frame classifications
 - `GET /spatial/zones` — zone attribution with spatial narrative
+- `GET /eval` — cached or live temporal evidence with proof-frame citations
+- `POST /temporal/run?n=8` — live temporal reasoning, cooldown protected
+- `GET /temporal/frame/{frame_index}` — frame files referenced by `/eval`
 
 ## Demo Output Shape
 

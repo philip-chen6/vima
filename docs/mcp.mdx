@@ -16,8 +16,9 @@ curl -sf https://vimaspatial.tech/mcp/health
 ```
 
 <Note>
-  If the health check returns `404`, Mintlify is fine but the main Vima
-  deployment has not shipped the MCP container and Caddy route yet.
+  Use `/mcp/health` for curl and browser checks. The `/mcp` route is the
+  streamable HTTP MCP endpoint, so a plain GET without MCP event-stream headers
+  can return `406 Not Acceptable` even when the service is healthy.
 </Note>
 
 ## Tools
@@ -40,7 +41,9 @@ MCP   -> backend:8765
 ```
 
 The server lives in `packages/vima-mcp` and runs as a small Docker Compose
-service next to the frontend and backend.
+service next to the frontend and backend. In production, `VIMA_API_URL` points
+the MCP container at `http://backend:8765`; public clients reach it through
+`https://vimaspatial.tech/mcp`.
 
 <CardGroup cols={2}>
   <Card title="Tiny Runtime" icon="feather">
