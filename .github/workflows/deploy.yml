@@ -73,10 +73,11 @@ jobs:
             # Build sequentially so deploy completion is boring and reliable.
             docker compose --env-file ../.env build
             docker compose --env-file ../.env up -d --remove-orphans
+            docker compose --env-file ../.env restart caddy
 
             echo "waiting for backend..."
             for i in $(seq 1 30); do
-              if curl -sf http://localhost:8765/health > /dev/null 2>&1; then
+              if docker compose --env-file ../.env exec -T backend curl -sf http://localhost:8765/health > /dev/null 2>&1; then
                 echo "backend healthy"
                 break
               fi
@@ -90,7 +91,7 @@ jobs:
 
             echo "waiting for mcp..."
             for i in $(seq 1 30); do
-              if curl -sf http://localhost:8766/health > /dev/null 2>&1; then
+              if docker compose --env-file ../.env exec -T mcp python -c "import urllib.request; urllib.request.urlopen('http://localhost:8766/health', timeout=2).read()" > /dev/null 2>&1; then
                 echo "mcp healthy"
                 break
               fi
