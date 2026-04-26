@@ -117,28 +117,31 @@
   --accent-orange: #FF6B35;
 
   /* Phosphor Terminal palette — new landing page system */
-  --color-ink:        #080503; /* near-black, warm undertone */
-  --color-ink-2:      #0d0805; /* slightly elevated surface */
-  --color-cream:      #e8d5c0; /* primary body — phosphor cream */
-  --color-cream-dim:  rgba(232, 213, 192, 0.55);
-  --color-cream-mute: rgba(232, 213, 192, 0.25);
-  --color-amber:      #f59e0b; /* primary accent — productive */
-  --color-amber-dim:  rgba(245, 158, 11, 0.55);
-  --color-amber-line: rgba(245, 158, 11, 0.10);
-  --color-amber-soft: rgba(245, 158, 11, 0.04);
-  --color-orange:     #fb923c; /* contributory */
-  --color-red:        #ef4444; /* non-contributory / alert */
-  --color-green:      #4ade80; /* status / live */
+  /* Yozakura terminal palette — DESIGN.md is canonical. Old phosphor-
+     amber names kept as aliases (--color-amber etc) so legacy components
+     don't need a token sweep, but they now point at sakura values. */
+  --color-ink:        #080503;
+  --color-ink-2:      #0d0805;
+  --color-cream:      #f7ecef; /* washi (was warm cream #e8d5c0) */
+  --color-cream-dim:  rgba(247, 236, 239, 0.55);
+  --color-cream-mute: rgba(247, 236, 239, 0.25);
+  --color-amber:      #f2a7b8; /* sakura-hot (was amber #f59e0b) */
+  --color-amber-dim:  rgba(242, 167, 184, 0.55);
+  --color-amber-line: rgba(242, 167, 184, 0.10);
+  --color-amber-soft: rgba(242, 167, 184, 0.04);
+  --color-orange:     #ffd3a6; /* lantern (was orange #fb923c) */
+  --color-red:        #ef476f; /* yozakura red (was #ef4444) */
+  --color-green:      #4ade80;
 
   /* Type stacks */
   --font-sans: "Saans", "Saans Static", "Inter", "Avenir Next", "Helvetica Neue", system-ui, sans-serif;
   --font-mono: "Saans Mono", "JetBrains Mono", "SFMono-Regular", "SF Mono", Menlo, Consolas, monospace;
   --font-semimono: "Saans SemiMono", "Saans Mono", "Saans", system-ui, sans-serif;
 
-  /* Phosphor glow tokens — drop into text-shadow */
-  --glow-amber-sm: 0 0 8px rgba(245, 158, 11, 0.35);
-  --glow-amber-md: 0 0 16px rgba(245, 158, 11, 0.30), 0 0 32px rgba(245, 158, 11, 0.10);
-  --glow-amber-lg: 0 0 24px rgba(245, 158, 11, 0.45), 0 0 48px rgba(245, 158, 11, 0.20);
+  /* Glow tokens — sakura-pink instead of amber. Names kept for compat. */
+  --glow-amber-sm: 0 0 8px rgba(242, 167, 184, 0.35);
+  --glow-amber-md: 0 0 16px rgba(242, 167, 184, 0.30), 0 0 32px rgba(242, 167, 184, 0.10);
+  --glow-amber-lg: 0 0 24px rgba(242, 167, 184, 0.45), 0 0 48px rgba(242, 167, 184, 0.20);
   /* Sidebar tokens overridden to Yozakura terminal palette so the
      shadcn Sidebar component matches the rest of /demo + /eval —
      ink rail, washi text, sakura active state. */
@@ -228,7 +231,7 @@ html[data-vima-loader-reveal="true"] [data-landing-backdrop-stage] {
   100% { transform: translateX(100%); }
 }
 @keyframes vima-glow {
-  0%, 100% { box-shadow: 0 0 6px rgba(245, 158, 11, 0.15); }
+  0%, 100% { box-shadow: 0 0 6px rgba(242, 167, 184, 0.15); }
   50% { box-shadow: var(--glow-amber-md); }
 }
 @keyframes vima-flicker {

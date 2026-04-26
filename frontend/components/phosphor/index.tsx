@@ -12,19 +12,21 @@ import { motion, useMotionValue, useSpring } from "motion/react";
 export const PHOSPHOR = {
   ink: "#080503",
   ink2: "#0d0805",
-  cream: "#e8d5c0",
-  creamDim: "rgba(232,213,192,0.55)",
-  creamMute: "rgba(232,213,192,0.25)",
-  amber: "#f59e0b",
-  amberDim: "rgba(245,158,11,0.55)",
-  amberLine: "rgba(245,158,11,0.10)",
-  amberSoft: "rgba(245,158,11,0.04)",
-  orange: "#fb923c",
-  red: "#ef4444",
+  cream: "#f7ecef",
+  creamDim: "rgba(247,236,239,0.55)",
+  creamMute: "rgba(247,236,239,0.25)",
+  // AMBER tokens repurposed to Yozakura sakura-hot — DESIGN.md flipped
+  // the palette and these names stuck for backward compat with downstream.
+  amber: "#f2a7b8",
+  amberDim: "rgba(242,167,184,0.55)",
+  amberLine: "rgba(242,167,184,0.10)",
+  amberSoft: "rgba(242,167,184,0.04)",
+  orange: "#ffd3a6", // lantern (was #fb923c)
+  red: "#ef476f",
   green: "#4ade80",
-  glowSm: "0 0 8px rgba(245,158,11,0.35)",
-  glowMd: "0 0 16px rgba(245,158,11,0.30), 0 0 32px rgba(245,158,11,0.10)",
-  glowLg: "0 0 24px rgba(245,158,11,0.45), 0 0 48px rgba(245,158,11,0.20)",
+  glowSm: "0 0 8px rgba(242,167,184,0.35)",
+  glowMd: "0 0 16px rgba(242,167,184,0.30), 0 0 32px rgba(242,167,184,0.10)",
+  glowLg: "0 0 24px rgba(242,167,184,0.45), 0 0 48px rgba(242,167,184,0.20)",
 } as const;
 
 // ─── EyebrowLabel ────────────────────────────────────────────────────────

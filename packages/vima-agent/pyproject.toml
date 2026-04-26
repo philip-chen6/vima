@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vima-agent"
+version = "0.1.0"
+description = "portable cli and agent skill for the vima spatial intelligence api"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "vima" }]
+dependencies = []
+
+[project.urls]
+Homepage = "https://vimaspatial.tech"
+Repository = "https://github.com/philip-chen6/vima"
+
+[project.scripts]
+vima = "vima_agent.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vima_agent"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/vima_agent/skill_template/SKILL.md" = "vima_agent/skill_template/SKILL.md"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

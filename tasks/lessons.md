@@ -1,5 +1,6 @@
 # lessons
 
+- when the user asks for a useful shippable artifact and the scope is within reach, ship the artifact instead of stopping at a strategic plan. research should feed implementation, not replace it.
 - if a scroll experiment is called fucked, purge the behavior completely instead of iterating around it: remove pinning attrs, ScrollTrigger pin blocks, css sticky fallbacks, and unused route hooks in one pass.
 - hero scroll cues should stay brutally simple when the user calls out clutter: use one lowercase label plus a directional icon, not event metadata plus explanatory scroll copy.
 - when the user asks to implement a scroll reference across the website, apply it to the existing page/section structure unless they explicitly ask for a new section. don't add a new conceptual section just to showcase the effect.

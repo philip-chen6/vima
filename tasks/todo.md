@@ -1,5 +1,17 @@
 # todo
 
+## vima agent cli and skill
+
+- [x] inspect existing backend cli/api split and package conventions
+- [ ] add standalone public cli package without backend/runtime dependencies
+- [ ] add portable skill template plus print/install commands
+- [ ] document one-command agent usage
+- [ ] run package tests and entrypoint smoke checks
+
+### result
+
+- pending.
+
 ## hero intro gap tighten
 
 - [x] reduce the offsets between hero intro stages while preserving the sequence order

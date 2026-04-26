@@ -40,8 +40,8 @@ const SplatViewer = dynamic(
         style={{
           width: "100%",
           aspectRatio: "16 / 10",
-          background: "linear-gradient(180deg, #0c0807 0%, #050302 100%)",
-          border: "1px solid rgba(245,158,11,0.22)",
+          background: "linear-gradient(180deg, #0c0508 0%, #050203 100%)",
+          border: "1px solid rgba(242,167,184,0.18)",
         }}
       />
     ),
