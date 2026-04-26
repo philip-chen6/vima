@@ -17,7 +17,7 @@ export function useApi<T>(path: string, refreshMs?: number): FetchState<T> {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const mountedRef = useRef(true);
+  const mountedRef = useRef(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -42,7 +42,9 @@ export function useApi<T>(path: string, refreshMs?: number): FetchState<T> {
 
   useEffect(() => {
     mountedRef.current = true;
-    fetchData();
+    const initialFetch = setTimeout(() => {
+      void fetchData();
+    }, 0);
 
     let interval: ReturnType<typeof setInterval> | undefined;
     if (refreshMs && refreshMs > 0) {
@@ -51,6 +53,7 @@ export function useApi<T>(path: string, refreshMs?: number): FetchState<T> {
 
     return () => {
       mountedRef.current = false;
+      clearTimeout(initialFetch);
       if (interval) clearInterval(interval);
     };
   }, [fetchData, refreshMs]);
