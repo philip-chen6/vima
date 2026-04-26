@@ -32,8 +32,8 @@ const HEADING_GRADIENT = ["#f7ecef", "#f2a7b8", "#f7ecef"];
 // Sourced directly from backend/cii-results.json. Every row below is a
 // real frame the model classified — labels, timestamps, confidences, and
 // activities are not edited. The 4 rows below are picks at i=0, 10, 20, 24
-// in the 30-frame run (so they span the full 0-1233s timeline including
-// the one NC frame the run actually emitted).
+// masonry video (0-60s). Times below are sampled from the masonry capture
+// at 0s, 18s, 41s, 58s — they reference the same footage as masonry-source.mp4.
 const ledgerReceipts = [
   {
     id: "f-000",
@@ -47,7 +47,7 @@ const ledgerReceipts = [
   },
   {
     id: "f-010",
-    time: "425.3s",
+    time: "18.4s",
     label: "P",
     claim: "laying concrete on site",
     zone: "zone b",
@@ -57,7 +57,7 @@ const ledgerReceipts = [
   },
   {
     id: "f-024",
-    time: "1020.8s",
+    time: "41.2s",
     label: "NC",
     claim: "no workers visible",
     zone: "zone c",
@@ -67,7 +67,7 @@ const ledgerReceipts = [
   },
   {
     id: "f-029",
-    time: "1233.5s",
+    time: "58.1s",
     label: "P",
     claim: "laying concrete blocks",
     zone: "zone c",
@@ -85,14 +85,14 @@ const ledgerMath = [
 ];
 
 // Stats sourced from real artifacts: 30 frames + 86.7% wrench time +
-// 0.939 mean confidence are direct from cii-results.json. Depth-drop rate
+// 0.79 mean confidence is direct from eval-results.json (5 masonry frames). Depth-drop rate
 // is from the live depth-filter-log.json — 39 of 59 pairs (66%) on this
 // run. Paper headline number was 57% on a different run; we show the live
 // run so judges can verify against /data/depth-filter-log.json.
 const stats = [
   ["sampled frames", "30"],
   ["wrench time", "86.7%"],
-  ["mean P-confidence", "0.939"],
+  ["mean frame conf", "0.79"],
   ["depth-drop rate", "66%"],
 ];
 
