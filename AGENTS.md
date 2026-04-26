@@ -110,6 +110,9 @@ python3 backend/vima_cli.py ask \
 
 4. **Dashboard agent**
    - Show frame, boxes, masks/depth preview, retrieved episodes, final answer.
+   - Include a chat-style question panel backed by `backend/answer_from_memory.py`
+     or the same `answer_query` function. The user should be able to ask
+     multiple questions after one completed VIMA run without rerunning masks/depth.
    - Keep it simple. Do not redesign the whole frontend unless asked.
 
 5. **Paper / pitch agent**
