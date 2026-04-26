@@ -1165,6 +1165,7 @@ export default function VimaLandingPage() {
               justifyContent: "center",
               alignItems: "center",
               minHeight: "500px",
+              transform: "translateY(clamp(-56px, -4vw, -28px))",
             }}
           >
             <Device
