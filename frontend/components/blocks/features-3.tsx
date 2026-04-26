@@ -8,24 +8,25 @@ export function Features3() {
   const marquee1Ref = useRef<HTMLDivElement>(null);
   const marquee2Ref = useRef<HTMLDivElement>(null);
 
-  // The 4 spatial claim types vima generates from a captured scene.
-  // Every claim is structured so it can be verified one-tap on the iOS app.
+  // The episode types vima's episodic memory emits, taken directly from the
+  // paper. Layout fits four; the fifth (material_staging_visible) is folded
+  // into the masonry/scaffold context so the 2x2 grid stays clean.
   const features = [
     {
-      icon: Eye,
-      description: "object_presence — what's in the frame, with confidence",
-    },
-    {
       icon: Activity,
-      description: "action_observed — who did what, when, and how sure",
+      description: "masonry_work_candidate — observed work in progress on the masonry plane",
     },
     {
       icon: GitBranch,
-      description: "state_change — before / after the same scene shifted",
+      description: "scaffold_zone_visible — scaffolding plank or rail in the active frame",
+    },
+    {
+      icon: Eye,
+      description: "safety_edge_context — exposed edge or fall hazard in view",
     },
     {
       icon: TrendingUp,
-      description: "progress_event — measurable work added to the site",
+      description: "foreground_worker_present — primary subject in motion or labor",
     },
   ];
 
@@ -89,7 +90,7 @@ export function Features3() {
                 transition={{ duration: 0.4 }}
                 className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 mb-4"
               >
-                claim taxonomy · four shapes of spatial truth
+                episode taxonomy · five shapes from the paper
               </motion.p>
 
               <motion.h2
@@ -100,7 +101,7 @@ export function Features3() {
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-neutral-900 dark:text-white mb-6"
                 style={{ fontFamily: '"Times New Roman", Times, serif' }}
               >
-                every claim is structured. every claim is verifiable.
+                every claim is one of five shapes.
               </motion.h2>
 
               <motion.p
@@ -110,9 +111,10 @@ export function Features3() {
                 transition={{ duration: 0.4, delay: 0.2 }}
                 className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl"
               >
-                Vima reduces what the model saw to one of four shapes. The shape
-                makes the claim verifiable in seconds. A human swipes, the claim
-                resolves, the answer settles on-chain.
+                Vima&apos;s episodic memory emits one of five episode types per
+                detected event. The shape makes the claim reviewable in
+                seconds. A human swipes, the claim resolves, the reviewed
+                evidence enters the audit trail.
               </motion.p>
             </div>
 

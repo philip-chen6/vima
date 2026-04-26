@@ -18,7 +18,7 @@ This rule overrides any conflicting earlier specification in this file.
 
 ## Product Context
 
-- **What this is:** Spatial safety intelligence platform for construction sites. Egocentric bodycam video → CII (Productive / Contributory / Non-Contributory) classification → COLMAP zone attribution → Solana SPL token payouts weighted by verified productive time.
+- **What this is:** Spatial safety intelligence platform for construction sites. Egocentric bodycam video → depth-delta frame filter (drops 57% of bad pairs) → MASt3R reconstruction (59% RPE_t reduction) → episodic memory binding events to time and zone, emitting five episode types (`masonry_work_candidate`, `scaffold_zone_visible`, `safety_edge_context`, `foreground_worker_present`, `material_staging_visible`). RGB-only — no lidar, no IMU, no site model.
 - **Who it's for:** Primary 30s — HackTech 2026 Ironsite Prize judges (next 27h). Secondary — construction ops/safety managers at 50-500 person GCs (Sarah at Acme Construction). Tertiary — the worker who gets paid.
 - **Space/industry:** Construction tech, computer vision, safety compliance, on-chain incentives.
 - **Project type:** Marketing/landing page. The live dashboard remains under `/demo`.

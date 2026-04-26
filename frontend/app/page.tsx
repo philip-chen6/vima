@@ -83,7 +83,7 @@ const stats = [
   ["sampled frames", "30"],
   ["wrench time", "86.7%"],
   ["mean P-confidence", "0.939"],
-  ["zones", "3"],
+  ["depth-drop rate", "57%"],
 ];
 
 const confidenceSeries = ledgerReceipts.map((frame) => ({
@@ -619,8 +619,9 @@ export default function VimaLandingPage() {
             letterSpacing: "0.005em",
           }}
         >
-          Hardhat video becomes a spatial proof chain: CII classification,
-          COLMAP zone attribution, and payout logic tied to verified work.
+          Hardhat video becomes an inspectable evidence chain. Depth-delta
+          filtering drops 57% of bad frames, MASt3R reconstruction grounds the
+          rest, episodic memory binds events to time and zone.
         </p>
 
         <div
@@ -635,7 +636,7 @@ export default function VimaLandingPage() {
             lineHeight: 1.9,
           }}
         >
-          video → frame ledger → CII label → zone attribution → SPL payout
+          video → depth-delta filter → MASt3R reconstruction → episodic memory → zone-aware claim
         </div>
 
         <div
@@ -769,7 +770,7 @@ export default function VimaLandingPage() {
               style={{
                 minHeight: "100px",
                 padding: "14px 12px",
-                borderRight: label === "zones" ? "0" : `1px solid rgba(242,167,184,0.12)`,
+                borderRight: label === "depth-drop rate" ? "0" : `1px solid rgba(242,167,184,0.12)`,
               }}
             >
               <div style={{ color: TEXT_MUTED, fontSize: "9px", letterSpacing: "0.04em" }}>{label}</div>
@@ -934,7 +935,7 @@ export default function VimaLandingPage() {
                   letterSpacing: 0,
                 }}
               >
-                this is where the claim becomes payable.
+                this is where a frame becomes inspectable evidence.
               </h2>
               <p
                 data-gsap="section-copy"
@@ -966,7 +967,7 @@ export default function VimaLandingPage() {
           <div className="ledger-receipt" data-gsap="ledger-panel">
             <div className="ledger-receipt-head">
               <span>frame receipt</span>
-              <span>reward gate · SPL pending</span>
+              <span>evidence gate · review pending</span>
             </div>
 
             <div className="ledger-receipt-body">
@@ -1004,11 +1005,11 @@ export default function VimaLandingPage() {
             <div className="ledger-audit-tail">
               <div>
                 <span>receipt hash</span>
-                <strong>cii:30 · colmap:3 · spl:ready</strong>
+                <strong>frames:30 · zones:3 · evidence:ready</strong>
               </div>
               <div>
                 <span>review path</span>
-                <strong>open frame trail before settlement</strong>
+                <strong>open frame trail before review</strong>
               </div>
             </div>
           </div>
@@ -1032,7 +1033,7 @@ export default function VimaLandingPage() {
               data-gsap="section-kicker"
               style={{ margin: 0, color: TEXT_MUTED, fontSize: "10px", letterSpacing: "0.05em" }}
             >
-              verify · the human side of accountable AI
+              verify · human review of episodic memory claims
             </p>
             <h2
               data-gsap="section-title"
@@ -1064,10 +1065,9 @@ export default function VimaLandingPage() {
             >
               Centralized labeling pipelines move at a worker&apos;s reading speed.
               Vima reduces the unit of work to one tap on a phone. The model
-              proposes, humans confirm. Right to confirm, left to reject. Every
-              confirmation earns XP. Every twenty-five claims spins a wheel
-              that can pay out real SOL, settled on-chain the moment the work
-              clears.
+              proposes its episodic memory claims, humans confirm or reject.
+              Right to accept, left to reject, up to skip. The reviewed claims
+              become the audit trail every safety incident depends on.
             </p>
             <ul
               style={{
@@ -1084,11 +1084,11 @@ export default function VimaLandingPage() {
               }}
             >
               <li>· tinder-style swipe deck</li>
-              <li>· 15 XP per claim, 30 for rare</li>
-              <li>· streak bonus at 10 + 25</li>
-              <li>· lottery wheel every 25 claims</li>
-              <li>· SOL prizes 0.001 → 0.5 legendary</li>
-              <li>· payouts queue to solana wallet</li>
+              <li>· accept · reject · skip per claim</li>
+              <li>· episode types match the paper&apos;s five</li>
+              <li>· human review feeds the audit trail</li>
+              <li>· every reviewed frame stays inspectable</li>
+              <li>· reviewer decisions become ground truth</li>
             </ul>
           </div>
           <div
@@ -1141,7 +1141,7 @@ export default function VimaLandingPage() {
                 >
                   <div>
                     <div style={{ color: SAKURA_HOT, fontSize: "9px", letterSpacing: "0.08em", marginBottom: "10px" }}>
-                      action_observed
+                      masonry_work_candidate
                     </div>
                     <div
                       style={{
@@ -1166,12 +1166,12 @@ export default function VimaLandingPage() {
                       letterSpacing: "0.04em",
                     }}
                   >
-                    swipe → confirm · 15 XP
+                    swipe → accept · review pending
                   </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: "9px", color: TEXT_MUTED }}>
-                  <span>streak · 12</span>
-                  <span>next spin · 8</span>
+                  <span>frame · 17 / 30</span>
+                  <span>session · 2:14</span>
                 </div>
               </div>
             </Device>
@@ -1301,7 +1301,7 @@ export default function VimaLandingPage() {
               }}
             >
               <GradientText colors={HEADING_GRADIENT} animationSpeed={7} direction="diagonal">
-                turn the demo stream into an auditable payout trail.
+                turn the demo stream into an auditable evidence chain.
               </GradientText>
             </h2>
           </div>
