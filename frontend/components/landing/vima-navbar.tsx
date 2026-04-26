@@ -49,35 +49,47 @@ const sectionLinks: SectionNavLink[] = [
     href: "#evidence",
     sectionId: "evidence",
     detail: "frame to claim",
-    panel: "start with bodycam frames, then inspect how each one becomes a CII work claim.",
+    panel: "every spatial claim has an evidence window. inspect the frames the model saw before it made the call.",
     items: [
-      { title: "evidence chain", description: "video to timestamped CII labels", href: "#evidence" },
-      { title: "confidence stream", description: "mean P-confidence 0.939", href: "#evidence" },
-      { title: "sample set", description: "30 sampled frames from the demo run", href: "#evidence" },
+      { title: "evidence chain", description: "scene to timestamped spatial claim", href: "#evidence" },
+      { title: "confidence stream", description: "mean confidence 0.939 across 30 frames", href: "#evidence" },
+      { title: "claim taxonomy", description: "object · action · state · progress", href: "#evidence" },
     ],
   },
   {
     label: "ledger",
     href: "#ledger",
     sectionId: "ledger",
-    detail: "inspectable audit",
-    panel: "follow every claim into the audit table with zone attribution and confidence.",
+    detail: "settlement receipt",
+    panel: "follow every claim into the audit table — frame, label, confidence, weight, status.",
     items: [
       { title: "frame ledger", description: "timestamp, label, zone, claim", href: "#ledger" },
-      { title: "zone attribution", description: "COLMAP assigns site context", href: "#ledger" },
+      { title: "settlement gate", description: "scoring rules for verified work", href: "#ledger" },
       { title: "audit trail", description: "human-readable proof rows", href: "#ledger" },
+    ],
+  },
+  {
+    label: "verify",
+    href: "#verify",
+    sectionId: "verify",
+    detail: "the human side",
+    panel: "swipe-deck on iOS. confirm or reject in seconds. earn XP, hit lottery spins, get paid in SOL.",
+    items: [
+      { title: "swipe deck", description: "right confirm · left reject · up skip", href: "#verify" },
+      { title: "xp + streaks", description: "15 XP per claim, bonus at 10 + 25", href: "#verify" },
+      { title: "sol payouts", description: "lottery wheel every 25 claims", href: "#verify" },
     ],
   },
   {
     label: "pipeline",
     href: "#pipeline",
     sectionId: "pipeline",
-    detail: "zone to payout",
-    panel: "see the pipeline from classification through spatial anchoring into payout logic.",
+    detail: "scene to settlement",
+    panel: "see the pipeline end-to-end: capture, classify, attach evidence, verify, settle.",
     items: [
-      { title: "classify", description: "bodycam frames become work categories", href: "#pipeline" },
-      { title: "anchor", description: "claims attach to construction zones", href: "#pipeline" },
-      { title: "settle", description: "productive time weights SPL payouts", href: "#cta" },
+      { title: "capture", description: "scene becomes a structured claim", href: "#pipeline" },
+      { title: "classify", description: "model labels what it saw", href: "#pipeline" },
+      { title: "settle", description: "verified claims clear on-chain", href: "#cta" },
     ],
   },
 ];
@@ -452,7 +464,7 @@ export default function VimaNavbar() {
                   <span className="vima-menu-panel-label">live sample</span>
                   <strong>86.7%</strong>
                 </div>
-                <p>bodycam video becomes a timestamped, spatially attributed proof chain.</p>
+                <p>captured scenes become structured spatial claims, then settle through human verification.</p>
                 <Link href="/demo" onClick={() => setIsMenuOpen(false)}>
                   open demo
                 </Link>
