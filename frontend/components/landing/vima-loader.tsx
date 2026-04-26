@@ -109,6 +109,22 @@ export default function VimaLoader() {
     let loaderTimeline: gsap.core.Timeline | undefined;
     let released = false;
 
+    // Scroll handoff guard: when the user refreshes mid-scroll the browser
+    // restores their old scroll position. The loader paints full-screen black
+    // on top, plays its 5s typography animation, hands off to the hero — but
+    // the user is parked 2000px down so they never see the hero, just a
+    // half-finished page mid-section. Two-part fix:
+    //   1. Tell the browser to STOP restoring scroll on refresh ("manual"
+    //      means the page is responsible, default is "auto").
+    //   2. Force scroll to 0 before the loader animation runs, so the
+    //      handoff lands at the top where the hero actually is.
+    if (typeof history !== "undefined" && "scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    if (window.scrollY !== 0) {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+
     root.style.animation = "none";
 
     const ctx = gsap.context(() => {
