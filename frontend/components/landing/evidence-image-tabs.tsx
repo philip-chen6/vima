@@ -12,15 +12,15 @@ const tabs = [
   {
     key: "frame",
     num: "01",
-    title: "frame evidence",
-    metric: "30 frames",
-    image: "/figures/fig_temporal_timeline.png",
-    alt: "temporal safety score timeline from the vima evidence run",
-    body: "timestamped bodycam frames become an inspectable CII trail before anything touches payout logic.",
+    title: "depth evidence",
+    metric: "frame 03",
+    image: "/figures/frame-03-depth-comparison.jpg",
+    alt: "side by side hardhat video frame and depth map from the vima masonry run",
+    body: "each bodycam frame gets paired with model depth before it can become a spatial work claim.",
     rows: [
       ["source", "bodycam video"],
-      ["claim", "CII label stream"],
-      ["audit", "frame-level review"],
+      ["signal", "depth map"],
+      ["audit", "visual check"],
     ],
   },
   {
