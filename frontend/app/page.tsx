@@ -1165,7 +1165,6 @@ export default function VimaLandingPage() {
               justifyContent: "center",
               alignItems: "center",
               minHeight: "560px",
-              transform: "translateX(clamp(-72px, -4vw, -28px))",
             }}
           >
             <Device
@@ -1182,11 +1181,12 @@ export default function VimaLandingPage() {
                 playsInline
                 poster="/mobile-screenshots/phone-flow-screen-poster.jpg"
                 style={{
-                  width: "100%",
+                  width: "108%",
                   height: "100%",
                   objectFit: "cover",
                   display: "block",
                   background: "#080503",
+                  transform: "translateX(-4%)",
                 }}
               >
                 <source src="/mobile-screenshots/phone-flow-screen.mp4" type="video/mp4" />
