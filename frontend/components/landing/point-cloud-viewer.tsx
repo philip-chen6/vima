@@ -30,6 +30,74 @@ const WASHI = "#f7ecef";
 const TEXT_MUTED = "rgba(247,236,239,0.46)";
 const LINE = "rgba(242,167,184,0.18)";
 
+// ── Camera frustum: a thin pyramid showing where one frame was captured ─
+// Drawn as a wireframe so it doesn't compete with the cloud. Hover/click
+// fires onSelect with the frame name.
+type CameraPose = {
+  frame: string;
+  position: [number, number, number];
+  // Either a quaternion {x,y,z,w} or rotation: [x,y,z,w]. Both supported.
+  rotation_quat?: [number, number, number, number];
+  rotation?: [number, number, number, number];
+};
+
+function CameraFrustum({
+  pose,
+  active,
+  onSelect,
+}: {
+  pose: CameraPose;
+  active: boolean;
+  onSelect: (frame: string) => void;
+}) {
+  const ref = useRef<THREE.Group>(null);
+  const rot = pose.rotation_quat || pose.rotation || [0, 0, 0, 1];
+
+  // Build a small frustum geometry: apex at origin, four corners 0.18 units
+  // ahead. Edges only.
+  const geometry = useMemo(() => {
+    const s = 0.12;
+    const d = 0.22;
+    const points = [
+      // apex to four corners
+      new THREE.Vector3(0, 0, 0), new THREE.Vector3(s, s, d),
+      new THREE.Vector3(0, 0, 0), new THREE.Vector3(-s, s, d),
+      new THREE.Vector3(0, 0, 0), new THREE.Vector3(s, -s, d),
+      new THREE.Vector3(0, 0, 0), new THREE.Vector3(-s, -s, d),
+      // far rectangle
+      new THREE.Vector3(s, s, d), new THREE.Vector3(-s, s, d),
+      new THREE.Vector3(-s, s, d), new THREE.Vector3(-s, -s, d),
+      new THREE.Vector3(-s, -s, d), new THREE.Vector3(s, -s, d),
+      new THREE.Vector3(s, -s, d), new THREE.Vector3(s, s, d),
+    ];
+    const g = new THREE.BufferGeometry().setFromPoints(points);
+    return g;
+  }, []);
+
+  return (
+    <group
+      ref={ref}
+      position={pose.position}
+      quaternion={[rot[0], rot[1], rot[2], rot[3]]}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(pose.frame);
+      }}
+      onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = "pointer"; }}
+      onPointerOut={() => { document.body.style.cursor = "default"; }}
+    >
+      <lineSegments geometry={geometry}>
+        <lineBasicMaterial
+          color={active ? "#f2a7b8" : "#A64D79"}
+          transparent
+          opacity={active ? 1.0 : 0.55}
+          linewidth={1}
+        />
+      </lineSegments>
+    </group>
+  );
+}
+
 // ── Scene helper: orbit controls bound to the canvas ─────────────────────
 function Controls({ autoRotate = true }: { autoRotate?: boolean }) {
   const { camera, gl } = useThree();
@@ -113,17 +181,53 @@ type Status =
 export interface PointCloudViewerProps {
   /** Path to a .ply file in /public, e.g. "/reconstruction/sparse.ply" */
   src: string;
+  /** Optional path to a cameras.json with [{frame, position, rotation_quat}].
+   *  When present, render a small frustum at each registered frame pose.
+   *  Empty / missing → only points are drawn. */
+  camerasSrc?: string;
   /** Caption label rendered as a chip on the panel */
   label?: string;
   /** Auto-rotate the cloud */
   autoRotate?: boolean;
+  /** Callback fired when a camera frustum is clicked. */
+  onSelectFrame?: (frame: string) => void;
 }
 
 export function PointCloudViewer({
   src,
+  camerasSrc,
   label = "colmap sparse · 1770 points",
   autoRotate = true,
+  onSelectFrame,
 }: PointCloudViewerProps) {
+  const [cameras, setCameras] = useState<CameraPose[]>([]);
+  const [activeCamera, setActiveCamera] = useState<string | null>(null);
+
+  // Optional cameras fetch — runs in parallel with the cloud load. 404 is
+  // fine; we just don't render frustums.
+  useEffect(() => {
+    if (!camerasSrc) return;
+    let cancelled = false;
+    fetch(camerasSrc, { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (cancelled) return;
+        if (!Array.isArray(data)) return;
+        // Normalize the schema — accept rotation_quat or rotation, default
+        // identity quat if missing.
+        const normalized: CameraPose[] = data
+          .filter((d) => d && d.position && Array.isArray(d.position))
+          .map((d) => ({
+            frame: d.frame || d.image || "?",
+            position: d.position,
+            rotation_quat: d.rotation_quat || d.rotation || [0, 0, 0, 1],
+          }));
+        setCameras(normalized);
+      })
+      .catch(() => { /* swallowed — frustums are best-effort */ });
+    return () => { cancelled = true; };
+  }, [camerasSrc]);
+
   const [status, setStatus] = useState<Status>({ kind: "loading" });
 
   useEffect(() => {
@@ -193,6 +297,17 @@ export function PointCloudViewer({
         >
           <ambientLight intensity={0.6} />
           <Cloud geometry={status.geometry} />
+          {cameras.map((pose) => (
+            <CameraFrustum
+              key={pose.frame}
+              pose={pose}
+              active={activeCamera === pose.frame}
+              onSelect={(f) => {
+                setActiveCamera(f);
+                onSelectFrame?.(f);
+              }}
+            />
+          ))}
           <Controls autoRotate={autoRotate} />
         </Canvas>
       )}
@@ -304,7 +419,7 @@ export function PointCloudViewer({
             backdropFilter: "blur(6px)",
           }}
         >
-          drag · scroll to zoom · {status.pointCount} pts
+          drag · scroll to zoom · {status.pointCount} pts{cameras.length > 0 ? ` · ${cameras.length} cams` : ""}
         </div>
       )}
     </div>

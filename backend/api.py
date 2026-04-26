@@ -8,6 +8,7 @@ import uvicorn
 
 from pipeline import run_event, run_batch
 from prompt_v1 import vima_classify, baseline_classify
+from temporal_v1 import run_live_demo_video
 
 app = FastAPI(title="Ironsite Spatial API", version="1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])

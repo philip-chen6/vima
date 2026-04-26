@@ -595,6 +595,7 @@ export default function DemoClient({
 
           <PointCloudViewer
             src="/reconstruction/sparse.ply"
+            camerasSrc="/data/cameras.json"
             label="colmap sparse · masonry capture"
             autoRotate
           />

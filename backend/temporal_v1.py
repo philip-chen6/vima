@@ -232,6 +232,91 @@ def baseline_single_frame_changes(frame_paths: list[pathlib.Path]) -> dict:
     }
 
 
+def extract_video_frames(
+    video_path: pathlib.Path,
+    n_frames: int = 8,
+    out_dir: pathlib.Path | None = None,
+) -> tuple[list[pathlib.Path], list[dict]]:
+    """Run ffmpeg to pull N evenly-spaced frames out of a video.
+
+    Used by /api/temporal to generate live multi-frame sequences from the
+    coldpath demo video on the box (frontend/public/demo/coldpath.mp4).
+    Returns (paths, meta) parallel lists where meta has timestamp_s + a
+    placeholder activity hint.
+
+    No ffmpeg-python dependency — we call the system binary directly.
+    Caches frames in `out_dir` (default: /tmp/vima-temporal-frames-<basename>)
+    keyed by video size+mtime so repeated calls don't re-decode the video."""
+    import subprocess
+
+    if not video_path.exists():
+        raise FileNotFoundError(f"video not found: {video_path}")
+
+    # Probe duration so we can space frames evenly across the timeline.
+    probe = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+         "-of", "default=noprint_wrappers=1:nokey=1", str(video_path)],
+        check=True, capture_output=True, text=True,
+    )
+    duration_s = float(probe.stdout.strip())
+
+    # Cache key — invalidate when source changes
+    stat = video_path.stat()
+    cache_key = f"{video_path.stem}-{int(stat.st_size)}-{int(stat.st_mtime)}-{n_frames}"
+    out_dir = out_dir or pathlib.Path("/tmp/vima-temporal-frames") / cache_key
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    paths: list[pathlib.Path] = []
+    meta: list[dict] = []
+
+    # Pick timestamps that hit the meaty middle of the video — skip first
+    # and last 5% so we don't grab black frames or end cards.
+    margin = duration_s * 0.05
+    span = duration_s - 2 * margin
+    for i in range(n_frames):
+        t = margin + (span * i / max(1, n_frames - 1))
+        out_path = out_dir / f"frame_{i:03d}.jpg"
+        if not out_path.exists():
+            subprocess.run(
+                ["ffmpeg", "-y", "-loglevel", "error",
+                 "-ss", f"{t:.2f}", "-i", str(video_path),
+                 "-frames:v", "1", "-q:v", "3", str(out_path)],
+                check=True, capture_output=True,
+            )
+        paths.append(out_path)
+        meta.append({
+            "timestamp_s": round(t, 1),
+            "activity": f"video frame at t={t:.1f}s",
+            "frame": out_path.name,
+        })
+
+    return paths, meta
+
+
+def run_live_demo_video(
+    video_path: pathlib.Path | None = None,
+    n_frames: int = 8,
+    persist: bool = True,
+) -> dict:
+    """End-to-end: extract frames from the coldpath demo video, run
+    temporal-v1 on them, optionally persist to temporal-results.json.
+    This is what /api/temporal calls so judges hitting /eval see live
+    multi-frame reasoning on real construction footage instead of the
+    reference fallback."""
+    if video_path is None:
+        # Default to the bundled demo video shipped at frontend/public/demo
+        video_path = ROOT.parent / "frontend" / "public" / "demo" / "coldpath.mp4"
+
+    paths, meta = extract_video_frames(video_path, n_frames=n_frames)
+    vima = detect_state_changes(paths, meta)
+    payload = {"vima": vima, "ts": time.time(), "video": str(video_path.name)}
+
+    if persist:
+        TEMPORAL_OUTPUT.write_text(json.dumps(payload, indent=2))
+
+    return payload
+
+
 def select_demo_sequence(n_frames: int = 8) -> tuple[list[pathlib.Path], list[dict]]:
     """Pick a representative sequence from the masonry data: evenly spaced
     frames spanning the full duration so judges see real temporal range.
