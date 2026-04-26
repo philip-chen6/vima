@@ -85,19 +85,50 @@ def _turbo_lut() -> np.ndarray:
     return lut
 
 
-def run_depth(pipe: Any, img_path: pathlib.Path, out_path: pathlib.Path) -> dict:
+def run_depth(pipe: Any, img_path: pathlib.Path, out_path: pathlib.Path) -> tuple[dict, np.ndarray]:
     img = Image.open(img_path).convert("RGB")
     result = pipe(img)
-    depth = np.array(result["depth"])  # PIL Image in meters-ish (relative)
-    heatmap = depth_to_heatmap(depth)
+    # `predicted_depth` is a torch tensor in arbitrary relative units (depth-anything-v2
+    # outputs inverse depth → larger = closer). `depth` (PIL) is the normalized 8-bit
+    # visualization. We want both: PNG for the UI, raw scalar stats for the judge.
+    raw = result.get("predicted_depth")
+    if raw is not None:
+        # Tensor → numpy float32 in original relative units.
+        raw_np = raw.squeeze().cpu().numpy().astype(np.float32)
+    else:
+        raw_np = np.array(result["depth"], dtype=np.float32)
+
+    depth_vis = np.array(result["depth"])  # 0-255 uint8 for the heatmap
+    heatmap = depth_to_heatmap(depth_vis)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     heatmap.save(out_path, optimize=True)
-    return {
-        "depth_min": float(depth.min()),
-        "depth_max": float(depth.max()),
-        "depth_mean": float(depth.mean()),
-        "shape": list(depth.shape),
+
+    # Raw depth percentiles + region stats — what the spatial judge actually
+    # needs to reason about distances. Quadrant means surface "things are
+    # closer in the bottom-right" type spatial structure for prompts.
+    h, w = raw_np.shape
+    qh, qw = h // 2, w // 2
+    quadrants = {
+        "tl": float(raw_np[:qh, :qw].mean()),
+        "tr": float(raw_np[:qh, qw:].mean()),
+        "bl": float(raw_np[qh:, :qw].mean()),
+        "br": float(raw_np[qh:, qw:].mean()),
     }
+    stats = {
+        "depth_min_raw": float(raw_np.min()),
+        "depth_max_raw": float(raw_np.max()),
+        "depth_mean_raw": float(raw_np.mean()),
+        "depth_p10": float(np.percentile(raw_np, 10)),
+        "depth_p50": float(np.percentile(raw_np, 50)),
+        "depth_p90": float(np.percentile(raw_np, 90)),
+        "depth_quadrants": quadrants,
+        "shape": list(raw_np.shape),
+        # Vis-only legacy fields kept for the old manifest consumers.
+        "depth_min": float(depth_vis.min()),
+        "depth_max": float(depth_vis.max()),
+        "depth_mean": float(depth_vis.mean()),
+    }
+    return stats, raw_np
 
 
 # ─── SAM (Segment Anything) ───────────────────────────────────────────────
@@ -120,6 +151,7 @@ def run_sam_grid(
     img_path: pathlib.Path,
     out_path: pathlib.Path,
     grid: int = 8,
+    depth_raw: np.ndarray | None = None,
 ) -> dict:
     """Run SAM on a grid of point prompts, merge masks, save overlay PNG.
 
@@ -167,32 +199,67 @@ def run_sam_grid(
     scores = outputs.iou_scores.cpu().numpy()[0, :, 0]  # [num_points]
 
     # Build overlay: start from RGBA, paint each mask with a deterministic
-    # color seeded by its index.
+    # color seeded by its index. ALSO record per-mask geometry stats so the
+    # spatial judge can read structured "object at (x,y) covering N% of frame".
     overlay = np.zeros((H, W, 4), dtype=np.uint8)
     rng = np.random.default_rng(42)
-    n_painted = 0
+    segments = []
     for i, m in enumerate(masks):
-        if scores[i] < 0.6:  # skip low-confidence
+        if scores[i] < 0.6:
             continue
         m_np = m[0].numpy().astype(bool)
-        if m_np.sum() < 200:  # skip tiny crap
+        area = int(m_np.sum())
+        if area < 200:
             continue
+        # Centroid + bbox in image coords.
+        ys, xs = np.where(m_np)
+        cx = float(xs.mean())
+        cy = float(ys.mean())
+        x0, x1 = int(xs.min()), int(xs.max())
+        y0, y1 = int(ys.min()), int(ys.max())
+
         color = rng.integers(60, 230, size=3)
-        # Paint with 50% alpha where mask is true AND not already painted.
         unpainted = overlay[..., 3] == 0
         paint = m_np & unpainted
         overlay[paint, 0] = color[0]
         overlay[paint, 1] = color[1]
         overlay[paint, 2] = color[2]
         overlay[paint, 3] = 128
-        n_painted += 1
+
+        seg = {
+            "id": len(segments),
+            "score": float(scores[i]),
+            "area_px": area,
+            "area_frac": round(area / float(H * W), 4),
+            "centroid_px": [round(cx, 1), round(cy, 1)],
+            "centroid_norm": [round(cx / W, 3), round(cy / H, 3)],
+            "bbox_px": [x0, y0, x1, y1],
+        }
+        # If depth was passed in, report median depth under this mask. The
+        # judge can then say "object 3 is at relative depth 0.42 (closer)
+        # while object 7 is at 0.81 (farther)".
+        if depth_raw is not None:
+            # Resize mask to depth resolution if they differ.
+            dh, dw = depth_raw.shape
+            if (dh, dw) != (H, W):
+                # cheap nearest-neighbor downsample
+                ys_d = (ys.astype(np.float32) * dh / H).astype(np.int32).clip(0, dh - 1)
+                xs_d = (xs.astype(np.float32) * dw / W).astype(np.int32).clip(0, dw - 1)
+                vals = depth_raw[ys_d, xs_d]
+            else:
+                vals = depth_raw[ys, xs]
+            seg["depth_median_raw"] = float(np.median(vals))
+            seg["depth_p10_raw"] = float(np.percentile(vals, 10))
+            seg["depth_p90_raw"] = float(np.percentile(vals, 90))
+        segments.append(seg)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     Image.fromarray(overlay, "RGBA").save(out_path, optimize=True)
     return {
-        "n_masks": int(n_painted),
+        "n_masks": len(segments),
         "grid": grid,
         "shape": [H, W],
+        "segments": segments,
     }
 
 
@@ -224,11 +291,13 @@ def main():
         mask_out = out_subdir / "mask.png"
 
         t0 = time.time()
-        depth_meta = run_depth(depth_pipe, img_path, depth_out)
+        depth_meta, depth_raw = run_depth(depth_pipe, img_path, depth_out)
         t_depth = time.time() - t0
 
         t0 = time.time()
-        sam_meta = run_sam_grid(sam_model, sam_processor, img_path, mask_out)
+        sam_meta = run_sam_grid(
+            sam_model, sam_processor, img_path, mask_out, depth_raw=depth_raw
+        )
         t_sam = time.time() - t0
 
         out_manifest.append({

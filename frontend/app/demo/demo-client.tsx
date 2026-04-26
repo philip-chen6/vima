@@ -28,6 +28,24 @@ const PointCloudViewer = dynamic(
   }
 );
 
+// Splat viewer is also heavy (three.js + gaussian-splats-3d). SSR-defer.
+const SplatViewer = dynamic(
+  () => import("@/components/landing/splat-viewer").then((m) => m.SplatViewer),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        style={{
+          width: "100%",
+          aspectRatio: "16 / 10",
+          background: "linear-gradient(180deg, #0c0807 0%, #050302 100%)",
+          border: "1px solid rgba(245,158,11,0.22)",
+        }}
+      />
+    ),
+  }
+);
+
 // ── Yozakura terminal palette — must match landing tokens exactly ────────
 const INK = "#080503";
 const WASHI = "#f7ecef";
@@ -525,10 +543,11 @@ export default function DemoClient({
                 lineHeight: 1.55,
               }}
             >
-              19 of 31 frames register through COLMAP into a 1,770-point sparse
-              map at 1.199px mean reprojection error — the same numbers the
-              paper benchmarks. Drag to orbit, scroll to zoom. Every frame in
-              the ledger anchors somewhere in this volume.
+              19 of 31 frames register through COLMAP at 1.199 px mean
+              reprojection error, then a Brush-exported gaussian splat
+              densifies the geometry to 22,553 anisotropic primitives with
+              spherical harmonics. Drag to orbit, scroll to zoom. Every frame
+              in the ledger anchors somewhere in this volume.
             </p>
 
             <ul
@@ -545,21 +564,35 @@ export default function DemoClient({
                 letterSpacing: "0.04em",
               }}
             >
-              <li>· 1,770 sparse vertices</li>
+              <li>· 22,553 splat primitives</li>
               <li>· 19 / 31 frames registered</li>
               <li>· 1.199 px reprojection error</li>
-              <li>· depth-delta filter pre-pass</li>
+              <li>· spherical harmonics · sh deg 3</li>
             </ul>
           </div>
 
           <div>
-            <PointCloudViewer
-              src="/reconstruction/sparse.ply"
-              camerasSrc="/data/cameras.json"
-              label="colmap sparse · masonry capture"
-              autoRotate
-              onSelectFrame={setPickedFrame}
+            {/* PRIMARY: photoreal gaussian splat (Brush v0.3.0, 22,553 SH-3
+                primitives, trained on Apple Metal). Renders the densified
+                scene with proper anisotropic gaussians and spherical
+                harmonics — what the masonry site actually looks like in 3D. */}
+            <SplatViewer
+              src="/reconstruction/masonry-splat-10k.ply"
+              label="gaussian splat · 22,553 primitives · brush v0.3.0"
             />
+
+            {/* SECONDARY: COLMAP sparse points + camera frustums for
+                inspecting which frame anchors where. Click a frustum to
+                see the registered bodycam still. */}
+            <div style={{ marginTop: 12 }}>
+              <PointCloudViewer
+                src="/reconstruction/sparse.ply"
+                camerasSrc="/data/cameras.json"
+                label="colmap sparse · 19 registered cameras"
+                autoRotate
+                onSelectFrame={setPickedFrame}
+              />
+            </div>
 
             {/* Thumbnail panel — populated when a frustum is clicked.
                 The frustum-name is the COLMAP image filename like

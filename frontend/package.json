@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@mkkellogg/gaussian-splats-3d": "^0.4.7",
     "@react-three/fiber": "^9.6.0",
     "@types/three": "^0.184.0",
     "clsx": "^2.1.1",
