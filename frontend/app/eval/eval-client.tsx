@@ -16,7 +16,7 @@
 // tabular-nums on every number, hairline borders, no bubble radius, no
 // purple. See DESIGN.md.
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ChevronRight } from "lucide-react";
@@ -57,6 +57,20 @@ type Episode = {
 };
 
 type FrameManifest = { filename: string; timestamp_s: number };
+type AnalyzerPrompt = "baseline" | "vima";
+type AnalyzerPhase = "idle" | "loading" | "success" | "paused" | "error";
+type FrameAnalysis = {
+  pnc?: "P" | "C" | "NC";
+  activity?: string;
+  spatial_claims?: SpatialClaim[];
+  confidence?: number;
+};
+type CachedAnalysis = {
+  status: AnalyzerPhase;
+  result?: FrameAnalysis;
+  message?: string;
+};
+type AnalysisCache = Record<string, Partial<Record<AnalyzerPrompt, CachedAnalysis>>>;
 
 // ── Yozakura tokens (must match landing) ─────────────────────────────────
 const INK = "#080503";
@@ -144,7 +158,6 @@ export default function EvalClient() {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
     Promise.all([
       fetch("/data/episodes.json").then((r) => (r.ok ? r.json() : null)),
       fetch("/masonry-frames-raw/manifest.json").then((r) => (r.ok ? r.json() : null)),
@@ -203,15 +216,15 @@ export default function EvalClient() {
     [activeEpisode, manifest],
   );
   const [analysisCache, setAnalysisCache] = useState<AnalysisCache>({});
-  const [backendState, setBackendState] = useState<"unknown" | "available" | "offline">("unknown");
+  const [backendState, setBackendState] = useState<"unknown" | "available" | "offline">(() => {
+    if (typeof window === "undefined") return "unknown";
+    return isLocalDevHost(window.location.hostname) ? "unknown" : "available";
+  });
   const activeFrameAnalysis = activeEvalFrame ? analysisCache[activeEvalFrame.filename] : undefined;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!isLocalDevHost(window.location.hostname)) {
-      setBackendState("available");
-      return;
-    }
+    if (!isLocalDevHost(window.location.hostname) || backendState !== "unknown") return;
 
     let cancelled = false;
     const controller = new AbortController();
@@ -232,7 +245,7 @@ export default function EvalClient() {
       controller.abort();
       window.clearTimeout(timeout);
     };
-  }, []);
+  }, [backendState]);
 
   useEffect(() => {
     if (!activeEpisode || !activeEvalFrame) return;
@@ -250,29 +263,31 @@ export default function EvalClient() {
 
     if (typeof window !== "undefined" && isLocalDevHost(window.location.hostname) && backendState === "offline") {
       const pausedMessage = "API paused · localhost backend is not running, showing cached offline state.";
-      setAnalysisCache((prev) => {
-        const existing = prev[frameKey] ?? {};
-        const next = { ...existing };
-        for (const prompt of missingPrompts) {
-          next[prompt] = { status: "paused", message: pausedMessage };
-        }
-        return { ...prev, [frameKey]: next };
-      });
-      return;
+      const timeout = window.setTimeout(() => {
+        setAnalysisCache((prev) => {
+          const existing = prev[frameKey] ?? {};
+          const next = { ...existing };
+          for (const prompt of missingPrompts) {
+            next[prompt] = { status: "paused", message: pausedMessage };
+          }
+          return { ...prev, [frameKey]: next };
+        });
+      }, 0);
+      return () => window.clearTimeout(timeout);
     }
 
     let cancelled = false;
 
-    setAnalysisCache((prev) => {
-      const existing = prev[frameKey] ?? {};
-      const next = { ...existing };
-      for (const prompt of missingPrompts) {
-        next[prompt] = { status: "loading" };
-      }
-      return { ...prev, [frameKey]: next };
-    });
-
     const fetchAnalyses = async () => {
+      setAnalysisCache((prev) => {
+        const existing = prev[frameKey] ?? {};
+        const next = { ...existing };
+        for (const prompt of missingPrompts) {
+          next[prompt] = { status: "loading" };
+        }
+        return { ...prev, [frameKey]: next };
+      });
+
       try {
         const frameResponse = await fetch(`/masonry-frames-raw/${activeEvalFrame.filename}`);
         if (!frameResponse.ok) {
