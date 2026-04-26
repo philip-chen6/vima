@@ -9,6 +9,8 @@ import multiprocessing as mp
 import os
 import pathlib
 import queue
+import urllib.error
+import urllib.request
 from typing import Any
 
 from memory_retrieval import compact_episode, load_episodes, retrieve
@@ -88,7 +90,63 @@ Rules:
         output.put({"ok": False, "error": f"{type(exc).__name__}: {exc}"})
 
 
-def gemini_answer(query: str, context: list[dict[str, Any]], model_name: str, timeout_s: int) -> str:
+def build_prompt(query: str, context: list[dict[str, Any]]) -> str:
+    return f"""
+You answer from structured construction-video episodic memory.
+
+User question:
+{query}
+
+Retrieved evidence episodes as JSON:
+{json.dumps(context, indent=2)}
+
+Rules:
+- Answer only from the retrieved episodes.
+- Cite episode_id and evidence frame names.
+- Be explicit when evidence is only a candidate, not proof.
+- Keep the answer short and useful for a construction productivity/safety judge.
+"""
+
+
+def gemini_rest_answer(query: str, context: list[dict[str, Any]], model_name: str, timeout_s: int) -> str:
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY or GOOGLE_API_KEY is required for --provider gemini.")
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+    body = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [{"text": build_prompt(query, context)}],
+            }
+        ],
+        "generationConfig": {
+            "temperature": 0.2,
+            "maxOutputTokens": 512,
+        },
+    }
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(body).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout_s) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Gemini REST HTTP {exc.code}: {detail}") from exc
+
+    parts = payload.get("candidates", [{}])[0].get("content", {}).get("parts", [])
+    text = "".join(part.get("text", "") for part in parts).strip()
+    if not text:
+        raise RuntimeError(f"Gemini REST returned no text: {payload}")
+    return text
+
+
+def gemini_legacy_answer(query: str, context: list[dict[str, Any]], model_name: str, timeout_s: int) -> str:
     api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY or GOOGLE_API_KEY is required for --provider gemini.")
@@ -111,6 +169,18 @@ def gemini_answer(query: str, context: list[dict[str, Any]], model_name: str, ti
     return result["text"]
 
 
+def gemini_answer(
+    query: str,
+    context: list[dict[str, Any]],
+    model_name: str,
+    timeout_s: int,
+    transport: str,
+) -> str:
+    if transport == "legacy":
+        return gemini_legacy_answer(query, context, model_name, timeout_s)
+    return gemini_rest_answer(query, context, model_name, timeout_s)
+
+
 def answer_query(
     memory_path: pathlib.Path,
     query: str,
@@ -119,6 +189,7 @@ def answer_query(
     model_name: str,
     timeout_s: int,
     fallback_on_error: bool,
+    gemini_transport: str,
 ) -> dict[str, Any]:
     episodes = load_episodes(memory_path)
     retrieved = retrieve(episodes, query, top_k)
@@ -126,7 +197,7 @@ def answer_query(
     error = None
     if provider == "gemini":
         try:
-            answer = gemini_answer(query, context, model_name, timeout_s)
+            answer = gemini_answer(query, context, model_name, timeout_s, gemini_transport)
         except Exception as exc:  # noqa: BLE001
             if not fallback_on_error:
                 raise
@@ -139,6 +210,7 @@ def answer_query(
         "query": query,
         "provider": provider,
         "model": model_name if provider == "gemini" else None,
+        "gemini_transport": gemini_transport if provider == "gemini" else None,
         "fallback_used": error is not None,
         "error": error,
         "answer": answer,
@@ -156,6 +228,7 @@ def main() -> int:
     parser.add_argument("--top-k", type=int, default=4)
     parser.add_argument("--timeout-s", type=int, default=20)
     parser.add_argument("--no-fallback", action="store_true")
+    parser.add_argument("--gemini-transport", choices=["rest", "legacy"], default="rest")
     args = parser.parse_args()
 
     load_env()
@@ -167,6 +240,7 @@ def main() -> int:
         args.model,
         args.timeout_s,
         not args.no_fallback,
+        args.gemini_transport,
     )
     out = pathlib.Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

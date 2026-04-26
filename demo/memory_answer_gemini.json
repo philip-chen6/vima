@@ -2,9 +2,10 @@
   "query": "Was there masonry work happening near the wall?",
   "provider": "gemini",
   "model": "gemini-2.5-flash",
-  "fallback_used": true,
-  "error": "TimeoutError: Gemini call exceeded 5s and was terminated.",
-  "answer": "Answer: The strongest matching memory is episode_001 (masonry_work_candidate) from 0.0s to 10.0s.\nWhy: Worker and concrete block wall are co-present, with proximity evidence where available.\nSpatial evidence: scaffold_01 (scaffold) is near depth rank 1; concrete_block_wall_01 (concrete block wall) is near depth rank 2; scaffold_02 (scaffold) is mid depth rank 3\nRelations: worker_01_near_concrete_block_wall_01, worker_02_near_concrete_block_wall_01\nEvidence frames: frame_000001.jpg, frame_000002.jpg\nQuery: Was there masonry work happening near the wall?",
+  "gemini_transport": "rest",
+  "fallback_used": false,
+  "error": null,
+  "answer": "Yes, masonry work was a candidate event near a concrete block wall in two episodes.",
   "retrieved_episodes": [
     {
       "episode_id": "episode_001",
