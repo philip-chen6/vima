@@ -9,6 +9,7 @@
     ],
     "hf_model": "depth-anything/Depth-Anything-V2-Small-hf",
     "depth_semantics": "higher relative_closeness means closer to camera",
+    "banding": "near/mid/far is quantile-ranked per frame and per track; absolute_depth_band preserves fixed-threshold score bands",
     "preview_video": "runs/vinna-hardhat/depth_preview/depth_tracks.mp4"
   },
   "tracks": [
@@ -20,8 +21,9 @@
       "time_start_s": 0.0,
       "time_end_s": 10.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.0364,
-      "mean_relative_closeness": 0.1697,
+      "mean_mask_area_frac": 0.0111,
+      "mean_relative_closeness": 0.1886,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     },
     {
@@ -32,9 +34,10 @@
       "time_start_s": 0.0,
       "time_end_s": 0.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.1819,
-      "mean_relative_closeness": 0.5803,
-      "depth_band": "mid"
+      "mean_mask_area_frac": 0.2094,
+      "mean_relative_closeness": 0.5949,
+      "absolute_depth_band": "mid",
+      "depth_band": "near"
     },
     {
       "track_id": "scaffold_02",
@@ -44,8 +47,9 @@
       "time_start_s": 0.0,
       "time_end_s": 10.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.0917,
-      "mean_relative_closeness": 0.2973,
+      "mean_mask_area_frac": 0.0663,
+      "mean_relative_closeness": 0.238,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     },
     {
@@ -56,9 +60,10 @@
       "time_start_s": 0.0,
       "time_end_s": 10.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.3571,
-      "mean_relative_closeness": 0.5086,
-      "depth_band": "mid"
+      "mean_mask_area_frac": 0.1832,
+      "mean_relative_closeness": 0.6317,
+      "absolute_depth_band": "mid",
+      "depth_band": "near"
     },
     {
       "track_id": "guardrail_01",
@@ -68,8 +73,9 @@
       "time_start_s": 0.0,
       "time_end_s": 10.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.0267,
-      "mean_relative_closeness": 0.1889,
+      "mean_mask_area_frac": 0.0073,
+      "mean_relative_closeness": 0.119,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     },
     {
@@ -80,9 +86,10 @@
       "time_start_s": 10.0,
       "time_end_s": 20.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.127,
-      "mean_relative_closeness": 0.5421,
-      "depth_band": "mid"
+      "mean_mask_area_frac": 0.164,
+      "mean_relative_closeness": 0.5991,
+      "absolute_depth_band": "mid",
+      "depth_band": "near"
     },
     {
       "track_id": "material_stack_01",
@@ -92,8 +99,9 @@
       "time_start_s": 10.0,
       "time_end_s": 10.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0468,
-      "mean_relative_closeness": 0.441,
+      "mean_mask_area_frac": 0.0275,
+      "mean_relative_closeness": 0.3601,
+      "absolute_depth_band": "far",
       "depth_band": "mid"
     },
     {
@@ -104,9 +112,10 @@
       "time_start_s": 20.0,
       "time_end_s": 30.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.1957,
-      "mean_relative_closeness": 0.5264,
-      "depth_band": "mid"
+      "mean_mask_area_frac": 0.1804,
+      "mean_relative_closeness": 0.5738,
+      "absolute_depth_band": "mid",
+      "depth_band": "near"
     },
     {
       "track_id": "material_stack_02",
@@ -116,9 +125,10 @@
       "time_start_s": 20.0,
       "time_end_s": 20.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.1029,
-      "mean_relative_closeness": 0.293,
-      "depth_band": "far"
+      "mean_mask_area_frac": 0.0442,
+      "mean_relative_closeness": 0.3378,
+      "absolute_depth_band": "far",
+      "depth_band": "mid"
     },
     {
       "track_id": "guardrail_02",
@@ -128,8 +138,9 @@
       "time_start_s": 20.0,
       "time_end_s": 30.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.0548,
-      "mean_relative_closeness": 0.2227,
+      "mean_mask_area_frac": 0.0445,
+      "mean_relative_closeness": 0.1774,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     },
     {
@@ -140,9 +151,10 @@
       "time_start_s": 30.0,
       "time_end_s": 40.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.0935,
-      "mean_relative_closeness": 0.6267,
-      "depth_band": "mid"
+      "mean_mask_area_frac": 0.0701,
+      "mean_relative_closeness": 0.7483,
+      "absolute_depth_band": "near",
+      "depth_band": "near"
     },
     {
       "track_id": "material_stack_03",
@@ -152,9 +164,10 @@
       "time_start_s": 30.0,
       "time_end_s": 30.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.112,
-      "mean_relative_closeness": 0.2996,
-      "depth_band": "far"
+      "mean_mask_area_frac": 0.0784,
+      "mean_relative_closeness": 0.3265,
+      "absolute_depth_band": "far",
+      "depth_band": "mid"
     },
     {
       "track_id": "guardrail_03",
@@ -164,9 +177,10 @@
       "time_start_s": 40.0,
       "time_end_s": 40.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0981,
-      "mean_relative_closeness": 0.5287,
-      "depth_band": "mid"
+      "mean_mask_area_frac": 0.085,
+      "mean_relative_closeness": 0.625,
+      "absolute_depth_band": "mid",
+      "depth_band": "near"
     },
     {
       "track_id": "open_edge_01",
@@ -176,9 +190,10 @@
       "time_start_s": 40.0,
       "time_end_s": 50.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.2338,
-      "mean_relative_closeness": 0.3525,
-      "depth_band": "far"
+      "mean_mask_area_frac": 0.1622,
+      "mean_relative_closeness": 0.3835,
+      "absolute_depth_band": "mid",
+      "depth_band": "mid"
     },
     {
       "track_id": "worker_04",
@@ -188,8 +203,9 @@
       "time_start_s": 50.0,
       "time_end_s": 50.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0153,
-      "mean_relative_closeness": 0.8451,
+      "mean_mask_area_frac": 0.0187,
+      "mean_relative_closeness": 0.8978,
+      "absolute_depth_band": "near",
       "depth_band": "near"
     },
     {
@@ -200,8 +216,9 @@
       "time_start_s": 50.0,
       "time_end_s": 50.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.08,
-      "mean_relative_closeness": 0.1201,
+      "mean_mask_area_frac": 0.0246,
+      "mean_relative_closeness": 0.1172,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     },
     {
@@ -212,9 +229,10 @@
       "time_start_s": 60.0,
       "time_end_s": 60.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0421,
-      "mean_relative_closeness": 0.3463,
-      "depth_band": "far"
+      "mean_mask_area_frac": 0.0293,
+      "mean_relative_closeness": 0.4092,
+      "absolute_depth_band": "mid",
+      "depth_band": "mid"
     },
     {
       "track_id": "scaffold_04",
@@ -224,8 +242,9 @@
       "time_start_s": 60.0,
       "time_end_s": 60.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.2417,
-      "mean_relative_closeness": 0.4162,
+      "mean_mask_area_frac": 0.1922,
+      "mean_relative_closeness": 0.4245,
+      "absolute_depth_band": "mid",
       "depth_band": "mid"
     },
     {
@@ -236,9 +255,10 @@
       "time_start_s": 60.0,
       "time_end_s": 90.0,
       "frames_seen": 4,
-      "mean_mask_area_frac": 0.1802,
-      "mean_relative_closeness": 0.4823,
-      "depth_band": "mid"
+      "mean_mask_area_frac": 0.1343,
+      "mean_relative_closeness": 0.5194,
+      "absolute_depth_band": "mid",
+      "depth_band": "near"
     },
     {
       "track_id": "material_stack_05",
@@ -248,8 +268,9 @@
       "time_start_s": 60.0,
       "time_end_s": 60.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.11,
-      "mean_relative_closeness": 0.3818,
+      "mean_mask_area_frac": 0.0587,
+      "mean_relative_closeness": 0.4137,
+      "absolute_depth_band": "mid",
       "depth_band": "mid"
     },
     {
@@ -260,8 +281,9 @@
       "time_start_s": 60.0,
       "time_end_s": 60.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0405,
-      "mean_relative_closeness": 0.3546,
+      "mean_mask_area_frac": 0.0171,
+      "mean_relative_closeness": 0.3159,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     },
     {
@@ -272,9 +294,10 @@
       "time_start_s": 70.0,
       "time_end_s": 70.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0146,
-      "mean_relative_closeness": 0.3207,
-      "depth_band": "far"
+      "mean_mask_area_frac": 0.0117,
+      "mean_relative_closeness": 0.35,
+      "absolute_depth_band": "far",
+      "depth_band": "mid"
     },
     {
       "track_id": "scaffold_05",
@@ -284,9 +307,10 @@
       "time_start_s": 70.0,
       "time_end_s": 90.0,
       "frames_seen": 3,
-      "mean_mask_area_frac": 0.2945,
-      "mean_relative_closeness": 0.4201,
-      "depth_band": "mid"
+      "mean_mask_area_frac": 0.3125,
+      "mean_relative_closeness": 0.4318,
+      "absolute_depth_band": "mid",
+      "depth_band": "near"
     },
     {
       "track_id": "material_stack_06",
@@ -296,8 +320,9 @@
       "time_start_s": 70.0,
       "time_end_s": 70.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.1045,
-      "mean_relative_closeness": 0.4773,
+      "mean_mask_area_frac": 0.0397,
+      "mean_relative_closeness": 0.4215,
+      "absolute_depth_band": "mid",
       "depth_band": "mid"
     },
     {
@@ -308,8 +333,9 @@
       "time_start_s": 80.0,
       "time_end_s": 80.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0254,
-      "mean_relative_closeness": 0.1834,
+      "mean_mask_area_frac": 0.0195,
+      "mean_relative_closeness": 0.2691,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     },
     {
@@ -320,9 +346,10 @@
       "time_start_s": 80.0,
       "time_end_s": 90.0,
       "frames_seen": 2,
-      "mean_mask_area_frac": 0.1112,
-      "mean_relative_closeness": 0.3066,
-      "depth_band": "far"
+      "mean_mask_area_frac": 0.0809,
+      "mean_relative_closeness": 0.3182,
+      "absolute_depth_band": "far",
+      "depth_band": "mid"
     },
     {
       "track_id": "guardrail_05",
@@ -332,8 +359,9 @@
       "time_start_s": 80.0,
       "time_end_s": 80.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0374,
-      "mean_relative_closeness": 0.1871,
+      "mean_mask_area_frac": 0.011,
+      "mean_relative_closeness": 0.1035,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     },
     {
@@ -344,9 +372,10 @@
       "time_start_s": 90.0,
       "time_end_s": 90.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.158,
-      "mean_relative_closeness": 0.6566,
-      "depth_band": "mid"
+      "mean_mask_area_frac": 0.1655,
+      "mean_relative_closeness": 0.6702,
+      "absolute_depth_band": "near",
+      "depth_band": "near"
     },
     {
       "track_id": "worker_09",
@@ -356,8 +385,9 @@
       "time_start_s": 90.0,
       "time_end_s": 90.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0152,
-      "mean_relative_closeness": 0.2239,
+      "mean_mask_area_frac": 0.0086,
+      "mean_relative_closeness": 0.2086,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     },
     {
@@ -368,8 +398,9 @@
       "time_start_s": 90.0,
       "time_end_s": 90.0,
       "frames_seen": 1,
-      "mean_mask_area_frac": 0.0343,
-      "mean_relative_closeness": 0.2635,
+      "mean_mask_area_frac": 0.0029,
+      "mean_relative_closeness": 0.21,
+      "absolute_depth_band": "far",
       "depth_band": "far"
     }
   ],
@@ -388,18 +419,19 @@
             260.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000001_worker_01.png",
-          "mask_area_frac": 0.0356,
+          "mask_area_frac": 0.0116,
           "centroid_norm": [
-            0.52,
-            0.397
+            0.551,
+            0.462
           ],
           "depth": {
-            "relative_closeness": 0.1339,
-            "band": "far",
-            "p10": 0.0941,
-            "p90": 0.2588,
+            "relative_closeness": 0.2209,
+            "band": "mid",
+            "p10": 0.102,
+            "p90": 0.2773,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 5
+            "rank_closest_in_frame": 4,
+            "absolute_band": "far"
           }
         },
         {
@@ -412,18 +444,19 @@
             420.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000001_scaffold_01.png",
-          "mask_area_frac": 0.1819,
+          "mask_area_frac": 0.2094,
           "centroid_norm": [
-            0.132,
-            0.436
+            0.117,
+            0.464
           ],
           "depth": {
-            "relative_closeness": 0.5803,
-            "band": "mid",
-            "p10": 0.1725,
+            "relative_closeness": 0.5949,
+            "band": "near",
+            "p10": 0.2157,
             "p90": 0.8706,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 1,
+            "absolute_band": "mid"
           }
         },
         {
@@ -436,18 +469,19 @@
             260.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000001_scaffold_02.png",
-          "mask_area_frac": 0.0734,
+          "mask_area_frac": 0.07,
           "centroid_norm": [
-            0.71,
-            0.27
+            0.708,
+            0.269
           ],
           "depth": {
-            "relative_closeness": 0.3288,
-            "band": "far",
-            "p10": 0.0941,
-            "p90": 0.5373,
+            "relative_closeness": 0.3937,
+            "band": "mid",
+            "p10": 0.1333,
+            "p90": 0.5725,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 3,
+            "absolute_band": "mid"
           }
         },
         {
@@ -460,18 +494,19 @@
             470.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000001_concrete_block_wall_01.png",
-          "mask_area_frac": 0.4154,
+          "mask_area_frac": 0.2465,
           "centroid_norm": [
-            0.508,
-            0.734
+            0.612,
+            0.771
           ],
           "depth": {
-            "relative_closeness": 0.5158,
-            "band": "mid",
-            "p10": 0.2235,
-            "p90": 0.851,
+            "relative_closeness": 0.5753,
+            "band": "near",
+            "p10": 0.3373,
+            "p90": 0.8706,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 2,
+            "absolute_band": "mid"
           }
         },
         {
@@ -484,18 +519,19 @@
             264.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000001_guardrail_01.png",
-          "mask_area_frac": 0.0268,
+          "mask_area_frac": 0.0018,
           "centroid_norm": [
-            0.268,
+            0.146,
             0.505
           ],
           "depth": {
-            "relative_closeness": 0.2175,
+            "relative_closeness": 0.1546,
             "band": "far",
             "p10": 0.0941,
-            "p90": 0.8863,
+            "p90": 0.298,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 4
+            "rank_closest_in_frame": 5,
+            "absolute_band": "far"
           }
         }
       ],
@@ -508,8 +544,8 @@
         "scaffold_01",
         "concrete_block_wall_01",
         "scaffold_02",
-        "guardrail_01",
-        "worker_01"
+        "worker_01",
+        "guardrail_01"
       ]
     },
     {
@@ -526,18 +562,19 @@
             292.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000002_worker_01.png",
-          "mask_area_frac": 0.0372,
+          "mask_area_frac": 0.0106,
           "centroid_norm": [
-            0.43,
-            0.464
+            0.489,
+            0.512
           ],
           "depth": {
-            "relative_closeness": 0.2054,
-            "band": "far",
+            "relative_closeness": 0.1563,
+            "band": "mid",
             "p10": 0.0824,
-            "p90": 0.4235,
+            "p90": 0.298,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 5
+            "rank_closest_in_frame": 4,
+            "absolute_band": "far"
           }
         },
         {
@@ -550,18 +587,19 @@
             381.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000002_worker_02.png",
-          "mask_area_frac": 0.0604,
+          "mask_area_frac": 0.0516,
           "centroid_norm": [
-            0.925,
-            0.48
+            0.947,
+            0.398
           ],
           "depth": {
-            "relative_closeness": 0.6434,
-            "band": "mid",
-            "p10": 0.2745,
-            "p90": 0.8235,
+            "relative_closeness": 0.7608,
+            "band": "near",
+            "p10": 0.6941,
+            "p90": 0.8118,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 1,
+            "absolute_band": "near"
           }
         },
         {
@@ -574,18 +612,19 @@
             315.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000002_scaffold_02.png",
-          "mask_area_frac": 0.1099,
+          "mask_area_frac": 0.0625,
           "centroid_norm": [
-            0.643,
-            0.327
+            0.659,
+            0.13
           ],
           "depth": {
-            "relative_closeness": 0.2657,
+            "relative_closeness": 0.0824,
             "band": "far",
             "p10": 0.0824,
-            "p90": 0.6588,
+            "p90": 0.0824,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 4
+            "rank_closest_in_frame": 6,
+            "absolute_band": "far"
           }
         },
         {
@@ -598,18 +637,19 @@
             430.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000002_concrete_block_wall_01.png",
-          "mask_area_frac": 0.2988,
+          "mask_area_frac": 0.1199,
           "centroid_norm": [
-            0.494,
-            0.688
+            0.525,
+            0.732
           ],
           "depth": {
-            "relative_closeness": 0.5015,
-            "band": "mid",
-            "p10": 0.0824,
-            "p90": 0.8118,
+            "relative_closeness": 0.6881,
+            "band": "near",
+            "p10": 0.5059,
+            "p90": 0.851,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 2,
+            "absolute_band": "near"
           }
         },
         {
@@ -622,18 +662,19 @@
             306.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000002_material_stack_01.png",
-          "mask_area_frac": 0.0468,
+          "mask_area_frac": 0.0275,
           "centroid_norm": [
-            0.87,
-            0.533
+            0.854,
+            0.555
           ],
           "depth": {
-            "relative_closeness": 0.441,
+            "relative_closeness": 0.3601,
             "band": "mid",
-            "p10": 0.1216,
-            "p90": 0.7961,
+            "p10": 0.2667,
+            "p90": 0.8,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 3,
+            "absolute_band": "far"
           }
         },
         {
@@ -646,18 +687,19 @@
             282.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000002_guardrail_01.png",
-          "mask_area_frac": 0.0266,
+          "mask_area_frac": 0.0128,
           "centroid_norm": [
-            0.27,
-            0.543
+            0.182,
+            0.578
           ],
           "depth": {
-            "relative_closeness": 0.1604,
+            "relative_closeness": 0.0833,
             "band": "far",
             "p10": 0.0824,
-            "p90": 0.4196,
+            "p90": 0.0824,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 6
+            "rank_closest_in_frame": 5,
+            "absolute_band": "far"
           }
         }
       ],
@@ -671,9 +713,9 @@
         "worker_02",
         "concrete_block_wall_01",
         "material_stack_01",
-        "scaffold_02",
         "worker_01",
-        "guardrail_01"
+        "guardrail_01",
+        "scaffold_02"
       ]
     },
     {
@@ -690,18 +732,19 @@
             480.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000003_worker_02.png",
-          "mask_area_frac": 0.1937,
+          "mask_area_frac": 0.2764,
           "centroid_norm": [
-            0.823,
-            0.566
+            0.834,
+            0.557
           ],
           "depth": {
-            "relative_closeness": 0.4408,
-            "band": "mid",
-            "p10": 0.1451,
-            "p90": 0.5647,
+            "relative_closeness": 0.4373,
+            "band": "near",
+            "p10": 0.1333,
+            "p90": 0.5608,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 1,
+            "absolute_band": "mid"
           }
         },
         {
@@ -714,18 +757,19 @@
             480.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000003_scaffold_03.png",
-          "mask_area_frac": 0.1669,
+          "mask_area_frac": 0.1564,
           "centroid_norm": [
-            0.893,
-            0.499
+            0.911,
+            0.523
           ],
           "depth": {
-            "relative_closeness": 0.3996,
-            "band": "mid",
-            "p10": 0.0824,
-            "p90": 0.5569,
+            "relative_closeness": 0.3884,
+            "band": "near",
+            "p10": 0.0863,
+            "p90": 0.5529,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 2,
+            "absolute_band": "mid"
           }
         },
         {
@@ -738,18 +782,19 @@
             328.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000003_material_stack_02.png",
-          "mask_area_frac": 0.1029,
+          "mask_area_frac": 0.0442,
           "centroid_norm": [
-            0.367,
-            0.532
+            0.329,
+            0.525
           ],
           "depth": {
-            "relative_closeness": 0.293,
-            "band": "far",
-            "p10": 0.1725,
-            "p90": 0.4196,
+            "relative_closeness": 0.3378,
+            "band": "mid",
+            "p10": 0.2627,
+            "p90": 0.4118,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 3,
+            "absolute_band": "far"
           }
         },
         {
@@ -762,18 +807,19 @@
             244.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000003_guardrail_02.png",
-          "mask_area_frac": 0.057,
+          "mask_area_frac": 0.0306,
           "centroid_norm": [
-            0.346,
-            0.443
+            0.333,
+            0.425
           ],
           "depth": {
-            "relative_closeness": 0.2751,
-            "band": "far",
+            "relative_closeness": 0.2372,
+            "band": "mid",
             "p10": 0.1373,
-            "p90": 0.451,
+            "p90": 0.2902,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 4
+            "rank_closest_in_frame": 4,
+            "absolute_band": "far"
           }
         }
       ],
@@ -800,18 +846,19 @@
             380.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000004_worker_03.png",
-          "mask_area_frac": 0.0456,
+          "mask_area_frac": 0.0353,
           "centroid_norm": [
-            0.533,
-            0.574
+            0.514,
+            0.544
           ],
           "depth": {
-            "relative_closeness": 0.658,
-            "band": "mid",
-            "p10": 0.6196,
-            "p90": 0.7529,
+            "relative_closeness": 0.6377,
+            "band": "near",
+            "p10": 0.6118,
+            "p90": 0.6757,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 2,
+            "absolute_band": "mid"
           }
         },
         {
@@ -824,18 +871,19 @@
             480.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000004_scaffold_03.png",
-          "mask_area_frac": 0.2245,
+          "mask_area_frac": 0.2043,
           "centroid_norm": [
-            0.738,
-            0.499
+            0.699,
+            0.518
           ],
           "depth": {
-            "relative_closeness": 0.6532,
-            "band": "mid",
-            "p10": 0.1176,
-            "p90": 0.8784,
+            "relative_closeness": 0.7593,
+            "band": "near",
+            "p10": 0.6941,
+            "p90": 0.8824,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 1,
+            "absolute_band": "near"
           }
         },
         {
@@ -848,18 +896,19 @@
             418.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000004_material_stack_03.png",
-          "mask_area_frac": 0.112,
+          "mask_area_frac": 0.0784,
           "centroid_norm": [
-            0.163,
-            0.7
+            0.138,
+            0.723
           ],
           "depth": {
-            "relative_closeness": 0.2996,
-            "band": "far",
+            "relative_closeness": 0.3265,
+            "band": "mid",
             "p10": 0.1176,
-            "p90": 0.6039,
+            "p90": 0.6118,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 3,
+            "absolute_band": "far"
           }
         },
         {
@@ -872,18 +921,19 @@
             255.5
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000004_guardrail_02.png",
-          "mask_area_frac": 0.0527,
+          "mask_area_frac": 0.0584,
           "centroid_norm": [
-            0.277,
-            0.472
+            0.186,
+            0.48
           ],
           "depth": {
-            "relative_closeness": 0.1703,
-            "band": "far",
+            "relative_closeness": 0.1176,
+            "band": "mid",
             "p10": 0.1176,
-            "p90": 0.1608,
+            "p90": 0.1176,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 4
+            "rank_closest_in_frame": 4,
+            "absolute_band": "far"
           }
         }
       ],
@@ -892,8 +942,8 @@
       ],
       "depth_map_path": "runs/vinna-hardhat/depth/frame_000004_depth.png",
       "depth_order_closest_first": [
-        "worker_03",
         "scaffold_03",
+        "worker_03",
         "material_stack_03",
         "guardrail_02"
       ]
@@ -912,18 +962,19 @@
             343.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000005_worker_03.png",
-          "mask_area_frac": 0.1415,
+          "mask_area_frac": 0.1049,
           "centroid_norm": [
-            0.661,
-            0.551
+            0.765,
+            0.533
           ],
           "depth": {
-            "relative_closeness": 0.5955,
-            "band": "mid",
-            "p10": 0.0549,
-            "p90": 0.8706,
+            "relative_closeness": 0.859,
+            "band": "near",
+            "p10": 0.7725,
+            "p90": 0.9608,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 1,
+            "absolute_band": "near"
           }
         },
         {
@@ -936,18 +987,19 @@
             310.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000005_guardrail_03.png",
-          "mask_area_frac": 0.0981,
+          "mask_area_frac": 0.085,
           "centroid_norm": [
-            0.499,
-            0.582
+            0.606,
+            0.575
           ],
           "depth": {
-            "relative_closeness": 0.5287,
+            "relative_closeness": 0.625,
             "band": "mid",
-            "p10": 0.0745,
-            "p90": 0.8745,
+            "p10": 0.0784,
+            "p90": 0.9216,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 2,
+            "absolute_band": "mid"
           }
         },
         {
@@ -960,18 +1012,19 @@
             385.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000005_open_edge_01.png",
-          "mask_area_frac": 0.1874,
+          "mask_area_frac": 0.1465,
           "centroid_norm": [
-            0.499,
-            0.681
+            0.472,
+            0.712
           ],
           "depth": {
-            "relative_closeness": 0.5294,
-            "band": "mid",
-            "p10": 0.1059,
-            "p90": 0.8431,
+            "relative_closeness": 0.5515,
+            "band": "far",
+            "p10": 0.1451,
+            "p90": 0.8392,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 3,
+            "absolute_band": "mid"
           }
         }
       ],
@@ -982,8 +1035,8 @@
       "depth_map_path": "runs/vinna-hardhat/depth/frame_000005_depth.png",
       "depth_order_closest_first": [
         "worker_03",
-        "open_edge_01",
-        "guardrail_03"
+        "guardrail_03",
+        "open_edge_01"
       ]
     },
     {
@@ -1000,18 +1053,19 @@
             480.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000006_worker_04.png",
-          "mask_area_frac": 0.0153,
+          "mask_area_frac": 0.0187,
           "centroid_norm": [
-            0.955,
-            0.861
+            0.963,
+            0.871
           ],
           "depth": {
-            "relative_closeness": 0.8451,
+            "relative_closeness": 0.8978,
             "band": "near",
-            "p10": 0.351,
-            "p90": 0.9843,
+            "p10": 0.7765,
+            "p90": 0.9882,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 1,
+            "absolute_band": "near"
           }
         },
         {
@@ -1024,18 +1078,19 @@
             393.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000006_material_stack_04.png",
-          "mask_area_frac": 0.08,
+          "mask_area_frac": 0.0246,
           "centroid_norm": [
-            0.564,
-            0.711
+            0.575,
+            0.722
           ],
           "depth": {
-            "relative_closeness": 0.1201,
+            "relative_closeness": 0.1172,
             "band": "far",
-            "p10": 0.051,
+            "p10": 0.0549,
             "p90": 0.1922,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 3,
+            "absolute_band": "far"
           }
         },
         {
@@ -1048,18 +1103,19 @@
             404.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000006_open_edge_01.png",
-          "mask_area_frac": 0.2802,
+          "mask_area_frac": 0.1778,
           "centroid_norm": [
-            0.499,
-            0.661
+            0.429,
+            0.679
           ],
           "depth": {
-            "relative_closeness": 0.1756,
-            "band": "far",
+            "relative_closeness": 0.2156,
+            "band": "mid",
             "p10": 0.0275,
-            "p90": 0.3647,
+            "p90": 0.4549,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 2,
+            "absolute_band": "far"
           }
         }
       ],
@@ -1087,18 +1143,19 @@
             345.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000007_worker_05.png",
-          "mask_area_frac": 0.0421,
+          "mask_area_frac": 0.0293,
           "centroid_norm": [
-            0.394,
-            0.512
+            0.415,
+            0.498
           ],
           "depth": {
-            "relative_closeness": 0.3463,
-            "band": "far",
-            "p10": 0.1961,
+            "relative_closeness": 0.4092,
+            "band": "mid",
+            "p10": 0.3529,
             "p90": 0.4824,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 4
+            "rank_closest_in_frame": 3,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1111,18 +1168,19 @@
             480.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000007_scaffold_04.png",
-          "mask_area_frac": 0.2417,
+          "mask_area_frac": 0.1922,
           "centroid_norm": [
-            0.684,
-            0.499
+            0.699,
+            0.544
           ],
           "depth": {
-            "relative_closeness": 0.4162,
-            "band": "mid",
-            "p10": 0.1098,
+            "relative_closeness": 0.4245,
+            "band": "near",
+            "p10": 0.149,
             "p90": 0.5804,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 1,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1135,18 +1193,19 @@
             450.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000007_concrete_block_wall_02.png",
-          "mask_area_frac": 0.0818,
+          "mask_area_frac": 0.0613,
           "centroid_norm": [
-            0.883,
-            0.762
+            0.869,
+            0.834
           ],
           "depth": {
-            "relative_closeness": 0.3088,
-            "band": "far",
-            "p10": 0.149,
-            "p90": 0.4706,
+            "relative_closeness": 0.3957,
+            "band": "mid",
+            "p10": 0.2549,
+            "p90": 0.5059,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 5
+            "rank_closest_in_frame": 4,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1159,18 +1218,19 @@
             316.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000007_material_stack_05.png",
-          "mask_area_frac": 0.11,
+          "mask_area_frac": 0.0587,
           "centroid_norm": [
-            0.261,
-            0.529
+            0.149,
+            0.502
           ],
           "depth": {
-            "relative_closeness": 0.3818,
-            "band": "mid",
-            "p10": 0.2471,
-            "p90": 0.4902,
+            "relative_closeness": 0.4137,
+            "band": "near",
+            "p10": 0.2706,
+            "p90": 0.5333,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 2,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1183,18 +1243,19 @@
             245.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000007_guardrail_04.png",
-          "mask_area_frac": 0.0405,
+          "mask_area_frac": 0.0171,
           "centroid_norm": [
-            0.292,
-            0.458
+            0.229,
+            0.464
           ],
           "depth": {
-            "relative_closeness": 0.3546,
+            "relative_closeness": 0.3159,
             "band": "far",
             "p10": 0.2314,
-            "p90": 0.4941,
+            "p90": 0.4824,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 5,
+            "absolute_band": "far"
           }
         }
       ],
@@ -1205,9 +1266,9 @@
       "depth_order_closest_first": [
         "scaffold_04",
         "material_stack_05",
-        "guardrail_04",
         "worker_05",
-        "concrete_block_wall_02"
+        "concrete_block_wall_02",
+        "guardrail_04"
       ]
     },
     {
@@ -1224,18 +1285,19 @@
             279.5
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000008_worker_06.png",
-          "mask_area_frac": 0.0146,
+          "mask_area_frac": 0.0117,
           "centroid_norm": [
-            0.959,
-            0.441
+            0.976,
+            0.45
           ],
           "depth": {
-            "relative_closeness": 0.3207,
-            "band": "far",
-            "p10": 0.1059,
-            "p90": 0.5294,
+            "relative_closeness": 0.35,
+            "band": "mid",
+            "p10": 0.1176,
+            "p90": 0.6039,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 4
+            "rank_closest_in_frame": 4,
+            "absolute_band": "far"
           }
         },
         {
@@ -1248,18 +1310,19 @@
             480.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000008_scaffold_05.png",
-          "mask_area_frac": 0.4403,
+          "mask_area_frac": 0.4336,
           "centroid_norm": [
-            0.284,
-            0.499
+            0.285,
+            0.535
           ],
           "depth": {
-            "relative_closeness": 0.3433,
-            "band": "far",
-            "p10": 0.1059,
-            "p90": 0.5333,
+            "relative_closeness": 0.3541,
+            "band": "mid",
+            "p10": 0.1412,
+            "p90": 0.5373,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 3,
+            "absolute_band": "far"
           }
         },
         {
@@ -1272,18 +1335,19 @@
             432.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000008_concrete_block_wall_02.png",
-          "mask_area_frac": 0.0974,
+          "mask_area_frac": 0.0544,
           "centroid_norm": [
-            0.873,
-            0.708
+            0.902,
+            0.698
           ],
           "depth": {
-            "relative_closeness": 0.4623,
-            "band": "mid",
-            "p10": 0.2745,
-            "p90": 0.6275,
+            "relative_closeness": 0.4595,
+            "band": "near",
+            "p10": 0.2824,
+            "p90": 0.6118,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 1,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1296,18 +1360,19 @@
             413.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000008_material_stack_06.png",
-          "mask_area_frac": 0.1045,
+          "mask_area_frac": 0.0397,
           "centroid_norm": [
-            0.553,
-            0.698
+            0.561,
+            0.697
           ],
           "depth": {
-            "relative_closeness": 0.4773,
-            "band": "mid",
-            "p10": 0.2275,
-            "p90": 0.8588,
+            "relative_closeness": 0.4215,
+            "band": "near",
+            "p10": 0.2392,
+            "p90": 0.6078,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 2,
+            "absolute_band": "mid"
           }
         }
       ],
@@ -1316,8 +1381,8 @@
       ],
       "depth_map_path": "runs/vinna-hardhat/depth/frame_000008_depth.png",
       "depth_order_closest_first": [
-        "material_stack_06",
         "concrete_block_wall_02",
+        "material_stack_06",
         "scaffold_05",
         "worker_06"
       ]
@@ -1336,18 +1401,19 @@
             275.5
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000009_worker_07.png",
-          "mask_area_frac": 0.0254,
+          "mask_area_frac": 0.0195,
           "centroid_norm": [
-            0.538,
-            0.436
+            0.535,
+            0.493
           ],
           "depth": {
-            "relative_closeness": 0.1834,
-            "band": "far",
-            "p10": 0.0784,
-            "p90": 0.3882,
+            "relative_closeness": 0.2691,
+            "band": "mid",
+            "p10": 0.0902,
+            "p90": 0.3961,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 5
+            "rank_closest_in_frame": 4,
+            "absolute_band": "far"
           }
         },
         {
@@ -1360,18 +1426,19 @@
             480.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000009_scaffold_05.png",
-          "mask_area_frac": 0.1986,
+          "mask_area_frac": 0.2291,
           "centroid_norm": [
-            0.126,
-            0.499
+            0.118,
+            0.498
           ],
           "depth": {
-            "relative_closeness": 0.4523,
-            "band": "mid",
-            "p10": 0.1255,
-            "p90": 0.749,
+            "relative_closeness": 0.4886,
+            "band": "near",
+            "p10": 0.149,
+            "p90": 0.7961,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 2,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1384,18 +1451,19 @@
             208.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000009_scaffold_06.png",
-          "mask_area_frac": 0.0744,
+          "mask_area_frac": 0.0351,
           "centroid_norm": [
-            0.781,
-            0.216
+            0.728,
+            0.15
           ],
           "depth": {
-            "relative_closeness": 0.3949,
+            "relative_closeness": 0.4085,
             "band": "mid",
-            "p10": 0.0784,
-            "p90": 0.7137,
+            "p10": 0.3765,
+            "p90": 0.4667,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 3,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1408,18 +1476,19 @@
             458.5
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000009_concrete_block_wall_02.png",
-          "mask_area_frac": 0.3093,
+          "mask_area_frac": 0.2776,
           "centroid_norm": [
-            0.672,
-            0.72
+            0.677,
+            0.756
           ],
           "depth": {
-            "relative_closeness": 0.6121,
-            "band": "mid",
-            "p10": 0.2706,
-            "p90": 0.8941,
+            "relative_closeness": 0.6472,
+            "band": "near",
+            "p10": 0.3137,
+            "p90": 0.902,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 1,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1432,18 +1501,19 @@
             257.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000009_guardrail_05.png",
-          "mask_area_frac": 0.0374,
+          "mask_area_frac": 0.011,
           "centroid_norm": [
-            0.365,
-            0.484
+            0.31,
+            0.459
           ],
           "depth": {
-            "relative_closeness": 0.1871,
+            "relative_closeness": 0.1035,
             "band": "far",
-            "p10": 0.0824,
-            "p90": 0.3725,
+            "p10": 0.0784,
+            "p90": 0.1478,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 4
+            "rank_closest_in_frame": 5,
+            "absolute_band": "far"
           }
         }
       ],
@@ -1456,8 +1526,8 @@
         "concrete_block_wall_02",
         "scaffold_05",
         "scaffold_06",
-        "guardrail_05",
-        "worker_07"
+        "worker_07",
+        "guardrail_05"
       ]
     },
     {
@@ -1474,18 +1544,19 @@
             480.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000010_worker_08.png",
-          "mask_area_frac": 0.158,
+          "mask_area_frac": 0.1655,
           "centroid_norm": [
-            0.336,
-            0.596
+            0.361,
+            0.616
           ],
           "depth": {
-            "relative_closeness": 0.6566,
-            "band": "mid",
-            "p10": 0.5294,
+            "relative_closeness": 0.6702,
+            "band": "near",
+            "p10": 0.5765,
             "p90": 0.7294,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 1
+            "rank_closest_in_frame": 1,
+            "absolute_band": "near"
           }
         },
         {
@@ -1498,18 +1569,19 @@
             315.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000010_worker_09.png",
-          "mask_area_frac": 0.0152,
+          "mask_area_frac": 0.0086,
           "centroid_norm": [
-            0.622,
-            0.519
+            0.63,
+            0.52
           ],
           "depth": {
-            "relative_closeness": 0.2239,
+            "relative_closeness": 0.2086,
             "band": "far",
-            "p10": 0.1255,
-            "p90": 0.3608,
+            "p10": 0.1529,
+            "p90": 0.2745,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 5
+            "rank_closest_in_frame": 6,
+            "absolute_band": "far"
           }
         },
         {
@@ -1522,18 +1594,19 @@
             480.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000010_scaffold_05.png",
-          "mask_area_frac": 0.2446,
+          "mask_area_frac": 0.2747,
           "centroid_norm": [
-            0.157,
-            0.499
+            0.14,
+            0.474
           ],
           "depth": {
-            "relative_closeness": 0.4647,
+            "relative_closeness": 0.4526,
             "band": "mid",
-            "p10": 0.1333,
-            "p90": 0.5961,
+            "p10": 0.1176,
+            "p90": 0.6039,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 3
+            "rank_closest_in_frame": 3,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1546,18 +1619,19 @@
             274.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000010_scaffold_06.png",
-          "mask_area_frac": 0.148,
+          "mask_area_frac": 0.1268,
           "centroid_norm": [
-            0.787,
-            0.284
+            0.779,
+            0.216
           ],
           "depth": {
-            "relative_closeness": 0.2183,
-            "band": "far",
-            "p10": 0.0784,
-            "p90": 0.3529,
+            "relative_closeness": 0.2278,
+            "band": "mid",
+            "p10": 0.0902,
+            "p90": 0.3725,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 6
+            "rank_closest_in_frame": 4,
+            "absolute_band": "far"
           }
         },
         {
@@ -1570,18 +1644,19 @@
             440.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000010_concrete_block_wall_02.png",
-          "mask_area_frac": 0.2322,
+          "mask_area_frac": 0.1438,
           "centroid_norm": [
-            0.657,
-            0.748
+            0.717,
+            0.805
           ],
           "depth": {
-            "relative_closeness": 0.546,
-            "band": "mid",
-            "p10": 0.3333,
-            "p90": 0.7255,
+            "relative_closeness": 0.5751,
+            "band": "near",
+            "p10": 0.3569,
+            "p90": 0.8314,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 2
+            "rank_closest_in_frame": 2,
+            "absolute_band": "mid"
           }
         },
         {
@@ -1594,18 +1669,19 @@
             276.0
           ],
           "mask_path": "runs/vinna-hardhat/masks/frame_000010_guardrail_06.png",
-          "mask_area_frac": 0.0343,
+          "mask_area_frac": 0.0029,
           "centroid_norm": [
-            0.633,
-            0.532
+            0.672,
+            0.526
           ],
           "depth": {
-            "relative_closeness": 0.2635,
+            "relative_closeness": 0.21,
             "band": "far",
-            "p10": 0.1765,
-            "p90": 0.3804,
+            "p10": 0.1804,
+            "p90": 0.2384,
             "source": "depth_anything_hf",
-            "rank_closest_in_frame": 4
+            "rank_closest_in_frame": 5,
+            "absolute_band": "far"
           }
         }
       ],
@@ -1620,9 +1696,9 @@
         "worker_08",
         "concrete_block_wall_02",
         "scaffold_05",
+        "scaffold_06",
         "guardrail_06",
-        "worker_09",
-        "scaffold_06"
+        "worker_09"
       ]
     }
   ]

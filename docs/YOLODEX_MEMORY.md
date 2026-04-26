@@ -78,13 +78,14 @@ Recommended use:
 ```text
 YOLO/Codex boxes for cheap frames
 Gemini Robotics-ER boxes for selected semantic keyframes
-SAM 2 or box-prompt fallback for masks
+SAM box-prompt masks
 mask tracks -> depth -> episodic memory -> VLM synthesis
 ```
 
-The current implementation uses a box-prompt mask fallback so the pipeline runs
-without SAM 2 weights. Replace `make_prompt_mask` in `demo/mask_track_memory.py`
-with a SAM 2 backend when the dependency is available; keep the JSON schema.
+The current implementation uses real Hugging Face SAM box-prompt masks via
+`facebook/sam-vit-base`. It still has a box-mask fallback for machines without
+model weights, but committed demo outputs should report
+`"mask_backend": "sam_hf_box_prompt"` in `demo/mask_track_memory.json`.
 
 ## Depth Stage
 
@@ -96,7 +97,7 @@ not the whole box. The script supports:
 - `--backend depth-anything`: require the Hugging Face depth pipeline.
 - `--backend proxy`: always use the lightweight local proxy.
 
-The fallback is not metric depth. It produces `relative_closeness` where higher
-means closer to the camera, plus `near` / `mid` / `far` bands. This is enough to
-feed spatial memory and can be swapped for Depth Anything V2 without changing
-the downstream JSON shape.
+Depth Anything is not metric depth. It produces `relative_closeness` where
+higher means closer to the camera. The overlay uses quantile-ranked
+`near` / `mid` / `far` bands per frame so the demo shows relative spatial order,
+while `absolute_depth_band` preserves fixed-threshold scores for audit.

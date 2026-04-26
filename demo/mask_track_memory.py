@@ -23,6 +23,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 DEFAULT_RUN_DIR = pathlib.Path("tools/yolodex/runs/vinna-hardhat")
 DEFAULT_OUTPUT = pathlib.Path("demo/mask_track_memory.json")
+DEFAULT_SAM_MODEL = "facebook/sam-vit-base"
 
 
 @dataclass
@@ -50,6 +51,50 @@ class TrackState:
     last_time_s: float
     frames_seen: int = 1
     area_fracs: list[float] = field(default_factory=list)
+
+
+class SamBoxMasker:
+    """Box-prompt SAM backend using Hugging Face transformers."""
+
+    def __init__(self, model_id: str) -> None:
+        import torch
+        from transformers import SamModel, SamProcessor
+
+        self.torch = torch
+        self.processor = SamProcessor.from_pretrained(model_id)
+        self.model = SamModel.from_pretrained(model_id)
+        self.model.eval()
+
+    def masks_for_frame(self, image: Image.Image, detections: list[Detection]) -> dict[str, Image.Image]:
+        if not detections:
+            return {}
+
+        boxes = [[list(det.bbox) for det in detections]]
+        inputs = self.processor(image, input_boxes=boxes, return_tensors="pt")
+        with self.torch.no_grad():
+            outputs = self.model(**inputs)
+
+        masks = self.processor.image_processor.post_process_masks(
+            outputs.pred_masks.cpu(),
+            inputs["original_sizes"].cpu(),
+            inputs["reshaped_input_sizes"].cpu(),
+        )[0]
+        scores = outputs.iou_scores.cpu()[0]
+
+        result: dict[str, Image.Image] = {}
+        for index, det in enumerate(detections):
+            best_idx = int(scores[index].argmax().item())
+            mask_arr = masks[index, best_idx].numpy().astype("uint8") * 255
+            result[det.track_id or f"det_{index}"] = Image.fromarray(mask_arr, mode="L")
+        return result
+
+
+def load_sam_masker(model_id: str) -> SamBoxMasker | None:
+    try:
+        return SamBoxMasker(model_id)
+    except Exception as exc:  # noqa: BLE001
+        print(f"Warning: failed to load SAM backend ({exc}); falling back to box masks.")
+        return None
 
 
 def load_classes(path: pathlib.Path) -> list[str]:
@@ -256,7 +301,14 @@ def encode_video(preview_dir: pathlib.Path, video_out: pathlib.Path, framerate: 
     subprocess.run(cmd, check=True)
 
 
-def build_mask_memory(run_dir: pathlib.Path, out: pathlib.Path, fps: float, iou_threshold: float) -> dict:
+def build_mask_memory(
+    run_dir: pathlib.Path,
+    out: pathlib.Path,
+    fps: float,
+    iou_threshold: float,
+    mask_backend: str,
+    sam_model: str,
+) -> dict:
     frames_dir = run_dir / "frames"
     classes = load_classes(run_dir / "classes.txt")
     frame_paths = sorted(frames_dir.glob("frame_*.jpg"))
@@ -270,14 +322,19 @@ def build_mask_memory(run_dir: pathlib.Path, out: pathlib.Path, fps: float, iou_
     preview_dir = run_dir / "mask_preview"
     mask_dir.mkdir(parents=True, exist_ok=True)
     preview_dir.mkdir(parents=True, exist_ok=True)
+    sam_masker = load_sam_masker(sam_model) if mask_backend in {"auto", "sam"} else None
+    if mask_backend == "sam" and sam_masker is None:
+        raise RuntimeError("SAM backend requested but could not be loaded.")
+    backend_used = "sam_hf_box_prompt" if sam_masker else "box_prompt_fallback"
 
     memory_rows = []
     for frame_path, detections in zip(frame_paths, frame_detections, strict=True):
         image = Image.open(frame_path)
+        sam_masks = sam_masker.masks_for_frame(image.convert("RGB"), detections) if sam_masker else {}
         for det in detections:
             if not det.track_id:
                 continue
-            mask = make_prompt_mask(det.label, det.bbox, image.size)
+            mask = sam_masks.get(det.track_id) or make_prompt_mask(det.label, det.bbox, image.size)
             mask_name = f"{frame_path.stem}_{det.track_id}.png"
             mask.save(mask_dir / mask_name)
             det.mask_path = str(mask_dir / mask_name)
@@ -331,7 +388,8 @@ def build_mask_memory(run_dir: pathlib.Path, out: pathlib.Path, fps: float, iou_
             "tool": "VINNA box-prompt mask tracks",
             "run_dir": str(run_dir),
             "fps": fps,
-            "mask_backend": "box_prompt_fallback",
+            "mask_backend": backend_used,
+            "sam_model": sam_model if backend_used == "sam_hf_box_prompt" else None,
             "sam2_ready": True,
             "preview_video": str(video_out) if video_out else None,
         },
@@ -349,12 +407,21 @@ def main() -> int:
     parser.add_argument("--out", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--fps", type=float, default=0.1)
     parser.add_argument("--iou-threshold", type=float, default=0.18)
+    parser.add_argument("--mask-backend", choices=["auto", "sam", "box"], default="auto")
+    parser.add_argument("--sam-model", default=DEFAULT_SAM_MODEL)
     args = parser.parse_args()
 
-    result = build_mask_memory(pathlib.Path(args.run_dir), pathlib.Path(args.out), args.fps, args.iou_threshold)
+    result = build_mask_memory(
+        pathlib.Path(args.run_dir),
+        pathlib.Path(args.out),
+        args.fps,
+        args.iou_threshold,
+        args.mask_backend,
+        args.sam_model,
+    )
     print(
         f"wrote {args.out} with {len(result['memory'])} frames "
-        f"and {len(result['tracks'])} tracks"
+        f"and {len(result['tracks'])} tracks, backend={result['metadata']['mask_backend']}"
     )
     if result["metadata"]["preview_video"]:
         print(f"preview: {result['metadata']['preview_video']}")

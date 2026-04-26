@@ -160,6 +160,17 @@ def band(score: float) -> str:
     return "far"
 
 
+def rank_band(rank: int, total: int) -> str:
+    if total <= 1:
+        return "near"
+    third = max(1, int(np.ceil(total / 3.0)))
+    if rank <= third:
+        return "near"
+    if rank <= third * 2:
+        return "mid"
+    return "far"
+
+
 def draw_depth_preview(
     frame: Image.Image,
     depth: np.ndarray,
@@ -267,6 +278,8 @@ def build_depth_memory(
         )
         for rank, obj in enumerate(ordered, start=1):
             obj["depth"]["rank_closest_in_frame"] = rank
+            obj["depth"]["absolute_band"] = obj["depth"]["band"]
+            obj["depth"]["band"] = rank_band(rank, len(ordered))
 
         draw_depth_preview(frame, depth, enriched_objects, preview_dir / row["frame"])
         enriched_rows.append({
@@ -279,13 +292,24 @@ def build_depth_memory(
         })
 
     track_depth = []
+    track_means = []
     for track in memory["tracks"]:
         scores = track_scores.get(track["track_id"], [])
         mean_score = float(np.mean(scores)) if scores else 0.0
+        track_means.append((track, mean_score))
+
+    ordered_tracks = sorted(track_means, key=lambda item: item[1], reverse=True)
+    track_band_by_id = {
+        track["track_id"]: rank_band(rank, len(ordered_tracks))
+        for rank, (track, _score) in enumerate(ordered_tracks, start=1)
+    }
+
+    for track, mean_score in track_means:
         track_depth.append({
             **track,
             "mean_relative_closeness": round(mean_score, 4),
-            "depth_band": band(mean_score),
+            "absolute_depth_band": band(mean_score),
+            "depth_band": track_band_by_id[track["track_id"]],
         })
 
     video_out = preview_dir / "depth_tracks.mp4"
@@ -303,6 +327,7 @@ def build_depth_memory(
             "backends_used": sorted(backends_used),
             "hf_model": hf_model if "depth_anything_hf" in backends_used else None,
             "depth_semantics": "higher relative_closeness means closer to camera",
+            "banding": "near/mid/far is quantile-ranked per frame and per track; absolute_depth_band preserves fixed-threshold score bands",
             "preview_video": str(video_out) if video_out else None,
         },
         "tracks": track_depth,
