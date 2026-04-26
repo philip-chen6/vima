@@ -12,7 +12,6 @@ import PipelineStepper from "@/components/landing/pipeline-stepper";
 import GradientText from "@/components/react-bits/gradient-text";
 import SimpleGraph from "@/components/react-bits/simple-graph";
 import Logo from "@/components/phosphor/logo";
-import Device from "@/components/react-bits/device";
 import { Showcase2 } from "@/components/blocks/showcase-2";
 import { Features3 } from "@/components/blocks/features-3";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
@@ -1167,14 +1166,55 @@ export default function VimaLandingPage() {
               minHeight: "560px",
             }}
           >
-            <Device
-              image="/mobile-screenshots/01-swipe-deck-initial.png"
-              scale={0.85}
-              enableParallax
-              enableRotate
-              parallaxStrength={12}
-              rotateStrength={2.5}
-            />
+            <div
+              style={{
+                position: "relative",
+                width: "min(390px, 78vw)",
+                aspectRatio: "390 / 706",
+                border: `1px solid ${LINE}`,
+                background: "rgba(8,5,3,0.7)",
+                boxShadow: "0 28px 80px rgba(0,0,0,0.48), 0 0 58px rgba(166,77,121,0.12)",
+                overflow: "hidden",
+              }}
+            >
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                poster="/mobile-screenshots/phone-flow-poster.jpg"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              >
+                <source src="/mobile-screenshots/phone-flow-crop.mp4" type="video/mp4" />
+              </video>
+              <div
+                style={{
+                  position: "absolute",
+                  left: 12,
+                  right: 12,
+                  bottom: 12,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "12px",
+                  padding: "9px 10px",
+                  border: `1px solid ${LINE}`,
+                  background: "rgba(8,5,3,0.78)",
+                  color: TEXT_SECONDARY,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  letterSpacing: "0.04em",
+                  backdropFilter: "blur(12px)",
+                }}
+              >
+                <span>live verifier</span>
+                <span style={{ color: SAKURA_HOT }}>25 claims · 2.5x</span>
+              </div>
+            </div>
           </div>
         </div>
 
