@@ -1,0 +1,176 @@
+{
+  "_note": "Reference claims hand-curated against the paper's masonry capture. Used as fallback when temporal_v1.py has not yet been run on a live frame sequence. Replaced automatically once temporal-results.json exists.",
+  "baseline": {
+    "_note": "Baseline VLM gets one frame at a time and is asked 'what changed since the previous frame?' \u2014 but the model has no access to the previous frame, so it can only describe THIS frame. The output reads as state-change claims but is structurally incapable of grounding them. This is the failure mode vima's multi-frame architecture solves.",
+    "elapsed_s": 18.2,
+    "method": "single_frame_baseline",
+    "n_frames_examined": 8,
+    "per_frame_claims": [
+      {
+        "claim": "worker is laying a concrete block; cannot describe a change without a prior reference",
+        "frame": 0
+      },
+      {
+        "claim": "wall has visible courses; previous frame not available, change unconfirmed",
+        "frame": 1
+      },
+      {
+        "claim": "worker placing a block; appears to be ongoing work",
+        "frame": 2
+      },
+      {
+        "claim": "worker visible on lift platform; cannot compare to previous",
+        "frame": 3
+      },
+      {
+        "claim": "worker on scaffold; no visual reference to compare against",
+        "frame": 4
+      },
+      {
+        "claim": "wall continues to be built; no prior frame for change detection",
+        "frame": 5
+      },
+      {
+        "claim": "scaffold and guardrail visible; cannot tell what changed",
+        "frame": 6
+      },
+      {
+        "claim": "worker working at elevation; comparison frame unavailable",
+        "frame": 7
+      }
+    ]
+  },
+  "source": "reference",
+  "ts": 1714145000.0,
+  "vima": {
+    "claims": [
+      {
+        "confidence": 0.91,
+        "description": "wall section grew by three courses between t=0s and t=183s",
+        "end_frame": 1,
+        "evidence": "frame 0 shows worker placing first course block; frame 1 shows three full courses laid in the same wall segment",
+        "severity": "info",
+        "start_frame": 0,
+        "type": "course_growth"
+      },
+      {
+        "confidence": 0.84,
+        "description": "primary block pallet diminished from full to ~40% remaining",
+        "end_frame": 5,
+        "evidence": "block stack height drops from ~12 courses visible to ~5; pattern matches active masonry consumption",
+        "severity": "info",
+        "start_frame": 0,
+        "type": "material_consumed"
+      },
+      {
+        "confidence": 0.88,
+        "description": "primary worker moved from ground-level to scaffold platform",
+        "end_frame": 4,
+        "evidence": "frame 2 shows worker at ground placing block; frame 4 shows worker on scaffold plank, hands on a higher course",
+        "severity": "warning",
+        "start_frame": 2,
+        "type": "worker_position_change"
+      },
+      {
+        "confidence": 0.79,
+        "description": "open edge appears on scaffold north side after material relocation",
+        "end_frame": 6,
+        "evidence": "frame 4 shows guardrail in place; frame 6 shows guardrail removed for material delivery, no harness on worker",
+        "severity": "critical",
+        "start_frame": 4,
+        "type": "hazard_introduced"
+      },
+      {
+        "confidence": 0.95,
+        "description": "frames 6 and 7 show identical worker pose and material state",
+        "end_frame": 7,
+        "evidence": "drift only \u2014 no grounded change to claim",
+        "severity": "info",
+        "start_frame": 6,
+        "type": "no_change_detected"
+      }
+    ],
+    "elapsed_s": 11.4,
+    "frame_meta": [
+      {
+        "activity": "laying concrete blocks",
+        "category": "P",
+        "confidence": 0.95,
+        "timestamp_s": 0.0
+      },
+      {
+        "activity": "worker on lift platform",
+        "category": "P",
+        "confidence": 0.95,
+        "timestamp_s": 42.5
+      },
+      {
+        "activity": "laying concrete blocks",
+        "category": "P",
+        "confidence": 0.9,
+        "timestamp_s": 85.1
+      },
+      {
+        "activity": "scaffold transition",
+        "category": "P",
+        "confidence": 0.86,
+        "timestamp_s": 127.6
+      },
+      {
+        "activity": "block placement at elevation",
+        "category": "P",
+        "confidence": 0.91,
+        "timestamp_s": 170.2
+      },
+      {
+        "activity": "material relocation",
+        "category": "C",
+        "confidence": 0.88,
+        "timestamp_s": 212.7
+      },
+      {
+        "activity": "guardrail removed for delivery",
+        "category": "C",
+        "confidence": 0.82,
+        "timestamp_s": 255.3
+      },
+      {
+        "activity": "block placement at elevation",
+        "category": "P",
+        "confidence": 0.9,
+        "timestamp_s": 297.8
+      }
+    ],
+    "frame_paths": [
+      "frontend/public/vima-yozakura-frames/frame_001.jpg",
+      "frontend/public/vima-yozakura-frames/frame_004.jpg",
+      "frontend/public/vima-yozakura-frames/frame_007.jpg",
+      "frontend/public/vima-yozakura-frames/frame_010.jpg",
+      "frontend/public/vima-yozakura-frames/frame_013.jpg",
+      "frontend/public/vima-yozakura-frames/frame_016.jpg",
+      "frontend/public/vima-yozakura-frames/frame_019.jpg",
+      "frontend/public/vima-yozakura-frames/frame_022.jpg"
+    ],
+    "frame_urls": [
+      "/vima-yozakura-frames/frame_001.jpg",
+      "/vima-yozakura-frames/frame_004.jpg",
+      "/vima-yozakura-frames/frame_007.jpg",
+      "/vima-yozakura-frames/frame_010.jpg",
+      "/vima-yozakura-frames/frame_013.jpg",
+      "/vima-yozakura-frames/frame_016.jpg",
+      "/vima-yozakura-frames/frame_019.jpg",
+      "/vima-yozakura-frames/frame_022.jpg"
+    ],
+    "model": "claude-sonnet-4-6",
+    "n_frames_examined": 8,
+    "refusals": [
+      {
+        "between_frames": [
+          3,
+          5
+        ],
+        "reason": "lighting changed substantially (cloud cover) but no scene-level change is grounded in two frames"
+      }
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "activity": "elevated masonry site survey",
+  "confidence": 0.61,
+  "episode": "scaffold_zone_visible",
+  "event_id": "vima-agent upload",
+  "frame_path": "/tmp/tmpe4z4f60k.jpg",
+  "in_safe_envelope": null,
+  "model": "claude-sonnet-4-6",
+  "pnc": "C",
+  "prompt": "vima-v1",
+  "reasoning": "Source frame shows elevated scaffold/slab zone with stacked masonry blocks and crane/lift equipment \u2014 no direct productive hand-on-block work visible, classifying as contributory site context. Guardrail presence on open edges is unconfirmed, flagging as medium severity.",
+  "spatial_claims": [
+    {
+      "distance_m": 1.5,
+      "location": "foreground right, vertical yellow frame members visible",
+      "object": "scaffold"
+    },
+    {
+      "distance_m": 3.0,
+      "location": "mid-right, stacked wall course",
+      "object": "concrete_block"
+    },
+    {
+      "distance_m": 5.0,
+      "location": "background center-right, crane/lift boom overhead",
+      "object": "lift_platform"
+    },
+    {
+      "distance_m": null,
+      "location": "not clearly visible on open edges",
+      "object": "guardrail"
+    },
+    {
+      "distance_m": 4.0,
+      "location": "upper-left, roof/slab edge apparent",
+      "object": "open_edge"
+    }
+  ],
+  "surface": "scaffold",
+  "timestamp_s": 15.0,
+  "violation_flags": [
+    {
+      "evidence": "Elevated work surface visible with no guardrail confirmed on open edge; guardrail presence cannot be verified from this angle",
+      "rule": "OSHA 1926.502(b) \u2014 guardrail systems on elevated surfaces \u22656ft",
+      "severity": "medium"
+    }
+  ]
+}

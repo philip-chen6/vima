@@ -201,19 +201,19 @@ export function LiveFrameAnalyzer() {
   return (
     <section
       id="live-analyze"
-      className="relative border-y border-[#6f4a2f]/35 bg-[#0b0806] px-5 py-16 sm:px-8 lg:px-12"
+      className="relative border-y border-[#f2a7b8]/35 bg-[#0a0507] px-5 py-16 sm:px-8 lg:px-12"
       style={{ fontFamily: "var(--font-sans)" }}
     >
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p
-              className="text-xs tracking-[0.28em] text-[#c77b42]"
+              className="text-xs tracking-[0.28em] text-[#f2a7b8]"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               live · claude vision
             </p>
-            <h2 className="mt-3 text-3xl font-light tracking-normal text-[#f4eadb] md:text-5xl">
+            <h2 className="mt-3 text-3xl font-light tracking-normal text-[#f7ecef] md:text-5xl">
               drop a frame. see the spatial claim.
             </h2>
           </div>
@@ -237,7 +237,7 @@ export function LiveFrameAnalyzer() {
             className={`group relative flex min-h-[320px] cursor-pointer flex-col items-center justify-center border bg-[#100b07] p-6 transition ${
               dragActive
                 ? "border-[#A64D79] bg-[#15090f]"
-                : "border-[#6f4a2f]/45 hover:border-[#c77b42]/70"
+                : "border-[#f2a7b8]/45 hover:border-[#f2a7b8]/70"
             }`}
             role="button"
             tabIndex={0}
@@ -260,7 +260,7 @@ export function LiveFrameAnalyzer() {
                 <img
                   src={previewUrl}
                   alt="uploaded frame"
-                  className="mx-auto max-h-[280px] w-auto border border-[#6f4a2f]/40 object-contain"
+                  className="mx-auto max-h-[280px] w-auto border border-[#f2a7b8]/40 object-contain"
                 />
                 {phase === "loading" && (
                   <div className="absolute inset-0 grid place-items-center bg-[#080604]/72 backdrop-blur-sm">
@@ -270,12 +270,12 @@ export function LiveFrameAnalyzer() {
               </div>
             ) : (
               <div className="flex flex-col items-center text-center">
-                <Upload className="h-7 w-7 text-[#c77b42]" />
-                <p className="mt-4 text-base text-[#f4eadb]">
+                <Upload className="h-7 w-7 text-[#f2a7b8]" />
+                <p className="mt-4 text-base text-[#f7ecef]">
                   Drop an image here, or click to upload.
                 </p>
                 <p
-                  className="mt-2 text-[11px] tracking-[0.18em] text-[#8f806d]"
+                  className="mt-2 text-[11px] tracking-[0.18em] text-[#a89292]"
                   style={{ fontFamily: "var(--font-mono)" }}
                 >
                   jpg · png · webp
@@ -285,10 +285,10 @@ export function LiveFrameAnalyzer() {
           </div>
 
           {/* ── Result panel ──────────────────────────────────────────── */}
-          <div className="border border-[#6f4a2f]/45 bg-[#0f0a07] p-5">
-            <div className="mb-4 flex items-center justify-between border-b border-[#6f4a2f]/30 pb-3">
+          <div className="border border-[#f2a7b8]/45 bg-[#0d0608] p-5">
+            <div className="mb-4 flex items-center justify-between border-b border-[#f2a7b8]/30 pb-3">
               <span
-                className="text-xs tracking-[0.24em] text-[#c77b42]"
+                className="text-xs tracking-[0.24em] text-[#f2a7b8]"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 spatial claim
@@ -325,7 +325,7 @@ export function LiveFrameAnalyzer() {
                 <div className="flex items-baseline justify-between gap-4 border-b border-[#2a1d14] pb-4">
                   <div>
                     <p
-                      className="text-[10px] tracking-[0.24em] text-[#8f806d]"
+                      className="text-[10px] tracking-[0.24em] text-[#a89292]"
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
                       cii verdict
@@ -334,7 +334,7 @@ export function LiveFrameAnalyzer() {
                       <span
                         className="text-4xl font-semibold"
                         style={{
-                          color: cii?.fg ?? "#f4eadb",
+                          color: cii?.fg ?? "#f7ecef",
                           fontFamily: "var(--font-mono)",
                           fontVariantNumeric: "tabular-nums",
                           textShadow: cii
@@ -354,13 +354,13 @@ export function LiveFrameAnalyzer() {
                   </div>
                   <div className="text-right">
                     <p
-                      className="text-[10px] tracking-[0.24em] text-[#8f806d]"
+                      className="text-[10px] tracking-[0.24em] text-[#a89292]"
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
                       confidence
                     </p>
                     <div
-                      className="mt-2 text-3xl font-semibold text-[#f1c27d]"
+                      className="mt-2 text-3xl font-semibold text-[#ffd3a6]"
                       style={{
                         fontFamily: "var(--font-mono)",
                         fontVariantNumeric: "tabular-nums",
@@ -378,7 +378,7 @@ export function LiveFrameAnalyzer() {
                       className="h-full"
                       style={{
                         width: `${confidencePct}%`,
-                        background: cii?.fg ?? "#f1c27d",
+                        background: cii?.fg ?? "#ffd3a6",
                         boxShadow: cii ? `0 0 10px ${cii.fg}80` : undefined,
                       }}
                     />
@@ -389,12 +389,12 @@ export function LiveFrameAnalyzer() {
                 {result.activity && (
                   <div>
                     <p
-                      className="text-[10px] tracking-[0.24em] text-[#8f806d]"
+                      className="text-[10px] tracking-[0.24em] text-[#a89292]"
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
                       activity
                     </p>
-                    <p className="mt-2 text-base text-[#f4eadb]">
+                    <p className="mt-2 text-base text-[#f7ecef]">
                       {result.activity}
                     </p>
                   </div>
@@ -404,7 +404,7 @@ export function LiveFrameAnalyzer() {
                 {result.reasoning && (
                   <div>
                     <p
-                      className="text-[10px] tracking-[0.24em] text-[#8f806d]"
+                      className="text-[10px] tracking-[0.24em] text-[#a89292]"
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
                       reasoning
@@ -419,7 +419,7 @@ export function LiveFrameAnalyzer() {
                 {result.spatial_claims && result.spatial_claims.length > 0 && (
                   <div>
                     <p
-                      className="text-[10px] tracking-[0.24em] text-[#8f806d]"
+                      className="text-[10px] tracking-[0.24em] text-[#a89292]"
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
                       spatial claims
@@ -434,8 +434,8 @@ export function LiveFrameAnalyzer() {
                             fontVariantNumeric: "tabular-nums",
                           }}
                         >
-                          <span className="text-[#c77b42]">{c.object}</span>
-                          <span className="truncate text-[#f4eadb]">
+                          <span className="text-[#f2a7b8]">{c.object}</span>
+                          <span className="truncate text-[#f7ecef]">
                             {c.location}
                           </span>
                           <span className="text-right">
@@ -453,7 +453,7 @@ export function LiveFrameAnalyzer() {
                 {result.violation_flags && result.violation_flags.length > 0 && (
                   <div>
                     <p
-                      className="text-[10px] tracking-[0.24em] text-[#8f806d]"
+                      className="text-[10px] tracking-[0.24em] text-[#a89292]"
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
                       osha flags
@@ -465,7 +465,7 @@ export function LiveFrameAnalyzer() {
                           className="border border-[#2a1d14] bg-[#100b07] px-3 py-2 text-xs text-[#a99a86]"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-[#f4eadb]">{v.rule}</span>
+                            <span className="text-[#f7ecef]">{v.rule}</span>
                             <span
                               className="text-[10px] tracking-[0.18em]"
                               style={{
@@ -475,7 +475,7 @@ export function LiveFrameAnalyzer() {
                                     ? "#ef476f"
                                     : v.severity === "medium"
                                       ? "#ffd3a6"
-                                      : "#8f806d",
+                                      : "#a89292",
                               }}
                             >
                               {v.severity}
@@ -490,7 +490,7 @@ export function LiveFrameAnalyzer() {
 
                 {/* meta */}
                 <div
-                  className="flex items-center justify-between border-t border-[#2a1d14] pt-3 text-[10px] tracking-[0.18em] text-[#8f806d]"
+                  className="flex items-center justify-between border-t border-[#2a1d14] pt-3 text-[10px] tracking-[0.18em] text-[#a89292]"
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontVariantNumeric: "tabular-nums",
@@ -500,7 +500,7 @@ export function LiveFrameAnalyzer() {
                   <button
                     type="button"
                     onClick={reset}
-                    className="text-[#c77b42] transition hover:text-[#f1c27d]"
+                    className="text-[#f2a7b8] transition hover:text-[#ffd3a6]"
                   >
                     try another
                   </button>
@@ -513,7 +513,7 @@ export function LiveFrameAnalyzer() {
         {/* ── Sample frames row (always visible for fast judge access) ── */}
         <div className="mt-6">
           <p
-            className="mb-3 text-[10px] tracking-[0.24em] text-[#8f806d]"
+            className="mb-3 text-[10px] tracking-[0.24em] text-[#a89292]"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             try sample frames
@@ -525,7 +525,7 @@ export function LiveFrameAnalyzer() {
                 type="button"
                 onClick={() => handleSample(s.src)}
                 disabled={phase === "loading"}
-                className="group relative aspect-video overflow-hidden border border-[#6f4a2f]/35 bg-[#100b07] transition hover:border-[#c77b42]/70 disabled:cursor-not-allowed disabled:opacity-50"
+                className="group relative aspect-video overflow-hidden border border-[#f2a7b8]/35 bg-[#100b07] transition hover:border-[#f2a7b8]/70 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -534,7 +534,7 @@ export function LiveFrameAnalyzer() {
                   className="h-full w-full object-cover opacity-80 transition group-hover:opacity-100"
                 />
                 <span
-                  className="absolute bottom-1 left-2 text-[10px] tracking-[0.18em] text-[#f4eadb]"
+                  className="absolute bottom-1 left-2 text-[10px] tracking-[0.18em] text-[#f7ecef]"
                   style={{
                     fontFamily: "var(--font-mono)",
                     textShadow: "0 1px 2px rgba(0,0,0,0.85)",
@@ -556,7 +556,7 @@ export function LiveFrameAnalyzer() {
 function EmptyState({ onSample }: { onSample: (src: string) => void }) {
   return (
     <div className="flex min-h-[260px] flex-col items-center justify-center gap-4 text-center">
-      <ImagePlus className="h-7 w-7 text-[#6f4a2f]" />
+      <ImagePlus className="h-7 w-7 text-[#f2a7b8]" />
       <p className="max-w-sm text-sm text-[#a99a86]">
         Upload a frame, or click a sample below. The judge runs Claude Sonnet
         against the same prompt the production pipeline uses.
@@ -564,7 +564,7 @@ function EmptyState({ onSample }: { onSample: (src: string) => void }) {
       <button
         type="button"
         onClick={() => onSample(SAMPLE_FRAMES[0].src)}
-        className="border border-[#c77b42]/60 bg-[#100b07] px-4 py-2 text-xs tracking-[0.22em] text-[#f1c27d] transition hover:border-[#f1c27d] hover:text-[#f4eadb]"
+        className="border border-[#f2a7b8]/60 bg-[#100b07] px-4 py-2 text-xs tracking-[0.22em] text-[#ffd3a6] transition hover:border-[#ffd3a6] hover:text-[#f7ecef]"
         style={{ fontFamily: "var(--font-mono)" }}
       >
         run sample frame
@@ -589,13 +589,13 @@ function ThinkingPulse({ elapsed }: { elapsed: number }) {
         <span className="absolute inset-5 rounded-full bg-[#A64D79]/80" />
       </div>
       <p
-        className="text-[11px] tracking-[0.24em] text-[#cdbda4]"
+        className="text-[11px] tracking-[0.24em] text-[#f7ecef]"
         style={{ fontFamily: "var(--font-mono)" }}
       >
         claude vision is reading the frame…
       </p>
       <p
-        className="text-[10px] tracking-[0.18em] text-[#8f806d]"
+        className="text-[10px] tracking-[0.18em] text-[#a89292]"
         style={{
           fontFamily: "var(--font-mono)",
           fontVariantNumeric: "tabular-nums",
@@ -624,7 +624,7 @@ function ErrorState({
         analyze failed
       </p>
       <pre
-        className="max-w-md whitespace-pre-wrap break-words border border-[#ef476f]/30 bg-[#15090c] px-4 py-3 text-left text-[11px] leading-5 text-[#f4eadb]"
+        className="max-w-md whitespace-pre-wrap break-words border border-[#ef476f]/30 bg-[#15090c] px-4 py-3 text-left text-[11px] leading-5 text-[#f7ecef]"
         style={{ fontFamily: "var(--font-mono)" }}
       >
         {message}
@@ -632,7 +632,7 @@ function ErrorState({
       <button
         type="button"
         onClick={onRetry}
-        className="border border-[#6f4a2f]/60 bg-[#100b07] px-4 py-2 text-xs tracking-[0.22em] text-[#c77b42] transition hover:border-[#f1c27d] hover:text-[#f1c27d]"
+        className="border border-[#f2a7b8]/60 bg-[#100b07] px-4 py-2 text-xs tracking-[0.22em] text-[#f2a7b8] transition hover:border-[#ffd3a6] hover:text-[#ffd3a6]"
         style={{ fontFamily: "var(--font-mono)" }}
       >
         try again

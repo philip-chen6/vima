@@ -1,0 +1,10 @@
+{
+  "baseline_pct": 30.0,
+  "contributory": 0,
+  "model": "claude-sonnet-4-6",
+  "non_contributory": 4,
+  "productive": 26,
+  "raffle_tickets": 11,
+  "total_frames": 30,
+  "wrench_time_pct": 86.7
+}

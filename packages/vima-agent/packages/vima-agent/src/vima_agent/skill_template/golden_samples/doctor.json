@@ -1,0 +1,29 @@
+{
+  "api_url": "https://vimaspatial.tech/api",
+  "checks": [
+    {
+      "name": "health",
+      "ok": true,
+      "path": "/health",
+      "summary": {
+        "status": "ok"
+      }
+    },
+    {
+      "name": "cii_summary",
+      "ok": true,
+      "path": "/cii/summary",
+      "summary": {
+        "total_frames": 30,
+        "wrench_time_pct": 86.7
+      }
+    },
+    {
+      "name": "spatial_zones",
+      "ok": true,
+      "path": "/spatial/zones",
+      "summary": {}
+    }
+  ],
+  "ok": true
+}

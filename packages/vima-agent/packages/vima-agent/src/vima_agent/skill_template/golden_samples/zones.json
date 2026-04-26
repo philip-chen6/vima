@@ -1,0 +1,34 @@
+{
+  "note": "Zone attribution uses COLMAP camera pose clustering (K=3); production deployment uses registered frame positions.",
+  "spatial_efficiency": 0.87,
+  "spatial_narrative": "Worker was most productive in Zone B (Scaffold) with 100.0% wrench time. Zone B (Scaffold) shows elevated fall-risk proximity (100.0% wrench time at height). Spatial efficiency score: 0.87",
+  "zones": {
+    "Zone A (Near Equipment)": {
+      "frames": 10,
+      "productive": 9,
+      "timestamp_range_s": [
+        0.0,
+        382.8
+      ],
+      "wrench_pct": 90.0
+    },
+    "Zone B (Scaffold)": {
+      "frames": 10,
+      "productive": 10,
+      "timestamp_range_s": [
+        425.3,
+        808.1
+      ],
+      "wrench_pct": 100.0
+    },
+    "Zone C (Material Staging)": {
+      "frames": 10,
+      "productive": 7,
+      "timestamp_range_s": [
+        850.7,
+        1233.5
+      ],
+      "wrench_pct": 70.0
+    }
+  }
+}

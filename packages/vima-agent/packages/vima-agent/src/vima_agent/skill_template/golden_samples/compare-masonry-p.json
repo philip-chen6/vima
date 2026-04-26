@@ -1,0 +1,62 @@
+{
+  "baseline": {
+    "activity": "crane and structural work at elevation",
+    "confidence": 0.72,
+    "pnc": "C",
+    "prompt": "baseline"
+  },
+  "image": "frame_000.jpg",
+  "vima": {
+    "activity": "elevated site survey",
+    "confidence": 0.62,
+    "episode": "scaffold_zone_visible",
+    "event_id": "vima-agent compare",
+    "frame_path": "/tmp/tmp_e2c3hgb.jpg",
+    "in_safe_envelope": null,
+    "model": "claude-sonnet-4-6",
+    "pnc": "C",
+    "prompt": "vima-v1",
+    "reasoning": "Source frame shows elevated scaffold/wall zone with stacked concrete blocks and no visible guardrail at the wall top edge; worker surface is likely scaffold or elevated platform based on vantage angle. Spatial memory point cloud not yet populated (000.0s), limiting depth confidence.",
+    "spatial_claims": [
+      {
+        "distance_m": 1.5,
+        "location": "foreground right, yellow tubular frame",
+        "object": "scaffold"
+      },
+      {
+        "distance_m": 3.0,
+        "location": "mid-right, stacked wall course",
+        "object": "concrete_block"
+      },
+      {
+        "distance_m": 3.5,
+        "location": "upper right, top of block wall, no visible guardrail",
+        "object": "open_edge"
+      },
+      {
+        "distance_m": null,
+        "location": "absent along visible wall top edge",
+        "object": "guardrail"
+      },
+      {
+        "distance_m": 15.0,
+        "location": "upper frame, crane/boom arm visible far background",
+        "object": "tool"
+      }
+    ],
+    "surface": "scaffold",
+    "timestamp_s": 15.0,
+    "violation_flags": [
+      {
+        "evidence": "Top of block wall visible at elevation with no guardrail or fall protection system visible along the edge",
+        "rule": "OSHA 1926.502(b) \u2014 guardrail systems required at unprotected edges \u22656ft",
+        "severity": "high"
+      },
+      {
+        "evidence": "Scaffold structure visible at apparent elevation; no guardrail confirmed on scaffold platform in view",
+        "rule": "OSHA 1926.451(g) \u2014 fall protection on scaffolds \u226510ft",
+        "severity": "medium"
+      }
+    ]
+  }
+}
