@@ -164,7 +164,9 @@ export default function DemoClient({
   // Client fallback if SSR couldn't reach the backend
   useEffect(() => {
     if (initialSummary === null || initialFrames === null) {
-      reload().finally(() => setLoading(false));
+      queueMicrotask(() => {
+        reload().finally(() => setLoading(false));
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -197,8 +199,9 @@ export default function DemoClient({
           { id: "stats", label: "stats", badge: "02" },
           { id: "analyzer", label: "analyzer", badge: "03" },
           { id: "spatial-inference", label: "depth + seg", badge: "04" },
-          { id: "reconstruction", label: "3d cloud", badge: "05" },
-          { id: "ledger", label: "ledger", badge: "06" },
+          { id: "depth-filter", label: "depth filter", badge: "05" },
+          { id: "reconstruction", label: "3d cloud", badge: "06" },
+          { id: "ledger", label: "ledger", badge: "07" },
         ]}
         pages={[
           { href: "/", label: "landing" },
@@ -1137,6 +1140,7 @@ function DepthFilterPanel() {
 
   return (
     <section
+      id="depth-filter"
       style={{
         maxWidth: "1400px",
         margin: "0 auto",

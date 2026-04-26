@@ -27,11 +27,13 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { SidebarSectionIcon } from "@/components/landing/section-svg/sidebar-section-icon";
 
 export interface WorkspaceSection {
   id: string;
   label: string;
   badge?: string;
+  icon?: string;
 }
 
 export interface WorkspacePage {
@@ -158,6 +160,7 @@ export function WorkspaceSidebar({ sections, pages = [], contextLabel }: Props) 
                         }}
                       >
                         <a href={`#${s.id}`} onClick={handleSectionClick(s.id)} aria-current={isActive ? "true" : undefined}>
+                          <SidebarSectionIcon id={s.icon ?? s.id} active={isActive} />
                           {s.badge && (
                             <span
                               style={{
@@ -229,6 +232,7 @@ export function WorkspaceSidebar({ sections, pages = [], contextLabel }: Props) 
                           aria-current={isActive ? "page" : undefined}
                           onClick={handleClick}
                         >
+                          <SidebarSectionIcon id={p.viewSwap ?? (p.href.replace("/", "") || "overview")} active={isActive} />
                           {p.badge && (
                             <span
                               style={{

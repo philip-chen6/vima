@@ -207,6 +207,28 @@ code, pre, .mono {
   font-family: var(--font-mono);
 }
 
+.vima-sidebar-tab-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  margin-right: 2px;
+  color: #f7ecef;
+}
+
+.vima-sidebar-tab-icon svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 8px rgba(242, 167, 184, 0.08));
+}
+
+.vima-sidebar-tab-icon[data-active="true"] svg {
+  filter: drop-shadow(0 0 10px rgba(242, 167, 184, 0.2));
+}
+
 [data-landing-backdrop-stage] {
   transform: translate3d(0, 0, 0) scale(1);
   transform-origin: 50% 50%;

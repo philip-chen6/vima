@@ -1,5 +1,6 @@
 # lessons
 
+- when the user asks for svg/tab treatment in a sidebar, treat "tabs" literally: enhance the navigation items with per-tab svg icons and labels, not the destination section headers.
 - when the user asks for a useful shippable artifact and the scope is within reach, ship the artifact instead of stopping at a strategic plan. research should feed implementation, not replace it.
 - if a scroll experiment is called fucked, purge the behavior completely instead of iterating around it: remove pinning attrs, ScrollTrigger pin blocks, css sticky fallbacks, and unused route hooks in one pass.
 - hero scroll cues should stay brutally simple when the user calls out clutter: use one lowercase label plus a directional icon, not event metadata plus explanatory scroll copy.
