@@ -15,6 +15,7 @@ RUN pip install --no-cache-dir \
     "python-multipart"
 
 COPY backend/ ./backend/
+COPY frontend/public/demo/coldpath.mp4 ./frontend/public/demo/coldpath.mp4
 
 ENV PYTHONPATH=/app:/app/backend
 ENV PYTHONUNBUFFERED=1
