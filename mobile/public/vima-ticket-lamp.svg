@@ -1,0 +1,37 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Vima ticket lamp mark</title>
+  <desc id="desc">A dark plum rounded ticket lamp mascot with two muted orange-gold oval eyes.</desc>
+  <defs>
+    <linearGradient id="tileGradient" x1="80" y1="48" x2="432" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1D1B22"/>
+      <stop offset="1" stop-color="#141318"/>
+    </linearGradient>
+    <linearGradient id="bodyGradient" x1="159" y1="153" x2="354" y2="363" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#743456"/>
+      <stop offset="0.48" stop-color="#54203F"/>
+      <stop offset="1" stop-color="#321529"/>
+    </linearGradient>
+    <linearGradient id="topGradient" x1="158" y1="146" x2="362" y2="216" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A45A7D"/>
+      <stop offset="0.55" stop-color="#743456"/>
+      <stop offset="1" stop-color="#4A1D38"/>
+    </linearGradient>
+    <linearGradient id="eyeGradient" x1="218" y1="227" x2="246" y2="285" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F0A953"/>
+      <stop offset="1" stop-color="#B8622F"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#tileGradient)"/>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M167 146C143.804 146 125 164.804 125 188V220C144.882 220 161 236.118 161 256C161 275.882 144.882 292 125 292V324C125 347.196 143.804 366 167 366H345C368.196 366 387 347.196 387 324V292C367.118 292 351 275.882 351 256C351 236.118 367.118 220 387 220V188C387 164.804 368.196 146 345 146H167Z"
+    fill="url(#bodyGradient)"
+  />
+  <path
+    d="M167 146H345C368.196 146 387 164.804 387 188V208C379.077 208 371.602 209.904 365 213.281V194C365 179.641 353.359 168 339 168H173C158.641 168 147 179.641 147 194V213.281C140.398 209.904 132.923 208 125 208V188C125 164.804 143.804 146 167 146Z"
+    fill="url(#topGradient)"
+  />
+  <rect x="218" y="227" width="28" height="58" rx="14" fill="url(#eyeGradient)"/>
+  <rect x="268" y="227" width="28" height="58" rx="14" fill="url(#eyeGradient)"/>
+</svg>

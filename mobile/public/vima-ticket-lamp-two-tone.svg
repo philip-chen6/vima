@@ -1,0 +1,11 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Vima two-tone ticket lamp mark</title>
+  <desc id="desc">A two-color dark pink ticket lamp logo with cutout eyes and folded ticket geometry.</desc>
+  <rect width="512" height="512" rx="116" fill="#17161B"/>
+  <path d="M181 137C152.833 137 130 159.833 130 188V215C149.882 215 166 231.118 166 251C166 270.882 149.882 287 130 287V324C130 352.167 152.833 375 181 375H331C359.167 375 382 352.167 382 324V287C362.118 287 346 270.882 346 251C346 231.118 362.118 215 382 215V188C382 159.833 359.167 137 331 137H181Z" fill="#B84D7C"/>
+  <path d="M181 137H240L130 247V188C130 159.833 152.833 137 181 137Z" fill="#17161B"/>
+  <path d="M130 287C149.882 287 166 270.882 166 251C166 231.118 149.882 215 130 215V287Z" fill="#17161B"/>
+  <path d="M382 215C362.118 215 346 231.118 346 251C346 270.882 362.118 287 382 287V215Z" fill="#17161B"/>
+  <rect x="204" y="222" width="28" height="60" rx="14" fill="#17161B"/>
+  <rect x="280" y="222" width="28" height="60" rx="14" fill="#17161B"/>
+</svg>
