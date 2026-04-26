@@ -8,7 +8,8 @@ VINNA vendors the working Yolodex collect/label/preview stages under
 ```text
 hardhat video
   -> sampled frames
-  -> Gemini/Yolodex bounding boxes
+  -> Yolodex/Codex bounding boxes
+  -> mask tracks
   -> preview overlays
   -> VINNA object-event memory JSON
 ```
@@ -30,14 +31,15 @@ Then:
 ```bash
 uv sync
 uv run .agents/skills/collect/scripts/run.py
-uv run .agents/skills/label/scripts/label_gemini.py
+uv run .agents/skills/label/scripts/dispatch.sh 1
 uv run .agents/skills/eval/scripts/preview_labels.py runs/vinna-hardhat/frames --classes runs/vinna-hardhat/classes.txt --out-dir runs/vinna-hardhat/frames/preview --limit 0 --video-out runs/vinna-hardhat/frames/preview/preview.mp4
 ```
 
 Back at the repo root:
 
 ```bash
-python3 demo/yolodex_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/object_event_memory.json
+python3 demo/yolodex_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/object_event_memory.json --fps 0.1
+python3 demo/mask_track_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/mask_track_memory.json --fps 0.1
 ```
 
 ## Output
@@ -46,6 +48,9 @@ python3 demo/yolodex_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out 
 - `tools/yolodex/runs/vinna-hardhat/classes.txt`: class map
 - `tools/yolodex/runs/vinna-hardhat/frames/preview/preview.mp4`: visual QA
 - `demo/object_event_memory.json`: timestamped object/event rows for VINNA
+- `tools/yolodex/runs/vinna-hardhat/masks/*.png`: prompt masks
+- `tools/yolodex/runs/vinna-hardhat/mask_preview/mask_tracks.mp4`: mask-track QA
+- `demo/mask_track_memory.json`: persistent mask tracks and relations
 
 ## Construction Classes
 
@@ -56,3 +61,23 @@ worker, scaffold, concrete block wall, material stack, ladder, tool, guardrail, 
 ```
 
 Add/remove classes in `tools/yolodex/config.json` before labeling.
+
+## Where Gemini Robotics Fits
+
+Gemini Robotics-ER can be used as a semantic box proposer, not as a mask
+backend. It can return structured object points / bounding boxes for prompts
+such as "open edge" or "worker laying block"; those boxes can feed this same
+mask-track stage.
+
+Recommended use:
+
+```text
+YOLO/Codex boxes for cheap frames
+Gemini Robotics-ER boxes for selected semantic keyframes
+SAM 2 or box-prompt fallback for masks
+mask tracks -> depth -> episodic memory -> VLM synthesis
+```
+
+The current implementation uses a box-prompt mask fallback so the pipeline runs
+without SAM 2 weights. Replace `make_prompt_mask` in `demo/mask_track_memory.py`
+with a SAM 2 backend when the dependency is available; keep the JSON schema.

@@ -45,6 +45,18 @@ See `docs/YOLODEX_MEMORY.md` for:
 hardhat video -> sampled frames -> bounding boxes -> object-event memory
 ```
 
+The next perception layer turns those boxes into mask tracks:
+
+```bash
+python3 demo/mask_track_memory.py \
+  --run-dir tools/yolodex/runs/vinna-hardhat \
+  --out demo/mask_track_memory.json \
+  --fps 0.1
+```
+
+This writes persistent track IDs, prompt masks, relation events, and a local
+mask-track preview under `tools/yolodex/runs/vinna-hardhat/`.
+
 ## API
 
 - `GET /health` — status check
