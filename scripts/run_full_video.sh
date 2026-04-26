@@ -12,6 +12,10 @@ YOLODEX_DIR="${ROOT}/tools/yolodex"
 RUN_DIR="${YOLODEX_DIR}/runs/${PROJECT}"
 SHARE_NAME="${PROJECT}_share"
 
+if [[ "$VIDEO_PATH" != http://* && "$VIDEO_PATH" != https://* ]]; then
+  VIDEO_PATH="$(cd "$ROOT" && python3 -c 'import pathlib, sys; print(pathlib.Path(sys.argv[1]).expanduser().resolve())' "$VIDEO_PATH")"
+fi
+
 cd "$ROOT"
 
 python3 - <<PY
