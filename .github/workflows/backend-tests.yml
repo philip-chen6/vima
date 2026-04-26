@@ -1,0 +1,40 @@
+name: Backend tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-tests.yml'
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          # Tests mock anthropic + don't need the heavy CV/ML stack, so
+          # install only what the test files import. Keep this in sync with
+          # backend/tests/*.py imports — if a new test pulls in a heavier
+          # dep, add it here rather than installing the full requirements.
+          pip install pytest anthropic numpy pillow
+
+      - name: Run pytest
+        run: pytest tests/ -v

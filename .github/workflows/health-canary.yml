@@ -1,0 +1,65 @@
+name: Health canary
+
+# External health probe — runs AFTER Deploy to Vultr completes successfully.
+# The deploy workflow already health-checks from inside the box; this one
+# hits the public domain from a github runner, so it catches things the
+# on-box check can't see: caddy misconfigs, DNS regressions, TLS expiry,
+# firewall rules, upstream cloudflare issues. Also runs every 30 min on
+# cron so we notice if prod silently dies between deploys.
+
+on:
+  workflow_run:
+    workflows: ["Deploy to Vultr"]
+    types: [completed]
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    # Skip if the upstream deploy failed — no point probing a deploy that
+    # never landed. The scheduled + manual triggers don't have a workflow_run
+    # context so they pass this gate trivially.
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe public endpoints
+        env:
+          BASE: https://vimaspatial.tech
+        run: |
+          set -e
+
+          fail=0
+
+          probe() {
+            local path="$1"
+            local expected="$2"
+            local url="${BASE}${path}"
+            # -L follows redirects (apex → www, http → https). -m 15 caps
+            # per-request time so a hung endpoint doesn't stall the whole job.
+            local code
+            code=$(curl -sS -L -o /tmp/body -w "%{http_code}" -m 15 "$url" || echo 000)
+            if [ "$code" = "$expected" ]; then
+              echo "OK   $path → $code"
+            else
+              echo "FAIL $path → $code (expected $expected)"
+              echo "---- response body (first 500 bytes) ----"
+              head -c 500 /tmp/body || true
+              echo
+              echo "-----------------------------------------"
+              fail=1
+            fi
+          }
+
+          # Frontend root — must serve the landing page.
+          probe "/"                "200"
+          # Backend health — fastapi /health proxied through caddy /api/*.
+          probe "/api/health"      "200"
+          # Demo data endpoint — proves backend can read static cii-results.
+          probe "/api/cii/summary" "200"
+
+          if [ "$fail" = "1" ]; then
+            echo "::error::canary failed — prod is degraded"
+            exit 1
+          fi
+          echo "all probes green"
