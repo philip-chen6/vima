@@ -65,7 +65,13 @@ def run_event(
         timestamp_s=timestamp_s,
     )
 
-    result["cloud_stub"] = cloud_path is None
+    # `cloud_stub` is True only when the cloud_loader had to synthesize
+    # random points — i.e. the canonical sparse map is missing. With Josh's
+    # PLY shipped at frontend/public/reconstruction/sparse.ply this should
+    # always be False in prod; the field is here so the UI can still flag
+    # degraded runs.
+    result["cloud_stub"] = cloud.source_path == "<stub>"
+    result["cloud_source"] = cloud.source_path
     result["cloud_n_points"] = cloud.n_points
     return result
 

@@ -7,6 +7,8 @@ import VimaNavbar from "@/components/landing/vima-navbar";
 import { LiveFrameAnalyzer } from "@/components/landing/live-frame-analyzer";
 import { SpatialInferenceOverlay } from "@/components/landing/spatial-inference-overlay";
 import { BentoSection, BentoCell } from "@/components/react-bits/magic-bento";
+import { WorkspaceSidebar } from "@/components/landing/workspace-sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import dynamic from "next/dynamic";
 
 // Point cloud viewer is r3f-heavy — defer to client only so the dashboard
@@ -146,6 +148,24 @@ export default function DemoClient({
     : [];
 
   return (
+    <SidebarProvider defaultOpen={false}>
+      <WorkspaceSidebar
+        contextLabel="demo · workspace"
+        sections={[
+          { id: "overview", label: "overview", badge: "01" },
+          { id: "stats", label: "stats", badge: "02" },
+          { id: "analyzer", label: "analyzer", badge: "03" },
+          { id: "spatial-inference", label: "depth + seg", badge: "04" },
+          { id: "reconstruction", label: "3d cloud", badge: "05" },
+          { id: "ledger", label: "ledger", badge: "06" },
+        ]}
+        pages={[
+          { href: "/", label: "landing" },
+          { href: "/demo", label: "demo" },
+          { href: "/eval", label: "eval" },
+        ]}
+      />
+      <SidebarInset>
     <main
       style={{
         minHeight: "100dvh",
@@ -159,6 +179,7 @@ export default function DemoClient({
 
       {/* ── HEADER STRIP ──────────────────────────────────────────────── */}
       <section
+        id="overview"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -248,6 +269,7 @@ export default function DemoClient({
 
       {/* ── STATS RIBBON ──────────────────────────────────────────────── */}
       <section
+        id="stats"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -346,6 +368,7 @@ export default function DemoClient({
           structured claim flow. The 30s walkthrough video lives at
           /demo/coldpath.mp4 if linked from elsewhere. */}
       <section
+        id="analyzer"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -545,7 +568,7 @@ export default function DemoClient({
             >
               19 of 31 frames register through COLMAP at 1.199 px mean
               reprojection error, then a Brush-exported gaussian splat
-              densifies the geometry to 22,553 anisotropic primitives with
+              densifies the geometry to 62,783 anisotropic primitives with
               spherical harmonics. Drag to orbit, scroll to zoom. Every frame
               in the ledger anchors somewhere in this volume.
             </p>
@@ -564,7 +587,7 @@ export default function DemoClient({
                 letterSpacing: "0.04em",
               }}
             >
-              <li>· 22,553 splat primitives</li>
+              <li>· 62,783 splat primitives</li>
               <li>· 19 / 31 frames registered</li>
               <li>· 1.199 px reprojection error</li>
               <li>· spherical harmonics · sh deg 3</li>
@@ -572,13 +595,13 @@ export default function DemoClient({
           </div>
 
           <div>
-            {/* PRIMARY: photoreal gaussian splat (Brush v0.3.0, 22,553 SH-3
-                primitives, trained on Apple Metal). Renders the densified
-                scene with proper anisotropic gaussians and spherical
+            {/* PRIMARY: photoreal gaussian splat (Brush v0.3.0, 62,783 SH-3
+                primitives, 30k training steps on Apple Metal). Renders the
+                densified scene with proper anisotropic gaussians and spherical
                 harmonics — what the masonry site actually looks like in 3D. */}
             <SplatViewer
-              src="/reconstruction/masonry-splat-10k.ply"
-              label="gaussian splat · 22,553 primitives · brush v0.3.0"
+              src="/reconstruction/masonry-splat-30k.ply"
+              label="gaussian splat · 62,783 primitives · brush v0.3.0 · 30k steps"
             />
 
             {/* SECONDARY: COLMAP sparse points + camera frustums for
@@ -997,6 +1020,8 @@ export default function DemoClient({
         }
       `}</style>
     </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
 
