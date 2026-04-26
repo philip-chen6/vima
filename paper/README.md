@@ -26,3 +26,8 @@ Outputs:
 - `paper/main-original.pdf` - copy of the PDF from current `main` for comparison.
 
 The report intentionally labels all measurements as hackathon pilot results.
+
+## Authors
+
+Philip Chen, Joshua Lin, Stephen Hung, Lucas He — Hacktech 2026 Spatial
+Intelligence Track.

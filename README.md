@@ -197,3 +197,12 @@ scripts/run_full_video.sh data/video01.mp4 vima-full \
   "timestamp_s": 15.0
 }
 ```
+
+## Credits
+
+VIMA is a Hacktech 2026 Spatial Intelligence Track submission by:
+
+- Philip Chen
+- Joshua Lin
+- Stephen Hung
+- Lucas He

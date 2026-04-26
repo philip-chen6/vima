@@ -133,3 +133,8 @@ add vima cli
 fix robotics merge
 document eval flow
 ```
+
+## Team
+
+VIMA is built by Philip Chen, Joshua Lin, Stephen Hung, and Lucas He for the
+Hacktech 2026 Spatial Intelligence Track.

@@ -22,3 +22,8 @@ The bundled sample uses:
 - `dashboard/data/episodic_memory.json`
 - `dashboard/data/memory_answer.json`
 
+## Credits
+
+Built by Philip Chen, Joshua Lin, Stephen Hung, and Lucas He for the Hacktech
+2026 Spatial Intelligence Track.
+

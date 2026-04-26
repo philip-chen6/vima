@@ -95,3 +95,7 @@ ssh root@45.76.77.107 'docker system prune -af --volumes'
 - **vhf plan** — better single-thread cpu than vc2; next.js SSR likes that
 - **no gpu** — backend calls anthropic API, no local inference. add a separate gpu worker only if live COLMAP/inference becomes needed
 - **mcp as a thin wrapper** — the hosted mcp server only forwards to the existing api, so the 2 GB box does not run torch, transformers, or reconstruction code
+
+## credits
+
+vima team — philip chen, joshua lin, stephen hung, lucas he. hacktech 2026 spatial intelligence track.

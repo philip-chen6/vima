@@ -3,3 +3,8 @@
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
+
+## Team
+
+VIMA is built by Philip Chen, Joshua Lin, Stephen Hung, and Lucas He for the
+Hacktech 2026 Spatial Intelligence Track.
