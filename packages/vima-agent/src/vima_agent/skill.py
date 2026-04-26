@@ -23,14 +23,23 @@ def detect_targets(agent: str) -> list[SkillTarget]:
     normalized = agent.lower()
     targets: list[SkillTarget] = []
 
-    if normalized in {"auto", "codex"}:
-        targets.append(SkillTarget("codex", home / ".codex" / "skills" / "vima"))
-    if normalized in {"auto", "claude"}:
-        targets.append(SkillTarget("claude", home / ".claude" / "skills" / "vima"))
-    if normalized in {"auto", "gstack"}:
+    if normalized == "auto":
+        if (home / ".codex").exists():
+            targets.append(SkillTarget("codex", home / ".codex" / "skills" / "vima"))
+        if (home / ".claude").exists():
+            targets.append(SkillTarget("claude", home / ".claude" / "skills" / "vima"))
         gstack_root = home / ".claude" / "skills" / "gstack" / ".agents" / "skills"
         if gstack_root.exists():
             targets.append(SkillTarget("gstack", gstack_root / "vima"))
+        return targets
+
+    if normalized == "codex":
+        targets.append(SkillTarget("codex", home / ".codex" / "skills" / "vima"))
+    if normalized == "claude":
+        targets.append(SkillTarget("claude", home / ".claude" / "skills" / "vima"))
+    if normalized == "gstack":
+        gstack_root = home / ".claude" / "skills" / "gstack" / ".agents" / "skills"
+        targets.append(SkillTarget("gstack", gstack_root / "vima"))
 
     if normalized not in {"auto", "codex", "claude", "gstack"}:
         targets.append(SkillTarget(normalized, pathlib.Path(normalized).expanduser()))

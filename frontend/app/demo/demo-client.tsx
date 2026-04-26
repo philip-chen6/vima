@@ -641,7 +641,7 @@ export default function DemoClient({
                 densified scene with proper anisotropic gaussians and spherical
                 harmonics — what the masonry site actually looks like in 3D. */}
             <SplatViewer
-              src="/reconstruction/masonry-splat-30k.ply"
+              src="/reconstruction/masonry-splat-10k.ply"
               label={
                 pickedPose
                   ? `splat · pose: ${pickedPose.label?.replace(".jpg", "")}`

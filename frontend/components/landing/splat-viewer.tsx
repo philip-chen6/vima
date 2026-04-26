@@ -9,10 +9,12 @@
 // can't load Brush's gaussian PLY directly. mkkellogg's PlyLoader handles
 // SH-degree-3 PLYs out of the box, which is exactly what Brush exports.
 //
-// Asset: /reconstruction/masonry-splat-30k.ply  (~15MB, 62,783 gaussians,
-// trained 30k steps at 1080p target from masonry-source.mp4 + COLMAP sparse
-// on Apple Silicon Metal via Brush v0.3.0 in ~6 minutes). The 10k variant
-// (5.3MB, 22,553 gaussians) is also available as a lighter-weight fallback.
+// Default asset: /reconstruction/masonry-splat-10k.ply (5.3MB, 22,553
+// gaussians, trained 10k steps via Brush v0.3.0). The 30k variant
+// (~15MB, 62,783 gaussians) lives at /reconstruction/masonry-splat-30k.ply
+// for high-detail viewing — pass src="/reconstruction/masonry-splat-30k.ply"
+// to opt in. We default to 10k so /demo's first paint isn't gated on a
+// 15MB download.
 //
 // Failure modes handled:
 //   - asset missing → "splat not yet exported" empty state
@@ -39,7 +41,7 @@ export type SplatCameraPose = {
 };
 
 export function SplatViewer({
-  src = "/reconstruction/masonry-splat-30k.ply",
+  src = "/reconstruction/masonry-splat-10k.ply",
   label = "gaussian splat · masonry capture",
   cameraPose = null,
 }: {

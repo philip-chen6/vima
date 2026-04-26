@@ -34,6 +34,26 @@ uv run api.py
 # → http://localhost:8765
 ```
 
+## Agent CLI
+
+Use the hosted VIMA API from any agent shell without cloning the full backend:
+
+```bash
+uvx vima-agent@latest doctor
+uvx vima-agent@latest analyze --sample masonry-p --json
+uvx vima-agent@latest skill install --agent auto
+```
+
+For local backend development:
+
+```bash
+VIMA_API_URL=http://localhost:8765 uvx vima-agent@latest doctor
+```
+
+The package source lives in `packages/vima-agent/`. It is intentionally a thin
+HTTP client around the deployed API, not a wrapper around the local SAM/depth/
+memory pipeline.
+
 ## Object Memory Stage
 
 The repo vendors Yolodex collect/label/preview scripts under `tools/yolodex/`

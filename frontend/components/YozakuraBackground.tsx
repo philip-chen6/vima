@@ -119,7 +119,11 @@ export default function YozakuraBackground() {
         muted
         playsInline
         poster="/vima-yozakura-poster.jpg"
-        preload="auto"
+        // preload="auto" was forcing the 6.7MB mp4 onto the critical path of
+        // first paint. "metadata" lets the browser stream-in once the poster
+        // is rendered + the video element is mounted, instead of competing
+        // for bytes with the page bundle.
+        preload="metadata"
         style={{
           position: "absolute",
           inset: 0,

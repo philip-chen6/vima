@@ -3,14 +3,19 @@
 ## vima agent cli and skill
 
 - [x] inspect existing backend cli/api split and package conventions
-- [ ] add standalone public cli package without backend/runtime dependencies
-- [ ] add portable skill template plus print/install commands
-- [ ] document one-command agent usage
+- [x] add standalone public cli package without backend/runtime dependencies
+- [x] add portable skill template plus print/install commands
+- [x] document one-command agent usage
 - [ ] run package tests and entrypoint smoke checks
 
 ### result
 
-- pending.
+- added `packages/vima-agent` as a stdlib-only python cli package with a `vima`
+  console script.
+- implemented `doctor`, `analyze`, `compare`, `cii summary`, `cii frames`,
+  `zones`, `eval`, `skill print`, and `skill install`.
+- documented `uvx vima-agent@latest ...` in the package README and root README.
+- verification pending final rerun after installer-detection cleanup.
 
 ## hero intro gap tighten
 

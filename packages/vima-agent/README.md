@@ -8,6 +8,12 @@ uvx vima-agent@latest analyze --sample masonry-p --json
 uvx vima-agent@latest skill install --agent auto
 ```
 
+fallback when `uv` is not installed:
+
+```bash
+pipx run vima-agent doctor
+```
+
 the cli is intentionally thin. it talks to `https://vimaspatial.tech/api` by
 default and does not import the local backend pipeline, model clients, sam,
 depth, colmap, or video tooling.
@@ -26,6 +32,10 @@ vima eval --json
 vima skill print --agent codex
 vima skill install --agent auto
 ```
+
+`skill install --agent auto` writes into detected local agent skill roots. if no
+known root exists, use `vima skill print --agent codex` and paste the markdown
+into the target agent's skill system.
 
 ## configuration
 
@@ -47,4 +57,3 @@ VIMA_API_URL=http://localhost:8765 vima doctor
 - `3`: api unavailable
 - `4`: auth/rate-limit style refusal
 - `5`: invalid or unexpected api response
-

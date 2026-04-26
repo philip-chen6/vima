@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from vima_agent.client import ImagePayload, _multipart_body, normalize_api_url
+from vima_agent.skill import detect_targets
 
 
 def test_normalize_default_host_adds_api_path():
@@ -17,3 +18,10 @@ def test_multipart_body_contains_file_metadata_and_bytes():
     assert b'name="file"; filename="frame.jpg"' in body
     assert b"content-type: image/jpeg" in body
     assert b"\r\n\r\nabc\r\n--boundary--" in body
+
+
+def test_auto_skill_detection_only_uses_existing_roots(tmp_path, monkeypatch):
+    monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
+    assert detect_targets("auto") == []
+    tmp_path.joinpath(".codex").mkdir()
+    assert [target.agent for target in detect_targets("auto")] == ["codex"]
