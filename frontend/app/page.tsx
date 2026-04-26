@@ -880,16 +880,16 @@ export default function VimaLandingPage() {
         <div style={{ marginTop: "clamp(40px, 5vw, 72px)" }}>
           <Showcase2 />
         </div>
+
+        {/* 4-shapes-of-spatial-truth: the claim taxonomy + frame marquees.
+            this is what "evidence" looks like in practice, not a separate
+            concept — keep it in the evidence section. */}
+        <div style={{ marginTop: "clamp(48px, 6vw, 96px)" }}>
+          <Features3 />
+        </div>
       </section>
 
-      <SectionDivider id="claims" label="claims" index="02" />
-      <section id="claims" data-gsap="section" data-scroll-section style={sectionStyle}>
-        {/* 4-shapes-of-spatial-truth section. opposite-scrolling marquees
-            of frames on the right, claim-type taxonomy on the left. */}
-        <Features3 />
-      </section>
-
-      <SectionDivider id="ledger" label="ledger" index="03" />
+      <SectionDivider id="ledger" label="ledger" index="02" />
       <section
         id="ledger"
         data-gsap="section"
@@ -1014,7 +1014,7 @@ export default function VimaLandingPage() {
         </div>
       </section>
 
-      <SectionDivider id="verify" label="verify" index="04" />
+      <SectionDivider id="verify" label="verify" index="03" />
       <section id="verify" data-gsap="section" data-scroll-section style={sectionStyle}>
         <SectionAtmosphere src="/vima-loader-rebar.png" position="center" opacity={0.28} />
         <div
@@ -1174,15 +1174,16 @@ export default function VimaLandingPage() {
             </Device>
           </div>
         </div>
+
+        {/* throughput argument FOR the verification approach: vima vs.
+            manual labeling on claims-per-minute. lives inside verify
+            because it's the case for why the iOS swipe deck wins. */}
+        <div style={{ marginTop: "clamp(56px, 7vw, 112px)" }}>
+          <Comparison3 />
+        </div>
       </section>
 
-      <SectionDivider id="benchmark" label="benchmark" index="05" />
-      <section id="benchmark" data-gsap="section" data-scroll-section style={sectionStyle}>
-        {/* vima vs. manual labeling — claims-per-minute throughput chart. */}
-        <Comparison3 />
-      </section>
-
-      <SectionDivider id="pipeline" label="pipeline" index="06" />
+      <SectionDivider id="pipeline" label="pipeline" index="04" />
       <section id="pipeline" data-gsap="section" data-scroll-section style={sectionStyle}>
         <SectionAtmosphere src="/vima-loader-site.png" position="center" opacity={0.32} />
         <div className="landing-pink-streak landing-pink-streak--pipeline" aria-hidden="true" />
@@ -1236,7 +1237,7 @@ export default function VimaLandingPage() {
         <PipelineStepper />
       </section>
 
-      <SectionDivider id="cta" label="settlement" index="07" />
+      <SectionDivider id="cta" label="settlement" index="05" />
       <section
         id="cta"
         data-gsap="section"
