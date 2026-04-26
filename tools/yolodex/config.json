@@ -1,0 +1,18 @@
+{
+  "project": "vinna-hardhat",
+  "video_url": "../../data/video01.mp4",
+  "classes": [
+    "worker",
+    "scaffold",
+    "concrete block wall",
+    "material stack",
+    "ladder",
+    "tool",
+    "guardrail",
+    "open edge"
+  ],
+  "fps": 0.5,
+  "output_dir": "output",
+  "label_mode": "gemini",
+  "gemini_model": "gemini-2.5-flash"
+}

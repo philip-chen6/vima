@@ -34,6 +34,17 @@ uv run api.py
 # → http://localhost:8765
 ```
 
+## Object Memory Stage
+
+The repo vendors Yolodex collect/label/preview scripts under `tools/yolodex/`
+for the detector stage only. No YOLO training is required.
+
+See `docs/YOLODEX_MEMORY.md` for:
+
+```text
+hardhat video -> sampled frames -> bounding boxes -> object-event memory
+```
+
 ## API
 
 - `GET /health` — status check
