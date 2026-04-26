@@ -7,14 +7,13 @@
 \usepackage{hyperref}
 \usepackage{xcolor}
 
-\newcommand{\widefigure}[3]{%
-\begin{figure*}[t]
+\newcommand{\widefigure}[4][t]{%
+\begin{figure*}[#1]
 \centering
-\includegraphics[width=0.96\textwidth]{#1}
-\caption{#2}
-\label{#3}
+\includegraphics[width=0.96\textwidth]{#2}
+\caption{#3}
+\label{#4}
 \end{figure*}}
-
 
 \hypersetup{
   colorlinks=true,
@@ -31,18 +30,20 @@
 \maketitle
 
 \begin{abstract}
-Egocentric construction video is a poor substrate for direct visual-language-model (VLM) judgment. In our pilot data, frontier VLMs produced fluent but unsafe spatial claims: hallucinating site objects, mis-estimating scaffold distance, and treating visual activity as evidence without binding it to a frame, object, or location. We present VIMA, an RGB-only spatial evidence memory for hardhat footage. VIMA decomposes video understanding into specialist perception stages---object boxes, SAM masks, monocular depth, depth-delta frame filtering, 3D reconstruction, and episodic retrieval---before any VLM writes an answer. The core contribution is a depth-delta pre-filter: consecutive frames whose normalized depth disagreement exceeds $\delta=0.25$ are treated as over-motion pairs and withheld from reconstruction. In hackathon pilot runs, this filter removed 57\% of wild construction frame pairs, improved MASt3R translational pose error by 59\% on TUM \texttt{freiburg1\_desk}, reduced masonry-site translation norm by 70\% (0.370 to 0.111), and produced a COLMAP reconstruction with 1,770 points, 19/31 registered images, and 1.199px reprojection error. VIMA's final artifact is not a caption but an auditable object-event memory: episode ids, evidence frames, tracks, depth facts, and retrieved answers. This reframes construction AI from ``ask a VLM what happened'' to ``verify spatial claims against recoverable evidence.''
+Egocentric construction video is a poor substrate for direct visual-language-model (VLM) judgment. Frontier VLMs can describe scenes fluently while hallucinating objects, mis-estimating distance, or making progress claims without recoverable evidence. We present VIMA, an RGB-only spatial evidence pipeline for hardhat video. VIMA decomposes video understanding into specialist perception stages---object proposals, segmentation masks, monocular depth, depth-delta frame filtering, reconstruction, and episodic memory---before any VLM writes an answer. The core contribution is a depth-delta pre-filter: consecutive frames whose normalized depth disagreement exceeds $\delta=0.25$ are treated as over-motion pairs and withheld from reconstruction. In hackathon pilot runs, this removed 57\% of unstable construction frame pairs, reduced a masonry-site translation norm by 70\% (0.370 to 0.111), and produced an object-event memory that links answers to frames, masks, depth maps, and candidate episodes. VIMA reframes construction AI from ``ask a VLM what happened'' to ``verify spatial claims against evidence.''
 \end{abstract}
 
 \section{Introduction}
-Construction progress and compliance are spatial problems. A useful system must answer not only \emph{what} appears in a frame, but also \emph{where} it is, whether it persists across time, which physical object changed, and whether a claim can be audited later. Egocentric-video benchmarks such as Ego4D show why memory and evidence retrieval matter in first-person video \cite{grauman2022ego4d}. Raw hardhat footage makes this harder: fisheye distortion, motion blur, repeated materials, partial occlusion, scaffold geometry, and multiple workers make many single-frame judgments ambiguous.
+Construction progress and compliance are spatial problems. A useful system must answer not only \emph{what} appears in a frame, but also \emph{where} it is, whether it persists across time, which physical object changed, and whether the claim can be audited later. Egocentric-video benchmarks such as Ego4D show why first-person video needs memory and retrieval rather than isolated image captioning \cite{grauman2022ego4d}. Raw hardhat footage is even less forgiving: fisheye distortion, motion blur, repeated materials, partial occlusion, scaffold geometry, and multiple workers make many single-frame judgments ambiguous.
 
-Our initial strategy was VLM-first: give Gemini, Claude, or an open VLM construction frames and ask for safety or progress judgments. This failed in exactly the way that matters for a construction company. The answers were polished, but the spatial grounding was brittle. Gemini hallucinated absent objects such as rebar in masonry frames. Claude-style distance estimates on scaffold scenes were off by roughly $3\times$ in pilot checks. These errors are not cosmetic. A false spatial claim could credit the wrong work, flag the wrong hazard, or produce an audit trail that cannot be defended.
+Our first pass was intentionally simple: give frontier VLMs construction frames and ask for safety, distance, or progress judgments. That was not reliable enough. The model outputs sounded confident, but the spatial grounding was brittle: objects were hallucinated, distance estimates drifted, and activity labels were generated without evidence frames. These are not harmless captioning errors. In a construction workflow, an unsupported spatial claim can credit the wrong work, miss a hazard, or create an audit trail that cannot be defended.
 
-VIMA therefore treats the VLM as the final synthesizer, not the spatial reasoner. This follows the broader lesson of recent spatial VLM work: language models can benefit from explicit spatial structure, but the structure should be externalized rather than assumed \cite{chen2024spatialvlm}. The system first builds a structured memory from RGB video, then asks a VLM or local open model to answer from that memory.
+VIMA therefore treats the VLM as a final synthesizer, not as the spatial sensor. This follows the broader lesson of spatial VLM work: language models can benefit from explicit spatial structure, but the structure should be externalized rather than assumed \cite{chen2024spatialvlm}. The pipeline builds a structured memory from RGB video first, then lets an answer layer retrieve and explain from that memory.
 
-\section{Failure Mode}
-The task we target is \textbf{spatially verifiable work evidence}: given hardhat video, determine whether an activity claim is supported by frames, object tracks, depth/order evidence, and reconstruction. Humans can inspect the footage and say, for example, ``masonry activity is visible near this block wall at these timestamps.'' VLMs can often describe the scene, but they do not naturally return the chain of evidence that makes the claim inspectable.
+\widefigure{figures/rgb_depth_pair.jpg}{The basic VIMA evidence unit: a raw hardhat frame next to a depth-conditioned view. The depth map is not used as metric truth; it is used as an RGB-derived spatial signal for ordering, stability checks, and reviewer-facing evidence.}{fig:rgb-depth}
+
+\section{Target Failure}
+The task we target is \textbf{spatially verifiable work evidence}: given hardhat video, determine whether an activity claim is supported by frames, object tracks, depth/order evidence, and reconstruction diagnostics. Humans can inspect the footage and say, for example, ``masonry activity is visible near this block wall at these timestamps.'' A VLM can often produce that sentence, but it does not naturally return the evidence chain that makes the sentence inspectable.
 
 \begin{table}[t]
 \centering
@@ -51,49 +52,23 @@ The task we target is \textbf{spatially verifiable work evidence}: given hardhat
 \toprule
 \textbf{Attempt} & \textbf{Observed failure} \\
 \midrule
-Raw VLM object judgment & Hallucinated construction objects in frame-level reasoning. \\
-Raw VLM distance judgment & Scaffold distance estimates were off by about $3\times$ in pilot checks. \\
-Single-frame productivity label & Over-labeled activity as non-contributory in early CII runs. \\
+Raw VLM object judgment & Hallucinated site objects in frame-level reasoning. \\
+Raw VLM distance judgment & Scaffold distance estimates were off by large factors in pilot checks. \\
+Single-frame activity label & Over-labeled activity when temporal context was removed. \\
 VLM-only answer & Could answer fluently without citing frames, tracks, or geometry. \\
 \bottomrule
 \end{tabular}
-\caption{Why VIMA moved away from direct VLM judgment. These are hackathon pilot observations used to choose the system design rather than final benchmark claims.}
+\caption{Why VIMA moved away from direct VLM judgment. These pilot observations define the failure mode: unsupported spatial text is not enough for jobsite evidence.}
 \label{tab:failures}
 \end{table}
 
-\section{Method}
-VIMA is an RGB-only spatial evidence pipeline. The input is a hardhat video; the output is a queryable memory whose claims point back to frames and intermediate evidence.
+The point is not that VLMs are useless. They are useful summarizers. The failure is asking one model to perform detection, temporal binding, depth reasoning, action attribution, and written explanation in a single opaque step. VIMA separates those responsibilities.
 
-\subsection{Perception Stack}
-Frames are sampled from video and passed through four specialist stages:
-\begin{enumerate}
-  \item \textbf{Object proposals}: YOLO/Codex-style labels for workers, scaffold, concrete block walls, guardrails, material stacks, tools, and open edges.
-  \item \textbf{Masks and tracks}: box-prompt SAM masks convert rectangles into object support regions and maintain object identities across frames.
-  \item \textbf{Monocular depth}: DepthAnythingV2-style relative depth estimates provide near/mid/far ordering for each masked object \cite{yang2024depthanythingv2}.
-  \item \textbf{Geometry}: MASt3R/COLMAP reconstructions estimate camera motion and sparse structure on filtered frame sets \cite{leroy2024master,schoenberger2016sfm,schoenberger2016mvs}.
-\end{enumerate}
+\section{Pipeline}
+VIMA is an RGB-only evidence stack. It does not assume LiDAR, IMU, a site model, or private construction labels. The input is a video; the output is an object-event memory whose claims point back to concrete visual evidence.
 
-The key design decision is that every model output becomes evidence metadata rather than an immediate natural-language conclusion.
-
-\subsection{Depth-Delta Frame Filtering}
-Construction video contains many adjacent frames that are visually adjacent in time but poor for geometry: fast head turns, motion blur, and partial occlusion. We found that RGB similarity alone was a weak filter, so VIMA uses depth disagreement as a proxy for spatial instability.
-
-For consecutive frames $I_t$ and $I_{t+1}$, a monocular depth model produces normalized maps $D_t,D_{t+1}\in[0,1]^{H\times W}$. We compute
-\begin{equation}
-\Delta_D(t) = \sqrt{\frac{1}{HW}\sum_{x,y} (D_t(x,y)-D_{t+1}(x,y))^2}.
-\end{equation}
-If $\Delta_D(t)>\delta$ with $\delta=0.25$, the pair is marked as over-motion and skipped before reconstruction. This is intentionally simple: depth is not used as metric truth, but as an RGB-derived spatial oracle for whether two frames are likely to form a stable geometric pair.
-
-\subsection{Object-Event Episodic Memory}
-After masks and depth, VIMA compiles object-level facts into episodes:
-\begin{itemize}
-  \item \texttt{masonry\_work\_candidate}
-  \item \texttt{safety\_edge\_context}
-  \item \texttt{scaffold\_zone\_visible}
-  \item \texttt{foreground\_worker\_present}
-  \item \texttt{material\_staging\_visible}
-\end{itemize}
-Each episode stores start/end time, evidence frames, involved tracks, spatial relations, depth facts, confidence, and retrieval text. The VLM answer layer receives this compact memory, not the full raw clip.
+\subsection{Frame-Level Evidence}
+Frames are sampled from video and converted into three aligned evidence views: raw RGB, object/mask overlays, and depth-conditioned overlays. Figure~\ref{fig:raw-mask-depth} shows the reviewer-facing version of that representation. The raw view preserves visual context; masks localize entities such as workers, walls, guardrails, scaffold, and material stacks; depth adds near/mid/far ordering to those entities.
 
 \begin{figure}[t]
 \centering
@@ -114,12 +89,39 @@ Each episode stores start/end time, evidence frames, involved tracks, spatial re
   \includegraphics[width=\linewidth]{figures/depth_frame.jpg}\\[-0.2em]
   \scriptsize depth
 \end{minipage}
-\caption{VIMA evidence views on a masonry-site clip. The dashboard exposes raw, mask, and depth-conditioned views so an internal reviewer can inspect the claim path.}
-\label{fig:evidence}
+\caption{Aligned evidence views for one construction frame. The same frame can be inspected as raw video, segmentation/mask evidence, or depth-conditioned spatial evidence.}
+\label{fig:raw-mask-depth}
 \end{figure}
 
-\section{Pilot Results}
-We report preliminary hackathon results, not a full benchmark. The important pattern is that geometry improves when high-depth-disagreement frame pairs are filtered before reconstruction, and the final memory makes VLM answers auditable.
+\subsection{Specialist Models Before Language}
+VIMA uses a specialist-first stack:
+\begin{enumerate}
+  \item \textbf{Object proposals}: detector labels for workers, scaffold, concrete block walls, guardrails, material stacks, tools, and open edges.
+  \item \textbf{Masks and tracks}: box-prompt segmentation converts rectangles into object support regions and maintains identities across nearby frames.
+  \item \textbf{Monocular depth}: DepthAnythingV2-style relative depth estimates provide near/mid/far ordering for each object region \cite{yang2024depthanythingv2}.
+  \item \textbf{Geometry}: MASt3R/COLMAP-style reconstruction estimates camera motion and sparse structure on filtered frame sets \cite{leroy2024master,schoenberger2016sfm,schoenberger2016mvs}.
+  \item \textbf{Memory}: object facts are grouped into episodes that can be retrieved for a user query.
+\end{enumerate}
+
+The key design choice is that each intermediate output remains visible. The system does not collapse detections into a caption and throw away the evidence. If the final answer says a wall-related work candidate exists, the dashboard can still show the raw frame, the object region, the depth view, and the episode that produced the claim.
+
+\section{Depth-Delta Filtering}
+Construction video contains many adjacent frames that are adjacent in time but poor for geometry: fast head turns, blur, partial occlusion, and worker-body motion. We found that using every frame pair made reconstruction unstable, so VIMA uses depth disagreement as a simple RGB-only spatial filter.
+
+For consecutive frames $I_t$ and $I_{t+1}$, a monocular depth model produces normalized maps $D_t,D_{t+1}\in[0,1]^{H\times W}$. VIMA computes
+\begin{equation}
+\Delta_D(t) = \sqrt{\frac{1}{HW}\sum_{x,y} (D_t(x,y)-D_{t+1}(x,y))^2}.
+\end{equation}
+If $\Delta_D(t)>\delta$ with $\delta=0.25$, the pair is marked as over-motion and skipped before reconstruction. This is not claiming the depth model has metric accuracy. It is using relative depth as a stability oracle: when two adjacent frames disagree too much in spatial layout, they are likely bad inputs for pose estimation.
+
+The simplest picture of the contribution is the transition from raw visual evidence to depth-conditioned evidence and then to downstream spatial memory. The filter is cheap, model-agnostic, and requires only RGB video. It also gives an interpretable failure explanation: the system can say a pair was skipped because its estimated spatial layout changed too aggressively, rather than silently feeding every frame into geometry.
+
+\widefigure{figures/comparisons.png}{Three-way comparison used in the paper narrative: raw spatial evidence, depth-conditioned reconstruction signal, and downstream risk/memory visualization. Keeping the views side by side makes the pipeline inspectable instead of relying on a single generated caption.}{fig:three-way}
+
+\section{Geometry and Reconstruction}
+After filtering, VIMA runs reconstruction only on the frame pairs that pass the depth-delta check. Figure~\ref{fig:reconstruction} shows the resulting reconstruction diagnostics: source frames, predicted depth/confidence products, and geometry outputs. This stage is where VIMA converts an egocentric video stream into a spatial memory substrate.
+
+\widefigure{figures/reconstruction_viz.png}{Reconstruction diagnostic panel for the construction clip. The view collects RGB evidence, depth products, and reconstruction confidence so a reviewer can see why a frame pair was accepted or rejected.}{fig:reconstruction}
 
 \begin{table}[t]
 \centering
@@ -130,17 +132,26 @@ We report preliminary hackathon results, not a full benchmark. The important pat
 \midrule
 Depth-delta filter & Dropped pairs & 57\% \\
 MASt3R on TUM & RPE$_t$ reduction & 59\% \\
-masonry-site & Translation norm & 0.370 $\rightarrow$ 0.111 \\
-masonry-site & Translation improvement & 70\% \\
-masonry-site & Confidence change & +32\% \\
+Masonry-site clip & Translation norm & 0.370 $\rightarrow$ 0.111 \\
+Masonry-site clip & Translation improvement & 70\% \\
+Masonry-site clip & Confidence change & +32\% \\
 COLMAP site run & Registered images & 19/31 \\
 COLMAP site run & Sparse points & 1,770 \\
 COLMAP site run & Reprojection error & 1.199px \\
 \bottomrule
 \end{tabular}
-\caption{Preliminary geometry results from the hackathon pipeline. The TUM result used \texttt{freiburg1\_desk}; site results used a masonry hardhat clip.}
+\caption{Preliminary geometry results from the hackathon pipeline. These are pilot numbers, not a frozen benchmark, but they show that frame selection materially changes reconstruction quality.}
 \label{tab:geometry}
 \end{table}
+
+The scalar results in Table~\ref{tab:geometry} should be read as a pilot validation of the mechanism: filtering the wildest egocentric frame pairs improved downstream geometry. The important product implication is that not all frames should become evidence. VIMA separates evidence frames from unstable frames before any reward, safety, or productivity logic consumes them.
+
+\section{Object-Event Episodic Memory}
+The reconstruction layer is useful, but the dashboard does not expose geometry alone. It exposes \emph{episodes}: compact records that bind object tracks, time ranges, spatial relations, confidence, and evidence frames. Example episode types include \texttt{masonry\_work\_candidate}, \texttt{safety\_edge\_context}, \texttt{scaffold\_zone\_visible}, \texttt{foreground\_worker\_present}, and \texttt{material\_staging\_visible}.
+
+\widefigure{figures/viz.png}{Depth overlays and point-cloud views across multiple frames. These views show how the same raw video can be converted into spatial evidence frames rather than treated as a flat slideshow.}{fig:viz}
+
+This memory layer is the main difference between VIMA and a video-captioning demo. A caption says ``a worker is near a block wall.'' An episode stores the frame ids, object ids, mask support, depth ordering, confidence, and time span that make the statement checkable. When a user asks whether masonry work occurred near a wall, VIMA retrieves relevant episodes and then asks the language layer to summarize only from those records.
 
 \begin{table}[t]
 \centering
@@ -162,83 +173,30 @@ Gemini answer & Success, quota-limited & Synthesis probe \\
 \end{table}
 
 \section{Answer Layer}
-VIMA supports both API VLMs and local open-weight probes. Gemini produced cleaner natural-language synthesis from the memory artifact when quota was available. Qwen2-VL-2B ran locally and confirmed that retrieved evidence frames and memory can be consumed without a remote API, though it followed citation instructions less reliably \cite{wang2024qwen2vl}. In both cases, the answer JSON stores retrieved episode ids and evidence frame names, so the response remains auditable.
+VIMA supports both API VLMs and local open-weight probes. Gemini produced cleaner natural-language synthesis from the memory artifact when quota was available. Qwen2-VL-2B ran locally and confirmed that retrieved evidence frames and memory records can be consumed without a remote API, though it followed citation instructions less reliably \cite{wang2024qwen2vl}.
 
-For example, the query \emph{``Was there masonry work happening near the wall?''} retrieved \texttt{episode\_001} and \texttt{episode\_007}; each contains concrete block wall tracks, worker tracks, proximity relations, depth facts, and supporting frame names.
+The important constraint is that the answer layer is evidence-bound. For the query \emph{``Was there masonry work happening near the wall?''}, the answer references retrieved episodes and frame names instead of making a free-form judgment from pixels alone. A typical answer can say: \emph{yes, there is candidate masonry work near a concrete block wall, supported by episode ids, evidence frames, worker/wall co-presence, and proximity where available}. This keeps the VLM useful without pretending it is a calibrated spatial measurement system.
 
-\section{Dashboard and Deployment}
-The dashboard is an internal evidence-review console rather than a consumer rewards app. It shows the current claim, the raw/mask/depth evidence views, run statistics, and an object-event timeline. Separately, a FastAPI backend was prototyped for bounty-style workflows with multi-witness verification: two independent witnesses must agree on the same frame before a payout-style action is enabled. For the construction-company dashboard, the same idea becomes an anti-larp audit rule: do not accept unsupported text; require evidence frames and independent signals.
+\widefigure{figures/heatmap.png}{Zone-aware memory visualization. VIMA's claim is not only timestamp-aware; it tries to attach work evidence to spatial zones so downstream review can ask where the evidence occurred.}{fig:heatmap}
+
+\section{Dashboard}
+The dashboard is an internal evidence-review console rather than a consumer rewards app. It shows the current claim, raw/mask/depth evidence views, run statistics, retrieved answers, and an object-event timeline. Figure~\ref{fig:plasma-ab} gives a compact A/B view of the RGB frame and depth-transformed frame; Figure~\ref{fig:risk-surface} shows how frame-level evidence becomes zone-aware temporal evidence.
+
+\widefigure{figures/plasma_ab_comparison.jpg}{A compact A/B view of raw frame and depth-transformed frame. This visualization is useful in demos because it makes the RGB-only spatial signal visible without asking the judge to inspect arrays or logs.}{fig:plasma-ab}
+
+\widefigure{figures/cii_risk_surface.png}{Temporal risk surface over frame index and spatial zone. This is the downstream form of the memory: object-event episodes become spatially indexed evidence that can support review, auditing, or risk triage.}{fig:risk-surface}
+
+The dashboard is intentionally conservative. It does not present the VLM answer as ground truth. It presents a claim, a confidence, and the artifacts needed to inspect it. This distinction matters for construction deployment: the system should help reviewers find evidence faster, not replace evidence with fluent text.
 
 \section{Limitations}
-The current system is a hackathon prototype. The reported numbers come from small pilot runs and should be treated as directional until repeated on a frozen dataset. DepthAnythingV2 is relative, not metric, so VIMA uses it for ordering, filtering, and stability checks rather than absolute measurements. The CII classifier runs were inconsistent: one full run over-labeled all frames as non-contributory, while smaller temporal batches produced more plausible P/C/NC splits. This argues for temporal batching and human-reviewed benchmark labels before any safety-critical deployment.
+The current system is a hackathon prototype. The reported numbers come from small pilot runs and should be treated as directional until repeated on a frozen dataset. DepthAnythingV2 is relative, not metric, so VIMA uses it for ordering, filtering, and stability checks rather than absolute measurements. The CII classifier runs were inconsistent: one full run over-labeled frames as non-contributory, while smaller temporal batches produced more plausible P/C/NC splits. This argues for temporal batching and human-reviewed benchmark labels before any safety-critical deployment.
+
+There are also limits to the evidence layer itself. Masks can fail on blurry frames, object proposals can miss small tools, and depth can be distorted by fisheye imagery or reflective surfaces. VIMA's defense is not that every intermediate model is correct. Its defense is inspectability: every claim is decomposed into visible artifacts that a reviewer can accept, reject, or relabel.
 
 \section{Conclusion}
-VIMA's central claim is that construction VLM systems need a spatial evidence layer before language synthesis. Direct VLM prompting is too brittle for jobsite claims because it can hallucinate objects, mis-estimate distance, and omit the evidence path. By combining RGB-derived depth, frame filtering, object masks, reconstruction, and episodic memory, VIMA turns hardhat video into auditable spatial claims. The most promising technical contribution is depth-delta filtering: a simple monocular-depth check that removes unstable frame pairs before geometry and improves downstream reconstruction quality in pilot runs.
+VIMA's central claim is that construction VLM systems need a spatial evidence layer before language synthesis. Direct VLM prompting is too brittle for jobsite claims because it can hallucinate objects, mis-estimate distance, and omit the evidence path. By combining RGB-derived depth, depth-delta frame filtering, object masks, reconstruction, and episodic memory, VIMA turns hardhat video into auditable spatial claims. The most promising technical contribution is the simplest one: a monocular-depth disagreement check that removes unstable frame pairs before geometry and improves downstream reconstruction quality in pilot runs.
 
 \bibliographystyle{plain}
 \bibliography{references}
-
-
-\clearpage
-\onecolumn
-\appendix
-\section{Appendix: Visual Evidence Pack}
-The following figures expand the evidence path used in the demo. They are included to make the report inspectable: raw frames, depth products, frame-selection diagnostics, reconstruction confidence, risk surfaces, point-cloud views, and dashboard screenshots.
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.98\textwidth]{figures/rgb_depth_pair.jpg}
-\caption{RGB frame beside its depth-conditioned view. This is the first sanity check for the RGB-only geometry claim: depth is not treated as metric truth, but it exposes relative spatial structure in the scene.}
-\label{fig:appendix-rgb-depth}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.98\textwidth]{figures/depth_delta_selection.png}
-\caption{Depth-delta frame selection. Green bars remain below the high-motion threshold; gray bars are rejected before reconstruction. The filter removes unstable pairs caused by fast head motion, blur, or abrupt viewpoint changes.}
-\label{fig:appendix-depth-delta}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.98\textwidth]{figures/dunemast3r_comparison.png}
-\caption{Selected versus rejected frame-pair comparison. In the pilot run, depth-delta selection raised mean confidence and reduced translation norm relative to rejected baseline pairs.}
-\label{fig:appendix-master-bars}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.98\textwidth]{figures/reconstruction_panel.png}
-\caption{Reconstruction diagnostic panel: source RGB frames, estimated depth maps, and confidence maps for a selected pair. This figure shows the intermediate products behind the scalar geometry metrics.}
-\label{fig:appendix-reconstruction}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.88\textwidth]{figures/cii_risk_surface.png}
-\caption{Temporal activity/risk surface over frame index and spatial zone. This was used as an explanatory view for how object-event memory can become zone-aware rather than only timestamp-aware.}
-\label{fig:appendix-risk-surface}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.98\textwidth]{figures/point_cloud_source.png}
-\caption{Point-cloud style visualization paired with its source frame. The point cloud is an interface artifact for the spatial-memory story: every spatial claim should remain connected to a recoverable video frame.}
-\label{fig:appendix-point-cloud}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.98\textwidth]{figures/demo_dashboard.png}
-\caption{Internal evidence dashboard. The interface exposes raw, mask, and depth views alongside the memory answer so reviewers can inspect why a claim was retrieved.}
-\label{fig:appendix-dashboard}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.98\textwidth]{figures/cold_path_dashboard.png}
-\caption{Cold-path prototype screenshot showing the broader proof-chain story: sampled frames become frame-level records, records become spatial claims, and claims become auditable review artifacts.}
-\label{fig:appendix-cold-path}
-\end{figure}
 
 \end{document}
