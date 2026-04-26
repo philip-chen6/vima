@@ -17,9 +17,9 @@ rsync -avz --delete \
   --exclude __pycache__ \
   --exclude .git \
   --exclude .gstack \
-  --exclude paper/build \
-  --exclude proof \
-  --exclude demo \
+  --exclude '/paper/build' \
+  --exclude '/proof' \
+  --exclude '/demo' \
   ../ root@$SERVER:/opt/vima/
 
 # build + restart on server

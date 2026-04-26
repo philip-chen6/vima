@@ -38,9 +38,9 @@ jobs:
             --exclude __pycache__ \
             --exclude .git \
             --exclude .gstack \
-            --exclude paper \
-            --exclude proof \
-            --exclude demo \
+            --exclude '/paper' \
+            --exclude '/proof' \
+            --exclude '/demo' \
             --exclude '*.pyc' \
             --exclude '.DS_Store' \
             --exclude '.env' \
