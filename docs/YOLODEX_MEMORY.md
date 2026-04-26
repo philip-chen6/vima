@@ -42,6 +42,7 @@ python3 demo/yolodex_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out 
 python3 demo/mask_track_memory.py --run-dir tools/yolodex/runs/vinna-hardhat --out demo/mask_track_memory.json --fps 0.1
 python3 demo/depth_memory.py --input demo/mask_track_memory.json --out demo/depth_track_memory.json --backend auto
 python3 demo/episodic_memory.py --input demo/depth_track_memory.json --out demo/episodic_memory.json --query "worker laying blocks near wall"
+python3 demo/answer_from_memory.py --query "Was there masonry work happening near the wall?" --provider gemini --out demo/memory_answer_gemini.json
 ```
 
 ## Output
@@ -57,6 +58,8 @@ python3 demo/episodic_memory.py --input demo/depth_track_memory.json --out demo/
 - `tools/yolodex/runs/vinna-hardhat/depth_preview/depth_tracks.mp4`: depth QA
 - `demo/depth_track_memory.json`: mask-aware object depth bands and per-frame ordering
 - `demo/episodic_memory.json`: compact object-event episodes for retrieval / VLM context
+- `demo/memory_answer.json`: deterministic memory answer with cited evidence
+- `demo/memory_answer_gemini.json`: Gemini synthesis answer from the same retrieved evidence
 
 ## Construction Classes
 
@@ -118,3 +121,61 @@ Each episode stores start/end time, evidence frames, involved object tracks,
 relations, depth facts, confidence, and `query_text`. The VLM should retrieve
 these episodes first, then answer from their cited evidence instead of watching
 the whole raw clip.
+
+## Answer Layer
+
+`demo/answer_from_memory.py` is the final synthesis step:
+
+```bash
+python3 demo/answer_from_memory.py \
+  --query "Was there masonry work happening near the wall?" \
+  --provider heuristic \
+  --out demo/memory_answer.json
+```
+
+For Gemini, the default transport is direct REST instead of the legacy
+`google-generativeai` SDK path. The old SDK path stalled on this machine, while
+the REST path completed quickly with the same API key:
+
+```bash
+python3 demo/answer_from_memory.py \
+  --query "Was there masonry work happening near the wall?" \
+  --provider gemini \
+  --timeout-s 12 \
+  --out demo/memory_answer_gemini.json
+```
+
+The JSON output always includes `retrieved_episodes`, so the answer can be
+audited against frame names, episode ids, relations, and depth facts. If Gemini
+times out or fails, the script records `fallback_used` / `error` and emits the
+deterministic heuristic answer instead of hanging.
+
+## Qwen-VL Probe
+
+`demo/qwen_frame_qa.py` is an optional local/open-weights VLM harness. It
+retrieves the same episodes, loads their evidence frames, and asks Qwen-VL to
+answer from both pixels and memory:
+
+```bash
+python3 demo/qwen_frame_qa.py \
+  --query "Was there masonry work happening near the wall?" \
+  --model Qwen/Qwen2.5-VL-3B-Instruct \
+  --out demo/qwen_answer.json
+```
+
+It is intentionally dependency-light until you choose to run it. Install the
+Qwen stack only on a machine with enough RAM/VRAM:
+
+```bash
+python3 -m pip install "transformers>=4.51.0" qwen-vl-utils torch accelerate pillow
+```
+
+Use Qwen for the open-model comparison:
+
+```text
+raw Qwen on evidence frames
+vs
+Qwen + retrieved episodic memory
+vs
+Gemini + retrieved episodic memory
+```

@@ -69,6 +69,21 @@ python3 demo/episodic_memory.py \
 This emits compact episodes with time ranges, evidence frames, object tracks,
 depth facts, and retrieval text for downstream VLM synthesis.
 
+Answer a natural-language question from the retrieved memory:
+
+```bash
+python3 demo/answer_from_memory.py \
+  --query "Was there masonry work happening near the wall?" \
+  --provider gemini \
+  --timeout-s 12 \
+  --out demo/memory_answer_gemini.json
+```
+
+The answer layer retrieves compact episodes first, then asks the VLM to synthesize
+from cited evidence. Gemini uses direct REST by default so demos do not hang on
+the legacy SDK transport. For an open-model comparison, use the optional Qwen-VL
+probe in `demo/qwen_frame_qa.py` after installing the Qwen dependencies.
+
 ## API
 
 - `GET /health` — status check
