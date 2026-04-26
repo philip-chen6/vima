@@ -1,0 +1,851 @@
+{
+  "metadata": {
+    "tool": "VINNA object-event memory from vendored Yolodex labels",
+    "run_dir": "runs/vinna-hardhat",
+    "frames": 10,
+    "classes": [
+      "worker",
+      "scaffold",
+      "concrete block wall",
+      "material stack",
+      "ladder",
+      "tool",
+      "guardrail",
+      "open edge"
+    ],
+    "fps": 0.1,
+    "note": "timestamp_s is derived from sampled-frame order and the provided extraction fps."
+  },
+  "summary": {
+    "object_counts": {
+      "worker": 12,
+      "scaffold": 11,
+      "concrete block wall": 6,
+      "guardrail": 8,
+      "material stack": 6,
+      "open edge": 2
+    },
+    "event_counts": {
+      "worker_near_block_wall": 6,
+      "scaffold_visible": 8,
+      "safety_edge_context": 9,
+      "material_staging_visible": 6
+    }
+  },
+  "memory": [
+    {
+      "frame": "frame_000001.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000001.jpg",
+      "frame_index": 0,
+      "timestamp_s": 0.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            270.5,
+            110.0,
+            395.5,
+            260.0
+          ],
+          "center_norm": [
+            0.52,
+            0.385
+          ],
+          "area_frac": 0.061,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            0,
+            0,
+            170.0,
+            420.0
+          ],
+          "center_norm": [
+            0.133,
+            0.438
+          ],
+          "area_frac": 0.2324,
+          "depth_hint": "near"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            400.0,
+            0,
+            510.0,
+            260.0
+          ],
+          "center_norm": [
+            0.711,
+            0.271
+          ],
+          "area_frac": 0.0931,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            55.0,
+            235.0,
+            595.0,
+            470.0
+          ],
+          "center_norm": [
+            0.508,
+            0.734
+          ],
+          "area_frac": 0.4131,
+          "depth_hint": "near"
+        },
+        {
+          "label": "guardrail",
+          "bbox_xyxy": [
+            50.0,
+            222.0,
+            294.0,
+            264.0
+          ],
+          "center_norm": [
+            0.269,
+            0.506
+          ],
+          "area_frac": 0.0334,
+          "depth_hint": "far"
+        }
+      ],
+      "events": [
+        "worker_near_block_wall",
+        "scaffold_visible",
+        "safety_edge_context"
+      ],
+      "query_text": "worker_near_block_wall scaffold_visible safety_edge_context worker scaffold scaffold concrete block wall guardrail"
+    },
+    {
+      "frame": "frame_000002.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000002.jpg",
+      "frame_index": 1,
+      "timestamp_s": 10.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            210.0,
+            142.0,
+            340.0,
+            292.0
+          ],
+          "center_norm": [
+            0.43,
+            0.452
+          ],
+          "area_frac": 0.0635,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            544.0,
+            56.0,
+            640,
+            381.0
+          ],
+          "center_norm": [
+            0.925,
+            0.455
+          ],
+          "area_frac": 0.1016,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            344.0,
+            0,
+            480.0,
+            315.0
+          ],
+          "center_norm": [
+            0.644,
+            0.328
+          ],
+          "area_frac": 0.1395,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            88.0,
+            230.0,
+            544.0,
+            430.0
+          ],
+          "center_norm": [
+            0.494,
+            0.688
+          ],
+          "area_frac": 0.2969,
+          "depth_hint": "near"
+        },
+        {
+          "label": "material stack",
+          "bbox_xyxy": [
+            486.0,
+            206.0,
+            628.0,
+            306.0
+          ],
+          "center_norm": [
+            0.87,
+            0.533
+          ],
+          "area_frac": 0.0462,
+          "depth_hint": "far"
+        },
+        {
+          "label": "guardrail",
+          "bbox_xyxy": [
+            52.0,
+            240.0,
+            294.0,
+            282.0
+          ],
+          "center_norm": [
+            0.27,
+            0.544
+          ],
+          "area_frac": 0.0331,
+          "depth_hint": "far"
+        }
+      ],
+      "events": [
+        "worker_near_block_wall",
+        "scaffold_visible",
+        "material_staging_visible",
+        "safety_edge_context"
+      ],
+      "query_text": "worker_near_block_wall scaffold_visible material_staging_visible safety_edge_context worker worker scaffold concrete block wall material stack guardrail"
+    },
+    {
+      "frame": "frame_000003.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000003.jpg",
+      "frame_index": 2,
+      "timestamp_s": 20.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            414.0,
+            30.0,
+            640.0,
+            480
+          ],
+          "center_norm": [
+            0.823,
+            0.531
+          ],
+          "area_frac": 0.331,
+          "depth_hint": "near"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            504.0,
+            0,
+            640,
+            480
+          ],
+          "center_norm": [
+            0.894,
+            0.5
+          ],
+          "area_frac": 0.2124,
+          "depth_hint": "near"
+        },
+        {
+          "label": "material stack",
+          "bbox_xyxy": [
+            127.0,
+            183.0,
+            343.0,
+            328.0
+          ],
+          "center_norm": [
+            0.367,
+            0.532
+          ],
+          "area_frac": 0.102,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "guardrail",
+          "bbox_xyxy": [
+            43.0,
+            182.0,
+            401.0,
+            244.0
+          ],
+          "center_norm": [
+            0.347,
+            0.444
+          ],
+          "area_frac": 0.0723,
+          "depth_hint": "mid"
+        }
+      ],
+      "events": [
+        "scaffold_visible",
+        "material_staging_visible",
+        "safety_edge_context"
+      ],
+      "query_text": "scaffold_visible material_staging_visible safety_edge_context worker scaffold material stack guardrail"
+    },
+    {
+      "frame": "frame_000004.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000004.jpg",
+      "frame_index": 3,
+      "timestamp_s": 30.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            288.5,
+            154.0,
+            393.5,
+            380.0
+          ],
+          "center_norm": [
+            0.533,
+            0.556
+          ],
+          "area_frac": 0.0773,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            380.5,
+            0,
+            565.5,
+            480
+          ],
+          "center_norm": [
+            0.739,
+            0.5
+          ],
+          "area_frac": 0.2891,
+          "depth_hint": "near"
+        },
+        {
+          "label": "material stack",
+          "bbox_xyxy": [
+            0,
+            254.0,
+            208.0,
+            418.0
+          ],
+          "center_norm": [
+            0.163,
+            0.7
+          ],
+          "area_frac": 0.1111,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "guardrail",
+          "bbox_xyxy": [
+            0,
+            198.5,
+            356.0,
+            255.5
+          ],
+          "center_norm": [
+            0.278,
+            0.473
+          ],
+          "area_frac": 0.0661,
+          "depth_hint": "mid"
+        }
+      ],
+      "events": [
+        "scaffold_visible",
+        "material_staging_visible",
+        "safety_edge_context"
+      ],
+      "query_text": "scaffold_visible material_staging_visible safety_edge_context worker scaffold material stack guardrail"
+    },
+    {
+      "frame": "frame_000005.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000005.jpg",
+      "frame_index": 4,
+      "timestamp_s": 40.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            206.0,
+            173.0,
+            640.0,
+            343.0
+          ],
+          "center_norm": [
+            0.661,
+            0.537
+          ],
+          "area_frac": 0.2402,
+          "depth_hint": "near"
+        },
+        {
+          "label": "guardrail",
+          "bbox_xyxy": [
+            0,
+            250.0,
+            640,
+            310.0
+          ],
+          "center_norm": [
+            0.5,
+            0.583
+          ],
+          "area_frac": 0.125,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "open edge",
+          "bbox_xyxy": [
+            0,
+            270.0,
+            640,
+            385.0
+          ],
+          "center_norm": [
+            0.5,
+            0.682
+          ],
+          "area_frac": 0.2396,
+          "depth_hint": "near"
+        }
+      ],
+      "events": [
+        "safety_edge_context"
+      ],
+      "query_text": "safety_edge_context worker guardrail open edge"
+    },
+    {
+      "frame": "frame_000006.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000006.jpg",
+      "frame_index": 5,
+      "timestamp_s": 50.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            583.0,
+            336.0,
+            640,
+            480
+          ],
+          "center_norm": [
+            0.955,
+            0.85
+          ],
+          "area_frac": 0.0267,
+          "depth_hint": "far"
+        },
+        {
+          "label": "material stack",
+          "bbox_xyxy": [
+            243.0,
+            290.0,
+            479.0,
+            393.0
+          ],
+          "center_norm": [
+            0.564,
+            0.711
+          ],
+          "area_frac": 0.0791,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "open edge",
+          "bbox_xyxy": [
+            0,
+            232.0,
+            640,
+            404.0
+          ],
+          "center_norm": [
+            0.5,
+            0.662
+          ],
+          "area_frac": 0.3583,
+          "depth_hint": "near"
+        }
+      ],
+      "events": [
+        "material_staging_visible",
+        "safety_edge_context"
+      ],
+      "query_text": "material_staging_visible safety_edge_context worker material stack open edge"
+    },
+    {
+      "frame": "frame_000007.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000007.jpg",
+      "frame_index": 6,
+      "timestamp_s": 60.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            201.0,
+            130.0,
+            303.0,
+            345.0
+          ],
+          "center_norm": [
+            0.394,
+            0.495
+          ],
+          "area_frac": 0.0714,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            339.0,
+            0,
+            537.0,
+            480
+          ],
+          "center_norm": [
+            0.684,
+            0.5
+          ],
+          "area_frac": 0.3094,
+          "depth_hint": "near"
+        },
+        {
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            491.0,
+            282.0,
+            640,
+            450.0
+          ],
+          "center_norm": [
+            0.884,
+            0.762
+          ],
+          "area_frac": 0.0815,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "material stack",
+          "bbox_xyxy": [
+            32.0,
+            192.0,
+            302.0,
+            316.0
+          ],
+          "center_norm": [
+            0.261,
+            0.529
+          ],
+          "area_frac": 0.109,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "guardrail",
+          "bbox_xyxy": [
+            30.0,
+            196.0,
+            345.0,
+            245.0
+          ],
+          "center_norm": [
+            0.293,
+            0.459
+          ],
+          "area_frac": 0.0503,
+          "depth_hint": "mid"
+        }
+      ],
+      "events": [
+        "worker_near_block_wall",
+        "scaffold_visible",
+        "material_staging_visible",
+        "safety_edge_context"
+      ],
+      "query_text": "worker_near_block_wall scaffold_visible material_staging_visible safety_edge_context worker scaffold concrete block wall material stack guardrail"
+    },
+    {
+      "frame": "frame_000008.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000008.jpg",
+      "frame_index": 7,
+      "timestamp_s": 70.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            588.0,
+            133.5,
+            640,
+            279.5
+          ],
+          "center_norm": [
+            0.959,
+            0.43
+          ],
+          "area_frac": 0.0247,
+          "depth_hint": "far"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            0,
+            0,
+            364.0,
+            480
+          ],
+          "center_norm": [
+            0.284,
+            0.5
+          ],
+          "area_frac": 0.5688,
+          "depth_hint": "near"
+        },
+        {
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            478.0,
+            248.0,
+            640.0,
+            432.0
+          ],
+          "center_norm": [
+            0.873,
+            0.708
+          ],
+          "area_frac": 0.097,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "material stack",
+          "bbox_xyxy": [
+            252.0,
+            257.0,
+            456.0,
+            413.0
+          ],
+          "center_norm": [
+            0.553,
+            0.698
+          ],
+          "area_frac": 0.1036,
+          "depth_hint": "mid"
+        }
+      ],
+      "events": [
+        "worker_near_block_wall",
+        "scaffold_visible",
+        "material_staging_visible"
+      ],
+      "query_text": "worker_near_block_wall scaffold_visible material_staging_visible worker scaffold concrete block wall material stack"
+    },
+    {
+      "frame": "frame_000009.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000009.jpg",
+      "frame_index": 8,
+      "timestamp_s": 80.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            297.0,
+            133.5,
+            392.0,
+            275.5
+          ],
+          "center_norm": [
+            0.538,
+            0.426
+          ],
+          "area_frac": 0.0439,
+          "depth_hint": "far"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            0.0,
+            0,
+            162.0,
+            480
+          ],
+          "center_norm": [
+            0.127,
+            0.5
+          ],
+          "area_frac": 0.2531,
+          "depth_hint": "near"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            430.5,
+            0.0,
+            570.5,
+            208.0
+          ],
+          "center_norm": [
+            0.782,
+            0.217
+          ],
+          "area_frac": 0.0948,
+          "depth_hint": "mid"
+        },
+        {
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            222.0,
+            231.5,
+            638.0,
+            458.5
+          ],
+          "center_norm": [
+            0.672,
+            0.719
+          ],
+          "area_frac": 0.3074,
+          "depth_hint": "near"
+        },
+        {
+          "label": "guardrail",
+          "bbox_xyxy": [
+            86.0,
+            209.0,
+            382.0,
+            257.0
+          ],
+          "center_norm": [
+            0.366,
+            0.485
+          ],
+          "area_frac": 0.0462,
+          "depth_hint": "far"
+        }
+      ],
+      "events": [
+        "worker_near_block_wall",
+        "scaffold_visible",
+        "safety_edge_context"
+      ],
+      "query_text": "worker_near_block_wall scaffold_visible safety_edge_context worker scaffold scaffold concrete block wall guardrail"
+    },
+    {
+      "frame": "frame_000010.jpg",
+      "frame_path": "runs/vinna-hardhat/frames/frame_000010.jpg",
+      "frame_index": 9,
+      "timestamp_s": 90.0,
+      "objects": [
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            116.0,
+            60.0,
+            314.0,
+            480
+          ],
+          "center_norm": [
+            0.336,
+            0.562
+          ],
+          "area_frac": 0.2707,
+          "depth_hint": "near"
+        },
+        {
+          "label": "worker",
+          "bbox_xyxy": [
+            368.0,
+            175.0,
+            428.0,
+            315.0
+          ],
+          "center_norm": [
+            0.622,
+            0.51
+          ],
+          "area_frac": 0.0274,
+          "depth_hint": "far"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            0,
+            0,
+            202.0,
+            480
+          ],
+          "center_norm": [
+            0.158,
+            0.5
+          ],
+          "area_frac": 0.3156,
+          "depth_hint": "near"
+        },
+        {
+          "label": "scaffold",
+          "bbox_xyxy": [
+            399.0,
+            0,
+            610.0,
+            274.0
+          ],
+          "center_norm": [
+            0.788,
+            0.285
+          ],
+          "area_frac": 0.1882,
+          "depth_hint": "near"
+        },
+        {
+          "label": "concrete block wall",
+          "bbox_xyxy": [
+            202.0,
+            278.0,
+            640,
+            440.0
+          ],
+          "center_norm": [
+            0.658,
+            0.748
+          ],
+          "area_frac": 0.231,
+          "depth_hint": "near"
+        },
+        {
+          "label": "guardrail",
+          "bbox_xyxy": [
+            241.5,
+            236.0,
+            569.5,
+            276.0
+          ],
+          "center_norm": [
+            0.634,
+            0.533
+          ],
+          "area_frac": 0.0427,
+          "depth_hint": "far"
+        }
+      ],
+      "events": [
+        "worker_near_block_wall",
+        "scaffold_visible",
+        "safety_edge_context"
+      ],
+      "query_text": "worker_near_block_wall scaffold_visible safety_edge_context worker worker scaffold scaffold concrete block wall guardrail"
+    }
+  ]
+}

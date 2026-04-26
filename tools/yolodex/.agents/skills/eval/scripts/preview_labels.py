@@ -101,26 +101,26 @@ def main() -> int:
     for image_path in images:
         draw_image(image_path, image_path.with_suffix(".txt"), out_dir / image_path.name, classes)
 
-        print(f"Rendered {len(images)} preview images to: {out_dir}")
-        if args.video_out and images:
-            try:
-                cmd = [
-                    "ffmpeg",
-                    "-y",
-                    "-framerate",
-                    str(args.framerate),
-                    "-i",
-                    str(out_dir / "frame_%06d.jpg"),
-                    "-c:v",
-                    "libx264",
-                    "-pix_fmt",
-                    "yuv420p",
-                    str(args.video_out),
-                ]
-                subprocess.run(cmd, check=True)
-                print(f"Created preview video: {args.video_out}")
-            except subprocess.CalledProcessError as exc:
-                print(f"Warning: Failed to render preview video ({exc})")
+    print(f"Rendered {len(images)} preview images to: {out_dir}")
+    if args.video_out and images:
+        try:
+            cmd = [
+                "ffmpeg",
+                "-y",
+                "-framerate",
+                str(args.framerate),
+                "-i",
+                str(out_dir / "frame_%06d.jpg"),
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+                str(args.video_out),
+            ]
+            subprocess.run(cmd, check=True)
+            print(f"Created preview video: {args.video_out}")
+        except subprocess.CalledProcessError as exc:
+            print(f"Warning: Failed to render preview video ({exc})")
     return 0
 
 

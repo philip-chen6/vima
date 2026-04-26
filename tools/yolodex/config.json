@@ -11,8 +11,9 @@
     "guardrail",
     "open edge"
   ],
-  "fps": 0.5,
+  "fps": 0.1,
   "output_dir": "output",
-  "label_mode": "gemini",
+  "label_mode": "codex",
+  "num_agents": 1,
   "gemini_model": "gemini-2.5-flash"
 }

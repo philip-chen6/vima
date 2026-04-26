@@ -2,7 +2,8 @@
 # Dispatch parallel Codex subagents for frame labeling
 set -euo pipefail
 
-REPO_ROOT="$(git rev-parse --show-toplevel)"
+GIT_ROOT="$(git rev-parse --show-toplevel)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
 WORKTREE_BASE="/tmp/yolodex-workers"
 NUM_AGENTS="${1:-4}"
 
@@ -67,7 +68,7 @@ if ! command -v uv >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! git worktree list >/dev/null 2>&1; then
+if ! git -C "$GIT_ROOT" worktree list >/dev/null 2>&1; then
   echo "Error: git worktree is unavailable in this repository."
   exit 1
 fi
@@ -106,31 +107,32 @@ for i in $(seq 1 $NUM_AGENTS); do
   [ $START -ge $TOTAL ] && continue
 
   # Create isolated worktree
-  git branch "$BRANCH" HEAD 2>/dev/null || true
-  git worktree add "$DIR" "$BRANCH" 2>/dev/null || true
+  git -C "$GIT_ROOT" branch "$BRANCH" HEAD 2>/dev/null || true
+  git -C "$GIT_ROOT" worktree add "$DIR" "$BRANCH" 2>/dev/null || true
 
   # Copy frames to worktree's output dir
-  mkdir -p "${DIR}/${OUTPUT_DIR}/frames"
+  WORKTREE_ROOT="${DIR}/tools/yolodex"
+  mkdir -p "${WORKTREE_ROOT}/${OUTPUT_DIR}/frames"
   # Preserve existing labels so subagents only fill missing annotations.
-  [ -f "${REPO_ROOT}/${OUTPUT_DIR}/frames/classes.txt" ] && cp "${REPO_ROOT}/${OUTPUT_DIR}/frames/classes.txt" "${DIR}/${OUTPUT_DIR}/frames/" || true
-  [ -f "${REPO_ROOT}/${OUTPUT_DIR}/classes.txt" ] && cp "${REPO_ROOT}/${OUTPUT_DIR}/classes.txt" "${DIR}/${OUTPUT_DIR}/" || true
+  [ -f "${REPO_ROOT}/${OUTPUT_DIR}/frames/classes.txt" ] && cp "${REPO_ROOT}/${OUTPUT_DIR}/frames/classes.txt" "${WORKTREE_ROOT}/${OUTPUT_DIR}/frames/" || true
+  [ -f "${REPO_ROOT}/${OUTPUT_DIR}/classes.txt" ] && cp "${REPO_ROOT}/${OUTPUT_DIR}/classes.txt" "${WORKTREE_ROOT}/${OUTPUT_DIR}/" || true
   for j in $(seq $START $(( END - 1 ))); do
-    cp "${FRAMES[$j]}" "${DIR}/${OUTPUT_DIR}/frames/"
+    cp "${FRAMES[$j]}" "${WORKTREE_ROOT}/${OUTPUT_DIR}/frames/"
     TXT_SRC="${FRAMES[$j]%.jpg}.txt"
-    [ -f "${TXT_SRC}" ] && cp "${TXT_SRC}" "${DIR}/${OUTPUT_DIR}/frames/"
+    [ -f "${TXT_SRC}" ] && cp "${TXT_SRC}" "${WORKTREE_ROOT}/${OUTPUT_DIR}/frames/"
   done
 
   # Launch Codex subagent in the worktree
-  echo "  Agent ${i}: frames ${START}-${END} in ${DIR}"
+  echo "  Agent ${i}: frames ${START}-${END} in ${WORKTREE_ROOT}"
 
   if [ "$LABEL_MODE" = "gpt" ] && [ -n "${OPENAI_API_KEY:-}" ]; then
-    codex exec --skip-git-repo-check --full-auto -C "$DIR" \
+    codex exec --skip-git-repo-check --full-auto -C "$WORKTREE_ROOT" \
       "You are a labeling subagent. Label all frames in ${OUTPUT_DIR}/frames/ using the label skill.
        Run: uv run .agents/skills/label/scripts/run_batch.py
        Do not modify any other files. Only create .txt label files next to each .jpg." \
       > "${DIR}/codex-output.log" 2>&1 &
   else
-    codex exec --skip-git-repo-check --full-auto -C "$DIR" \
+    codex exec --skip-git-repo-check --full-auto -C "$WORKTREE_ROOT" \
       "You are a vision labeling subagent. Do not use external APIs or API keys.
        Work only inside ${OUTPUT_DIR}/frames/.
        For each .jpg without a same-name .txt, inspect the image with the available image-viewing tool.
@@ -154,12 +156,13 @@ done
 echo "Merging label results..."
 for i in $(seq 1 $NUM_AGENTS); do
   DIR="${WORKTREE_BASE}/agent-${i}"
+  WORKTREE_ROOT="${DIR}/tools/yolodex"
   [ -d "$DIR" ] || continue
   # Copy .txt label files back
-  cp "${DIR}/${OUTPUT_DIR}"/frames/*.txt "${FRAMES_DIR}/" 2>/dev/null || true
+  cp "${WORKTREE_ROOT}/${OUTPUT_DIR}"/frames/*.txt "${FRAMES_DIR}/" 2>/dev/null || true
   # Cleanup
-  git worktree remove "$DIR" --force 2>/dev/null || true
-  git branch -D "yolodex/labeler-${i}" 2>/dev/null || true
+  git -C "$GIT_ROOT" worktree remove "$DIR" --force 2>/dev/null || true
+  git -C "$GIT_ROOT" branch -D "yolodex/labeler-${i}" 2>/dev/null || true
 done
 
 # Merge class maps

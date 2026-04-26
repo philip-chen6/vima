@@ -1,0 +1,4 @@
+.env
+data/
+tools/yolodex/runs/
+tools/yolodex/output/

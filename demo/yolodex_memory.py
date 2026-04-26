@@ -83,7 +83,7 @@ def infer_events(objects: list[dict]) -> list[str]:
     return events
 
 
-def build_memory(run_dir: pathlib.Path) -> dict:
+def build_memory(run_dir: pathlib.Path, fps: float) -> dict:
     frames_dir = run_dir / "frames"
     classes = load_classes(run_dir / "classes.txt")
     frame_paths = sorted(frames_dir.glob("frame_*.jpg"))
@@ -112,7 +112,7 @@ def build_memory(run_dir: pathlib.Path) -> dict:
             "frame": frame_path.name,
             "frame_path": str(frame_path),
             "frame_index": index,
-            "timestamp_s": round(index * 2.0, 2),
+            "timestamp_s": round(index / fps, 2),
             "objects": objects,
             "events": events,
             "query_text": " ".join([*events, *[obj["label"] for obj in objects]]),
@@ -124,7 +124,8 @@ def build_memory(run_dir: pathlib.Path) -> dict:
             "run_dir": str(run_dir),
             "frames": len(rows),
             "classes": classes,
-            "note": "timestamp_s assumes config fps=0.5 unless replaced by exact frame timestamps",
+            "fps": fps,
+            "note": "timestamp_s is derived from sampled-frame order and the provided extraction fps.",
         },
         "summary": {
             "object_counts": dict(object_counts),
@@ -138,9 +139,10 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-dir", default=str(DEFAULT_RUN_DIR))
     parser.add_argument("--out", default=str(DEFAULT_OUTPUT))
+    parser.add_argument("--fps", type=float, default=0.1, help="Frame extraction rate used for this run")
     args = parser.parse_args()
 
-    memory = build_memory(pathlib.Path(args.run_dir))
+    memory = build_memory(pathlib.Path(args.run_dir), args.fps)
     out = pathlib.Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(memory, indent=2))
