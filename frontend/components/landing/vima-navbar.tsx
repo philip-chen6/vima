@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { flushSync } from "react-dom";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal, flushSync } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown } from "lucide-react";
 import gsap from "gsap";
@@ -19,6 +19,10 @@ const PROGRAMMATIC_SCROLL_END = "vima-programmatic-scroll:end";
 const NAV_SCROLL_DURATION = 1.28;
 const NAV_SCROLL_EASE = "power2.inOut";
 const NAV_SCROLL_OFFSET = 92;
+
+const noopSubscribe = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
 
 function dispatchProgrammaticScroll(name: string) {
   window.dispatchEvent(new CustomEvent(name));
@@ -128,6 +132,9 @@ export default function VimaNavbar() {
   const [activeSection, setActiveSection] = useState("top");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const navigateWithCurtain = useCurtainNavigate();
+  // Portal mount guard — render-to-body only happens client-side after
+  // hydration so SSR + initial markup match.
+  const mounted = useSyncExternalStore(noopSubscribe, clientSnapshot, serverSnapshot);
 
   // Close the enter dropdown on outside click + escape. Other dropdowns
   // (proof/ledger/etc) are inside the nav so they get the existing
@@ -330,10 +337,9 @@ export default function VimaNavbar() {
                   aria-haspopup="menu"
                   aria-expanded={activeDropdown === "enter"}
                   aria-label="open enter menu"
-                  onClick={() =>
-                    setActiveDropdown(activeDropdown === "enter" ? null : "enter")
-                  }
-                  onFocus={() => setActiveDropdown("enter")}
+                  onClick={() => {
+                    setActiveDropdown((current) => (current === "enter" ? null : "enter"));
+                  }}
                 >
                   <span>enter</span>
                   <ChevronDown
@@ -346,15 +352,15 @@ export default function VimaNavbar() {
                     }}
                   />
                 </button>
-                <AnimatePresence>
-                  {activeDropdown === "enter" && (
-                    <motion.div
-                      key="enter-panel"
+                {/* Portal the panel to <body> so it escapes the
+                    smooth-scroll stacking context (#smooth-content has
+                    a transform that creates its own stacking context,
+                    trapping any normal z-index from this navbar). */}
+                {mounted &&
+                  createPortal(
+                    <div
                       className="vima-nav-enter-panel"
-                      initial={{ opacity: 0, y: -4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -4 }}
-                      transition={{ duration: 0.22, ease: [0.2, 0.8, 0.2, 1] }}
+                      data-open={activeDropdown === "enter" ? "true" : "false"}
                       role="menu"
                     >
                       {[
@@ -363,7 +369,7 @@ export default function VimaNavbar() {
                         { href: "/eval", label: "eval", detail: "118 episodes · a/b" },
                         { href: "https://docs.vimaspatial.tech", label: "docs", detail: "api · agent skill", external: true },
                         { href: "/paper.pdf", label: "paper", detail: "spatial reasoning · pdf", external: true },
-                      ].map((item) => (
+                      ].map((item) =>
                         item.external ? (
                           <a
                             key={item.href}
@@ -392,11 +398,11 @@ export default function VimaNavbar() {
                             <span>{item.label}</span>
                             <span>{item.detail}</span>
                           </Link>
-                        )
-                      ))}
-                    </motion.div>
+                        ),
+                      )}
+                    </div>,
+                    document.body,
                   )}
-                </AnimatePresence>
               </div>
             </div>
           </div>

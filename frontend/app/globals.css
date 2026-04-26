@@ -1217,18 +1217,33 @@ html[data-vima-loader-reveal="true"] [data-landing-backdrop-stage] {
   pointer-events: none;
 }
 
+/* Hidden + lifted up so the gsap intro can drop it down dramatically.
+   gsap.set runs in scroll-motion.tsx and locks this state via inline
+   styles (which override these), then the timeline tweens it down.
+   Safety net in scroll-motion fires playIntroTimeline() after 2.4s if
+   the loader event never came. Worst-case third-line fallback: this
+   CSS rule auto-clears after 3.6s via the keyframe below so the nav
+   never stays permanently invisible. */
 .vima-nav[data-gsap-intro="intro-nav"] {
   visibility: hidden;
   opacity: 0;
   transform: translateY(-140px) scaleY(0.98);
   transform-origin: 50% 0%;
+  animation: vima-nav-intro-fallback 0s ease 9s forwards;
 }
-
+@keyframes vima-nav-intro-fallback {
+  to {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .vima-nav[data-gsap-intro="intro-nav"] {
     visibility: visible;
     opacity: 1;
     transform: none;
+    animation: none;
   }
 }
 
@@ -1542,8 +1557,21 @@ button.vima-nav-menu {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  z-index: 30;
+  /* High z-index + isolation so the panel escapes the smooth-scroll
+     stacking context (#smooth-content has transform which creates its
+     own stacking context, trapping any normal z-index). */
+  z-index: 2147483646;
+  isolation: isolate;
   font-family: var(--font-mono);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 220ms cubic-bezier(.2,.8,.2,1), transform 220ms cubic-bezier(.2,.8,.2,1);
+}
+.vima-nav-enter-panel[data-open="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 .vima-nav-enter-item {
   display: flex;

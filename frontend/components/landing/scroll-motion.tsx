@@ -262,6 +262,9 @@ export default function ScrollMotion({ children, className, style }: ScrollMotio
             transformOrigin: "0% 50%",
             clipPath: "inset(0 100% 0 0)",
           });
+          // Hidden + lifted up so the intro can drop it down dramatically.
+          // Safety net below ensures it never stays stuck hidden if the
+          // loader event fails to fire.
           gsap.set(introNav, {
             autoAlpha: 0,
             y: -140,
@@ -378,12 +381,22 @@ export default function ScrollMotion({ children, className, style }: ScrollMotio
           if ((window as Window & { __vimaLoaderComplete?: boolean }).__vimaLoaderComplete) {
             playIntroTimeline();
           } else {
+            // Wait for the loader to fully finish before dropping the
+            // navbar in from top. COMPLETE fires after the loader has
+            // wiped out and faded; navbar then slides in from y:-140
+            // via the gsap timeline.
             window.addEventListener(LOADER_COMPLETE_EVENT, playIntroTimeline, { once: true });
             cleanups.push(() => window.removeEventListener(LOADER_COMPLETE_EVENT, playIntroTimeline));
 
-            if ((window as Window & { __vimaLoaderComplete?: boolean }).__vimaLoaderComplete) {
-              playIntroTimeline();
-            }
+            // Hard safety: if the loader catastrophically fails (no
+            // event ever fires), force the intro after 8s so the nav
+            // can never stay permanently stuck off-screen.
+            const introFallback = window.setTimeout(() => {
+              if (introTl.progress() === 0) {
+                playIntroTimeline();
+              }
+            }, 8000);
+            cleanups.push(() => window.clearTimeout(introFallback));
           }
 
           cleanups.push(() => {

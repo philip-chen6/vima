@@ -157,9 +157,15 @@ export function PageCurtain() {
  * routes in a new tab.
  */
 export function useCurtainNavigate() {
+  const pathname = usePathname();
+
   return useCallback((href: string) => (e: React.MouseEvent) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    if (href === pathname) {
+      e.preventDefault();
+      return;
+    }
     e.preventDefault();
     window.dispatchEvent(new CustomEvent("vima-navigate", { detail: { href } }));
-  }, []);
+  }, [pathname]);
 }
