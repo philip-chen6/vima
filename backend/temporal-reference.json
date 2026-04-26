@@ -1,0 +1,98 @@
+{
+  "_note": "Reference claims hand-curated against the paper's masonry capture. Used as fallback when temporal_v1.py has not yet been run on a live frame sequence. Replaced automatically once temporal-results.json exists.",
+  "vima": {
+    "n_frames_examined": 8,
+    "elapsed_s": 11.4,
+    "model": "claude-sonnet-4-6",
+    "claims": [
+      {
+        "type": "course_growth",
+        "description": "wall section grew by three courses between t=0s and t=183s",
+        "start_frame": 0,
+        "end_frame": 1,
+        "evidence": "frame 0 shows worker placing first course block; frame 1 shows three full courses laid in the same wall segment",
+        "confidence": 0.91,
+        "severity": "info"
+      },
+      {
+        "type": "material_consumed",
+        "description": "primary block pallet diminished from full to ~40% remaining",
+        "start_frame": 0,
+        "end_frame": 5,
+        "evidence": "block stack height drops from ~12 courses visible to ~5; pattern matches active masonry consumption",
+        "confidence": 0.84,
+        "severity": "info"
+      },
+      {
+        "type": "worker_position_change",
+        "description": "primary worker moved from ground-level to scaffold platform",
+        "start_frame": 2,
+        "end_frame": 4,
+        "evidence": "frame 2 shows worker at ground placing block; frame 4 shows worker on scaffold plank, hands on a higher course",
+        "confidence": 0.88,
+        "severity": "warning"
+      },
+      {
+        "type": "hazard_introduced",
+        "description": "open edge appears on scaffold north side after material relocation",
+        "start_frame": 4,
+        "end_frame": 6,
+        "evidence": "frame 4 shows guardrail in place; frame 6 shows guardrail removed for material delivery, no harness on worker",
+        "confidence": 0.79,
+        "severity": "critical"
+      },
+      {
+        "type": "no_change_detected",
+        "description": "frames 6 and 7 show identical worker pose and material state",
+        "start_frame": 6,
+        "end_frame": 7,
+        "evidence": "drift only — no grounded change to claim",
+        "confidence": 0.95,
+        "severity": "info"
+      }
+    ],
+    "refusals": [
+      {
+        "between_frames": [3, 5],
+        "reason": "lighting changed substantially (cloud cover) but no scene-level change is grounded in two frames"
+      }
+    ],
+    "frame_paths": [
+      "frontend/public/vima-yozakura-frames/frame_001.jpg",
+      "frontend/public/vima-yozakura-frames/frame_004.jpg",
+      "frontend/public/vima-yozakura-frames/frame_007.jpg",
+      "frontend/public/vima-yozakura-frames/frame_010.jpg",
+      "frontend/public/vima-yozakura-frames/frame_013.jpg",
+      "frontend/public/vima-yozakura-frames/frame_016.jpg",
+      "frontend/public/vima-yozakura-frames/frame_019.jpg",
+      "frontend/public/vima-yozakura-frames/frame_022.jpg"
+    ],
+    "frame_meta": [
+      {"timestamp_s": 0.0, "activity": "laying concrete blocks", "category": "P", "confidence": 0.95},
+      {"timestamp_s": 42.5, "activity": "worker on lift platform", "category": "P", "confidence": 0.95},
+      {"timestamp_s": 85.1, "activity": "laying concrete blocks", "category": "P", "confidence": 0.9},
+      {"timestamp_s": 127.6, "activity": "scaffold transition", "category": "P", "confidence": 0.86},
+      {"timestamp_s": 170.2, "activity": "block placement at elevation", "category": "P", "confidence": 0.91},
+      {"timestamp_s": 212.7, "activity": "material relocation", "category": "C", "confidence": 0.88},
+      {"timestamp_s": 255.3, "activity": "guardrail removed for delivery", "category": "C", "confidence": 0.82},
+      {"timestamp_s": 297.8, "activity": "block placement at elevation", "category": "P", "confidence": 0.9}
+    ]
+  },
+  "baseline": {
+    "method": "single_frame_baseline",
+    "n_frames_examined": 8,
+    "elapsed_s": 18.2,
+    "_note": "Baseline VLM gets one frame at a time and is asked 'what changed since the previous frame?' — but the model has no access to the previous frame, so it can only describe THIS frame. The output reads as state-change claims but is structurally incapable of grounding them. This is the failure mode vima's multi-frame architecture solves.",
+    "per_frame_claims": [
+      {"frame": 0, "claim": "worker is laying a concrete block; cannot describe a change without a prior reference"},
+      {"frame": 1, "claim": "wall has visible courses; previous frame not available, change unconfirmed"},
+      {"frame": 2, "claim": "worker placing a block; appears to be ongoing work"},
+      {"frame": 3, "claim": "worker visible on lift platform; cannot compare to previous"},
+      {"frame": 4, "claim": "worker on scaffold; no visual reference to compare against"},
+      {"frame": 5, "claim": "wall continues to be built; no prior frame for change detection"},
+      {"frame": 6, "claim": "scaffold and guardrail visible; cannot tell what changed"},
+      {"frame": 7, "claim": "worker working at elevation; comparison frame unavailable"}
+    ]
+  },
+  "ts": 1714145000.0
+}

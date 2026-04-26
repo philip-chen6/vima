@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 import uvicorn
 
 from pipeline import run_event, run_batch
+from prompt_v1 import vima_classify, baseline_classify
 
 app = FastAPI(title="Ironsite Spatial API", version="1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -30,15 +31,41 @@ def health():
         "video_exists": pathlib.Path(VIDEO_PATH).exists(),
         "endpoints": [
             "GET  /health",
-            "POST /analyze/frame",
+            "POST /analyze/frame  ?prompt=vima|baseline",
             "POST /analyze/timestamp",
             "POST /analyze/batch",
             "GET  /demo",
             "GET  /cii/summary",
             "GET  /cii/frames",
             "GET  /spatial/zones",
+            "GET  /eval",
         ],
     }
+
+
+# ── Temporal-reasoning results: multi-frame state-change detection ─────────
+TEMPORAL_PATH = pathlib.Path(__file__).parent / "temporal-results.json"
+TEMPORAL_FALLBACK_PATH = pathlib.Path(__file__).parent / "temporal-reference.json"
+
+
+@app.get("/eval")
+def eval_results():
+    """vima-temporal-v1 results: multi-frame state-change claims with
+    proof-frame citations.
+
+    The JSON consumed by the /eval frontend page. Populated by running
+    `python temporal_v1.py --n 8 --with-baseline` on real construction
+    frame sequences. Falls back to hand-curated reference claims grounded
+    in the paper if no live results exist yet."""
+    if TEMPORAL_PATH.exists():
+        payload = json.loads(TEMPORAL_PATH.read_text())
+        payload["source"] = "live"
+        return JSONResponse(payload)
+    if TEMPORAL_FALLBACK_PATH.exists():
+        payload = json.loads(TEMPORAL_FALLBACK_PATH.read_text())
+        payload["source"] = "reference"
+        return JSONResponse(payload)
+    raise HTTPException(404, "no temporal results. run `python temporal_v1.py` first.")
 
 
 @app.post("/analyze/frame")
@@ -47,18 +74,31 @@ async def analyze_frame(
     timestamp: float = 15.0,
     event_id: str = "NC event candidate",
     cloud_path: str | None = None,
+    prompt: str = "vima",  # "vima" (default, full scaffold) | "baseline" (1-line)
 ):
-    """Upload a frame image, get spatial analysis JSON back."""
+    """Upload a frame image, get spatial analysis JSON back.
+
+    `prompt=vima` (default) routes through vima-prompt-v1: domain-grounded
+    system prompt + 4-shot example bank + structured spatial-claim schema +
+    self-consistency confidence damping. This is vima's actual contribution.
+
+    `prompt=baseline` is the floor — a one-line "classify this" prompt with no
+    examples, no schema. Used by /eval to A/B vima against raw VLM. Surface it
+    as a query param so judges can flip between them in the live demo.
+    """
     tmp = tempfile.NamedTemporaryFile(suffix=pathlib.Path(file.filename).suffix, delete=False)
     try:
         shutil.copyfileobj(file.file, tmp)
         tmp.close()
-        result = run_event(
-            event_id=event_id,
-            timestamp_s=timestamp,
-            frame_path=tmp.name,
-            cloud_path=cloud_path,
-        )
+        if prompt == "baseline":
+            result = baseline_classify(tmp.name)
+            result["prompt"] = "baseline"
+        else:
+            # vima-prompt-v1 — disable self-consistency for the live endpoint
+            # to keep latency under 5s. Full self-consistency runs in the
+            # offline eval harness where 2x latency is fine.
+            result = vima_classify(tmp.name, event_id=event_id,
+                                   timestamp_s=timestamp, self_consistency=False)
         return JSONResponse(result)
     finally:
         pathlib.Path(tmp.name).unlink(missing_ok=True)
