@@ -43,10 +43,26 @@ const CII_COLORS: Record<string, { fg: string; label: string }> = {
 };
 
 const SAMPLE_FRAMES = [
-  { id: "frame_007", src: "/vima-yozakura-frames/frame_007.jpg", label: "frame 007" },
-  { id: "frame_022", src: "/vima-yozakura-frames/frame_022.jpg", label: "frame 022" },
-  { id: "frame_045", src: "/vima-yozakura-frames/frame_045.jpg", label: "frame 045" },
-  { id: "frame_073", src: "/vima-yozakura-frames/frame_073.jpg", label: "frame 073" },
+  {
+    id: "masonry_0000",
+    src: "/masonry-frames-raw/frame_0000_00000000.jpg",
+    label: "masonry · 0.0s",
+  },
+  {
+    id: "masonry_0005",
+    src: "/masonry-frames-raw/frame_0005_00010000.jpg",
+    label: "masonry · 10.0s",
+  },
+  {
+    id: "masonry_0015",
+    src: "/masonry-frames-raw/frame_0015_00030000.jpg",
+    label: "masonry · 30.0s",
+  },
+  {
+    id: "masonry_0029",
+    src: "/masonry-frames-raw/frame_0029_00058000.jpg",
+    label: "masonry · 58.0s",
+  },
 ];
 
 export function LiveFrameAnalyzer() {
@@ -63,7 +79,7 @@ export function LiveFrameAnalyzer() {
   const blobUrlsRef = useRef<Set<string>>(new Set());
 
   // Revoke a blob URL we created earlier. No-op for sample frames (which
-  // are static /vima-yozakura-frames/ paths, not blob: URLs).
+  // are static /masonry-frames-raw/ paths, not blob: URLs).
   const revokeBlob = useCallback((url: string | null) => {
     if (!url) return;
     if (!url.startsWith("blob:")) return;
