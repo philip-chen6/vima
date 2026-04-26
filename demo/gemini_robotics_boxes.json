@@ -1,0 +1,75 @@
+{
+  "image": "tools/yolodex/runs/vinna-hardhat/frames/frame_000001.jpg",
+  "model": "gemini-robotics-er-1.6-preview",
+  "queries": [
+    "worker",
+    "concrete block wall",
+    "scaffold",
+    "guardrail or open edge",
+    "material stack",
+    "tool in hand"
+  ],
+  "raw_text": "```json\n[\n  {\n    \"box_2d\": [348, 508, 563, 655],\n    \"label\": \"worker\"\n  },\n  {\n    \"box_2d\": [403, 381, 994, 915],\n    \"label\": \"concrete block wall\"\n  },\n  {\n    \"box_2d\": [0, 0, 980, 351],\n    \"label\": \"scaffold\"\n  },\n  {\n    \"box_2d\": [488, 532, 553, 595],\n    \"label\": \"tool in hand\"\n  }\n]\n```",
+  "boxes": [
+    {
+      "box_2d": [
+        348,
+        508,
+        563,
+        655
+      ],
+      "label": "worker",
+      "pixel_xyxy": [
+        325,
+        167,
+        419,
+        270
+      ]
+    },
+    {
+      "box_2d": [
+        403,
+        381,
+        994,
+        915
+      ],
+      "label": "concrete block wall",
+      "pixel_xyxy": [
+        244,
+        193,
+        586,
+        477
+      ]
+    },
+    {
+      "box_2d": [
+        0,
+        0,
+        980,
+        351
+      ],
+      "label": "scaffold",
+      "pixel_xyxy": [
+        0,
+        0,
+        225,
+        470
+      ]
+    },
+    {
+      "box_2d": [
+        488,
+        532,
+        553,
+        595
+      ],
+      "label": "tool in hand",
+      "pixel_xyxy": [
+        340,
+        234,
+        381,
+        265
+      ]
+    }
+  ]
+}

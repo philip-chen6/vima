@@ -92,6 +92,23 @@ The current implementation uses real Hugging Face SAM box-prompt masks via
 model weights, but committed demo outputs should report
 `"mask_backend": "sam_hf_box_prompt"` in `demo/mask_track_memory.json`.
 
+Run the Robotics-ER probe on a selected evidence frame:
+
+```bash
+.venv/bin/python demo/gemini_robotics_boxes.py \
+  --image tools/yolodex/runs/vinna-hardhat/frames/frame_000001.jpg \
+  --out demo/gemini_robotics_boxes.json
+```
+
+Dry-run the merge into the existing YOLO label file:
+
+```bash
+.venv/bin/python demo/merge_robotics_boxes.py --dry-run
+```
+
+The merge keeps YOLO/Codex boxes as the backbone, skips duplicates by class/IoU,
+and adds Robotics-ER boxes for semantic misses such as `tool in hand`.
+
 ## Depth Stage
 
 Depth is applied after masks so each object's depth is averaged over the mask,
@@ -167,7 +184,7 @@ It is intentionally dependency-light until you choose to run it. Install the
 Qwen stack only on a machine with enough RAM/VRAM:
 
 ```bash
-python3 -m pip install "transformers>=4.51.0" qwen-vl-utils torch accelerate pillow
+python3 -m pip install "transformers>=4.51.0" qwen-vl-utils torch torchvision accelerate pillow
 ```
 
 Use Qwen for the open-model comparison:

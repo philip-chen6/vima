@@ -14,7 +14,7 @@ from memory_retrieval import compact_episode, load_episodes, retrieve
 DEFAULT_MEMORY = pathlib.Path("demo/episodic_memory.json")
 DEFAULT_FRAMES_DIR = pathlib.Path("tools/yolodex/runs/vinna-hardhat/frames")
 DEFAULT_OUTPUT = pathlib.Path("demo/qwen_answer.json")
-DEFAULT_MODEL = "Qwen/Qwen2.5-VL-3B-Instruct"
+DEFAULT_MODEL = "Qwen/Qwen2-VL-2B-Instruct"
 
 
 def resolve_evidence_images(
@@ -63,24 +63,26 @@ def run_qwen(
     image_paths: list[pathlib.Path],
     model_name: str,
     max_new_tokens: int,
+    local_files_only: bool,
 ) -> str:
     try:
         import torch
         from qwen_vl_utils import process_vision_info
-        from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
+        from transformers import AutoModelForImageTextToText, AutoProcessor
     except ImportError as exc:
         raise RuntimeError(
             "Qwen dependencies are missing. Install with: "
-            "python3 -m pip install 'transformers>=4.51.0' qwen-vl-utils torch accelerate pillow"
+            "python3 -m pip install 'transformers>=4.51.0' qwen-vl-utils torch torchvision accelerate pillow"
         ) from exc
 
     messages = build_messages(query, context, image_paths)
-    model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+    model = AutoModelForImageTextToText.from_pretrained(
         model_name,
         torch_dtype="auto",
         device_map="auto",
+        local_files_only=local_files_only,
     )
-    processor = AutoProcessor.from_pretrained(model_name)
+    processor = AutoProcessor.from_pretrained(model_name, local_files_only=local_files_only)
     text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     image_inputs, video_inputs = process_vision_info(messages)
     inputs = processor(
@@ -114,6 +116,7 @@ def main() -> int:
     parser.add_argument("--top-k", type=int, default=3)
     parser.add_argument("--max-images", type=int, default=4)
     parser.add_argument("--max-new-tokens", type=int, default=192)
+    parser.add_argument("--local-files-only", action="store_true")
     args = parser.parse_args()
 
     episodes = retrieve(load_episodes(pathlib.Path(args.memory)), args.query, args.top_k)
@@ -122,7 +125,14 @@ def main() -> int:
     if not image_paths:
         raise SystemExit(f"no evidence frames found under {args.frames_dir}")
 
-    answer = run_qwen(args.query, context, image_paths, args.model, args.max_new_tokens)
+    answer = run_qwen(
+        args.query,
+        context,
+        image_paths,
+        args.model,
+        args.max_new_tokens,
+        args.local_files_only,
+    )
     result = {
         "query": args.query,
         "model": args.model,
