@@ -1141,7 +1141,7 @@ export default function VimaLandingPage() {
                 }}
               >
                 <div style={{ fontSize: "10px", letterSpacing: "0.06em", color: TEXT_MUTED }}>
-                  vima · claim 17 of 30
+                  vima · claim 03 of 21
                 </div>
                 <div
                   style={{
@@ -1185,8 +1185,8 @@ export default function VimaLandingPage() {
                   </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: "9px", color: TEXT_MUTED }}>
-                  <span>frame · 17 / 30</span>
-                  <span>session · 2:14</span>
+                  <span>frame · 03 / 21</span>
+                  <span>session · live</span>
                 </div>
               </div>
             </Device>

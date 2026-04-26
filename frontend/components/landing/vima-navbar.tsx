@@ -248,12 +248,19 @@ export default function VimaNavbar() {
         >
           <div className="vima-nav-bar">
             <Link
-              href="#top"
+              href="/"
               className="vima-nav-brand"
               aria-label="vima home"
               data-gsap-intro="intro-nav-brand"
               onClick={(event) => {
-                if (goToHash("#top")) event.preventDefault();
+                // On the landing page (where #top exists in the DOM), do
+                // the smooth GSAP scroll. On any other route (/demo, /eval),
+                // let the Link navigate to /. goToHash returns false when
+                // the target isn't on the current page so the default href
+                // takes over.
+                if (typeof window !== "undefined" && document.getElementById("top")) {
+                  if (goToHash("#top")) event.preventDefault();
+                }
               }}
             >
               <span className="vima-nav-logo" aria-hidden="true">

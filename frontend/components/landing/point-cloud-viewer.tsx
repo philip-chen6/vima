@@ -111,8 +111,8 @@ function Controls({ autoRotate = true }: { autoRotate?: boolean }) {
     controls.zoomSpeed = 0.8;
     controls.autoRotate = autoRotate;
     controls.autoRotateSpeed = 0.6;
-    controls.minDistance = 0.6;
-    controls.maxDistance = 30;
+    controls.minDistance = 0.3;
+    controls.maxDistance = 12;
     ref.current = controls;
     return () => controls.dispose();
   }, [camera, gl, autoRotate]);
@@ -130,7 +130,7 @@ function Cloud({ geometry }: { geometry: THREE.BufferGeometry }) {
   // wireframe-style object in the dark theme.
   const material = useMemo(() => {
     return new THREE.PointsMaterial({
-      size: 0.04,
+      size: 0.085,
       sizeAttenuation: true,
       vertexColors: true,
       transparent: true,
@@ -255,7 +255,10 @@ export function PointCloudViewer({
           const size = new THREE.Vector3();
           geom.boundingBox.getSize(size);
           const maxDim = Math.max(size.x, size.y, size.z);
-          if (maxDim > 0) geom.scale(2 / maxDim, 2 / maxDim, 2 / maxDim);
+          // Normalize the cloud to fill ~2.6 units (was 2.0). Combined with
+          // the closer camera + wider fov, the sparse cloud now occupies
+          // most of the viewport instead of looking lost in negative space.
+          if (maxDim > 0) geom.scale(2.6 / maxDim, 2.6 / maxDim, 2.6 / maxDim);
         }
         const positions = geom.attributes.position;
         const pointCount = positions ? positions.count : 0;
@@ -283,7 +286,11 @@ export function PointCloudViewer({
       style={{
         position: "relative",
         width: "100%",
-        aspectRatio: "16 / 10",
+        // 4/3 fits the sparse cloud better — 16/10 was wide and short which
+        // crushed the cloud vertically inside /demo's right-column 320-360px
+        // width. 4/3 gives the cloud breathing room.
+        aspectRatio: "4 / 3",
+        minHeight: "320px",
         border: `1px solid ${LINE}`,
         background: "linear-gradient(180deg, #0c0508 0%, #050203 100%)",
         overflow: "hidden",
@@ -291,7 +298,7 @@ export function PointCloudViewer({
     >
       {status.kind === "ready" && (
         <Canvas
-          camera={{ position: [2.4, 1.8, 2.6], fov: 38, near: 0.05, far: 100 }}
+          camera={{ position: [1.7, 1.3, 1.9], fov: 50, near: 0.05, far: 100 }}
           gl={{ antialias: true, alpha: true }}
           style={{ width: "100%", height: "100%" }}
         >

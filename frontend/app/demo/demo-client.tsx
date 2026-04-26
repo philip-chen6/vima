@@ -939,25 +939,46 @@ export default function DemoClient({
             comparison slider lets you verify each claim by eye.
           </p>
         </div>
-        <Link
-          href="/eval"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "14px 18px",
-            border: `1px solid ${SAKURA}`,
-            background: "rgba(166,77,121,0.12)",
-            color: WASHI,
-            textDecoration: "none",
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            letterSpacing: "0.05em",
-            whiteSpace: "nowrap",
-          }}
-        >
-          open /eval <ChevronRight size={14} strokeWidth={1.6} />
-        </Link>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          <Link
+            href="/"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "14px 18px",
+              border: `1px solid ${LINE}`,
+              background: "rgba(247,236,239,0.04)",
+              color: WASHI,
+              textDecoration: "none",
+              fontFamily: "var(--font-mono)",
+              fontSize: "12px",
+              letterSpacing: "0.05em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            ← landing
+          </Link>
+          <Link
+            href="/eval"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "14px 18px",
+              border: `1px solid ${SAKURA}`,
+              background: "rgba(166,77,121,0.12)",
+              color: WASHI,
+              textDecoration: "none",
+              fontFamily: "var(--font-mono)",
+              fontSize: "12px",
+              letterSpacing: "0.05em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            open /eval <ChevronRight size={14} strokeWidth={1.6} />
+          </Link>
+        </div>
       </section>
 
       {/* tiny CSS for the spinning reload icon — keep inline, no global slop */}
