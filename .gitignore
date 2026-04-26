@@ -1,5 +1,8 @@
 .env
-data/
+# top-level data/ is for project-local artifacts (memory dumps, etc).
+# Anchored so it doesn't clobber frontend/public/data/ which holds real
+# shipping assets (cameras.json, episodes.json, depth-filter-log.json).
+/data/
 artifacts/
 __pycache__/
 *.pyc
