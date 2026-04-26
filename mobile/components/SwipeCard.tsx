@@ -163,7 +163,13 @@ function RewardStickerCluster({ claim }: { claim: Claim }) {
     : variant;
 
   return (
-    <div className="relative mt-7 min-h-[235px] flex-1 overflow-visible">
+    <div
+      className="relative mt-7 min-h-[235px] flex-1 overflow-visible"
+      style={{
+        maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+        WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+      }}
+    >
       {stickers.map((sticker, index) => (
         <StickerImage
           key={`${claim.id}-${sticker.src}-${index}`}

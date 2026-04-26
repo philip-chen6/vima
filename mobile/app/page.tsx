@@ -5,8 +5,6 @@ import { AnimatePresence, useMotionValue } from "motion/react";
 import { RotateCcw } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { StarSwipeBG } from "@/components/StarSwipeBG";
-import { LevelShaderBG } from "@/components/LevelShaderBG";
 import { SwipeDeck } from "@/components/SwipeDeck";
 import { LotteryWheel } from "@/components/LotteryWheel";
 import { PayoutClaim } from "@/components/PayoutClaim";
@@ -39,12 +37,6 @@ export default function Home() {
   return (
     <PhoneFrame>
       <div className="absolute inset-0 overflow-hidden" style={{ background: "#000000" }}>
-        {/* base layer: dark vertical swipe-rotated star-swipe shader */}
-        <StarSwipeBG dragX={dragX} />
-
-        {/* overlay layer: pink cloud rising from bottom, tied to XP */}
-        <LevelShaderBG />
-
         {/* the only foreground UI: the card */}
         <SwipeDeck dragX={dragX} dragY={dragY} morphFreezeAtRef={morphFreezeAtRef} />
 
