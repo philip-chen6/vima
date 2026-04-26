@@ -32,14 +32,14 @@ export function Features3() {
 
   // Frames feeding the verification queue. Each is one piece of evidence
   // attached to a claim. Drag through the swipe deck on iOS to confirm.
-  // TODO: swap for real construction frames once exported from cii-results.json.
+  // These are actual masonry bodycam frames from the production run.
   const images = [
-    { name: "frame_001", url: "/vima-yozakura-frames/frame_001.jpg" },
-    { name: "frame_004", url: "/vima-yozakura-frames/frame_004.jpg" },
-    { name: "frame_007", url: "/vima-yozakura-frames/frame_007.jpg" },
-    { name: "frame_010", url: "/vima-yozakura-frames/frame_010.jpg" },
-    { name: "frame_013", url: "/vima-yozakura-frames/frame_013.jpg" },
-    { name: "frame_015", url: "/vima-yozakura-frames/frame_015.jpg" },
+    { name: "masonry frame 00", url: "/masonry-frames-raw/frame_0000_00000000.jpg" },
+    { name: "masonry frame 05", url: "/masonry-frames-raw/frame_0005_00010000.jpg" },
+    { name: "masonry frame 10", url: "/masonry-frames-raw/frame_0010_00020000.jpg" },
+    { name: "masonry frame 15", url: "/masonry-frames-raw/frame_0015_00030000.jpg" },
+    { name: "masonry frame 20", url: "/masonry-frames-raw/frame_0020_00040000.jpg" },
+    { name: "masonry frame 29", url: "/masonry-frames-raw/frame_0029_00058000.jpg" },
   ];
 
   useEffect(() => {

@@ -4,43 +4,42 @@ import { motion, useMotionValue, useAnimationFrame } from "motion/react";
 import { useRef, useState, useEffect } from "react";
 
 // vima evidence carousel: real frames from capture, each card is a spatial
-// claim the model produced. drag horizontally to scroll. swap the `image`
-// paths to real masonry frames once exported from cii-results.json.
-// TODO: replace with actual construction frames; using yozakura placeholder set.
+// claim the model produced. drag horizontally to scroll. these are actual
+// masonry bodycam frames from the 60s production run.
 const SHOWCASE_ITEMS = [
   {
     id: 1,
-    image: "/vima-yozakura-frames/frame_001.jpg",
+    image: "/masonry-frames-raw/frame_0000_00000000.jpg",
     height: "h-[420px]",
     bgColor: "bg-[#1a0d14]",
   },
   {
     id: 2,
-    image: "/vima-yozakura-frames/frame_004.jpg",
+    image: "/masonry-frames-raw/frame_0005_00010000.jpg",
     height: "h-[440px]",
     bgColor: "bg-[#1a0d14]",
   },
   {
     id: 3,
-    image: "/vima-yozakura-frames/frame_007.jpg",
+    image: "/masonry-frames-raw/frame_0010_00020000.jpg",
     height: "h-[400px]",
     bgColor: "bg-[#1a0d14]",
   },
   {
     id: 4,
-    image: "/vima-yozakura-frames/frame_010.jpg",
+    image: "/masonry-frames-raw/frame_0015_00030000.jpg",
     height: "h-[420px]",
     bgColor: "bg-[#1a0d14]",
   },
   {
     id: 5,
-    image: "/vima-yozakura-frames/frame_013.jpg",
+    image: "/masonry-frames-raw/frame_0020_00040000.jpg",
     height: "h-[380px]",
     bgColor: "bg-[#1a0d14]",
   },
   {
     id: 6,
-    image: "/vima-yozakura-frames/frame_015.jpg",
+    image: "/masonry-frames-raw/frame_0029_00058000.jpg",
     height: "h-[440px]",
     bgColor: "bg-[#1a0d14]",
   },
@@ -165,7 +164,7 @@ export function Showcase2() {
                 <div className={`w-full h-full ${item.bgColor}`}>
                   <img
                     src={item.image}
-                    alt="Showcase item"
+                    alt="masonry bodycam frame from the vima evidence stream"
                     className="w-full h-full object-cover object-top pointer-events-none"
                     draggable="false"
                   />
