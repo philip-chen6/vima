@@ -16,6 +16,8 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from typing import Any
 
+from memory_retrieval import retrieve
+
 
 DEFAULT_INPUT = pathlib.Path("demo/depth_track_memory.json")
 DEFAULT_OUTPUT = pathlib.Path("demo/episodic_memory.json")
@@ -277,19 +279,6 @@ def serialize_episode(index: int, episode: Episode) -> dict[str, Any]:
         "spatial_facts": unique_facts,
         "query_text": " ".join(str(term) for term in query_terms if term),
     }
-
-
-def score_episode(query_terms: set[str], episode: dict[str, Any]) -> float:
-    text = episode["query_text"].lower()
-    score = sum(1.0 for term in query_terms if term in text)
-    score += episode.get("confidence", 0.0) * 0.25
-    return score
-
-
-def retrieve(episodes: list[dict[str, Any]], query: str, top_k: int) -> list[dict[str, Any]]:
-    query_terms = {term for term in re.split(r"[^a-z0-9_]+", query.lower()) if term}
-    ranked = sorted(episodes, key=lambda episode: score_episode(query_terms, episode), reverse=True)
-    return ranked[:top_k]
 
 
 def build_episodic_memory(input_path: pathlib.Path, output_path: pathlib.Path, max_gap_s: float) -> dict[str, Any]:
