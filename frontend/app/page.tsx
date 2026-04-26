@@ -1164,11 +1164,11 @@ export default function VimaLandingPage() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              minHeight: "560px",
+              minHeight: "500px",
             }}
           >
             <Device
-              scale={0.85}
+              scale={0.72}
               enableParallax
               enableRotate
               parallaxStrength={12}
