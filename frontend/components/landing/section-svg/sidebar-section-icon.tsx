@@ -21,7 +21,7 @@ const lineProps = {
 };
 
 export function SidebarSectionIcon({ id, active = false }: Props) {
-  const icon = id === "spatial-inference" ? "depth" : id;
+  const icon = normalizeIcon(id);
   const animate = active ? { opacity: 1, pathLength: 1 } : { opacity: 0.56, pathLength: 0.72 };
   const pulse = active ? { scale: [1, 1.08, 1], opacity: [0.76, 1, 0.76] } : { scale: 1, opacity: 0.62 };
   const transition = active
@@ -108,10 +108,56 @@ export function SidebarSectionIcon({ id, active = false }: Props) {
             <motion.path d="M10 23 H20" stroke={RED} strokeWidth="1.4" {...lineProps} animate={active ? { pathLength: [0.15, 1, 0.4] } : { pathLength: 0.45 }} transition={transition} />
           </>
         )}
-        {!["overview", "stats", "analyzer", "depth", "depth-filter", "reconstruction", "ledger"].includes(icon) && (
+        {icon === "temporal" && (
+          <>
+            <motion.path d="M9 16 H23" stroke={SAKURA} strokeWidth="1" {...lineProps} animate={animate} />
+            {[10, 16, 22].map((x, i) => (
+              <motion.circle key={x} cx={x} cy="16" r={i === 1 ? "2" : "1.3"} fill={i === 1 ? HOT : WASHI} animate={active ? { opacity: [0.45, 1, 0.45] } : { opacity: 0.62 }} transition={{ ...transition, delay: i * 0.16 }} />
+            ))}
+            <path d="M10 22 L16 10 L22 22" stroke={HOT} strokeWidth="1.1" opacity="0.64" {...lineProps} />
+          </>
+        )}
+        {icon === "episode" && (
+          <>
+            <path d="M9 9 H23 V23 H9 Z" stroke={WASHI} strokeWidth="1" opacity="0.42" {...lineProps} />
+            <motion.path d="M12 13 H20 M12 17 H18 M12 21 H21" stroke={HOT} strokeWidth="1.1" {...lineProps} animate={animate} />
+          </>
+        )}
+        {icon === "constellation" && (
+          <>
+            <motion.path d="M10 20 L15 11 L22 14 L19 23 Z" stroke={SAKURA} strokeWidth="1" {...lineProps} animate={animate} />
+            {[10, 15, 22, 19].map((x, i) => (
+              <circle key={`${x}-${i}`} cx={x} cy={[20, 11, 14, 23][i]} r="1.5" fill={i === 1 ? HOT : WASHI} opacity="0.74" />
+            ))}
+          </>
+        )}
+        {icon === "compare" && (
+          <>
+            <path d="M8 9 H15 V23 H8 Z M17 9 H24 V23 H17 Z" stroke={WASHI} strokeWidth="1" opacity="0.42" {...lineProps} />
+            <motion.path d="M16 8 V24" stroke={HOT} strokeWidth="1.3" {...lineProps} animate={active ? { y: [-2, 2, -2], opacity: [0.65, 1, 0.65] } : { y: 0, opacity: 0.64 }} transition={transition} />
+          </>
+        )}
+        {icon === "links" && (
+          <>
+            <path d="M11 12 H21 M11 16 H19 M11 20 H23" stroke={HOT} strokeWidth="1.1" {...lineProps} />
+            <path d="M8 12 H8.2 M8 16 H8.2 M8 20 H8.2" stroke={WASHI} strokeWidth="2" {...lineProps} />
+          </>
+        )}
+        {!["overview", "stats", "analyzer", "depth", "depth-filter", "reconstruction", "ledger", "temporal", "episode", "constellation", "compare", "links"].includes(icon) && (
           <motion.path d="M9 16 H23 M16 9 V23" stroke={HOT} strokeWidth="1.3" {...lineProps} animate={animate} />
         )}
       </svg>
     </span>
   );
+}
+
+function normalizeIcon(id: string) {
+  if (id === "spatial-inference") return "depth";
+  if (id === "eval") return "temporal";
+  if (id === "demo") return "overview";
+  if (id === "episode-detail") return "episode";
+  if (id === "baseline") return "compare";
+  if (id === "footer-nav") return "links";
+  if (id === "landing") return "overview";
+  return id;
 }

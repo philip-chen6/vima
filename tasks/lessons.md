@@ -68,3 +68,4 @@
 - if gsap loader animation feels laggy, look for simultaneous decode + morph + layout work. pause video playback during heavy morph/expansion windows, slow/space morphs, and start media playback only after loader release.
 - post-loader hero intro timelines must wait for a loader-complete signal, not loader-release or timeout fallbacks. release can happen while the loader is still fading; complete means the user can actually see the sequence.
 - when the user asks for more apparent separation, do not assume they want a whole highlighted divider band. try one stronger rule first; escalate only if they ask for labels or section chrome.
+- before adding gsap to a non-landing surface, inspect the landing gsap implementation first and reuse its motion language. for vima that means scoped `gsap.context`/`useGSAP`, `power3.out`/`expo.out`, subtle transform reveals, scanline/clip style, and no first-paint blanking.

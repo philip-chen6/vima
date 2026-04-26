@@ -193,6 +193,11 @@ export default function EvalClient() {
   const [temporalEval, setTemporalEval] = useState<TemporalEvalPayload | null>(null);
   const [isRunningLive, setIsRunningLive] = useState(false);
   const [runLiveError, setRunLiveError] = useState<string | null>(null);
+  const [analysisCache, setAnalysisCache] = useState<AnalysisCache>({});
+  const [backendState, setBackendState] = useState<"unknown" | "available" | "offline">(() => {
+    if (typeof window === "undefined") return "unknown";
+    return isLocalDevHost(window.location.hostname) ? "unknown" : "available";
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -298,11 +303,6 @@ export default function EvalClient() {
     () => (activeEpisode && manifest ? closestFrame(activeEpisode.ts_start, manifest) : null),
     [activeEpisode, manifest],
   );
-  const [analysisCache, setAnalysisCache] = useState<AnalysisCache>({});
-  const [backendState, setBackendState] = useState<"unknown" | "available" | "offline">(() => {
-    if (typeof window === "undefined") return "unknown";
-    return isLocalDevHost(window.location.hostname) ? "unknown" : "available";
-  });
   const activeFrameAnalysis = activeEvalFrame ? analysisCache[activeEvalFrame.filename] : undefined;
 
   useEffect(() => {
@@ -467,7 +467,13 @@ export default function EvalClient() {
   return (
     <SidebarProvider defaultOpen={true}>
       <WorkspaceSidebar
-        contextLabel="eval · vima sees time"
+        contextLabel="temporal proof"
+        run={{
+          eyebrow: "current video",
+          title: "masonry capture",
+          meta: "temporal eval · 5-frame A/B",
+          stats: ["118 episodes", "haiku-4-5", "proof pairs"],
+        }}
         sections={[
           { id: "overview", label: "overview", badge: "01" },
           { id: "episode-detail", label: "episode detail", badge: "02" },
@@ -477,8 +483,7 @@ export default function EvalClient() {
         ]}
         pages={[
           { href: "/", label: "landing" },
-          { href: "/demo", label: "demo" },
-          { href: "/eval", label: "eval" },
+          { href: "/demo", label: "capture workspace", icon: "demo" },
         ]}
       />
       <SidebarInset>
@@ -492,24 +497,9 @@ export default function EvalClient() {
       }}
     >
       <VimaNavbar />
-      {/* Floating sidebar trigger — sits below the navbar so it's always
-          reachable. cmd/ctrl+B also toggles via the shadcn keyboard
-          shortcut wired in components/ui/sidebar.tsx. */}
-      <div
-        style={{
-          position: "fixed",
-          top: "84px",
-          left: "16px",
-          zIndex: 30,
-          background: "rgba(8,5,3,0.78)",
-          border: "1px solid rgba(242,167,184,0.18)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          padding: "4px",
-        }}
-      >
+      <div className="vima-workspace-mobile-trigger">
         <SidebarTrigger
-          className="text-[#f7ecef]"
+          className="vima-sidebar-trigger"
           aria-label="toggle workspace sidebar"
         />
       </div>

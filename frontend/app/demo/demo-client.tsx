@@ -193,7 +193,13 @@ export default function DemoClient({
   return (
     <SidebarProvider defaultOpen={true}>
       <WorkspaceSidebar
-        contextLabel="demo · workspace"
+        contextLabel="capture workspace"
+        run={{
+          eyebrow: "current video",
+          title: "masonry capture",
+          meta: "hardhat bodycam · 60.0s",
+          stats: ["30 frames", "118 episodes", "86.7% wrench"],
+        }}
         sections={[
           { id: "overview", label: "overview", badge: "01" },
           { id: "stats", label: "stats", badge: "02" },
@@ -205,8 +211,7 @@ export default function DemoClient({
         ]}
         pages={[
           { href: "/", label: "landing" },
-          { href: "/demo", label: "demo" },
-          { href: "/eval", label: "eval" },
+          { href: "/eval", label: "temporal proof", icon: "eval" },
         ]}
       />
       <SidebarInset>
@@ -220,24 +225,9 @@ export default function DemoClient({
       }}
     >
       <VimaNavbar />
-      {/* Floating sidebar trigger — sits below the navbar so it's always
-          reachable. cmd/ctrl+B also toggles via the shadcn keyboard
-          shortcut wired in components/ui/sidebar.tsx. */}
-      <div
-        style={{
-          position: "fixed",
-          top: "84px",
-          left: "16px",
-          zIndex: 30,
-          background: "rgba(8,5,3,0.78)",
-          border: "1px solid rgba(242,167,184,0.18)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          padding: "4px",
-        }}
-      >
+      <div className="vima-workspace-mobile-trigger">
         <SidebarTrigger
-          className="text-[#f7ecef]"
+          className="vima-sidebar-trigger"
           aria-label="toggle workspace sidebar"
         />
       </div>
