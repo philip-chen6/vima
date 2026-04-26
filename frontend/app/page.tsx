@@ -109,6 +109,10 @@ const footerLinks = [
 
 const agentCommands = [
   {
+    label: "mcp endpoint",
+    command: "https://vimaspatial.tech/mcp",
+  },
+  {
     label: "install + health",
     command:
       'uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima doctor',
@@ -694,6 +698,17 @@ export default function VimaLandingPage() {
           >
             <span>open dashboard</span>
           </Link>
+          <Link
+            href="/paper.pdf"
+            target="_blank"
+            rel="noreferrer"
+            data-gsap="hero-cta"
+            data-gsap-intro="intro-cta-secondary"
+            data-gsap-magnetic
+            className="hero-cta-button hero-cta-button--secondary"
+          >
+            <span>read paper</span>
+          </Link>
         </div>
 
         <div
@@ -1268,22 +1283,39 @@ export default function VimaLandingPage() {
 
         <div className="landing-agent-handoff">
           <div className="landing-agent-copy">
-            <p>agent handoff · hosted api + cli + skill</p>
-            <h3>paste vima into any agent shell.</h3>
+            <p>agent handoff · hosted api + mcp + cli + skill</p>
+            <h3>plug vima into any agent.</h3>
             <span>
-              the dashboard is not the only interface. vima now ships as a
-              thin cli around the hosted api, with stable json for automated qa,
-              frame analysis, cii receipts, temporal evals, and a skill prompt
-              that tells agents not to invent evidence.
+              the dashboard is not the only interface. vima now exposes a
+              hosted mcp server for claude code, cursor, windsurf, and other
+              tool-using agents, plus a thin cli around the same production api
+              for stable json, frame analysis, cii receipts, temporal evals,
+              and skill handoff prompts.
             </span>
             <div className="landing-agent-links">
               <a href="/api/health">
                 <Code2 size={15} strokeWidth={1.7} aria-hidden="true" />
                 api health
               </a>
+              <a href="/mcp/health">
+                <Code2 size={15} strokeWidth={1.7} aria-hidden="true" />
+                mcp health
+              </a>
               <a href="/api/cii/frames">
                 <Code2 size={15} strokeWidth={1.7} aria-hidden="true" />
                 frame rows
+              </a>
+              <a href="https://github.com/philip-chen6/vima/tree/main/packages/vima-mcp" target="_blank" rel="noreferrer">
+                <Code2 size={15} strokeWidth={1.7} aria-hidden="true" />
+                mcp source
+              </a>
+              <a href="https://docs.vimaspatial.tech" target="_blank" rel="noreferrer">
+                <FileText size={15} strokeWidth={1.7} aria-hidden="true" />
+                docs
+              </a>
+              <a href="/paper.pdf" target="_blank" rel="noreferrer">
+                <FileText size={15} strokeWidth={1.7} aria-hidden="true" />
+                paper
               </a>
               <a href="https://github.com/philip-chen6/vima/tree/main/packages/vima-agent" target="_blank" rel="noreferrer">
                 <Code2 size={15} strokeWidth={1.7} aria-hidden="true" />
@@ -1291,10 +1323,10 @@ export default function VimaLandingPage() {
               </a>
             </div>
           </div>
-          <div className="landing-agent-terminal" aria-label="vima agent cli commands">
+          <div className="landing-agent-terminal" aria-label="vima agent endpoint and cli commands">
             <div className="landing-agent-terminal-head">
-              <span>vima-agent</span>
-              <span>json evidence harness</span>
+              <span>vima agent surface</span>
+              <span>mcp tools + json evidence harness</span>
             </div>
             <div className="landing-agent-command-list">
               {agentCommands.map((item) => (
@@ -1306,7 +1338,7 @@ export default function VimaLandingPage() {
             </div>
             <div className="landing-agent-terminal-tail">
               <span>verified against production</span>
-              <strong>health · cii · zones · eval · analyze</strong>
+              <strong>mcp · health · cii · zones · eval · analyze</strong>
             </div>
           </div>
         </div>

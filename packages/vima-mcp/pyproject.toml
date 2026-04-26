@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vima-mcp"
+version = "0.1.0"
+description = "hosted mcp server for the vima spatial intelligence api"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "vima" }]
+dependencies = [
+    "fastmcp>=2.13.0",
+]
+
+[project.scripts]
+vima-mcp = "vima_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vima_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

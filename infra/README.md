@@ -20,8 +20,9 @@ production deployment lives on a vultr VPS, fronted by caddy (auto-TLS), running
 | caddy    | `caddy:2-alpine`           | 80, 443         | TLS + reverse proxy         |
 | frontend | next.js + bun              | 3000            | landing + dashboard SSR     |
 | backend  | fastapi + uvicorn          | 8765            | CII judge, spatial endpoints |
+| mcp      | fastmcp + stdlib urllib    | 8766            | remote agent tool endpoint  |
 
-caddy routes `/api/*` → `backend:8765` (strips `/api`), everything else → `frontend:3000`.
+caddy routes `/api/*` → `backend:8765` (strips `/api`), `/mcp*` → `mcp:8766`, everything else → `frontend:3000`.
 
 ## first-time setup on a fresh box
 
@@ -72,6 +73,10 @@ ssh root@45.76.77.107 'cd /opt/vima/infra && docker compose logs -f --tail=100'
 # tail one service
 ssh root@45.76.77.107 'cd /opt/vima/infra && docker compose logs -f backend'
 
+# check mcp endpoint
+curl -sf https://vimaspatial.tech/mcp
+curl -sf https://vimaspatial.tech/mcp/health
+
 # restart everything
 ssh root@45.76.77.107 'cd /opt/vima/infra && docker compose --env-file ../.env up -d --force-recreate'
 
@@ -89,3 +94,4 @@ ssh root@45.76.77.107 'docker system prune -af --volumes'
 - **single-box compose** — vima isn't web-scale; one box is simpler than k8s/swarm and cheaper than managed
 - **vhf plan** — better single-thread cpu than vc2; next.js SSR likes that
 - **no gpu** — backend calls anthropic API, no local inference. add a separate gpu worker only if live COLMAP/inference becomes needed
+- **mcp as a thin wrapper** — the hosted mcp server only forwards to the existing api, so the 2 GB box does not run torch, transformers, or reconstruction code

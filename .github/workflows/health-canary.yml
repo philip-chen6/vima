@@ -55,6 +55,8 @@ jobs:
           probe "/"                "200"
           # Backend health — fastapi /health proxied through caddy /api/*.
           probe "/api/health"      "200"
+          # MCP health — catches caddy route and hosted agent endpoint regressions.
+          probe "/mcp/health"      "200"
           # Demo data endpoint — proves backend can read static cii-results.
           probe "/api/cii/summary" "200"
 

@@ -24,6 +24,15 @@ vimaspatial.tech {
         reverse_proxy backend:8765
     }
 
+    handle /mcp/health {
+        uri strip_prefix /mcp
+        reverse_proxy mcp:8766
+    }
+
+    handle /mcp* {
+        reverse_proxy mcp:8766
+    }
+
     handle {
         reverse_proxy frontend:3000
     }
@@ -48,6 +57,13 @@ vimaspatial.tech {
     handle /api/* {
         uri strip_prefix /api
         reverse_proxy backend:8765
+    }
+    handle /mcp/health {
+        uri strip_prefix /mcp
+        reverse_proxy mcp:8766
+    }
+    handle /mcp* {
+        reverse_proxy mcp:8766
     }
     handle {
         reverse_proxy frontend:3000

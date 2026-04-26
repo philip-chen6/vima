@@ -1,5 +1,6 @@
 # lessons
 
+- for mintlify docs, do not apply the vima lowercase-fragment rule to page titles, card titles, table headers, or body prose. keep the `v i m a.` wordmark and tiny nav labels lowercase if intentional, but docs should read professionally with normal title/sentence case.
 - when the user asks for svg/tab treatment in a sidebar, treat "tabs" literally: enhance the navigation items with per-tab svg icons and labels, not the destination section headers.
 - when the user asks for a useful shippable artifact and the scope is within reach, ship the artifact instead of stopping at a strategic plan. research should feed implementation, not replace it.
 - if a scroll experiment is called fucked, purge the behavior completely instead of iterating around it: remove pinning attrs, ScrollTrigger pin blocks, css sticky fallbacks, and unused route hooks in one pass.
@@ -69,3 +70,4 @@
 - post-loader hero intro timelines must wait for a loader-complete signal, not loader-release or timeout fallbacks. release can happen while the loader is still fading; complete means the user can actually see the sequence.
 - when the user asks for more apparent separation, do not assume they want a whole highlighted divider band. try one stronger rule first; escalate only if they ask for labels or section chrome.
 - before adding gsap to a non-landing surface, inspect the landing gsap implementation first and reuse its motion language. for vima that means scoped `gsap.context`/`useGSAP`, `power3.out`/`expo.out`, subtle transform reveals, scanline/clip style, and no first-paint blanking.
+- reconstruction sections should put the reconstruction first. if the user is judging spatial proof, the gaussian splat / point cloud must be the primary canvas, not a narrow side widget next to explanatory copy.

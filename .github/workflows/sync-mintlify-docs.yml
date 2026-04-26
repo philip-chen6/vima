@@ -1,0 +1,77 @@
+name: Sync Mintlify docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs.json'
+      - 'docs/**'
+      - 'README.md'
+      - 'backend/api.py'
+      - 'backend/inference_context.py'
+      - 'packages/vima-agent/**'
+      - 'packages/vima-mcp/**'
+      - 'infra/Caddyfile'
+      - 'infra/docker-compose.yml'
+      - 'infra/Dockerfile.mcp'
+      - '.github/workflows/sync-mintlify-docs.yml'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      DOCS_SYNC_TOKEN: ${{ secrets.VIMA_DOCS_SYNC_TOKEN }}
+    steps:
+      - name: Skip when sync token is not configured
+        if: env.DOCS_SYNC_TOKEN == ''
+        run: |
+          echo "VIMA_DOCS_SYNC_TOKEN is not configured; skipping docs repo sync."
+          exit 0
+
+      - name: Check out vima
+        if: env.DOCS_SYNC_TOKEN != ''
+        uses: actions/checkout@v4
+        with:
+          path: vima
+
+      - name: Check out docs repo
+        if: env.DOCS_SYNC_TOKEN != ''
+        uses: actions/checkout@v4
+        with:
+          repository: stephenhungg/vima-docs
+          path: vima-docs
+          token: ${{ env.DOCS_SYNC_TOKEN }}
+
+      - name: Sync docs payload
+        if: env.DOCS_SYNC_TOKEN != ''
+        run: |
+          set -euo pipefail
+
+          rm -rf vima-docs/docs
+          mkdir -p vima-docs/docs
+
+          cp vima/docs.json vima-docs/docs.json
+          cp vima/docs/*.mdx vima-docs/docs/
+          cp vima/docs/AGENT_DOCS_AUDIT.md vima-docs/docs/
+
+          if [ -f vima/frontend/app/favicon.ico ]; then
+            cp vima/frontend/app/favicon.ico vima-docs/favicon.ico
+          fi
+
+      - name: Commit and push docs changes
+        if: env.DOCS_SYNC_TOKEN != ''
+        working-directory: vima-docs
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- docs.json docs favicon.ico; then
+            echo "mintlify docs already in sync"
+            exit 0
+          fi
+
+          git config user.name "vima docs sync"
+          git config user.email "actions@github.com"
+          git add docs.json docs favicon.ico
+          git commit -m "sync vima docs"
+          git push

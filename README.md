@@ -11,6 +11,24 @@ Spatially-anchored worker intelligence and incentive system for egocentric const
 
 Results on 30 frames of real Ironsite masonry footage: **86.7% productive**, mean confidence 0.939.
 
+## For Judges
+
+Live verification:
+
+- Dashboard: https://vimaspatial.tech/demo
+- Temporal eval: https://vimaspatial.tech/eval
+
+Check the numbers directly from the deployed API:
+
+```bash
+curl -s https://vimaspatial.tech/api/cii/summary | jq
+curl -s https://vimaspatial.tech/api/cii/frames | jq 'length'
+curl -s https://vimaspatial.tech/api/spatial/zones | jq
+```
+
+Expected headline values: 30 frames, 86.7% wrench time, 0.939 mean confidence,
+and 118 temporal episodes in the eval workspace.
+
 ## Team
 
 - **Joshua** — CII classifier, backend, COLMAP spatial layer
@@ -21,6 +39,7 @@ Results on 30 frames of real Ironsite masonry footage: **86.7% productive**, mea
 | Layer | Tech |
 |-------|------|
 | Backend API | FastAPI + uvicorn (port 8765) |
+| Agent MCP | FastMCP streamable HTTP (port 8766) |
 | AI judge | Claude Sonnet 4.6 (Anthropic SDK) |
 | Frame extraction | ffmpeg |
 | Spatial reconstruction | COLMAP (K=3 zone simulation; production: registered camera poses) |
@@ -53,6 +72,32 @@ VIMA_API_URL=http://localhost:8765 uvx vima-agent@latest doctor
 The package source lives in `packages/vima-agent/`. It is intentionally a thin
 HTTP client around the deployed API, not a wrapper around the local SAM/depth/
 memory pipeline.
+
+## Agent MCP
+
+Remote agents can connect directly to the hosted MCP endpoint:
+
+```text
+https://vimaspatial.tech/mcp
+```
+
+It exposes the same thin API surface as the CLI: doctor, frame analysis,
+baseline comparison, CII summary/frames, spatial zones, and temporal eval.
+The source lives in `packages/vima-mcp/`; production runs it as a small compose
+service next to the frontend and backend.
+
+## Docs
+
+Mintlify docs live in `docs.json` and `docs/*.mdx`. Start with:
+
+- `docs/quickstart.mdx`
+- `docs/onboarding.mdx`
+- `docs/mcp.mdx`
+- `docs/cicd.mdx`
+
+CI runs a docs-drift check whenever the public api, cli, mcp server, or routing
+changes. The report-only agent prompt for docs updates lives at
+`docs/AGENT_DOCS_AUDIT.md`.
 
 ## Object Memory Stage
 

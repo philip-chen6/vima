@@ -1,0 +1,60 @@
+name: Docs drift
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/api.py'
+      - 'backend/inference_context.py'
+      - 'packages/vima-agent/**'
+      - 'packages/vima-mcp/**'
+      - 'infra/Caddyfile'
+      - 'infra/docker-compose.yml'
+      - 'infra/Dockerfile.mcp'
+      - 'docs/**'
+      - 'docs.json'
+      - 'README.md'
+      - 'infra/README.md'
+      - 'frontend/app/page.tsx'
+      - 'scripts/check_docs_drift.py'
+      - '.github/workflows/docs-drift.yml'
+  pull_request:
+    paths:
+      - 'backend/api.py'
+      - 'backend/inference_context.py'
+      - 'packages/vima-agent/**'
+      - 'packages/vima-mcp/**'
+      - 'infra/Caddyfile'
+      - 'infra/docker-compose.yml'
+      - 'infra/Dockerfile.mcp'
+      - 'docs/**'
+      - 'docs.json'
+      - 'README.md'
+      - 'infra/README.md'
+      - 'frontend/app/page.tsx'
+      - 'scripts/check_docs_drift.py'
+      - '.github/workflows/docs-drift.yml'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine diff base
+        id: diff
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "base=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_OUTPUT"
+          elif [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            echo "base=${{ github.event.before }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "base=HEAD~1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check docs drift
+        run: python3 scripts/check_docs_drift.py --base "${{ steps.diff.outputs.base }}" --head "${{ github.sha }}"

@@ -1,0 +1,63 @@
+---
+title: "MCP server"
+description: "Hosted Model Context Protocol tools for Vima."
+---
+
+The hosted MCP endpoint is:
+
+```text
+https://vimaspatial.tech/mcp
+```
+
+Health check:
+
+```bash
+curl -sf https://vimaspatial.tech/mcp/health
+```
+
+<Note>
+  If the health check returns `404`, Mintlify is fine but the main Vima
+  deployment has not shipped the MCP container and Caddy route yet.
+</Note>
+
+## Tools
+
+| Tool | Purpose |
+| --- | --- |
+| `vima_doctor` | Checks API health, CII summary, and spatial zones |
+| `vima_analyze_frame` | Analyzes a sample, image URL, or base64 image |
+| `vima_compare_frame` | Compares Vima prompting against baseline prompting |
+| `vima_cii_summary` | Returns wrench-time summary stats |
+| `vima_cii_frames` | Returns frame-level CII rows, optionally filtered by `P`, `C`, or `NC` |
+| `vima_spatial_zones` | Returns zone-level spatial productivity evidence |
+| `vima_eval` | Returns temporal eval claims and baseline comparison |
+
+## Deployment Shape
+
+```text
+Caddy -> /mcp* -> mcp:8766
+MCP   -> backend:8765
+```
+
+The server lives in `packages/vima-mcp` and runs as a small Docker Compose
+service next to the frontend and backend.
+
+<CardGroup cols={2}>
+  <Card title="Tiny Runtime" icon="feather">
+    FastMCP plus standard-library HTTP forwarding. No local inference stack.
+  </Card>
+  <Card title="Same Evidence Surface" icon="layers-3">
+    MCP tools wrap the same hosted API used by the CLI and dashboard.
+  </Card>
+</CardGroup>
+
+## What Not to Add
+
+Do not add any of these to the production MCP container:
+
+- `torch`
+- `transformers`
+- `open3d`
+- SAM
+- Depth Anything
+- local COLMAP or reconstruction runtime

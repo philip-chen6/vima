@@ -291,9 +291,15 @@ export default function VimaNavbar() {
             </div>
 
             <div className="vima-nav-actions" data-gsap-intro="intro-nav-actions">
-              {/* paper link replaces the "demo" button to give judges a
-                  one-click route to the technical method. dashboard is the
-                  primary CTA, so it gets the heavier styling. */}
+              <Link
+                href="https://docs.vimaspatial.tech"
+                target="_blank"
+                rel="noreferrer"
+                className="vima-nav-demo"
+                onMouseEnter={() => setActiveDropdown(null)}
+              >
+                docs
+              </Link>
               <Link
                 href="/paper.pdf"
                 target="_blank"

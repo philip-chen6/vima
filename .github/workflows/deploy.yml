@@ -58,7 +58,7 @@ jobs:
             # cannot be started". Force-remove any leftover containers from
             # the compose project before bringing things back up. This is
             # safe because compose recreates them anyway.
-            for c in infra-frontend-1 infra-backend-1 infra-caddy-1; do
+            for c in infra-frontend-1 infra-backend-1 infra-mcp-1 infra-caddy-1; do
               if docker inspect "$c" >/dev/null 2>&1; then
                 state=$(docker inspect -f '{{.State.Status}}' "$c" 2>/dev/null || echo "unknown")
                 if [ "$state" = "removing" ] || [ "$state" = "dead" ] || [ "$state" = "created" ]; then
@@ -78,27 +78,52 @@ jobs:
                 break
               fi
               sleep 2
+              if [ "$i" = "30" ]; then
+                echo "ERROR: backend health failed after 30 tries"
+                docker compose --env-file ../.env logs --tail 50 backend
+                exit 1
+              fi
+            done
+
+            echo "waiting for mcp..."
+            for i in $(seq 1 30); do
+              if curl -sf http://localhost:8766/health > /dev/null 2>&1; then
+                echo "mcp healthy"
+                break
+              fi
+              sleep 2
+              if [ "$i" = "30" ]; then
+                echo "ERROR: mcp health failed after 30 tries"
+                docker compose --env-file ../.env logs --tail 50 mcp
+                exit 1
+              fi
             done
 
             # Health gate: prod must serve 200. Try 5x with backoff before
             # giving up. Logs failures loudly so the workflow run shows red.
             echo "verifying public health..."
             for i in $(seq 1 5); do
-              code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80/ || echo 000)
-              if [ "$code" = "200" ]; then
-                echo "public health ok (HTTP 200)"
+              root_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80/ || echo 000)
+              mcp_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80/mcp/health || echo 000)
+              if [ "$root_code" = "200" ] && [ "$mcp_code" = "200" ]; then
+                echo "public health ok (root=$root_code mcp=$mcp_code)"
                 break
               fi
-              echo "[$i/5] public returned $code, retrying..."
+              echo "[$i/5] public returned root=$root_code mcp=$mcp_code, retrying..."
               sleep 4
               if [ "$i" = "5" ]; then
-                echo "ERROR: public health failed after 5 tries (last code: $code)"
+                echo "ERROR: public health failed after 5 tries (root=$root_code mcp=$mcp_code)"
                 docker compose --env-file ../.env ps
                 docker compose --env-file ../.env logs --tail 50 frontend
+                docker compose --env-file ../.env logs --tail 50 mcp
+                docker compose --env-file ../.env logs --tail 50 caddy
                 exit 1
               fi
             done
 
-            docker system prune -af 2>/dev/null || true
-            docker builder prune -af 2>/dev/null || true
+            # Cleanup should never hold the deploy open. Docker prune can hang
+            # behind the daemon lock on the small VPS, so cap it and keep the
+            # already-healthy deployment green.
+            timeout 45s docker system prune -af 2>/dev/null || true
+            timeout 45s docker builder prune -af 2>/dev/null || true
           EOF

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "v i m a.",
+  "description": "Agent-ready spatial intelligence for construction video.",
+  "theme": "mint",
+  "colors": {
+    "primary": "#A64D79",
+    "light": "#f2a7b8",
+    "dark": "#080503"
+  },
+  "appearance": {
+    "default": "dark",
+    "strict": false
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs",
+    "codeblocks": "dark"
+  },
+  "icons": {
+    "library": "lucide"
+  },
+  "favicon": "/favicon.ico",
+  "logo": {
+    "light": "/assets/vima-mark.ico",
+    "dark": "/assets/vima-mark.ico",
+    "href": "https://vimaspatial.tech"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Start",
+        "pages": [
+          "docs/overview",
+          "docs/quickstart",
+          "docs/onboarding"
+        ]
+      },
+      {
+        "group": "Agent Interfaces",
+        "pages": [
+          "docs/mcp",
+          "docs/cli",
+          "docs/endpoint-reference"
+        ]
+      },
+      {
+        "group": "Operations",
+        "pages": [
+          "docs/architecture",
+          "docs/cicd"
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Live Site",
+        "href": "https://vimaspatial.tech"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/stephenhungg/vima-docs"
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/stephenhungg/vima-docs"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+---
+title: "Overview"
+description: "Agent-ready spatial intelligence for construction video."
+---
+
+Vima turns egocentric construction footage into auditable spatial evidence.
+Instead of asking a model to guess from raw video, Vima builds a compact evidence
+layer first, then exposes it to humans and agents through a dashboard, HTTP API,
+CLI, and MCP server.
+
+<CardGroup cols={2}>
+  <Card title="Evidence First" icon="scan-search">
+    Frames are grounded with cached CII labels, zone attribution, and spatial
+    context before they become an answer.
+  </Card>
+  <Card title="Agent Native" icon="bot">
+    MCP and CLI interfaces let external agents inspect the same production
+    evidence as the dashboard.
+  </Card>
+  <Card title="Small Production Footprint" icon="server">
+    Expensive perception is precomputed offline, so the hosted services stay
+    light enough for a 1 vCPU / 2 GB VPS.
+  </Card>
+  <Card title="Auditable Outputs" icon="clipboard-check">
+    Tool responses are structured JSON with frame rows, zone metrics, and
+    temporal evidence instead of ungrounded prose.
+  </Card>
+</CardGroup>
+
+## Production Surfaces
+
+| Surface | URL |
+| --- | --- |
+| Landing | `https://vimaspatial.tech` |
+| API | `https://vimaspatial.tech/api` |
+| MCP | `https://vimaspatial.tech/mcp` |
+| MCP Health | `https://vimaspatial.tech/mcp/health` |
+
+## Pipeline
+
+```text
+Hardhat frames
+  -> precomputed spatial inference
+  -> CII work labels
+  -> COLMAP zone attribution
+  -> cited dashboard / API / agent response
+```
+
+## Current Hosted Facts
+
+- 30 sampled masonry frames
+- 86.7% wrench time
+- Cached CII frame rows and spatial zones
+- Offline inference artifacts served through a small hosted API
+
+<Note>
+  The hosted MCP route depends on the main Vima app deployment. If
+  `/mcp/health` returns `404`, the docs are deployed but the main app has not
+  shipped the MCP service yet.
+</Note>

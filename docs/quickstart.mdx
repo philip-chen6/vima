@@ -1,0 +1,56 @@
+---
+title: "Quickstart"
+description: "Verify Vima from a fresh machine in a few commands."
+---
+
+<Steps>
+  <Step title="Check production health">
+    ```bash
+    curl -sf https://vimaspatial.tech/api/health
+    curl -sf https://vimaspatial.tech/api/cii/summary
+    curl -sf https://vimaspatial.tech/mcp/health
+    ```
+  </Step>
+
+  <Step title="Run the CLI from GitHub">
+    Until the package is published to PyPI, install from the repository
+    subdirectory:
+
+    ```bash
+    uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima doctor
+    ```
+  </Step>
+
+  <Step title="Analyze a sample frame">
+    ```bash
+    uvx --from "git+https://github.com/philip-chen6/vima.git#subdirectory=packages/vima-agent" vima analyze --sample masonry-p --json
+    ```
+  </Step>
+
+  <Step title="Connect an MCP client">
+    Point Claude Code, Cursor, Windsurf, or another MCP-capable client at:
+
+    ```text
+    https://vimaspatial.tech/mcp
+    ```
+  </Step>
+</Steps>
+
+## Recommended First Tool Calls
+
+<CardGroup cols={2}>
+  <Card title="MCP: Doctor" icon="stethoscope">
+    Call `vima_doctor` to verify the API, CII summary, and spatial zone
+    endpoints.
+  </Card>
+  <Card title="MCP: CII Summary" icon="bar-chart-3">
+    Call `vima_cii_summary` for the hosted wrench-time metrics.
+  </Card>
+  <Card title="CLI: Skill Print" icon="file-text">
+    Run `vima skill print --agent codex` to hand off Vima context to another
+    coding agent.
+  </Card>
+  <Card title="API: Frame Rows" icon="table">
+    Fetch `/api/cii/frames` when you need raw per-frame evidence.
+  </Card>
+</CardGroup>
