@@ -1,0 +1,1116 @@
+{
+  "eval_version": "1.0",
+  "model": "claude-sonnet-4-6",
+  "frames_evaluated": 5,
+  "source_video": "01_production_masonry.mp4 (0-60s segment)",
+  "reconstruction": "COLMAP sparse (1770 vertices, 19 cameras)",
+  "results": [
+    {
+      "frame": "frame_0000_00000000.jpg",
+      "timestamp_s": 0.0,
+      "event_id": "frame_0000_00000000",
+      "baseline_classification": {
+        "pnc": "NC",
+        "activity": "Masonry work at wall top",
+        "spatial_claims": [
+          {
+            "object": "worker",
+            "location": "atop partially constructed masonry wall, leaning over edge",
+            "distance_m": 1.2
+          },
+          {
+            "object": "open_edge",
+            "location": "top of CMU wall, unguarded perimeter",
+            "distance_m": 1.5
+          },
+          {
+            "object": "scaffold",
+            "location": "left side of frame, yellow tubular scaffold structure",
+            "distance_m": 2.1
+          },
+          {
+            "object": "material_stack",
+            "location": "CMU blocks stacked at wall top near worker",
+            "distance_m": 1.3
+          },
+          {
+            "object": "guardrail",
+            "location": "absent at open wall edges",
+            "distance_m": null
+          }
+        ],
+        "violation_flags": [
+          {
+            "rule": "OSHA 1926.502(b) - Guardrail systems required at unprotected edges \u22656ft",
+            "severity": "high",
+            "evidence": "Worker operating at top of masonry wall with no visible guardrail or fall protection system along open perimeter edges"
+          },
+          {
+            "rule": "OSHA 1926.501(b)(1) - Fall protection required for leading edges",
+            "severity": "high",
+            "evidence": "Unprotected open edge visible at wall top where worker is actively leaning, apparent elevation suggests >6ft drop"
+          },
+          {
+            "rule": "OSHA 1926.100(a) - Head protection required",
+            "severity": "medium",
+            "evidence": "Worker wearing hi-vis vest but no hard hat visible on worker leaning over wall top under active construction"
+          },
+          {
+            "rule": "OSHA 1926.250(a) - Material storage must not create hazard",
+            "severity": "low",
+            "evidence": "CMU blocks stored at wall edge near worker without apparent securing against displacement or fall"
+          }
+        ],
+        "confidence": 0.74,
+        "reasoning": "Worker is performing masonry tasks atop a CMU block wall at apparent elevation with no visible fall protection (guardrails, harness, or safety net), constituting a high-severity OSHA 1926.502 violation. Point cloud scene extent of 8.2m and sparse reconstruction support elevated worksite geometry but limited point density (1770 points) reduces precise distance confidence.",
+        "event_id": "frame_0000_00000000",
+        "timestamp_s": 0.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0000_00000000.jpg",
+        "model": "claude-sonnet-4-6"
+      },
+      "vima_spatial_analysis": {
+        "scene_description": "Egocentric bodycam view at an elevated construction level showing a worker laying or inspecting concrete masonry units (CMU blocks) atop a partially constructed wall, with scaffold/truss structures on left and right flanking the scene. The camera wearer appears to be at approximately the same elevation as the top of the wall being worked on.",
+        "spatial_claims": [
+          {
+            "object": "worker",
+            "location": "center-right of frame, leaning forward over top course of CMU wall, facing away from camera",
+            "distance_from_camera_m": 1.8,
+            "dimensions_estimate": "~1.7m tall (partially crouched), ~0.5m wide",
+            "spatial_relationships": [
+              "directly atop or immediately behind CMU wall top course",
+              "approximately 1.5-2m from camera",
+              "flanked by metal roof truss structure to the right"
+            ]
+          },
+          {
+            "object": "CMU wall",
+            "location": "center of frame, running horizontally left-to-right, approximately at chest height relative to camera",
+            "distance_from_camera_m": 1.5,
+            "dimensions_estimate": "~3m wide visible section, ~1.8-2.2m tall from ground, ~0.2m thick blocks",
+            "spatial_relationships": [
+              "directly in front of camera",
+              "worker is positioned on top/behind it",
+              "metal roof truss attached to top-right",
+              "open edge visible at top surface"
+            ]
+          },
+          {
+            "object": "metal roof truss / structural frame",
+            "location": "right side of frame, attached to or rising from top of CMU wall, extending upward and to the right",
+            "distance_from_camera_m": 2.5,
+            "dimensions_estimate": "~3m+ tall visible section, steel frame members ~0.1m wide",
+            "spatial_relationships": [
+              "right of worker",
+              "mounted atop CMU wall",
+              "extends above frame top"
+            ]
+          },
+          {
+            "object": "scaffold / yellow steel frame structure",
+            "location": "left side of frame, close to camera, partially occluding left view",
+            "distance_from_camera_m": 0.8,
+            "dimensions_estimate": "~2m+ tall visible, tubular steel members",
+            "spatial_relationships": [
+              "immediately to camera left",
+              "parallel to CMU wall",
+              "extends vertically beyond frame"
+            ]
+          },
+          {
+            "object": "ladder",
+            "location": "left-center background, leaning against or near scaffold structure",
+            "distance_from_camera_m": 3.5,
+            "dimensions_estimate": "~3m tall visible, ~0.4m wide",
+            "spatial_relationships": [
+              "behind scaffold frame",
+              "left of center",
+              "provides vertical access to this elevation"
+            ]
+          },
+          {
+            "object": "open sky / horizon",
+            "location": "upper portion of frame, indicating elevated work platform with open exposure above wall height",
+            "distance_from_camera_m": null,
+            "dimensions_estimate": null,
+            "spatial_relationships": [
+              "above wall top course",
+              "indicates no overhead structure directly above camera position"
+            ]
+          },
+          {
+            "object": "material stack / debris",
+            "location": "background center-left, ground level approximately 4-6m away",
+            "distance_from_camera_m": 5.0,
+            "dimensions_estimate": "~1m tall pile",
+            "spatial_relationships": [
+              "below camera elevation",
+              "at base/ground level of structure"
+            ]
+          }
+        ],
+        "distance_estimates": [
+          {
+            "from": "camera",
+            "to": "worker",
+            "distance_m": 1.8,
+            "confidence": 0.72,
+            "method": "known human body size reference; worker fills roughly 25% of vertical frame at moderate fisheye distortion"
+          },
+          {
+            "from": "camera",
+            "to": "CMU wall face",
+            "distance_m": 1.5,
+            "confidence": 0.75,
+            "method": "standard CMU block dimensions (0.4m x 0.2m x 0.2m) used to estimate perspective scale; block courses visible at known proportions"
+          },
+          {
+            "from": "camera",
+            "to": "scaffold left",
+            "distance_m": 0.8,
+            "confidence": 0.65,
+            "method": "proximity/occlusion cue; scaffold members fill edge of frame suggesting very close distance"
+          },
+          {
+            "from": "worker",
+            "to": "roof truss frame",
+            "distance_m": 0.8,
+            "confidence": 0.6,
+            "method": "perspective convergence and relative apparent size of truss members vs worker"
+          },
+          {
+            "from": "CMU wall top",
+            "to": "ground level",
+            "distance_m": 2.2,
+            "confidence": 0.65,
+            "method": "estimated from visible CMU course count (~10-11 courses at 0.2m each) and perspective foreshortening"
+          },
+          {
+            "from": "camera",
+            "to": "background material stack",
+            "distance_m": 5.0,
+            "confidence": 0.5,
+            "method": "scene extent reported as 8.2m; background object occupies small angular size, estimated at 60% of total scene depth"
+          }
+        ],
+        "zone_classification": "elevated masonry work platform at ~2m height, active CMU wall construction zone with adjacent scaffold access",
+        "worker_spatial_context": {
+          "count": 1,
+          "positions": [
+            "approximately 1.8m ahead of camera, positioned at top of CMU wall (elevation ~2m above ground), leaning forward and working on the wall top course, facing away from camera toward open side"
+          ],
+          "density_description": "single worker concentrated at the wall top within 2m of camera"
+        },
+        "notable_spatial_features": [
+          "open edge at top of CMU wall where worker is positioned \u2014 drop estimated ~2m to ground on far side",
+          "no visible guardrail or handrail along wall top where worker is working",
+          "scaffold structure within arm's reach on left provides some lateral reference but not a fall barrier at wall",
+          "metal roof truss installation in progress at top of CMU wall \u2014 active overhead spatial change",
+          "ladder visible in background providing sole observed vertical access route",
+          "fisheye lens distortion compresses apparent distances \u2014 close objects exaggerated in apparent size"
+        ],
+        "confidence": 0.68,
+        "reasoning": "Spatial estimates primarily derived from known CMU block dimensions (standard 400x200x200mm units) visible in the wall to calibrate perspective scale. Worker body proportions confirm distance estimate of ~1.8m. The fisheye distortion is accounted for by noting edge compression effects. COLMAP scene extent of 8.2m with 19 registered cameras provides a reasonable bounding envelope \u2014 the active work zone appears to occupy roughly the near 3m of that extent, with background structure extending to 5-6m. Elevation of camera relative to ground is estimated at ~2m based on the wall height calculation from visible CMU courses.",
+        "event_id": "frame_0000_00000000",
+        "timestamp_s": 0.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0000_00000000.jpg",
+        "model": "claude-sonnet-4-6",
+        "mode": "spatial_reasoning"
+      }
+    },
+    {
+      "frame": "frame_0006_00012000.jpg",
+      "timestamp_s": 12.0,
+      "event_id": "frame_0006_00012000",
+      "baseline_classification": {
+        "pnc": "NC",
+        "activity": "Masonry block laying elevated",
+        "spatial_claims": [
+          {
+            "object": "worker",
+            "location": "elevated masonry wall, leaning over blocks",
+            "distance_m": 1.8
+          },
+          {
+            "object": "worker",
+            "location": "right side, standing near open edge",
+            "distance_m": 3.2
+          },
+          {
+            "object": "open_edge",
+            "location": "perimeter of elevated work platform, right side",
+            "distance_m": 3.5
+          },
+          {
+            "object": "scaffold",
+            "location": "background, crane/tower structure",
+            "distance_m": 4.1
+          },
+          {
+            "object": "material_stack",
+            "location": "foreground, concrete masonry units stacked",
+            "distance_m": 1.2
+          },
+          {
+            "object": "guardrail",
+            "location": "not visible on exposed perimeter edges",
+            "distance_m": null
+          }
+        ],
+        "violation_flags": [
+          {
+            "rule": "OSHA 1926.502(b) - Guardrail systems required at edges >6ft",
+            "severity": "high",
+            "evidence": "Workers operating at elevation on masonry wall with no visible guardrails on open perimeter edges"
+          },
+          {
+            "rule": "OSHA 1926.100(a) - Hard hat requirement",
+            "severity": "medium",
+            "evidence": "Worker on left appears to have hard hat but fit/position unclear due to leaning posture; right worker hard hat visible but tilted"
+          },
+          {
+            "rule": "OSHA 1926.502(j) - Fall protection plan required for leading edge work",
+            "severity": "high",
+            "evidence": "No fall arrest systems, safety nets, or guardrails observed at open edges of elevated masonry structure"
+          },
+          {
+            "rule": "OSHA 1926.250(a) - Material storage safety",
+            "severity": "low",
+            "evidence": "Masonry blocks stacked in foreground near work area, potential instability risk"
+          }
+        ],
+        "confidence": 0.74,
+        "reasoning": "Workers are performing masonry construction at elevation with no visible guardrail systems on open perimeter edges, constituting a high-severity fall hazard violation under OSHA 1926.502. The sparse point cloud (1770 points) limits precise depth estimation but scene extent of 8.2m and visual evidence confirm elevated work without adequate fall protection.",
+        "event_id": "frame_0006_00012000",
+        "timestamp_s": 12.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0006_00012000.jpg",
+        "model": "claude-sonnet-4-6"
+      },
+      "vima_spatial_analysis": {
+        "scene_description": "Elevated construction platform approximately 2-3m above ground level where workers are actively laying concrete masonry unit (CMU) blocks, with a crane tower structure rising vertically in the background-left. The camera is positioned at roughly chest height of the bodycam wearer, looking slightly downward toward the work area.",
+        "spatial_claims": [
+          {
+            "object": "worker (orange hi-vis, crouching)",
+            "location": "center-left of frame, approximately 2-3m ahead of camera, bent over CMU wall",
+            "distance_from_camera_m": 2.5,
+            "dimensions_estimate": "~1.7m tall (standing estimate), currently crouched to ~1.0m height",
+            "spatial_relationships": [
+              "directly behind CMU block wall",
+              "beneath crane tower",
+              "~1m from right-standing worker"
+            ]
+          },
+          {
+            "object": "worker (yellow hi-vis, standing)",
+            "location": "right side of frame, approximately 1.5-2m from camera, facing slightly away",
+            "distance_from_camera_m": 1.8,
+            "dimensions_estimate": "~1.7-1.8m tall",
+            "spatial_relationships": [
+              "right of CMU wall",
+              "closest worker to camera",
+              "standing at edge of work platform"
+            ]
+          },
+          {
+            "object": "CMU block wall (concrete masonry units)",
+            "location": "center of frame, running roughly perpendicular to camera line of sight",
+            "distance_from_camera_m": 2.0,
+            "dimensions_estimate": "~2.5m wide visible section, ~1.2m tall current height, ~0.4m deep per block",
+            "spatial_relationships": [
+              "below crane tower base",
+              "in front of orange worker",
+              "left of yellow worker"
+            ]
+          },
+          {
+            "object": "CMU block stack (loose blocks foreground)",
+            "location": "lower-center and lower-right of frame, immediately in front of camera position",
+            "distance_from_camera_m": 0.8,
+            "dimensions_estimate": "~1.0m wide stack, ~0.6m tall",
+            "spatial_relationships": [
+              "closest solid object to camera",
+              "directly below workers' work zone",
+              "supply stack adjacent to active wall"
+            ]
+          },
+          {
+            "object": "crane tower / lattice mast",
+            "location": "upper-center-left of frame, rising vertically from near the CMU wall area",
+            "distance_from_camera_m": 3.5,
+            "dimensions_estimate": "~0.6m square cross-section visible, extends >5m above frame",
+            "spatial_relationships": [
+              "above and behind CMU wall",
+              "left of crouching worker",
+              "dominant vertical structure in scene"
+            ]
+          },
+          {
+            "object": "crane arm / yellow horizontal member",
+            "location": "upper-left frame, horizontal element visible behind crane mast",
+            "distance_from_camera_m": 4.0,
+            "dimensions_estimate": "~0.3m diameter, extends left out of frame",
+            "spatial_relationships": [
+              "attached to crane mast",
+              "elevated ~4m above platform level"
+            ]
+          },
+          {
+            "object": "orange safety fencing / barriers",
+            "location": "right-center background, running horizontally behind workers",
+            "distance_from_camera_m": 4.5,
+            "dimensions_estimate": "~3m wide visible, ~1m tall",
+            "spatial_relationships": [
+              "behind right-standing worker",
+              "defines perimeter of work platform"
+            ]
+          },
+          {
+            "object": "rebar vertical stubs",
+            "location": "upper portion of CMU wall, center frame",
+            "distance_from_camera_m": 2.5,
+            "dimensions_estimate": "~4-5 bars visible, ~0.5m protruding above wall top",
+            "spatial_relationships": [
+              "embedded in top of CMU wall",
+              "directly below crane mast"
+            ]
+          },
+          {
+            "object": "vertical yellow post / scaffold element (left edge)",
+            "location": "far left of frame, partially cut off",
+            "distance_from_camera_m": 1.2,
+            "dimensions_estimate": "~0.1m wide post, full height unclear",
+            "spatial_relationships": [
+              "left boundary of work zone",
+              "adjacent to camera position"
+            ]
+          }
+        ],
+        "distance_estimates": [
+          {
+            "from": "camera",
+            "to": "CMU block foreground stack",
+            "distance_m": 0.8,
+            "confidence": 0.8,
+            "method": "perspective scale of standard CMU block (390x190x190mm), apparent size in frame"
+          },
+          {
+            "from": "camera",
+            "to": "yellow hi-vis worker (right)",
+            "distance_m": 1.8,
+            "confidence": 0.75,
+            "method": "worker height reference (~1.75m), angular size in fisheye frame"
+          },
+          {
+            "from": "camera",
+            "to": "orange hi-vis worker (crouching, center)",
+            "distance_m": 2.5,
+            "confidence": 0.7,
+            "method": "perspective regression against known worker size, occlusion by CMU wall"
+          },
+          {
+            "from": "camera",
+            "to": "crane mast base",
+            "distance_m": 3.5,
+            "confidence": 0.6,
+            "method": "scene extent 8.2m from geometry stats, crane positioned approximately mid-scene; perspective lines and relative scale to workers"
+          },
+          {
+            "from": "orange worker",
+            "to": "yellow worker",
+            "distance_m": 1.2,
+            "confidence": 0.7,
+            "method": "relative angular separation between two workers, normalized against estimated distances from camera"
+          },
+          {
+            "from": "CMU wall top",
+            "to": "platform floor level",
+            "distance_m": 1.2,
+            "confidence": 0.65,
+            "method": "standard CMU block height 190mm, approximately 6 courses visible = ~1.14m"
+          },
+          {
+            "from": "camera / platform",
+            "to": "ground level below",
+            "distance_m": 2.5,
+            "confidence": 0.5,
+            "method": "scene reconstruction extent 8.2m, vegetated horizon line and platform context suggest moderate elevation; estimated from perspective of surrounding terrain"
+          }
+        ],
+        "zone_classification": "elevated masonry work platform, active CMU block laying zone, crane-adjacent mid-elevation construction deck",
+        "worker_spatial_context": {
+          "count": 2,
+          "positions": [
+            "Worker 1 (orange hi-vis): crouched at CMU wall, approximately 2.5m ahead of camera at center-left, actively placing or inspecting blocks",
+            "Worker 2 (yellow hi-vis): standing upright at right side of platform, approximately 1.8m from camera, appears to be supervising or preparing materials"
+          ],
+          "density_description": "two workers within 3m of each other, clustered around a 2.5m wide CMU wall section within a compact elevated work zone"
+        },
+        "notable_spatial_features": [
+          "Elevated platform with no visible guardrail on near (camera) side \u2014 potential open edge behind camera position",
+          "Vertical rebar stubs protruding ~0.5m above CMU wall top at approximately 2.5m from camera \u2014 puncture hazard in close proximity to crouching worker",
+          "Crane mast base located within ~1m horizontal of active masonry work \u2014 limited lateral clearance",
+          "Loose CMU blocks stacked within 1m of camera at floor level \u2014 trip/navigation hazard in immediate path",
+          "Orange perimeter fencing visible at ~4.5m marks platform boundary on right side",
+          "Scene extent of 8.2m (from COLMAP) encompasses the full visible work zone \u2014 moderate spatial scale",
+          "Strong backlighting from clear sky reduces depth contrast on upper portion of scene"
+        ],
+        "confidence": 0.72,
+        "reasoning": "Distance estimates primarily derived from known CMU block dimensions (standard 390x190x190mm) as a photogrammetric ruler \u2014 block apparent size in frame establishes a reliable near-field scale. Worker heights (~1.75m) provide secondary reference for mid-field distances. The COLMAP scene extent of 8.2m with 19 registered cameras constrains the total scene volume, suggesting the crane mast is roughly mid-scene at 3-4m. Fisheye lens distortion was accounted for by focusing on central frame regions for size estimation. Perspective convergence lines toward the CMU wall and the vertical crane mast provide additional depth ordering confirmation.",
+        "event_id": "frame_0006_00012000",
+        "timestamp_s": 12.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0006_00012000.jpg",
+        "model": "claude-sonnet-4-6",
+        "mode": "spatial_reasoning"
+      }
+    },
+    {
+      "frame": "frame_0012_00024000.jpg",
+      "timestamp_s": 24.0,
+      "event_id": "frame_0012_00024000",
+      "baseline_classification": {
+        "pnc": "NC",
+        "activity": "Worker at elevated edge",
+        "spatial_claims": [
+          {
+            "object": "worker",
+            "location": "near right edge of elevated slab, close to open perimeter",
+            "distance_m": 0.8
+          },
+          {
+            "object": "open_edge",
+            "location": "visible perimeter edge with low or absent guardrail protection",
+            "distance_m": 1.2
+          },
+          {
+            "object": "scaffold",
+            "location": "vertical structure to far right, ladder-like framework",
+            "distance_m": 1.5
+          },
+          {
+            "object": "guardrail",
+            "location": "partial/orange barrier visible at perimeter, appears incomplete",
+            "distance_m": 2.0
+          },
+          {
+            "object": "material_stack",
+            "location": "wheeled concrete buggy/cart at lower left foreground",
+            "distance_m": 1.0
+          }
+        ],
+        "violation_flags": [
+          {
+            "rule": "OSHA 29 CFR 1926.502(b) - Guardrail Systems",
+            "severity": "high",
+            "evidence": "Worker appears within 1m of open elevated edge with no visible compliant guardrail (42-inch top rail, midrail, toeboard) on active perimeter; orange barriers appear temporary and non-compliant"
+          },
+          {
+            "rule": "OSHA 29 CFR 1926.502(d) - Personal Fall Arrest System",
+            "severity": "high",
+            "evidence": "No visible personal fall arrest system (harness lanyard connection to anchorage) on worker at apparent elevation above 6 feet"
+          },
+          {
+            "rule": "OSHA 29 CFR 1926.501(b)(1) - Fall Protection at 6-foot threshold",
+            "severity": "high",
+            "evidence": "Worker at elevated concrete slab level near unprotected edge; scene extent 8.2m indicates significant elevation change possible"
+          },
+          {
+            "rule": "OSHA 29 CFR 1926.200 - Signage/Housekeeping at open edges",
+            "severity": "low",
+            "evidence": "No visible warning line or safety monitoring system apparent for fall hazard zone"
+          }
+        ],
+        "confidence": 0.72,
+        "reasoning": "Worker is positioned at an elevated slab edge with what appears to be an incomplete or non-compliant perimeter guarding system; orange temporary barriers are visible but do not meet 29 CFR 1926.502(b) guardrail standards, and no personal fall arrest equipment is visibly in use, constituting multiple high-severity fall protection violations.",
+        "event_id": "frame_0012_00024000",
+        "timestamp_s": 24.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0012_00024000.jpg",
+        "model": "claude-sonnet-4-6"
+      },
+      "vima_spatial_analysis": {
+        "scene_description": "Egocentric fisheye view from an elevated construction platform level, showing a worker directly to the camera's right at approximately arm's reach, with a wheeled concrete bucket in the foreground-left, a tower crane in the mid-distance, and an expansive open construction site visible below and beyond.",
+        "spatial_claims": [
+          {
+            "object": "worker",
+            "location": "immediately to the right of camera, slightly above eye level, facing away/sideways",
+            "distance_from_camera_m": 0.6,
+            "dimensions_estimate": "~1.8m tall (partially cropped), wearing hi-vis vest and hard hat",
+            "spatial_relationships": [
+              "within arm's reach of camera",
+              "standing at same platform level as camera wearer",
+              "adjacent to vertical structure (ladder/scaffold) on far right"
+            ]
+          },
+          {
+            "object": "wheeled concrete bucket / mortar tub",
+            "location": "foreground left, approximately 1\u20131.5m from camera, at ground/platform level",
+            "distance_from_camera_m": 1.2,
+            "dimensions_estimate": "~1.0m wide, ~0.6m tall, on wheeled frame ~0.3m clearance",
+            "spatial_relationships": [
+              "left of worker by ~2m",
+              "on the same elevated platform surface",
+              "below camera line of sight"
+            ]
+          },
+          {
+            "object": "ladder / vertical scaffold structure",
+            "location": "far right edge of frame, vertical orientation",
+            "distance_from_camera_m": 0.8,
+            "dimensions_estimate": "~0.5m wide, extends beyond frame vertically",
+            "spatial_relationships": [
+              "immediately right of worker",
+              "attached to edge of platform structure",
+              "provides vertical access to/from current level"
+            ]
+          },
+          {
+            "object": "tower crane",
+            "location": "mid-frame, background, center-slightly-right, rising above site",
+            "distance_from_camera_m": 35.0,
+            "dimensions_estimate": "~40m+ tall (partial view), mast visible above platform level",
+            "spatial_relationships": [
+              "behind and above current work platform",
+              "hook line visible descending from jib",
+              "approximately 30\u201340m horizontally from camera position"
+            ]
+          },
+          {
+            "object": "crane hook / rigging line",
+            "location": "center-right sky, dangling from above frame",
+            "distance_from_camera_m": 30.0,
+            "dimensions_estimate": "hook ~0.3m, cable visible over ~3m vertical extent in frame",
+            "spatial_relationships": [
+              "directly above platform work area",
+              "suspended from tower crane jib overhead",
+              "approximately 5\u20138m above current platform level"
+            ]
+          },
+          {
+            "object": "concrete formwork / barrier wall",
+            "location": "mid-ground, spanning left-center to right-center of frame",
+            "distance_from_camera_m": 4.0,
+            "dimensions_estimate": "~6m wide, ~1.2m tall, orange-colored panels",
+            "spatial_relationships": [
+              "behind concrete bucket and worker",
+              "defines far edge of current platform",
+              "below open sky horizon"
+            ]
+          },
+          {
+            "object": "open construction site / lower grade",
+            "location": "beyond formwork wall, visible drop in elevation",
+            "distance_from_camera_m": 15.0,
+            "dimensions_estimate": "extends ~50m+ horizontally to treeline",
+            "spatial_relationships": [
+              "below current platform elevation by estimated 3\u20135m",
+              "equipment and materials visible at lower level",
+              "defines open edge hazard zone beyond formwork"
+            ]
+          },
+          {
+            "object": "rebar / steel horizontal members",
+            "location": "platform surface level, foreground below camera",
+            "distance_from_camera_m": 1.5,
+            "dimensions_estimate": "multiple bars, ~3\u20134m span visible",
+            "spatial_relationships": [
+              "on deck surface between camera and formwork",
+              "at foot level of camera wearer"
+            ]
+          }
+        ],
+        "distance_estimates": [
+          {
+            "from": "camera",
+            "to": "worker",
+            "distance_m": 0.6,
+            "confidence": 0.85,
+            "method": "angular size of known human body width (~0.4m shoulder) in fisheye frame; occupies ~25% of frame width"
+          },
+          {
+            "from": "camera",
+            "to": "wheeled concrete bucket",
+            "distance_m": 1.2,
+            "confidence": 0.75,
+            "method": "perspective foreshortening and known bucket dimensions (~1m wide); subtends ~15% of frame width"
+          },
+          {
+            "from": "camera",
+            "to": "concrete formwork wall",
+            "distance_m": 4.0,
+            "confidence": 0.65,
+            "method": "relative size of formwork panels and perspective recession; scene extent 8.2m from geometry stats supports this range"
+          },
+          {
+            "from": "camera",
+            "to": "tower crane base",
+            "distance_m": 35.0,
+            "confidence": 0.5,
+            "method": "apparent angular subtense of crane mast against known typical mast width (~1.5m); horizon distance perspective cue"
+          },
+          {
+            "from": "current platform level",
+            "to": "lower site grade",
+            "distance_m": 4.0,
+            "confidence": 0.55,
+            "method": "parallax drop visible beyond formwork wall; horizon line relative to platform surface in fisheye geometry"
+          },
+          {
+            "from": "crane hook",
+            "to": "platform surface",
+            "distance_m": 6.0,
+            "confidence": 0.45,
+            "method": "angular position of hook in frame relative to platform horizon; estimated clearance above work area"
+          }
+        ],
+        "zone_classification": "elevated platform deck (estimated 3\u20135m above site grade), active crane lift zone, material staging area",
+        "worker_spatial_context": {
+          "count": 1,
+          "positions": [
+            "standing approximately 0.6m to the right of the camera wearer, at the same platform level, adjacent to a vertical ladder/scaffold structure at the platform's right edge, facing toward the crane and lower site"
+          ],
+          "density_description": "single worker within immediate 1m radius of camera; no other workers visible in the broader 8\u201315m radius of view"
+        },
+        "notable_spatial_features": [
+          "open edge beyond formwork wall \u2014 platform drops ~3\u20135m to lower site grade approximately 4m ahead of camera",
+          "active crane hook suspended overhead (~6m above platform), indicating active or imminent lift operation",
+          "wheeled concrete bucket on platform within 1.5m of apparent open edge zone",
+          "vertical ladder at right platform edge \u2014 sole visible vertical access/egress route",
+          "strong solar glare from near-zenith sun reducing visibility of upper frame / sky zones",
+          "rebar/steel members on platform deck surface creating trip hazard geometry at foot level"
+        ],
+        "confidence": 0.72,
+        "reasoning": "Distance estimates rely primarily on angular size of known objects (worker body ~0.4m shoulder width, concrete bucket ~1m diameter) scaled against fisheye field of view distortion. The scene_extent_m of 8.2m from COLMAP sparse reconstruction anchors mid-ground features within that range. The tower crane distance is extrapolated beyond reconstruction bounds using apparent mast angular size and site-scale context visible in the background. Platform elevation above grade is inferred from the visible horizon drop beyond the formwork wall and the visible lower-site activity level.",
+        "event_id": "frame_0012_00024000",
+        "timestamp_s": 24.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0012_00024000.jpg",
+        "model": "claude-sonnet-4-6",
+        "mode": "spatial_reasoning"
+      }
+    },
+    {
+      "frame": "frame_0018_00036000.jpg",
+      "timestamp_s": 36.0,
+      "event_id": "frame_0018_00036000",
+      "baseline_classification": {
+        "pnc": "NC",
+        "activity": "Worker at height on structure",
+        "spatial_claims": [
+          {
+            "object": "worker",
+            "location": "elevated on red steel structure, arms raised overhead",
+            "distance_m": 3.5
+          },
+          {
+            "object": "scaffold",
+            "location": "red steel frame structure, center frame",
+            "distance_m": 3.5
+          },
+          {
+            "object": "open_edge",
+            "location": "left side of elevated platform, no visible guardrail",
+            "distance_m": 2.1
+          },
+          {
+            "object": "ladder",
+            "location": "blue ladder visible right side of structure",
+            "distance_m": 4.0
+          },
+          {
+            "object": "material_stack",
+            "location": "fire extinguisher at base of structure, ground level",
+            "distance_m": 3.2
+          }
+        ],
+        "violation_flags": [
+          {
+            "rule": "OSHA 1926.502(b) - Guardrail systems required at unprotected edges above 6 feet",
+            "severity": "high",
+            "evidence": "Worker visibly elevated on steel structure with no guardrail or perimeter protection visible on left open edge"
+          },
+          {
+            "rule": "OSHA 1926.502(d) - Personal fall arrest system required if no guardrail",
+            "severity": "high",
+            "evidence": "No visible harness, lanyard, or fall arrest equipment on worker working at height"
+          },
+          {
+            "rule": "OSHA 1926.416(a)(1) - Eye and face protection from sun/glare hazard",
+            "severity": "low",
+            "evidence": "Extreme solar glare in work area; hard to confirm PPE compliance due to overexposure"
+          },
+          {
+            "rule": "OSHA 1926.150(c)(1) - Fire extinguisher placement and accessibility",
+            "severity": "low",
+            "evidence": "Fire extinguisher present at base but unsecured placement observed"
+          }
+        ],
+        "confidence": 0.71,
+        "reasoning": "Worker is elevated on a steel construction structure with no visible fall protection guardrails on the open left edge and no discernible personal fall arrest system, constituting non-compliance with OSHA 1926.502. Image quality is partially degraded by solar glare, reducing confidence in full PPE and harness assessment.",
+        "event_id": "frame_0018_00036000",
+        "timestamp_s": 36.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0018_00036000.jpg",
+        "model": "claude-sonnet-4-6"
+      },
+      "vima_spatial_analysis": {
+        "scene_description": "Elevated construction platform viewed from worker-level bodycam, showing a large red/orange circular concrete form or spool structure dominating the right-center frame, with a worker standing at its base approximately 2-3m ahead. A crane tower is visible in the background left at significant distance.",
+        "spatial_claims": [
+          {
+            "object": "large circular concrete form / spool structure (red/orange)",
+            "location": "center-right of frame, immediately in front of and slightly right of camera",
+            "distance_from_camera_m": 1.5,
+            "dimensions_estimate": "~2.5m diameter, ~3m tall",
+            "spatial_relationships": [
+              "dominates right half of frame",
+              "worker is positioned directly at its base",
+              "blue ladder/scaffold structure attached to its right side",
+              "rests on elevated platform floor"
+            ]
+          },
+          {
+            "object": "worker",
+            "location": "center frame, standing at base of circular structure, arms raised working overhead",
+            "distance_from_camera_m": 2.5,
+            "dimensions_estimate": "~1.8m tall (estimated standing height)",
+            "spatial_relationships": [
+              "directly in front of camera at ~2.5m",
+              "standing at base of large red circular form",
+              "reaching upward approximately 2m above platform floor",
+              "on elevated platform"
+            ]
+          },
+          {
+            "object": "blue ladder / scaffold frame",
+            "location": "right edge of frame, vertical structure attached to or adjacent to circular form",
+            "distance_from_camera_m": 2.0,
+            "dimensions_estimate": "~0.6m wide, ~4m+ tall (extends beyond frame top)",
+            "spatial_relationships": [
+              "right of circular form",
+              "vertical, running full height of frame",
+              "adjacent to circular structure"
+            ]
+          },
+          {
+            "object": "fire extinguisher",
+            "location": "lower center frame, on platform floor at base of circular structure",
+            "distance_from_camera_m": 2.2,
+            "dimensions_estimate": "~0.5m tall, ~0.15m diameter",
+            "spatial_relationships": [
+              "directly below worker",
+              "resting on platform floor",
+              "between camera and circular form"
+            ]
+          },
+          {
+            "object": "crane tower",
+            "location": "upper-left background, silhouetted against bright sky",
+            "distance_from_camera_m": 45.0,
+            "dimensions_estimate": "~30-40m tall estimated tower",
+            "spatial_relationships": [
+              "far background, left of center",
+              "well beyond the immediate work platform",
+              "elevated above horizon line"
+            ]
+          },
+          {
+            "object": "metal railing / guardrail structure",
+            "location": "left side and mid-left of frame, at platform edge",
+            "distance_from_camera_m": 3.5,
+            "dimensions_estimate": "~1m tall, spans ~5m laterally",
+            "spatial_relationships": [
+              "defines left and rear perimeter of elevated platform",
+              "open construction site visible beyond it",
+              "lower than the circular form"
+            ]
+          },
+          {
+            "object": "elevated platform / floor surface",
+            "location": "ground plane visible beneath worker and extending toward camera",
+            "distance_from_camera_m": 0.5,
+            "dimensions_estimate": "~8m x 8m estimated platform area (consistent with 8.2m scene extent)",
+            "spatial_relationships": [
+              "camera operator standing on it",
+              "worker standing on it ~2.5m ahead",
+              "appears to be several meters above ground level based on open view over railing"
+            ]
+          },
+          {
+            "object": "drum / barrel",
+            "location": "lower-right foreground area, partially visible",
+            "distance_from_camera_m": 1.8,
+            "dimensions_estimate": "~0.6m diameter, ~0.9m tall",
+            "spatial_relationships": [
+              "right foreground",
+              "beside base of circular form",
+              "on platform floor"
+            ]
+          }
+        ],
+        "distance_estimates": [
+          {
+            "from": "camera",
+            "to": "worker",
+            "distance_m": 2.5,
+            "confidence": 0.72,
+            "method": "known human height (~1.8m) used as scale reference against image pixel height; perspective foreshortening on platform floor"
+          },
+          {
+            "from": "camera",
+            "to": "circular form (red structure)",
+            "distance_m": 1.5,
+            "confidence": 0.65,
+            "method": "worker scale reference and angular subtense of structure; structure appears larger than worker suggesting camera is very close"
+          },
+          {
+            "from": "camera",
+            "to": "crane tower",
+            "distance_m": 45.0,
+            "confidence": 0.4,
+            "method": "atmospheric haze, apparent angular size of crane relative to known crane tower dimensions (~30-50m tall structures), perspective depth"
+          },
+          {
+            "from": "worker",
+            "to": "circular form base",
+            "distance_m": 0.3,
+            "confidence": 0.8,
+            "method": "worker appears to be directly touching/working on the structure, contact implied by pose and proximity"
+          },
+          {
+            "from": "platform floor",
+            "to": "ground level (estimated drop)",
+            "distance_m": 4.0,
+            "confidence": 0.35,
+            "method": "open horizon line visible over railings suggests significant elevation; site materials visible below railing level; rough estimation from construction site context"
+          },
+          {
+            "from": "camera",
+            "to": "guardrail/platform edge",
+            "distance_m": 3.5,
+            "confidence": 0.55,
+            "method": "perspective lines on platform floor, scene extent of 8.2m from COLMAP geometry used as bounding constraint"
+          }
+        ],
+        "zone_classification": "elevated platform / active formwork assembly area with large circular vertical structure",
+        "worker_spatial_context": {
+          "count": 1,
+          "positions": [
+            "standing centrally on elevated platform approximately 2.5m directly ahead of camera, at base of large red circular form with arms raised above head working on structure at approximately 2m height"
+          ],
+          "density_description": "single worker isolated within ~3m radius work zone around large circular structure"
+        },
+        "notable_spatial_features": [
+          "large circular form/structure (~2.5m diameter) creates confined lateral working corridor between structure and platform edge",
+          "platform appears elevated ~3-5m above site ground level \u2014 open edge visible over left railing with no apparent fall protection barrier in view",
+          "strong solar glare from upper-left significantly reduces depth perception and detail in upper hemisphere of image",
+          "fire extinguisher positioned at base of structure within ~0.3m of worker's feet \u2014 potential trip hazard in confined space",
+          "blue ladder structure on right provides vertical access route ascending beyond frame",
+          "scene extent of 8.2m (COLMAP) confirms compact platform workspace \u2014 total usable area likely 6-8m across",
+          "crane tower in background-left implies active lifting operations possible in the broader zone"
+        ],
+        "confidence": 0.62,
+        "reasoning": "Primary depth estimation relied on worker height (~1.8m) as a known scale anchor to calibrate distances to the circular structure and platform extent. The COLMAP scene extent of 8.2m provides a hard upper bound on the spatial spread of reconstructed geometry, consistent with a compact elevated platform. Solar overexposure in the upper-left quadrant degraded depth cues for background elements, reducing confidence in crane distance estimates. Perspective convergence lines on the platform floor and the angular size of the large red circular structure relative to the worker were used to estimate the 1.5m camera-to-structure distance.",
+        "event_id": "frame_0018_00036000",
+        "timestamp_s": 36.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0018_00036000.jpg",
+        "model": "claude-sonnet-4-6",
+        "mode": "spatial_reasoning"
+      }
+    },
+    {
+      "frame": "frame_0024_00048000.jpg",
+      "timestamp_s": 48.0,
+      "event_id": "frame_0024_00048000",
+      "baseline_classification": {
+        "pnc": "NC",
+        "activity": "Elevated observation no PPE",
+        "spatial_claims": [
+          {
+            "object": "worker",
+            "location": "foreground, elevated position, arm/hand visible occluding frame",
+            "distance_m": 0.3
+          },
+          {
+            "object": "open_edge",
+            "location": "below and surrounding worker position, ground level visible ~8m drop",
+            "distance_m": 1.2
+          },
+          {
+            "object": "scaffold",
+            "location": "lower right quadrant, partial structure visible",
+            "distance_m": 4.5
+          },
+          {
+            "object": "material_stack",
+            "location": "mid-ground construction yard, center-left",
+            "distance_m": 35.0
+          }
+        ],
+        "violation_flags": [
+          {
+            "rule": "OSHA 1926.502(d) - Personal Fall Arrest System required at heights >6ft",
+            "severity": "high",
+            "evidence": "Worker appears elevated with open edges visible below; no fall arrest harness or lanyard visible in frame"
+          },
+          {
+            "rule": "OSHA 1926.502(b) - Guardrail systems required at unprotected edges",
+            "severity": "high",
+            "evidence": "No guardrail visible at worker's elevated position; open edge exposure apparent from scene geometry ~8m extent"
+          },
+          {
+            "rule": "OSHA 1926.100 - Head protection required in construction zones",
+            "severity": "medium",
+            "evidence": "No hard hat visible on worker; active crane operations observed in background"
+          },
+          {
+            "rule": "OSHA 1926.416(a) - Working in proximity to crane swing radius",
+            "severity": "medium",
+            "evidence": "Tower crane visible in upper right quadrant, worker elevated position may be within operational swing arc"
+          }
+        ],
+        "confidence": 0.62,
+        "reasoning": "Worker is visibly elevated with ground level construction site visible below indicating significant fall height exceeding 6ft threshold; absence of observable fall protection equipment and guardrails constitutes multiple serious OSHA 1926.502 violations. Point cloud scene extent of 8.2m and low point density (1770 points) limits precise geometry confirmation but elevation risk is evident.",
+        "event_id": "frame_0024_00048000",
+        "timestamp_s": 48.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0024_00048000.jpg",
+        "model": "claude-sonnet-4-6"
+      },
+      "vima_spatial_analysis": {
+        "scene_description": "Elevated egocentric view from a construction site with a worker's forearm/hand occluding the lower-right portion of the frame. The camera is positioned at significant height overlooking a large construction yard with a tower crane visible to the upper right and hilly terrain in the background.",
+        "spatial_claims": [
+          {
+            "object": "worker_forearm_hand",
+            "location": "immediate foreground, center-right, occluding approximately 40% of the frame",
+            "distance_from_camera_m": 0.3,
+            "dimensions_estimate": "~0.3m visible forearm length in frame",
+            "spatial_relationships": [
+              "directly in front of camera lens",
+              "blocking view of mid-ground construction area"
+            ]
+          },
+          {
+            "object": "tower_crane",
+            "location": "upper right quadrant of frame, mid-to-far distance",
+            "distance_from_camera_m": 80.0,
+            "dimensions_estimate": "~50-70m tall structure visible, jib arm extends left",
+            "spatial_relationships": [
+              "northeast of camera position",
+              "above construction yard floor level",
+              "approximately 80-120m horizontal distance"
+            ]
+          },
+          {
+            "object": "construction_yard_ground_level",
+            "location": "center-left mid-ground, significantly below camera elevation",
+            "distance_from_camera_m": 25.0,
+            "dimensions_estimate": "~100m+ wide visible area",
+            "spatial_relationships": [
+              "below camera by estimated 15-20m vertical drop",
+              "extends north and west",
+              "contains parked vehicles and material stacks"
+            ]
+          },
+          {
+            "object": "material_stack",
+            "location": "center-left of frame, on ground level of construction yard",
+            "distance_from_camera_m": 40.0,
+            "dimensions_estimate": "~10-15m wide cluster of materials",
+            "spatial_relationships": [
+              "well below camera elevation",
+              "west of crane",
+              "on flat construction pad"
+            ]
+          },
+          {
+            "object": "scaffold_or_structure_lower_right",
+            "location": "lower right corner of frame, partially visible",
+            "distance_from_camera_m": 5.0,
+            "dimensions_estimate": "~2m wide visible portion",
+            "spatial_relationships": [
+              "adjacent to camera position",
+              "at or near same elevation as camera",
+              "likely part of elevated platform worker is standing on"
+            ]
+          },
+          {
+            "object": "hillside_terrain",
+            "location": "far background, center and left horizon",
+            "distance_from_camera_m": 500.0,
+            "dimensions_estimate": "rolling hills spanning ~300m+ width in view",
+            "spatial_relationships": [
+              "beyond construction site boundary",
+              "at lower elevation than camera but rising to horizon"
+            ]
+          },
+          {
+            "object": "vehicles_parked",
+            "location": "center-left ground level, clustered in yard",
+            "distance_from_camera_m": 50.0,
+            "dimensions_estimate": "individual vehicles ~4-5m each",
+            "spatial_relationships": [
+              "on construction yard surface",
+              "15-20m below camera elevation",
+              "grouped in staging area"
+            ]
+          }
+        ],
+        "distance_estimates": [
+          {
+            "from": "camera",
+            "to": "construction_yard_ground_level",
+            "distance_m": 18.0,
+            "confidence": 0.55,
+            "method": "perspective foreshortening of vehicles and materials visible below; apparent scale of parked vehicles (~4-5m long) compared to pixel size suggests 15-20m vertical drop"
+          },
+          {
+            "from": "camera",
+            "to": "tower_crane_base",
+            "distance_m": 90.0,
+            "confidence": 0.45,
+            "method": "angular size of crane tower; typical tower crane mast section widths (~1.5-2m) and apparent pixel width used for distance triangulation"
+          },
+          {
+            "from": "camera",
+            "to": "scaffold_lower_right",
+            "distance_m": 4.0,
+            "confidence": 0.65,
+            "method": "apparent size and proximity of structural elements at frame edge, consistent with adjacent elevated platform"
+          },
+          {
+            "from": "construction_yard_floor",
+            "to": "camera_elevation",
+            "distance_m": 18.0,
+            "confidence": 0.55,
+            "method": "downward perspective angle and scale of ground-level objects; scene_extent_m of 8.2m from COLMAP suggests local structure is within ~8m but overall site spans much further"
+          },
+          {
+            "from": "tower_crane",
+            "to": "material_stack",
+            "distance_m": 40.0,
+            "confidence": 0.35,
+            "method": "relative angular separation in frame combined with estimated ground-plane distance from camera"
+          }
+        ],
+        "zone_classification": "elevated structure or upper floor level, estimated 15-20m above site ground floor, overlooking open construction yard \u2014 high elevation work zone",
+        "worker_spatial_context": {
+          "count": 1,
+          "positions": [
+            "Camera wearer is at elevated position; forearm visible at ~0.3m, indicating worker is leaning or gesturing toward camera; standing on elevated platform or upper floor structure"
+          ],
+          "density_description": "single worker identifiable via bodycam; no other workers visible in the wide construction yard below at this resolution"
+        },
+        "notable_spatial_features": [
+          "Significant elevation above construction yard \u2014 estimated 15-20m height creates high fall exposure at camera location",
+          "Open view with no visible guardrail in frame suggesting possible open edge near camera position",
+          "Tower crane operational overhead to northeast \u2014 swing radius consideration relevant to elevated position",
+          "Strong solar glare from directly overhead sun reduces visibility of upper quadrant and sky zone",
+          "Worker's forearm occluding ~40% of scene view limits spatial assessment of immediate surroundings",
+          "COLMAP scene extent of 8.2m suggests the reconstructed local geometry covers the immediate elevated platform area",
+          "Downward sightline to active construction yard below with vehicles and material staging visible"
+        ],
+        "confidence": 0.52,
+        "reasoning": "Primary depth cues used: (1) apparent angular size of parked vehicles on ground (~4-5m long vehicles appearing very small) to estimate ~15-20m vertical drop to yard level; (2) tower crane angular size \u2014 typical 1.5m mast width appearing as ~10px in 640px wide frame gives roughly 80-100m slant distance; (3) COLMAP sparse reconstruction with scene_extent_m of 8.2m and 19 registered cameras confirms the local platform geometry is compact (~8m span), consistent with an elevated floor or scaffold deck. Confidence is moderate due to heavy forearm occlusion, solar overexposure in upper frame, and fisheye distortion complicating angular measurements.",
+        "event_id": "frame_0024_00048000",
+        "timestamp_s": 48.0,
+        "frame_path": "/Users/qtzx/Desktop/workspace/lifebase/.runtime/ironsite_probe/colmap_map/images/frame_0024_00048000.jpg",
+        "model": "claude-sonnet-4-6",
+        "mode": "spatial_reasoning"
+      }
+    }
+  ]
+}
