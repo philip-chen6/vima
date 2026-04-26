@@ -353,15 +353,18 @@ export default function ScrollMotion({ children, className, style }: ScrollMotio
             .to(introMetaChildren, { autoAlpha: 1, y: 0, stagger: 0.06, duration: 0.52 }, "hero:meta+=0.12")
             .addLabel("hero:scroll", "hero:meta+=0.28")
             .to(introScrollTrace, { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.68 }, "hero:scroll")
-            .addLabel("hero:nav", "hero:scroll+=0.42")
-            .to(introNav, { autoAlpha: 1, y: 0, scaleY: 1, duration: 1.35, ease: "expo.out" }, "hero:nav")
-            .to(introNavBrand, { autoAlpha: 1, x: 0, duration: 0.9 }, "hero:nav+=0.45")
+            // navbar moved earlier — appears alongside the small text reveals
+            // so the page reads as "navigable" the moment the hero settles in,
+            // not 3-4 seconds after.
+            .addLabel("hero:nav", "hero:small-text+=0.1")
+            .to(introNav, { autoAlpha: 1, y: 0, scaleY: 1, duration: 0.9, ease: "expo.out" }, "hero:nav")
+            .to(introNavBrand, { autoAlpha: 1, x: 0, duration: 0.6 }, "hero:nav+=0.12")
             .to(
               introNavLinks,
-              { autoAlpha: 1, y: 0, rotationX: 0, stagger: 0.07, duration: 0.86 },
-              "hero:nav+=0.58",
+              { autoAlpha: 1, y: 0, rotationX: 0, stagger: 0.05, duration: 0.6 },
+              "hero:nav+=0.18",
             )
-            .to(introNavActions, { autoAlpha: 1, x: 0, stagger: 0.08, duration: 0.86 }, "hero:nav+=0.72")
+            .to(introNavActions, { autoAlpha: 1, x: 0, stagger: 0.06, duration: 0.6 }, "hero:nav+=0.28")
             .set([...introTargets, ...introLogoGlyphs, ...introMaskedLines], { clearProps: "willChange" });
 
           introTl.timeScale(conditions.compact || !conditions.finePointer ? 1.05 : 0.72);

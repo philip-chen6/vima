@@ -192,6 +192,27 @@ html[data-vima-loader-reveal="true"] [data-landing-backdrop-stage] {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
+/* Pre-hydration FOUC guard.
+
+   The loader is a "use client" component. Its <span data-loader-letter>
+   spans (v / i / m / a / .) are SSR-rendered with default styling so for
+   one frame between server-paint and useLayoutEffect (which runs the
+   gsap.set that hides them with yPercent: 112), the wordmark briefly
+   shows. CSS hides them until JS takes over.
+
+   GSAP's autoAlpha-based animations override these via inline styles
+   the moment useLayoutEffect runs, so the visual sequence becomes:
+     SSR paint (letters hidden by CSS) → JS hydrates → gsap.set keeps
+     them hidden → timeline reveals them on cue. */
+[data-loader-letter] {
+  transform: translateY(112%);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-loader-letter] {
+    transform: none;
+  }
+}
+
 /* ─── Phosphor Terminal keyframes (ported from signal-lab) ────────────── */
 @keyframes vima-pulse {
   0%, 100% { opacity: 1; }
