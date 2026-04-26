@@ -79,6 +79,8 @@ Rules:
 - Answer only from the retrieved episodes.
 - Cite episode_id and evidence frame names.
 - Be explicit when evidence is only a candidate, not proof.
+- Write 3 complete sentences.
+- Do not use markdown bullets.
 - Keep the answer short and useful for a construction productivity/safety judge.
 """
     try:
@@ -123,7 +125,7 @@ def gemini_rest_answer(query: str, context: list[dict[str, Any]], model_name: st
         ],
         "generationConfig": {
             "temperature": 0.2,
-            "maxOutputTokens": 512,
+            "maxOutputTokens": 1024,
         },
     }
     request = urllib.request.Request(
@@ -139,10 +141,14 @@ def gemini_rest_answer(query: str, context: list[dict[str, Any]], model_name: st
         detail = exc.read().decode("utf-8", errors="replace")
         raise RuntimeError(f"Gemini REST HTTP {exc.code}: {detail}") from exc
 
-    parts = payload.get("candidates", [{}])[0].get("content", {}).get("parts", [])
+    candidate = payload.get("candidates", [{}])[0]
+    parts = candidate.get("content", {}).get("parts", [])
     text = "".join(part.get("text", "") for part in parts).strip()
     if not text:
         raise RuntimeError(f"Gemini REST returned no text: {payload}")
+    finish_reason = candidate.get("finishReason")
+    if finish_reason and finish_reason != "STOP":
+        text = f"{text}\n\n[gemini_finish_reason={finish_reason}]"
     return text
 
 

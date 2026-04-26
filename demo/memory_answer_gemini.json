@@ -5,7 +5,7 @@
   "gemini_transport": "rest",
   "fallback_used": false,
   "error": null,
-  "answer": "Yes, masonry work was a candidate event near a concrete block wall in two episodes.",
+  "answer": "Yes, there was masonry work happening near a concrete block wall.\n\nEpisode 001 (0.0s-10.0s) indicates a \"masonry_work_candidate\" event where workers were near a concrete block wall, as observed in frames `frame_000001.jpg` and `frame_000002.jpg`.\nEpisode 007 (60.0s-90.0s) also indicates a \"masonry_work_candidate\" event with multiple workers near a concrete block wall, as observed in frames `frame_000007.jpg`, `frame_000008.jpg`, `frame_000009.jpg`, and `frame_000010.jpg`.\n\nNote that these are identified as \"masonry_work_candidate\" events, not definitive proof.",
   "retrieved_episodes": [
     {
       "episode_id": "episode_001",
@@ -152,6 +152,46 @@
         "worker_02 (worker) is near depth rank 1",
         "material_stack_01 (material stack) is mid depth rank 3",
         "guardrail_01 guardrail depth=far score=0.0833"
+      ]
+    },
+    {
+      "episode_id": "episode_009",
+      "event_type": "safety_edge_context",
+      "time_start_s": 80.0,
+      "time_end_s": 90.0,
+      "confidence": 0.815,
+      "observation": "Guardrail or open-edge context is visible near worker/site activity.",
+      "evidence_frames": [
+        {
+          "frame": "frame_000009.jpg",
+          "votes": 1
+        },
+        {
+          "frame": "frame_000010.jpg",
+          "votes": 1
+        }
+      ],
+      "involved_tracks": [
+        "guardrail_05",
+        "guardrail_06",
+        "worker_07",
+        "worker_08",
+        "worker_09"
+      ],
+      "relations": [
+        "worker_07_edge_context_guardrail_05",
+        "worker_08_edge_context_guardrail_06",
+        "worker_09_edge_context_guardrail_06"
+      ],
+      "spatial_facts": [
+        "concrete_block_wall_02 (concrete block wall) is near depth rank 1",
+        "scaffold_05 (scaffold) is near depth rank 2",
+        "scaffold_06 (scaffold) is mid depth rank 3",
+        "guardrail_05 guardrail depth=far score=0.1035",
+        "worker_07 worker depth=mid score=0.2691",
+        "worker_08 (worker) is near depth rank 1",
+        "concrete_block_wall_02 (concrete block wall) is near depth rank 2",
+        "scaffold_05 (scaffold) is mid depth rank 3"
       ]
     }
   ]
