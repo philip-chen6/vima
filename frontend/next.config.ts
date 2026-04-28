@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
-// in prod (docker compose), backend is reachable at http://backend:8765
-// in dev, it runs on localhost:8765
+// in prod (vercel), point at railway-hosted services via env vars
+// in dev, both run on localhost
 const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8765";
+const MCP_URL = process.env.MCP_URL ?? "http://localhost:8766";
 
 const nextConfig: NextConfig = {
   async rewrites() {
@@ -10,6 +11,10 @@ const nextConfig: NextConfig = {
       {
         source: '/api/:path*',
         destination: `${BACKEND_URL}/:path*`,
+      },
+      {
+        source: '/mcp/:path*',
+        destination: `${MCP_URL}/:path*`,
       },
     ];
   },
